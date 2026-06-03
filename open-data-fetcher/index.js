@@ -1,0 +1,296 @@
+#!/usr/bin/env node
+/**
+ * Fetches Rotterdam municipal trees from the city's public WFS service.
+ *
+ * Source:  Gemeente Rotterdam, Beheer Buitenruimte
+ * WFS:     https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe
+ * Layer:   ms:obs_bmn_alg  ("bomen algemeen")
+ * License: Creative Commons Public Domain Mark 1.0
+ *
+ * Usage:
+ *   node index.js                         # fetch first 100 trees → bomen-rotterdam.json
+ *   node index.js -d                      # dry run: print JSON to console only
+ *   node index.js --count 500             # fetch 500 trees
+ *   node index.js --count 500 --page 1    # second page of 500
+ *   node index.js --all                   # fetch all trees (many requests)
+ *   node index.js --all --format sqlite   # fetch all → bomen-rotterdam.db
+ *   node index.js --layer ms:obs_bmn_bijz # notable trees only
+ *
+ * Available layers:
+ *   ms:obs_bmn_alg    bomen algemeen (all trees — default)
+ *   ms:obs_bmn_gesl   bomen naar geslacht (by genus)
+ *   ms:obs_bmn_bos    bomen in bosplantsoen (in forest plantings)
+ *   ms:obs_bmn_bijz   bomen met bijzonderheid (notable trees)
+ *   ms:obs_bmn_kroon  bomen naar kroonprojectie (by crown projection)
+ */
+
+import https from 'https';
+import fs from 'fs/promises';
+import proj4 from 'proj4';
+import initSqlJs from 'sql.js';
+import { parseStringPromise, processors } from 'xml2js';
+
+// ── Coordinate system ────────────────────────────────────────────────────────
+
+// RD New (EPSG:28992) → WGS84
+proj4.defs(
+    'EPSG:28992',
+    '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38720621111111 '
+    + '+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel '
+    + '+towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 '
+    + '+units=m +no_defs',
+);
+
+function toWGS84(x, y) {
+    const [lon, lat] = proj4('EPSG:28992', 'WGS84', [x, y]);
+    return { lat: +lat.toFixed(7), lon: +lon.toFixed(7) };
+}
+
+// ── Field mapping ────────────────────────────────────────────────────────────
+// Only fields listed here are kept in the output.
+
+const FIELD_MAP = {
+    ID: 'id',
+    AANLEGJAAR: 'year_planted',
+    BOOMSORTIMENT_NEDERLANDS: 'name_indigenous',
+    BOOMSORTIMENT: 'species',
+    GESLACHT: 'genus',
+    WIJK: 'neighbourhood',
+    STRAAT: 'street',
+    DIAMETER: 'trunk_diameter',
+    KROONOMVANG: 'crown_spread',
+    LAATSTE_MUTATIE: 'last_updated',
+};
+
+// WFS PROPERTYNAME: geometry field + every attribute field in FIELD_MAP.
+// This tells the server to omit all other fields from the GML response.
+const PROPERTY_NAMES = ['GEOM', ...Object.keys(FIELD_MAP)].join(',');
+
+const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
+const MAP     = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
+
+// Rotterdam's WFS server has a certificate chain issue; disable verification.
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+// ── WFS request ──────────────────────────────────────────────────────────────
+
+function fetchRaw(params, onProgress) {
+    return new Promise((resolve, reject) => {
+        const req = https.get(`${WFS_URL}?${params}`, { agent: httpsAgent }, res => {
+            if (res.statusCode !== 200) {
+                reject(new Error(`HTTP ${res.statusCode} ${res.statusMessage}`));
+                res.resume();
+                return;
+            }
+            const total  = parseInt(res.headers['content-length'] ?? '0', 10);
+            let received = 0;
+            const chunks = [];
+            res.on('data', chunk => {
+                chunks.push(chunk);
+                received += chunk.length;
+                onProgress?.(received, total);
+            });
+            res.on('end', () => {
+                // Server declares UTF-8 but sends ISO-8859-1 bytes (server bug).
+                // latin1 is lossless for any single-byte encoding: byte 0xNN → U+00NN.
+                resolve(Buffer.concat(chunks).toString('latin1'));
+            });
+        });
+        req.on('error', reject);
+    });
+}
+
+function fetchPage(layer, count, startIndex, onProgress) {
+    return fetchRaw(new URLSearchParams({
+        map: MAP, SERVICE: 'WFS', VERSION: '2.0.0',
+        REQUEST: 'GetFeature', TYPENAMES: layer,
+        COUNT: String(count), STARTINDEX: String(startIndex),
+        PROPERTYNAME: PROPERTY_NAMES,
+    }), onProgress);
+}
+
+async function fetchCount(layer) {
+    const xml = await fetchRaw(new URLSearchParams({
+        map: MAP, SERVICE: 'WFS', VERSION: '2.0.0',
+        REQUEST: 'GetFeature', TYPENAMES: layer, resultType: 'hits',
+    }));
+    const doc = await parseStringPromise(xml, {
+        explicitArray: false, tagNameProcessors: [processors.stripPrefix],
+    });
+    return parseInt(doc?.FeatureCollection?.$.numberMatched ?? '0', 10) || 0;
+}
+
+// ── Progress bar ──────────────────────────────────────────────────────────────
+
+function drawProgress(fetched, total) {
+    if (!process.stderr.isTTY) return;
+    const W      = 40;
+    const pct    = total > 0 ? fetched / total : 0;
+    const filled = Math.round(W * pct);
+    const bar    = '='.repeat(filled).padEnd(W);
+    const label  = `${fetched} / ${total} (${Math.round(pct * 100)}%)`;
+    process.stderr.write(`\r[${bar}] ${label}  `);
+    if (fetched >= total) process.stderr.write('\n');
+}
+
+
+// ── GML / XML parsing ────────────────────────────────────────────────────────
+
+function parsePoint(geomNode) {
+    if (!geomNode) return null;
+    const point = geomNode.Point ?? geomNode['gml:Point'];
+    if (!point) return null;
+    const raw = point.pos ?? point['gml:pos'];
+    if (!raw) return null;
+    const parts = (typeof raw === 'string' ? raw : raw[0]).trim().split(/\s+/);
+    if (parts.length < 2) return null;
+    return toWGS84(parseFloat(parts[0]), parseFloat(parts[1]));
+}
+
+function toTree(featureNode) {
+    if (!featureNode) return null;
+
+    const tree = {};
+
+    // Detect geometry by presence of a nested Point element
+    for (const [key, val] of Object.entries(featureNode)) {
+        if (key === '$') continue;
+        const scalar = Array.isArray(val) ? val[0] : val;
+
+        if (scalar && typeof scalar === 'object' && (scalar.Point ?? scalar['gml:Point'])) {
+            const coords = parsePoint(scalar);
+            if (coords) { tree.lat = coords.lat; tree.lon = coords.lon; }
+            continue;
+        }
+
+        const mapped = FIELD_MAP[key];
+        if (!mapped) continue;
+
+        const text = typeof scalar === 'string' ? scalar : (scalar?._ ?? '');
+        tree[mapped] = text;
+    }
+
+    return tree;
+}
+
+async function parseGML(xml, layer) {
+    const doc = await parseStringPromise(xml, {
+        explicitArray: false,
+        tagNameProcessors: [processors.stripPrefix],
+        attrNameProcessors: [processors.stripPrefix],
+    });
+
+    if (doc?.ExceptionReport) {
+        const msg = doc.ExceptionReport.Exception?.ExceptionText ?? JSON.stringify(doc.ExceptionReport);
+        throw new Error(`WFS exception: ${msg}`);
+    }
+
+    const collection = doc?.FeatureCollection;
+    if (!collection) throw new Error('No FeatureCollection in response');
+
+    let members = collection.member ?? [];
+    if (!Array.isArray(members)) members = [members];
+
+    const localName = layer.split(':').pop();
+    return members.map(m => toTree(m[localName])).filter(Boolean);
+}
+
+// ── Output writers ────────────────────────────────────────────────────────────
+
+async function writeJSON(trees, file) {
+    await fs.writeFile(file, JSON.stringify(trees, null, 2), 'utf8');
+}
+
+async function writeSQLite(trees, file) {
+    const SQL = await initSqlJs();
+    const db  = new SQL.Database();
+
+    // Columns: lat + lon + every mapped field in FIELD_MAP order
+    const cols = ['lat', 'lon', ...Object.values(FIELD_MAP)];
+
+    db.run(`CREATE TABLE trees (${cols.join(', ')})`);
+    db.run(`CREATE INDEX idx_lat_lon ON trees (lat, lon)`);
+    db.run(`CREATE INDEX idx_species ON trees (species)`);
+
+    const placeholders = cols.map(() => '?').join(', ');
+    const stmt = db.prepare(`INSERT INTO trees VALUES (${placeholders})`);
+    for (const tree of trees) {
+        stmt.run(cols.map(c => tree[c] ?? null));
+    }
+    stmt.free();
+
+    await fs.writeFile(file, Buffer.from(db.export()));
+    db.close();
+}
+
+// ── CLI argument parsing ──────────────────────────────────────────────────────
+
+function parseArgs(argv) {
+    const args = { count: 100, page: 0, all: false, dry: false, format: 'json', layer: 'ms:obs_bmn_alg' };
+    for (let i = 0; i < argv.length; i++) {
+        switch (argv[i]) {
+            case '--count':  args.count  = parseInt(argv[++i], 10); break;
+            case '--page':   args.page   = parseInt(argv[++i], 10); break;
+            case '--layer':  args.layer  = argv[++i];               break;
+            case '--format': args.format = argv[++i];               break;
+            case '--all':    args.all    = true;                     break;
+            case '-d':       args.dry    = true;                     break;
+        }
+    }
+    return args;
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+    const args = parseArgs(process.argv.slice(2));
+
+    let trees = [];
+
+    if (args.all) {
+        const pageSize = 1000;
+        let startIndex = 0;
+
+        process.stderr.write('Counting trees...\n');
+        const total = await fetchCount(args.layer);
+        process.stderr.write(`${total} trees in dataset.\n`);
+        drawProgress(0, total);
+
+        while (true) {
+            const xml  = await fetchPage(args.layer, pageSize, startIndex);
+            const page = await parseGML(xml, args.layer);
+            trees.push(...page);
+            drawProgress(trees.length, total);
+            if (page.length < pageSize) break;
+            startIndex += pageSize;
+        }
+    } else {
+        const startIndex = args.page * args.count;
+        const xml = await fetchPage(args.layer, args.count, startIndex);
+        trees = await parseGML(xml, args.layer);
+        drawProgress(trees.length, args.count);
+    }
+
+    process.stderr.write(`Got ${trees.length} trees.\n`);
+
+    if (args.dry) {
+        process.stdout.write(JSON.stringify(trees, null, 2) + '\n');
+        return;
+    }
+
+    if (args.format === 'sqlite') {
+        const file = 'bomen-rotterdam.db';
+        process.stderr.write('Writing SQLite database...\n');
+        await writeSQLite(trees, file);
+        process.stderr.write(`Written to ${file}\n`);
+    } else {
+        const file = 'bomen-rotterdam.json';
+        await writeJSON(trees, file);
+        process.stderr.write(`Written to ${file}\n`);
+    }
+}
+
+main().catch(err => {
+    process.stderr.write(`Error: ${err.message}\n`);
+    process.exit(1);
+});

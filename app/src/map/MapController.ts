@@ -9,6 +9,7 @@ interface Callbacks {
 
 export class MapController {
   private map: L.Map | null = null
+  private readonly markerLayer = L.layerGroup()
   private readonly callbacks: Callbacks
 
   constructor(callbacks: Callbacks) {
@@ -23,18 +24,36 @@ export class MapController {
       maxZoom: 19,
     }).addTo(this.map)
 
-    this.map.on('moveend', () => {
-      if (!this.map) return
-      const b = this.map.getBounds()
-      this.callbacks.onMoveEnd({
-        nw: { lat: b.getNorth(), lon: b.getWest() },
-        se: { lat: b.getSouth(), lon: b.getEast() },
-      })
+    this.markerLayer.addTo(this.map)
+
+    this.map.on('moveend', () => this.fireMoveEnd())
+
+    // Trigger initial data load once the map has a known size
+    this.map.whenReady(() => this.fireMoveEnd())
+  }
+
+  private fireMoveEnd(): void {
+    if (!this.map) return
+    const b = this.map.getBounds()
+    this.callbacks.onMoveEnd({
+      nw: { lat: b.getNorth(), lon: b.getWest() },
+      se: { lat: b.getSouth(), lon: b.getEast() },
     })
   }
 
-  setTrees(_trees: Tree[]): void {
-    // Step 5
+  setTrees(trees: Tree[]): void {
+    this.markerLayer.clearLayers()
+    for (const tree of trees) {
+      L.circleMarker([tree.lat, tree.lon], {
+        radius: 5,
+        fillColor: '#52b788',
+        color: '#2d6a4f',
+        weight: 1,
+        fillOpacity: 0.75,
+      })
+        .on('click', () => this.callbacks.onMarkerClick(tree))
+        .addTo(this.markerLayer)
+    }
   }
 
   highlightSpecies(_species: string | null): void {

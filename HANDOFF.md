@@ -661,7 +661,7 @@ curl -X POST http://localhost:8000/api/trees \
   -d '{"bboxes":[{"s":51.88,"n":51.92,"w":4.47,"e":4.52}]}'
 ```
 
-### Step 3 `[ ]` — Project scaffold
+### Step 3 `[x]` — Project scaffold
 Bootstrap `app/` with Vite + React + TypeScript. Install and configure
 Tailwind CSS and shadcn/ui. Set up the Vite proxy. Confirm dev server runs
 and proxy reaches the PHP API.

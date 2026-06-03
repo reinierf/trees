@@ -611,6 +611,12 @@ endpoint, prevents overloading DB and renderer.
 Each step is a focused session. HANDOFF is updated if decisions change during
 implementation. Status: `[ ]` todo · `[~]` in progress · `[x]` done
 
+After each step: commit changed files. Split into multiple commits when
+changes are logically distinct (e.g. a bug fix separate from a feature, or
+two independent files with unrelated reasons to change). Each commit message
+names the step, lists what changed, and notes any non-obvious decisions made
+during implementation (bugs found, approach changes, gotchas).
+
 ### Step 1 `[x]` — Fetcher: schema + sanitisation
 Update `open-data-fetcher/index.js` to:
 - Add `species_binomial` and `species_cultivar` columns to the SQLite schema

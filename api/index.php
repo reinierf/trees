@@ -13,7 +13,7 @@
 
 define('DB_PATH',       __DIR__ . '/bomen-rotterdam.db');
 define('DEFAULT_LIMIT', 500);
-define('MAX_LIMIT',     2000);
+define('MAX_LIMIT',     20000);
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');

@@ -360,9 +360,10 @@ viewport load typically collapses to a single bbox covering the whole view.
 | Constant | Default | Purpose |
 |---|---|---|
 | `CELL_SIZE_DEG` | `0.005` | Grid cell size in degrees |
-| `MAX_VIEWPORT_DEG2` | `0.04` | Area threshold (deg²) above which fetch is skipped |
+| `MAX_VIEWPORT_DEG2` | `0.04` | Area threshold (deg²) above which fetch is skipped (secondary safeguard) |
 | `MAX_CACHE_CELLS` | `666` | LRU eviction limit |
 | `DEBOUNCE_MS` | `300` | Delay after pan/zoom stops before triggering load |
+| `MIN_FETCH_ZOOM` | `15` | Below this Leaflet zoom level fetch is skipped and "Zoom in to see trees" is shown |
 
 ### Deferred / not in scope for now
 - Species search / autocomplete
@@ -631,8 +632,10 @@ Closing popup or re-clicking same tree → clears both.
 First word titlecased, remaining words lowercase, joined with `_`.
 
 **POST `/api/trees` limit**
-2000 trees per request regardless of number of bboxes — same cap as the GET
-endpoint, prevents overloading DB and renderer.
+20 000 trees per request (PHP `MAX_LIMIT`, client `API_LIMIT`). Rotterdam
+averages ~117 trees per 0.005° cell. Below `MIN_FETCH_ZOOM` (15) no fetch is
+issued, so the maximum practical viewport at fetch time is zoom 15 (~18k trees).
+The GET endpoint default (500) is unchanged.
 
 ---
 

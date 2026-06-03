@@ -3,7 +3,7 @@ import type { Bbox, Tree } from '../types'
 import { MAP_CENTER, MAP_ZOOM } from '../config'
 
 interface Callbacks {
-  onMoveEnd: (bounds: Bbox) => void
+  onMoveEnd: (bounds: Bbox, zoom: number) => void
   onMarkerClick: (tree: Tree) => void
 }
 
@@ -35,10 +35,14 @@ export class MapController {
   private fireMoveEnd(): void {
     if (!this.map) return
     const b = this.map.getBounds()
-    this.callbacks.onMoveEnd({
-      nw: { lat: b.getNorth(), lon: b.getWest() },
-      se: { lat: b.getSouth(), lon: b.getEast() },
-    })
+    const zoom = this.map.getZoom()
+    this.callbacks.onMoveEnd(
+      {
+        nw: { lat: b.getNorth(), lon: b.getWest() },
+        se: { lat: b.getSouth(), lon: b.getEast() },
+      },
+      zoom,
+    )
   }
 
   setTrees(trees: Tree[]): void {

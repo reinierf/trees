@@ -278,6 +278,35 @@ React state (bbox, selectedSpecies, trees…)
   markers to normal
 - Updates automatically whenever the map moves and new data loads
 
+**Current location**
+- A circular button with a `LocateFixed` icon (Lucide), positioned
+  bottom-left of the map (absolute, inside the map container)
+- Three button states:
+  - **idle** — icon visible, clickable
+  - **loading** — spinner replaces icon while `getCurrentPosition` is
+    pending (timeout 10 s)
+  - **error** — brief error label ("Location access denied" /
+    "Location unavailable" / "Location timed out") for 3 s, then
+    reverts to idle
+- Button is hidden when `!navigator.geolocation` (API unavailable)
+- On success: map flies to position at zoom 16; a blue location dot
+  appears at the user's position
+  - Dot: `L.CircleMarker` — radius 8 px, solid blue fill
+    (`#3B82F6`), 2 px white stroke, no popup, never clustered
+  - Subsequent clicks refresh position and re-centre; dot moves to
+    new position
+- One-shot only (`getCurrentPosition`, not `watchPosition`) — no
+  background location tracking
+
+**MapController additions for current location:**
+```
+flyToLocation(lat, lon)        — map.flyTo([lat, lon], 16)
+setLocationMarker(lat, lon)    — creates L.CircleMarker on first call,
+                                  moves it on subsequent calls
+```
+Both called by `Map.tsx` in the `onLocate` callback — no new Zustand
+state needed (location centering is fire-and-forget).
+
 ### Client-side tile cache
 
 Rather than fetching the exact viewport bbox on every pan/zoom, the client
@@ -560,9 +589,10 @@ map/
 api/
   trees.ts              — fetch functions wrapping POST /api/trees
 components/
-  Map.tsx               — renders the map div, uses useMap hook
+  Map.tsx               — renders the map div + LocationButton overlay, uses useMap hook
   InfoOverlay.tsx       — tree count + expandable species list
   Popup.tsx             — tree detail popup
+  LocationButton.tsx    — geolocation button (idle/loading/error states)
 App.tsx
 main.tsx
 ```
@@ -691,6 +721,13 @@ Clicking a tree marker opens the React popup with full details and Wikipedia
 link. Non-matching species markers are downlighted. Clicking the same tree
 or closing the popup resets all markers.
 
-### Step 9 `[ ]` — Polish
+### Step 9 `[ ]` — Current location button
+Add `LocationButton.tsx` and wire it into `Map.tsx`. Implement
+`flyToLocation` and `setLocationMarker` on `MapController`. The button
+must handle all three states (idle / loading / error) and the location
+dot must appear and update correctly. Confirm the feature works end-to-end
+in the browser.
+
+### Step 10 `[ ]` — Polish
 Loading indicator while fetching. "Zoom in to see trees" message when
 viewport exceeds the area threshold. Debounce and threshold tuning.

@@ -666,7 +666,7 @@ Bootstrap `app/` with Vite + React + TypeScript. Install and configure
 Tailwind CSS and shadcn/ui. Set up the Vite proxy. Confirm dev server runs
 and proxy reaches the PHP API.
 
-### Step 4 `[ ]` — Map shell
+### Step 4 `[x]` — Map shell
 Implement `MapController` and the `useMap` hook. Render a bare Leaflet map
 centred on Rotterdam with an OSM tile layer. No data yet — just confirm the
 map renders and map-move events surface to React state.

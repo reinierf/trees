@@ -701,7 +701,7 @@ Implement `MapController` and the `useMap` hook. Render a bare Leaflet map
 centred on Rotterdam with an OSM tile layer. No data yet — just confirm the
 map renders and map-move events surface to React state.
 
-### Step 5 `[ ]` — Data layer
+### Step 5 `[x]` — Data layer
 Implement the tile cache (`tileCache.ts`) and the bbox fetch logic. Wire up
 `POST /api/trees`. Render trees as simple `CircleMarker` placeholders (no
 species icon yet). Confirm trees appear, pan/zoom triggers correct fetches,

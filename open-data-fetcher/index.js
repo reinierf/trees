@@ -66,6 +66,106 @@ const FIELD_MAP = {
 // This tells the server to omit all other fields from the GML response.
 const PROPERTY_NAMES = ['GEOM', ...Object.keys(FIELD_MAP)].join(',');
 
+// ── DB column order ───────────────────────────────────────────────────────────
+
+const DB_COLS = [
+    'lat', 'lon', 'id', 'year_planted', 'name_indigenous',
+    'species', 'species_binomial', 'species_cultivar',
+    'genus', 'neighbourhood', 'street',
+    'trunk_diameter', 'crown_spread', 'last_updated',
+];
+
+// ── Species / indigenous-name sanitisation ────────────────────────────────────
+
+const NON_BOTANICAL = new Set([
+    'ASSORTIMENT ONBEKEND',
+    'CONIFEREN',
+    'OVERIG',
+    'NIET (REGULIER) INBOETEN',
+]);
+
+// Rank markers that indicate a subspecies / variety / forma — not a cultivar.
+const RANK_MARKERS = new Set([
+    'SUBSP.', 'SUBSP', 'VAR.', 'VAR', 'F.', 'CV.', 'CV*', 'CV',
+]);
+
+function applySpeciesTypoCorrections(s) {
+    return s
+        .replace(/\bMETASQUOIA\b/, 'METASEQUOIA')
+        .replace(/\bPTEROCAYRA\b/, 'PTEROCARYA')
+        .replace(/HIBISCUS SYR\./, 'HIBISCUS SYRIACUS');
+}
+
+function applyIndigenousTypoCorrections(s) {
+    return s.replace(/\bSIERAPPPEL\b/, 'SIERAPPEL');
+}
+
+function extractSpeciesBinomial(s) {
+    if (!s) return null;
+    // Strip from first quote or opening paren onward (cultivar / trade name)
+    s = s.replace(/'.*$/, '').replace(/\(.*$/, '').trim();
+    // Strip rank markers and everything after
+    s = s.replace(/\s+(SUBSP\.|SUBSP|VAR\.|VAR|F\.|CV\.|CV\*|CV)(\s|$).*/i, '').trim();
+    const words = s.split(/\s+/).filter(Boolean);
+    if (words.length === 0) return null;
+    if (words.length === 1) return words[0];
+    if (words[1] === '×' && words[2]) return `${words[0]} × ${words[2]}`;
+    return `${words[0]} ${words[1]}`;
+}
+
+function extractSpeciesCultivar(s) {
+    if (!s) return null;
+    // Case 1: ICNCP code in parentheses ('CODE') — most stable cross-source identifier
+    const icncp = s.match(/\('([^')]+)'\)?/);
+    if (icncp) return icncp[1].trim() || null;
+    // Case 2: quoted cultivar name 'NAME'
+    const quoted = s.match(/'([^']+)'/);
+    if (quoted) return quoted[1].trim() || null;
+    // Case 3: words after the binomial that aren't rank markers
+    const words = s.split(/\s+/).filter(Boolean);
+    const skip = (words[1] === '×') ? 3 : 2;
+    if (words.length <= skip) return null;
+    const rest = words.slice(skip);
+    if (RANK_MARKERS.has(rest[0])) return null;
+    const filtered = rest
+        .filter(w => !RANK_MARKERS.has(w))
+        .join(' ')
+        .replace(/\(.*$/, '')   // strip unclosed or closed parentheticals
+        .replace(/\([^)]*\)/g, '')
+        .trim();
+    return filtered || null;
+}
+
+function sanitiseIndigenousName(s) {
+    if (!s) return null;
+    s = s.trim().replace(/\s+/g, ' ');
+    // Strip leading-dash pure-admin entries
+    if (s.startsWith('-')) return null;
+    // Strip admin suffix (everything from first ' -' onward)
+    const dashIdx = s.indexOf(' -');
+    if (dashIdx !== -1) s = s.slice(0, dashIdx).trim();
+    // Strip trailing (CV) and (V) markers
+    s = s.replace(/\s*\(CV\)\s*$/i, '').replace(/\s*\(V\)\s*$/i, '').trim();
+    // Null-check known pure-admin strings
+    if (!s || s.toUpperCase() === 'NIET INBOETEN') return null;
+    return s;
+}
+
+function sanitiseTree(tree) {
+    if (!tree) return null;
+    const rawSpecies = ((tree.species ?? '').trim().replace(/\s+/g, ' ')).toUpperCase();
+    // Skip non-botanical entries entirely
+    if (NON_BOTANICAL.has(rawSpecies)) return null;
+    // Compute species fields from typo-corrected uppercase value
+    const corrected = applySpeciesTypoCorrections(rawSpecies);
+    tree.species_binomial = extractSpeciesBinomial(corrected);
+    tree.species_cultivar  = extractSpeciesCultivar(corrected);
+    // Sanitise indigenous name (write clean value directly)
+    const rawIndigenous = (tree.name_indigenous ?? '').trim().replace(/\s+/g, ' ');
+    tree.name_indigenous = sanitiseIndigenousName(applyIndigenousTypoCorrections(rawIndigenous));
+    return tree;
+}
+
 const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
 const MAP     = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
 
@@ -192,7 +292,8 @@ async function parseGML(xml, layer) {
     if (!Array.isArray(members)) members = [members];
 
     const localName = layer.split(':').pop();
-    return members.map(m => toTree(m[localName])).filter(Boolean);
+    const trees = members.map(m => sanitiseTree(toTree(m[localName]))).filter(Boolean);
+    return { trees, rawCount: members.length };
 }
 
 // ── Output writers ────────────────────────────────────────────────────────────
@@ -205,17 +306,16 @@ async function writeSQLite(trees, file) {
     const SQL = await initSqlJs();
     const db  = new SQL.Database();
 
-    // Columns: lat + lon + every mapped field in FIELD_MAP order
-    const cols = ['lat', 'lon', ...Object.values(FIELD_MAP)];
+    db.run(`CREATE TABLE trees (${DB_COLS.join(', ')})`);
+    db.run(`CREATE INDEX idx_lat_lon          ON trees (lat, lon)`);
+    db.run(`CREATE INDEX idx_species          ON trees (species)`);
+    db.run(`CREATE INDEX idx_species_binomial ON trees (species_binomial)`);
+    db.run(`CREATE INDEX idx_species_cultivar ON trees (species_binomial, species_cultivar)`);
 
-    db.run(`CREATE TABLE trees (${cols.join(', ')})`);
-    db.run(`CREATE INDEX idx_lat_lon ON trees (lat, lon)`);
-    db.run(`CREATE INDEX idx_species ON trees (species)`);
-
-    const placeholders = cols.map(() => '?').join(', ');
+    const placeholders = DB_COLS.map(() => '?').join(', ');
     const stmt = db.prepare(`INSERT INTO trees VALUES (${placeholders})`);
     for (const tree of trees) {
-        stmt.run(cols.map(c => tree[c] ?? null));
+        stmt.run(DB_COLS.map(c => tree[c] ?? null));
     }
     stmt.free();
 
@@ -257,17 +357,18 @@ async function main() {
         drawProgress(0, total);
 
         while (true) {
-            const xml  = await fetchPage(args.layer, pageSize, startIndex);
-            const page = await parseGML(xml, args.layer);
+            const xml = await fetchPage(args.layer, pageSize, startIndex);
+            const { trees: page, rawCount } = await parseGML(xml, args.layer);
             trees.push(...page);
             drawProgress(trees.length, total);
-            if (page.length < pageSize) break;
+            if (rawCount < pageSize) break;
             startIndex += pageSize;
         }
     } else {
         const startIndex = args.page * args.count;
         const xml = await fetchPage(args.layer, args.count, startIndex);
-        trees = await parseGML(xml, args.layer);
+        const { trees: page } = await parseGML(xml, args.layer);
+        trees = page;
         drawProgress(trees.length, args.count);
     }
 

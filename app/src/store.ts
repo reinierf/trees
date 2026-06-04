@@ -8,6 +8,7 @@ interface AppStore {
   isLoading: boolean
   tooZoomedOut: boolean
   currentZoom: number
+  currentCenter: [number, number] | null
 
   setSelectedSpecies: (s: string | null) => void
   setSelectedTree: (t: Tree | null) => void
@@ -15,6 +16,7 @@ interface AppStore {
   setIsLoading: (v: boolean) => void
   setTooZoomedOut: (v: boolean) => void
   setCurrentZoom: (z: number) => void
+  setCurrentCenter: (c: [number, number]) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -24,6 +26,7 @@ export const useStore = create<AppStore>((set) => ({
   isLoading: false,
   tooZoomedOut: false,
   currentZoom: 0,
+  currentCenter: null,
 
   setSelectedSpecies: (s) => set({ selectedSpecies: s }),
   setSelectedTree: (t) => set({ selectedTree: t }),
@@ -31,4 +34,5 @@ export const useStore = create<AppStore>((set) => ({
   setIsLoading: (v) => set({ isLoading: v }),
   setTooZoomedOut: (v) => set({ tooZoomedOut: v }),
   setCurrentZoom: (z) => set({ currentZoom: z }),
+  setCurrentCenter: (c) => set({ currentCenter: c }),
 }))

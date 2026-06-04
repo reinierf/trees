@@ -7,6 +7,27 @@ import { useStore } from '../store'
 import { DEBOUNCE_MS, MAX_VIEWPORT_DEG2, MIN_FETCH_ZOOM } from '../config'
 import type { Bbox } from '../types'
 
+const POSITION_KEY = 'map-position'
+const POSITION_TTL = 86_400_000 // 1 day
+
+function loadSavedPosition(): { center: [number, number]; zoom: number } | null {
+  try {
+    const raw = localStorage.getItem(POSITION_KEY)
+    if (!raw) return null
+    const { lat, lon, zoom, savedAt } = JSON.parse(raw)
+    if (Date.now() - savedAt > POSITION_TTL) return null
+    return { center: [lat as number, lon as number], zoom: zoom as number }
+  } catch {
+    return null
+  }
+}
+
+function savePosition(center: [number, number], zoom: number): void {
+  try {
+    localStorage.setItem(POSITION_KEY, JSON.stringify({ lat: center[0], lon: center[1], zoom, savedAt: Date.now() }))
+  } catch {}
+}
+
 export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
   const controllerRef = useRef<MapController | null>(null)
   const tileCacheRef = useRef(new TileCache())
@@ -18,6 +39,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
   const setIsLoading = useStore((s) => s.setIsLoading)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
+  const setCurrentCenter = useStore((s) => s.setCurrentCenter)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const selectedSpecies = useStore((s) => s.selectedSpecies)
 
@@ -63,9 +85,12 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       }
     }
 
+    const saved = loadSavedPosition()
     const controller = new MapController({
-      onMoveEnd: (bounds, zoom) => {
+      onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
+        setCurrentCenter(center)
+        savePosition(center, zoom)
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
@@ -75,7 +100,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       },
     })
 
-    controller.init(el)
+    controller.init(el, saved?.center, saved?.zoom)
     controllerRef.current = controller
 
     return () => {
@@ -84,7 +109,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       controller.destroy()
       controllerRef.current = null
     }
-  }, [setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom])
+  }, [setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)

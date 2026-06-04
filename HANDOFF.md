@@ -183,26 +183,31 @@ bridges the two worlds.
 Owns the Leaflet map instance, marker layer, and cluster layer. No React
 imports. Exposes imperative methods called by the hook:
 ```
-init(divElement)         — creates the Leaflet map on the given div
-setTrees(trees)          — clears markers and renders the new set
-highlightSpecies(spec)   — downlights all markers not matching spec
-clearHighlight()         — resets all markers to normal opacity
-destroy()                — tears down the map on unmount
+init(divElement, center?, zoom?)  — creates the Leaflet map; optional center/zoom
+                                    override falls back to MAP_CENTER/MAP_ZOOM
+setTrees(trees)                   — clears markers and renders the new set
+highlightSpecies(spec)            — downlights all markers not matching spec
+clearHighlight()                  — resets all markers to normal opacity
+destroy()                         — tears down the map on unmount
 ```
 Fires outward via callbacks passed in at construction:
 ```
-onMoveEnd(bounds)        — called when the map stops moving
-onMarkerClick(tree)      — called when a tree marker is clicked
+onMoveEnd(bounds, zoom, center)  — called when the map stops moving;
+                                   center is [lat, lng] of current map centre
+onMarkerClick(tree)              — called when a tree marker is clicked
 ```
 
 **`useMap` hook (React bridge)**
-Holds a `MapController` instance in a `useRef`. On mount, calls `init()` and
-wires the controller's callbacks to React state setters. Watches React state
-and calls controller methods as side effects:
+Holds a `MapController` instance in a `useRef`. On mount, reads any saved
+position from `localStorage` (`map-position`, 1-day TTL), passes it to
+`init()` as overrides, then wires the controller's callbacks to React state
+setters. Watches React state and calls controller methods as side effects:
 ```js
 useEffect(() => controller.setTrees(trees),              [trees])
 useEffect(() => controller.highlightSpecies(selected),   [selected])
 ```
+On every `onMoveEnd`, writes `{ lat, lon, zoom, savedAt }` to `localStorage`
+so the position is restored on the next page load.
 Has zero direct Leaflet imports — only talks to the controller.
 
 **`createSpeciesIcon(species)` (pure function)**
@@ -277,6 +282,24 @@ React state (bbox, selectedSpecies, trees…)
 - Clicking the same species again or clearing the selection resets all
   markers to normal
 - Updates automatically whenever the map moves and new data loads
+
+**Debug overlay**
+A persistent top-centre overlay shows diagnostic info:
+```
+z17 · fetch≥16 · solo≥18 · [51.9225, 4.4792]
+```
+`z` = current zoom · `fetch≥` = MIN_FETCH_ZOOM · `solo≥` = CLUSTER_DISABLE_ZOOM
+· bracketed pair = map centre lat/lon (4 dp), ready to copy-paste into `config.ts`
+as `MAP_CENTER`.
+
+**Map position persistence**
+- On every `moveend`, the hook writes `{ lat, lon, zoom, savedAt }` to
+  `localStorage` under key `map-position`.
+- On page load, if the saved entry is less than 24 hours old, the map
+  initialises at the saved centre and zoom instead of `MAP_CENTER`/`MAP_ZOOM`.
+- Stale (>1 day) or missing entries fall back to config defaults silently.
+- `currentCenter: [number, number] | null` in the Zustand store is updated on
+  every move and drives the debug overlay display.
 
 **Current location**
 - A circular button with a `LocateFixed` icon (Lucide), positioned
@@ -607,15 +630,21 @@ Scales cleanly as more panels (filters, list, stats) are added.
 Store defined in `src/store.ts`:
 ```ts
 interface AppStore {
-  selectedSpecies: string | null  // set by marker click OR overlay — drives downlight
-  selectedTree:    Tree | null    // set by marker click only — drives popup
-  visibleTrees:    Tree[]         // current viewport trees — drives overlay + count
+  selectedSpecies: string | null       // set by marker click OR overlay — drives downlight
+  selectedTree:    Tree | null         // set by marker click only — drives popup
+  visibleTrees:    Tree[]              // current viewport trees — drives overlay + count
   isLoading:       boolean
+  tooZoomedOut:    boolean
+  currentZoom:     number
+  currentCenter:   [number, number] | null  // current map centre [lat, lon]
 
   setSelectedSpecies: (s: string | null) => void
   setSelectedTree:    (t: Tree | null) => void
   setVisibleTrees:    (trees: Tree[]) => void
   setIsLoading:       (v: boolean) => void
+  setTooZoomedOut:    (v: boolean) => void
+  setCurrentZoom:     (z: number) => void
+  setCurrentCenter:   (c: [number, number]) => void
 }
 ```
 

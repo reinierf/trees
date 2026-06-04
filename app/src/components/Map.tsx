@@ -8,6 +8,11 @@ export function Map() {
   useMap(containerRef)
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
   const currentZoom = useStore((s) => s.currentZoom)
+  const currentCenter = useStore((s) => s.currentCenter)
+
+  const centerStr = currentCenter
+    ? `[${currentCenter[0].toFixed(4)}, ${currentCenter[1].toFixed(4)}]`
+    : ''
 
   return (
     <div className="relative w-full h-full">
@@ -20,7 +25,7 @@ export function Map() {
         </div>
       )}
       <div className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
-        z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}
+        z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
       </div>
     </div>
   )

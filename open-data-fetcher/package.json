@@ -8,7 +8,6 @@
     "start": "node bomen.js"
   },
   "dependencies": {
-    "proj4": "^2.20.8",
     "sql.js": "^1.14.1",
     "xml2js": "^0.6.2"
   },

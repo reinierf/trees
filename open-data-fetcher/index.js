@@ -26,25 +26,9 @@
 
 import https from 'https';
 import fs from 'fs/promises';
-import proj4 from 'proj4';
 import initSqlJs from 'sql.js';
 import { parseStringPromise, processors } from 'xml2js';
 
-// ── Coordinate system ────────────────────────────────────────────────────────
-
-// RD New (EPSG:28992) → WGS84
-proj4.defs(
-    'EPSG:28992',
-    '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38720621111111 '
-    + '+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel '
-    + '+towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 '
-    + '+units=m +no_defs',
-);
-
-function toWGS84(x, y) {
-    const [lon, lat] = proj4('EPSG:28992', 'WGS84', [x, y]);
-    return { lat: +lat.toFixed(7), lon: +lon.toFixed(7) };
-}
 
 // ── Field mapping ────────────────────────────────────────────────────────────
 // Only fields listed here are kept in the output.

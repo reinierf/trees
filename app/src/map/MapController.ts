@@ -20,6 +20,7 @@ export class MapController {
       iconCreateFunction: (cluster) => createClusterIcon(cluster.getChildCount()),
       disableClusteringAtZoom: CLUSTER_DISABLE_ZOOM,
       chunkedLoading: true,
+      animate: false,
     })
   }
 
@@ -34,7 +35,10 @@ export class MapController {
     this.clusterLayer.addTo(this.map)
 
     this.map.on('moveend', () => this.fireMoveEnd())
-    this.map.whenReady(() => this.fireMoveEnd())
+    this.map.whenReady(() => {
+      this.map?.invalidateSize()
+      this.fireMoveEnd()
+    })
   }
 
   private fireMoveEnd(): void {
@@ -51,15 +55,17 @@ export class MapController {
 
   setTrees(trees: Tree[]): void {
     this.clusterLayer.clearLayers()
+    const markers: L.Marker[] = []
     for (const tree of trees) {
       if (!tree.species_binomial) continue
-      L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
-        .on('click', () => this.callbacks.onMarkerClick(tree))
-        .addTo(this.clusterLayer)
+      const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
+      m.on('click', () => this.callbacks.onMarkerClick(tree))
+      markers.push(m)
     }
+    this.clusterLayer.addLayers(markers)
   }
 
-  highlightSpecies(_species: string | null): void {
+  highlightSpecies(_: string | null): void {
     // Step 8
   }
 

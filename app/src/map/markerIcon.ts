@@ -19,10 +19,10 @@ function buildDivIcon(code: string): L.DivIcon {
   const r = 14
   const d = r * 2
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}">` +
-    `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#52b788" stroke="#2d6a4f" stroke-width="1.5"/>` +
-    `<text x="${r}" y="${r + 4}" font-family="Arial,sans-serif" font-size="9"` +
-    ` font-weight="bold" text-anchor="middle" fill="white">${code}</text>` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" style="display:block">` +
+    `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#81e0b4" stroke="#2d6a4f" stroke-width="1.5"/>` +
+    `<text x="${r}" y="${r + 4}" font-family="Arial" font-size="10"` +
+    ` font-weight="normal" text-anchor="middle" fill="#000000">${code}</text>` +
     `</svg>`
   return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
 }
@@ -44,10 +44,10 @@ export function createClusterIcon(count: number): L.DivIcon {
   const r = size / 2
   const fs = count < 100 ? 11 : 9
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" style="display:block">` +
     `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#2d6a4f" opacity="0.85" stroke="white" stroke-width="1.5"/>` +
     `<text x="${r}" y="${r + 4}" font-family="Arial,sans-serif" font-size="${fs}"` +
-    ` font-weight="bold" text-anchor="middle" fill="white">${count}</text>` +
+    ` font-weight="normal" text-anchor="middle" fill="white">${count}</text>` +
     `</svg>`
   return L.divIcon({ html: svg, className: '', iconSize: [size, size], iconAnchor: [r, r] })
 }

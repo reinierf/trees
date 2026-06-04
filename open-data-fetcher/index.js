@@ -205,6 +205,10 @@ function fetchPage(layer, count, startIndex, onProgress) {
     return fetchRaw(new URLSearchParams({
         map: MAP, SERVICE: 'WFS', VERSION: '2.0.0',
         REQUEST: 'GetFeature', TYPENAMES: layer,
+        // Request WGS84 directly so the server applies its own accurate transformation
+        // (RDNAPTRANS2018 grid correction) instead of our ~29 m Helmert approximation.
+        // EPSG:4326 in WFS 2.0.0 returns coordinates as (lat, lon) per the EPSG axis order.
+        SRSNAME: 'urn:ogc:def:crs:EPSG::4326',
         COUNT: String(count), STARTINDEX: String(startIndex),
         PROPERTYNAME: PROPERTY_NAMES,
     }), onProgress);
@@ -245,7 +249,10 @@ function parsePoint(geomNode) {
     if (!raw) return null;
     const parts = (typeof raw === 'string' ? raw : raw[0]).trim().split(/\s+/);
     if (parts.length < 2) return null;
-    return toWGS84(parseFloat(parts[0]), parseFloat(parts[1]));
+    // SRSNAME=urn:ogc:def:crs:EPSG::4326 → WFS 2.0.0 returns (lat, lon) per EPSG axis order
+    const lat = parseFloat(parts[0]);
+    const lon = parseFloat(parts[1]);
+    return { lat: +lat.toFixed(7), lon: +lon.toFixed(7) };
 }
 
 function toTree(featureNode) {

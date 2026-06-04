@@ -650,6 +650,16 @@ two independent files with unrelated reasons to change). Each commit message
 names the step, lists what changed, and notes any non-obvious decisions made
 during implementation (bugs found, approach changes, gotchas).
 
+### ⚠ DB rebuild required
+Two fetcher fixes have been made since the last full fetch — run
+`node index.js --all --format sqlite` to rebuild `bomen-rotterdam.db`:
+1. **Coordinate accuracy** — switched from a 7-parameter Helmert towgs84
+   (~29 m error in NL) to requesting WGS84 directly from the WFS
+   (`SRSNAME=urn:ogc:def:crs:EPSG::4326`); the server applies its own
+   RDNAPTRANS2018 grid correction
+2. **Null species_binomial** — `sanitiseTree` now returns null (skips row)
+   when `extractSpeciesBinomial` yields null
+
 ### Step 1 `[x]` — Fetcher: schema + sanitisation
 Update `open-data-fetcher/index.js` to:
 - Add `species_binomial` and `species_cultivar` columns to the SQLite schema

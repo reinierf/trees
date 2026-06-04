@@ -79,6 +79,10 @@ export class MapController {
     this.highlightSpecies(this.currentHighlight)
   }
 
+  panTo(lat: number, lon: number): void {
+    this.map?.panTo([lat, lon])
+  }
+
   highlightSpecies(species: string | null): void {
     this.currentHighlight = species
     for (const { m, species: s } of this.markers) {

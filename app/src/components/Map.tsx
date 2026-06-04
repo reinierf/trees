@@ -6,7 +6,7 @@ import { Popup } from './Popup'
 
 export function Map() {
   const containerRef = useRef<HTMLDivElement>(null)
-  useMap(containerRef)
+  const controllerRef = useMap(containerRef)
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
   const currentZoom = useStore((s) => s.currentZoom)
   const currentCenter = useStore((s) => s.currentCenter)
@@ -28,7 +28,7 @@ export function Map() {
       <div className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
         z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
       </div>
-      <Popup />
+      <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
     </div>
   )
 }

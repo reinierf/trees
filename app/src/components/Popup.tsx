@@ -1,3 +1,4 @@
+import { Crosshair } from 'lucide-react'
 import { useStore } from '../store'
 
 function wikiUrl(binomial: string): string {
@@ -18,7 +19,11 @@ function Row({ label, value }: { label: string; value: string | number | null | 
   )
 }
 
-export function Popup() {
+interface Props {
+  onCenter: (lat: number, lon: number) => void
+}
+
+export function Popup({ onCenter }: Props) {
   const tree = useStore((s) => s.selectedTree)
   const setSelectedTree = useStore((s) => s.setSelectedTree)
   const setSelectedSpecies = useStore((s) => s.setSelectedSpecies)
@@ -47,13 +52,22 @@ export function Popup() {
             <p className="text-xs text-muted-foreground mt-0.5">{tree.name_indigenous}</p>
           )}
         </div>
-        <button
-          onClick={close}
-          className="text-muted-foreground hover:text-foreground leading-none text-lg mt-0.5 shrink-0"
-          aria-label="Close"
-        >
-          ×
-        </button>
+        <div className="flex items-center gap-3 shrink-0 mt-0.5">
+          <button
+            onClick={() => onCenter(tree.lat, tree.lon)}
+            className="text-muted-foreground hover:text-foreground"
+            aria-label="Center map on tree"
+          >
+            <Crosshair size={15} />
+          </button>
+          <button
+            onClick={close}
+            className="text-muted-foreground hover:text-foreground leading-none text-2xl"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
       </div>
 
       <div className="px-4 pb-3 space-y-1 border-t pt-2">

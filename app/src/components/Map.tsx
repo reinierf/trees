@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
+import { Popup } from './Popup'
 
 export function Map() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -27,6 +28,7 @@ export function Map() {
       <div className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
         z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
       </div>
+      <Popup />
     </div>
   )
 }

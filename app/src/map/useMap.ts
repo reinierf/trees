@@ -94,9 +94,19 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
+      onMapClick: () => {
+        setSelectedTree(null)
+        setSelectedSpecies(null)
+      },
       onMarkerClick: (tree) => {
-        setSelectedTree(tree)
-        setSelectedSpecies(tree.species_binomial)
+        const current = useStore.getState().selectedTree
+        if (current?.id === tree.id) {
+          setSelectedTree(null)
+          setSelectedSpecies(null)
+        } else {
+          setSelectedTree(tree)
+          setSelectedSpecies(tree.species_binomial)
+        }
       },
     })
 

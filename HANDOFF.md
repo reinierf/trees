@@ -753,15 +753,15 @@ and cache prevents redundant requests.
 Implement `createSpeciesIcon` (SVG `DivIcon`, 4-char code, Arial, cached per
 species). Replace placeholder markers. Wire up Leaflet.MarkerCluster.
 
-### Step 7 `[ ]` — Info overlay
-Build the React info overlay: tree count + expandable species list with per-
-species counts. Wire to React state so it updates on every map move. Clicking
-a species triggers downlight (all other markers dimmed).
-
-### Step 8 `[ ]` — Popup + downlight from marker click
+### Step 7 `[x]` — Popup + downlight from marker click
 Clicking a tree marker opens the React popup with full details and Wikipedia
 link. Non-matching species markers are downlighted. Clicking the same tree
 or closing the popup resets all markers.
+
+### Step 8 `[ ]` — Info overlay
+Build the React info overlay: tree count + expandable species list with per-
+species counts. Wire to React state so it updates on every map move. Clicking
+a species triggers downlight (all other markers dimmed).
 
 ### Step 9 `[ ]` — Current location button
 Add `LocationButton.tsx` and wire it into `Map.tsx`. Implement

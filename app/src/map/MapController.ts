@@ -7,12 +7,16 @@ import { createSpeciesIcon, createClusterIcon } from './markerIcon'
 interface Callbacks {
   onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
   onMarkerClick: (tree: Tree) => void
+  onMapClick: () => void
 }
 
 export class MapController {
   private map: L.Map | null = null
   private readonly clusterLayer: L.MarkerClusterGroup
   private readonly callbacks: Callbacks
+  private dragOccurred = false
+  private currentHighlight: string | null = null
+  private readonly onPointerDown = () => { this.dragOccurred = false }
 
   constructor(callbacks: Callbacks) {
     this.callbacks = callbacks
@@ -35,6 +39,9 @@ export class MapController {
     this.clusterLayer.addTo(this.map)
 
     this.map.on('moveend', () => this.fireMoveEnd())
+    this.map.on('drag', () => { this.dragOccurred = true })
+    this.map.on('click', () => { if (!this.dragOccurred) this.callbacks.onMapClick() })
+    el.addEventListener('pointerdown', this.onPointerDown)
     this.map.whenReady(() => {
       this.map?.invalidateSize()
       this.fireMoveEnd()
@@ -55,23 +62,32 @@ export class MapController {
     )
   }
 
+  private markers: Array<{ m: L.Marker; species: string }> = []
+
   setTrees(trees: Tree[]): void {
     this.clusterLayer.clearLayers()
-    const markers: L.Marker[] = []
+    this.markers = []
+    const layerMarkers: L.Marker[] = []
     for (const tree of trees) {
       if (!tree.species_binomial) continue
       const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
-      m.on('click', () => this.callbacks.onMarkerClick(tree))
-      markers.push(m)
+      m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
+      this.markers.push({ m, species: tree.species_binomial })
+      layerMarkers.push(m)
     }
-    this.clusterLayer.addLayers(markers)
+    this.clusterLayer.addLayers(layerMarkers)
+    this.highlightSpecies(this.currentHighlight)
   }
 
-  highlightSpecies(_: string | null): void {
-    // Step 8
+  highlightSpecies(species: string | null): void {
+    this.currentHighlight = species
+    for (const { m, species: s } of this.markers) {
+      m.setOpacity(species === null || species === s ? 1 : 0.5)
+    }
   }
 
   destroy(): void {
+    this.map?.getContainer().removeEventListener('pointerdown', this.onPointerDown)
     this.map?.remove()
     this.map = null
   }

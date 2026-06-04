@@ -17,6 +17,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
   const setVisibleTrees = useStore((s) => s.setVisibleTrees)
   const setIsLoading = useStore((s) => s.setIsLoading)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
+  const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const selectedSpecies = useStore((s) => s.selectedSpecies)
 
@@ -64,6 +65,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
 
     const controller = new MapController({
       onMoveEnd: (bounds, zoom) => {
+        setCurrentZoom(zoom)
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
@@ -82,7 +84,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       controller.destroy()
       controllerRef.current = null
     }
-  }, [setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut])
+  }, [setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)

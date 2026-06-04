@@ -15,7 +15,7 @@ export interface Tree {
   year_planted: string
   name_indigenous: string | null
   species: string
-  species_binomial: string
+  species_binomial: string | null
   species_cultivar: string | null
   genus: string
   neighbourhood: string

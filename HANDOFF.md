@@ -363,7 +363,7 @@ viewport load typically collapses to a single bbox covering the whole view.
 | `MAX_VIEWPORT_DEG2` | `0.04` | Area threshold (deg²) above which fetch is skipped (secondary safeguard) |
 | `MAX_CACHE_CELLS` | `666` | LRU eviction limit |
 | `DEBOUNCE_MS` | `300` | Delay after pan/zoom stops before triggering load |
-| `MIN_FETCH_ZOOM` | `15` | Below this Leaflet zoom level fetch is skipped and "Zoom in to see trees" is shown |
+| `MIN_FETCH_ZOOM` | `17` | Below this Leaflet zoom level fetch is skipped and "Zoom in to see trees" is shown |
 
 ### Deferred / not in scope for now
 - Species search / autocomplete
@@ -710,7 +710,7 @@ Implement the tile cache (`tileCache.ts`) and the bbox fetch logic. Wire up
 species icon yet). Confirm trees appear, pan/zoom triggers correct fetches,
 and cache prevents redundant requests.
 
-### Step 6 `[ ]` — Species markers + clustering
+### Step 6 `[x]` — Species markers + clustering
 Implement `createSpeciesIcon` (SVG `DivIcon`, 4-char code, Arial, cached per
 species). Replace placeholder markers. Wire up Leaflet.MarkerCluster.
 

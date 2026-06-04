@@ -159,6 +159,7 @@ function sanitiseTree(tree) {
     // Compute species fields from typo-corrected uppercase value
     const corrected = applySpeciesTypoCorrections(rawSpecies);
     tree.species_binomial = extractSpeciesBinomial(corrected);
+    if (!tree.species_binomial) return null;
     tree.species_cultivar  = extractSpeciesCultivar(corrected);
     // Sanitise indigenous name (write clean value directly)
     const rawIndigenous = (tree.name_indigenous ?? '').trim().replace(/\s+/g, ' ');

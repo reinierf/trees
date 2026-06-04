@@ -7,12 +7,14 @@ interface AppStore {
   visibleTrees: Tree[]
   isLoading: boolean
   tooZoomedOut: boolean
+  currentZoom: number
 
   setSelectedSpecies: (s: string | null) => void
   setSelectedTree: (t: Tree | null) => void
   setVisibleTrees: (trees: Tree[]) => void
   setIsLoading: (v: boolean) => void
   setTooZoomedOut: (v: boolean) => void
+  setCurrentZoom: (z: number) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -21,10 +23,12 @@ export const useStore = create<AppStore>((set) => ({
   visibleTrees: [],
   isLoading: false,
   tooZoomedOut: false,
+  currentZoom: 0,
 
   setSelectedSpecies: (s) => set({ selectedSpecies: s }),
   setSelectedTree: (t) => set({ selectedTree: t }),
   setVisibleTrees: (trees) => set({ visibleTrees: trees }),
   setIsLoading: (v) => set({ isLoading: v }),
   setTooZoomedOut: (v) => set({ tooZoomedOut: v }),
+  setCurrentZoom: (z) => set({ currentZoom: z }),
 }))

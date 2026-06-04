@@ -1,19 +1,39 @@
 import L from 'leaflet'
+import 'leaflet.markercluster'
 import type { Bbox, Tree } from '../types'
-import { MAP_CENTER, MAP_ZOOM } from '../config'
+import { MAP_CENTER, MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
+import { createSpeciesIcon } from './markerIcon'
 
 interface Callbacks {
   onMoveEnd: (bounds: Bbox, zoom: number) => void
   onMarkerClick: (tree: Tree) => void
 }
 
+function clusterIcon(count: number): L.DivIcon {
+  const size = count < 100 ? 34 : 40
+  const r = size / 2
+  const fs = count < 100 ? 11 : 9
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+    `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#2d6a4f" opacity="0.85" stroke="white" stroke-width="1.5"/>` +
+    `<text x="${r}" y="${r + 4}" font-family="Arial,sans-serif" font-size="${fs}"` +
+    ` font-weight="bold" text-anchor="middle" fill="white">${count}</text>` +
+    `</svg>`
+  return L.divIcon({ html: svg, className: '', iconSize: [size, size], iconAnchor: [r, r] })
+}
+
 export class MapController {
   private map: L.Map | null = null
-  private readonly markerLayer = L.layerGroup()
+  private readonly clusterLayer: L.MarkerClusterGroup
   private readonly callbacks: Callbacks
 
   constructor(callbacks: Callbacks) {
     this.callbacks = callbacks
+    this.clusterLayer = L.markerClusterGroup({
+      iconCreateFunction: (cluster) => clusterIcon(cluster.getChildCount()),
+      disableClusteringAtZoom: CLUSTER_DISABLE_ZOOM,
+      chunkedLoading: true,
+    })
   }
 
   init(el: HTMLDivElement): void {
@@ -21,47 +41,39 @@ export class MapController {
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
+      maxZoom: MAP_MAX_ZOOM,
     }).addTo(this.map)
 
-    this.markerLayer.addTo(this.map)
+    this.clusterLayer.addTo(this.map)
 
     this.map.on('moveend', () => this.fireMoveEnd())
-
-    // Trigger initial data load once the map has a known size
     this.map.whenReady(() => this.fireMoveEnd())
   }
 
   private fireMoveEnd(): void {
     if (!this.map) return
     const b = this.map.getBounds()
-    const zoom = this.map.getZoom()
     this.callbacks.onMoveEnd(
       {
         nw: { lat: b.getNorth(), lon: b.getWest() },
         se: { lat: b.getSouth(), lon: b.getEast() },
       },
-      zoom,
+      this.map.getZoom(),
     )
   }
 
   setTrees(trees: Tree[]): void {
-    this.markerLayer.clearLayers()
+    this.clusterLayer.clearLayers()
     for (const tree of trees) {
-      L.circleMarker([tree.lat, tree.lon], {
-        radius: 5,
-        fillColor: '#52b788',
-        color: '#2d6a4f',
-        weight: 1,
-        fillOpacity: 0.75,
-      })
+      if (!tree.species_binomial) continue
+      L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
         .on('click', () => this.callbacks.onMarkerClick(tree))
-        .addTo(this.markerLayer)
+        .addTo(this.clusterLayer)
     }
   }
 
   highlightSpecies(_species: string | null): void {
-    // Step 6/8
+    // Step 8
   }
 
   destroy(): void {

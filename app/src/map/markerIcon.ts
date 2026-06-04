@@ -1,0 +1,40 @@
+import L from 'leaflet'
+
+function speciesCode(binomial: string): string {
+  const parts = binomial.trim().split(/\s+/)
+  const genus = parts[0]
+  // "ACER × FREEMANII" → parts[1] is '×', epithet is parts[2]
+  const epithet = parts[1] === '×' ? parts[2] : parts[1]
+
+  const g1 = genus[0]?.toUpperCase() ?? '?'
+  const g2 = genus[1]?.toLowerCase() ?? '?'
+  if (!epithet) return `${g1}${g2}??`
+
+  const e1 = epithet[0]?.toUpperCase() ?? '?'
+  const e2 = epithet[1]?.toLowerCase() ?? '?'
+  return `${g1}${g2}${e1}${e2}`
+}
+
+function buildDivIcon(code: string): L.DivIcon {
+  const r = 14
+  const d = r * 2
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}">` +
+    `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#52b788" stroke="#2d6a4f" stroke-width="1.5"/>` +
+    `<text x="${r}" y="${r + 4}" font-family="Arial,sans-serif" font-size="9"` +
+    ` font-weight="bold" text-anchor="middle" fill="white">${code}</text>` +
+    `</svg>`
+  return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
+}
+
+const iconCache = new Map<string, L.DivIcon>()
+
+export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
+  const code = speciesCode(speciesBinomial)
+  let icon = iconCache.get(code)
+  if (!icon) {
+    icon = buildDivIcon(code)
+    iconCache.set(code, icon)
+  }
+  return icon
+}

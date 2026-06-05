@@ -52,7 +52,7 @@ export function Popup({ onCenter }: Props) {
     : tree.species
 
   return (
-    <div className="absolute bottom-4 right-4 z-[1000] w-72 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
+    <div className="absolute bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-[1000] w-72 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
       <div className="flex items-start justify-between gap-2 px-4 pt-4 pb-2">
         <div>
           <p className="font-semibold text-sm leading-snug italic">{displayName}</p>

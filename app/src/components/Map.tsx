@@ -3,6 +3,7 @@ import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { Popup } from './Popup'
+import { LocationButton } from './LocationButton'
 
 export function Map() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -29,6 +30,10 @@ export function Map() {
         z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
       </div>
       <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
+      <LocationButton onLocate={(lat, lon) => {
+        controllerRef.current?.flyToLocation(lat, lon)
+        controllerRef.current?.setLocationMarker(lat, lon)
+      }} />
     </div>
   )
 }

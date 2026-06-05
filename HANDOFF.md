@@ -758,17 +758,17 @@ Clicking a tree marker opens the React popup with full details and Wikipedia
 link. Non-matching species markers are downlighted. Clicking the same tree
 or closing the popup resets all markers.
 
-### Step 8 `[ ]` — Info overlay
-Build the React info overlay: tree count + expandable species list with per-
-species counts. Wire to React state so it updates on every map move. Clicking
-a species triggers downlight (all other markers dimmed).
-
-### Step 9 `[ ]` — Current location button
+### Step 8 `[x]` — Current location button
 Add `LocationButton.tsx` and wire it into `Map.tsx`. Implement
 `flyToLocation` and `setLocationMarker` on `MapController`. The button
 must handle all three states (idle / loading / error) and the location
 dot must appear and update correctly. Confirm the feature works end-to-end
 in the browser.
+
+### Step 9 `[ ]` — Info overlay
+Build the React info overlay: tree count + expandable species list with per-
+species counts. Wire to React state so it updates on every map move. Clicking
+a species triggers downlight (all other markers dimmed).
 
 ### Step 10 `[ ]` — Polish
 Loading indicator while fetching. "Zoom in to see trees" message when

@@ -83,6 +83,28 @@ export class MapController {
     this.map?.panTo([lat, lon])
   }
 
+  flyToLocation(lat: number, lon: number): void {
+    this.map?.flyTo([lat, lon], 16)
+  }
+
+  private locationMarker: L.CircleMarker | null = null
+
+  setLocationMarker(lat: number, lon: number): void {
+    if (!this.map) return
+    if (this.locationMarker) {
+      this.locationMarker.setLatLng([lat, lon])
+    } else {
+      this.locationMarker = L.circleMarker([lat, lon], {
+        radius: 8,
+        fillColor: '#3B82F6',
+        fillOpacity: 1,
+        color: '#ffffff',
+        weight: 2,
+        interactive: false,
+      }).addTo(this.map)
+    }
+  }
+
   highlightSpecies(species: string | null): void {
     this.currentHighlight = species
     for (const { m, species: s } of this.markers) {

@@ -4,6 +4,7 @@ import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { Popup } from './Popup'
 import { LocationButton } from './LocationButton'
+import { FullscreenButton } from './FullscreenButton'
 
 export function Map() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -16,6 +17,8 @@ export function Map() {
     ? `[${currentCenter[0].toFixed(4)}, ${currentCenter[1].toFixed(4)}]`
     : ''
 
+  const showDebug = import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1'
+
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
@@ -26,10 +29,13 @@ export function Map() {
           </div>
         </div>
       )}
-      <div className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
-        z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
-      </div>
+      {showDebug && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
+          z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
+        </div>
+      )}
       <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
+      <FullscreenButton />
       <LocationButton onLocate={(lat, lon) => {
         controllerRef.current?.flyToLocation(lat, lon)
         controllerRef.current?.setLocationMarker(lat, lon)

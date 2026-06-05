@@ -10,3 +10,11 @@ export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap
 export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual
 
 export const API_LIMIT = 20000
+
+// Override with VITE_API_BASE (e.g. './api' in production) when needed.
+const envApiBase = import.meta.env.VITE_API_BASE?.trim()
+export const API_BASE = envApiBase
+	? envApiBase.replace(/\/$/, '')
+	: import.meta.env.BASE_URL === '/'
+		? '/api'
+		: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api`

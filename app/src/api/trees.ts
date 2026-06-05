@@ -1,8 +1,8 @@
 import type { Bbox, Tree } from '../types'
-import { API_LIMIT } from '../config'
+import { API_BASE, API_LIMIT } from '../config'
 
 export async function fetchTrees(bboxes: Bbox[], signal?: AbortSignal): Promise<Tree[]> {
-  const response = await fetch('/api/trees', {
+  const response = await fetch(`${API_BASE}/trees`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

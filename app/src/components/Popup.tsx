@@ -9,12 +9,20 @@ function wikiUrl(binomial: string): string {
   return `https://en.wikipedia.org/wiki/${slug}`
 }
 
-function Row({ label, value }: { label: string; value: string | number | null | undefined }) {
+function Row({
+  label,
+  value,
+  valueClassName,
+}: {
+  label: string
+  value: string | number | null | undefined
+  valueClassName?: string
+}) {
   if (value == null || value === '') return null
   return (
     <div className="flex gap-2 text-sm">
       <span className="text-muted-foreground w-32 shrink-0">{label}</span>
-      <span className="font-medium">{value}</span>
+      <span className={`font-medium ${valueClassName ?? ''}`}>{value}</span>
     </div>
   )
 }
@@ -72,7 +80,7 @@ export function Popup({ onCenter }: Props) {
 
       <div className="px-4 pb-3 space-y-1 border-t pt-2">
         <Row label="Geplant" value={tree.year_planted} />
-        <Row label="Straat" value={tree.street} />
+        <Row label="Straat" value={tree.street.toLowerCase()} valueClassName="capitalize" />
         <Row
           label="Stamdiameter"
           value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null}

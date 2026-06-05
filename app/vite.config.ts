@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  // Use relative asset URLs in production so the app can be served from a subfolder.
+  base: mode === 'production' ? './' : '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -24,4 +26,4 @@ export default defineConfig({
       '/api': 'http://localhost:8000',
     },
   },
-})
+}))

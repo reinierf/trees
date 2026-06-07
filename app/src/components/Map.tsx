@@ -1,14 +1,37 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { Popup } from './Popup'
 import { LocationButton } from './LocationButton'
 import { FullscreenButton } from './FullscreenButton'
+import type { City } from '../types'
 
-export function Map() {
+interface Props {
+  city: City
+  cities: City[]
+}
+
+function pickCity(lat: number, lon: number, cities: City[]): string {
+  const contained = cities.filter(
+    (c) => lat >= c.bbox.s && lat <= c.bbox.n && lon >= c.bbox.w && lon <= c.bbox.e,
+  )
+  if (contained.length === 1) return contained[0].id
+  // Euclidean distance in degrees is fine for Netherlands-scale distances
+  let nearest = cities[0]
+  let minDist = Infinity
+  for (const c of cities) {
+    const d = Math.hypot(lat - c.center[0], lon - c.center[1])
+    if (d < minDist) { minDist = d; nearest = c }
+  }
+  return nearest.id
+}
+
+export function Map({ city, cities }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const controllerRef = useMap(containerRef)
+  const controllerRef = useMap(containerRef, city)
+  const navigate = useNavigate()
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
   const currentZoom = useStore((s) => s.currentZoom)
   const currentCenter = useStore((s) => s.currentCenter)
@@ -37,8 +60,13 @@ export function Map() {
       <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <FullscreenButton />
       <LocationButton onLocate={(lat, lon) => {
-        controllerRef.current?.flyToLocation(lat, lon)
-        controllerRef.current?.setLocationMarker(lat, lon)
+        const pickedCityId = pickCity(lat, lon, cities)
+        if (pickedCityId !== city.id) {
+          navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
+        } else {
+          controllerRef.current?.flyToLocation(lat, lon)
+          controllerRef.current?.setLocationMarker(lat, lon)
+        }
       }} />
     </div>
   )

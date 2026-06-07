@@ -1,7 +1,7 @@
 import L from 'leaflet'
 import 'leaflet.markercluster'
 import type { Bbox, Tree } from '../types'
-import { MAP_CENTER, MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
+import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { createSpeciesIcon, createClusterIcon, createSelectedSpeciesIcon } from './markerIcon'
 
 interface Callbacks {
@@ -28,8 +28,8 @@ export class MapController {
         })
     }
 
-    init(el: HTMLDivElement, center?: [number, number], zoom?: number): void {
-        this.map = L.map(el, { center: center ?? MAP_CENTER, zoom: zoom ?? MAP_ZOOM })
+    init(el: HTMLDivElement, center: [number, number], zoom?: number): void {
+        this.map = L.map(el, { center, zoom: zoom ?? MAP_ZOOM })
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',

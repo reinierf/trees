@@ -1,18 +1,18 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { fetchTrees } from '../api/trees'
 import { useStore } from '../store'
-import { DEBOUNCE_MS, MAX_VIEWPORT_DEG2, MIN_FETCH_ZOOM } from '../config'
-import type { Bbox } from '../types'
+import { DEBOUNCE_MS, MAP_ZOOM, MAX_VIEWPORT_DEG2, MIN_FETCH_ZOOM } from '../config'
+import type { Bbox, City } from '../types'
 
-const POSITION_KEY = 'map-position'
 const POSITION_TTL = 86_400_000 // 1 day
 
-function loadSavedPosition(): { center: [number, number]; zoom: number } | null {
+function loadSavedPosition(cityId: string): { center: [number, number]; zoom: number } | null {
   try {
-    const raw = localStorage.getItem(POSITION_KEY)
+    const raw = localStorage.getItem(`map-position-${cityId}`)
     if (!raw) return null
     const { lat, lon, zoom, savedAt } = JSON.parse(raw)
     if (Date.now() - savedAt > POSITION_TTL) return null
@@ -22,13 +22,17 @@ function loadSavedPosition(): { center: [number, number]; zoom: number } | null 
   }
 }
 
-function savePosition(center: [number, number], zoom: number): void {
+function savePosition(cityId: string, center: [number, number], zoom: number): void {
   try {
-    localStorage.setItem(POSITION_KEY, JSON.stringify({ lat: center[0], lon: center[1], zoom, savedAt: Date.now() }))
+    localStorage.setItem(
+      `map-position-${cityId}`,
+      JSON.stringify({ lat: center[0], lon: center[1], zoom, savedAt: Date.now() }),
+    )
   } catch {}
 }
 
-export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
+export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City) {
+  const [, setSearchParams] = useSearchParams()
   const controllerRef = useRef<MapController | null>(null)
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -76,7 +80,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       setIsLoading(true)
       try {
         const bboxes = cache.mergeMissingToBboxes(missing)
-        const trees = await fetchTrees(bboxes, signal)
+        const trees = await fetchTrees(bboxes, city.id, signal)
         cache.storeFetchResult(missing, trees)
         setVisibleTrees(cache.getVisibleTrees(bounds))
       } catch (e) {
@@ -86,12 +90,23 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       }
     }
 
-    const saved = loadSavedPosition()
+    // Read fly-to coords passed via URL when location button switches city
+    const hash = window.location.hash
+    const qIdx = hash.indexOf('?')
+    let flyTarget: { lat: number; lon: number } | null = null
+    if (qIdx !== -1) {
+      const params = new URLSearchParams(hash.slice(qIdx))
+      const lat = parseFloat(params.get('lat') ?? '')
+      const lon = parseFloat(params.get('lon') ?? '')
+      if (!isNaN(lat) && !isNaN(lon)) flyTarget = { lat, lon }
+    }
+
+    const saved = loadSavedPosition(city.id)
     const controller = new MapController({
       onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
         setCurrentCenter(center)
-        savePosition(center, zoom)
+        savePosition(city.id, center, zoom)
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
@@ -111,16 +126,26 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
       },
     })
 
-    controller.init(el, saved?.center, saved?.zoom)
+    controller.init(el, saved?.center ?? city.center, saved?.zoom ?? MAP_ZOOM)
     controllerRef.current = controller
+
+    if (flyTarget) {
+      controller.flyToLocation(flyTarget.lat, flyTarget.lon)
+      controller.setLocationMarker(flyTarget.lat, flyTarget.lon)
+      setSearchParams({}, { replace: true })
+    }
 
     return () => {
       if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
       abortController?.abort()
       controller.destroy()
       controllerRef.current = null
+      // Clear selection state so stale popup doesn't linger on city switch
+      setSelectedTree(null)
+      setSelectedSpecies(null)
+      setVisibleTrees([])
     }
-  }, [setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
+  }, [city, setSearchParams, setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)

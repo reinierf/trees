@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { fetchTrees } from '../api/trees'
 import { useStore } from '../store'
-import { DEBOUNCE_MS, MAP_ZOOM, MAX_VIEWPORT_DEG2, MIN_FETCH_ZOOM } from '../config'
+import { DEBOUNCE_MS, MAP_ZOOM, MAX_VIEWPORT_DEG2, MIN_CITY_SWITCH_ZOOM, MIN_FETCH_ZOOM } from '../config'
 import type { Bbox, City } from '../types'
 
 const POSITION_TTL = 86_400_000 // 1 day
@@ -31,7 +31,8 @@ function savePosition(cityId: string, center: [number, number], zoom: number): v
   } catch {}
 }
 
-export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City) {
+export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
+  const navigate = useNavigate()
   const [, setSearchParams] = useSearchParams()
   const controllerRef = useRef<MapController | null>(null)
   const tileCacheRef = useRef(new TileCache())
@@ -101,12 +102,37 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       if (!isNaN(lat) && !isNaN(lon)) flyTarget = { lat, lon }
     }
 
-    const saved = loadSavedPosition(city.id)
+    const rawSaved = loadSavedPosition(city.id)
+    const saved = rawSaved &&
+      rawSaved.center[0] >= city.bbox.s && rawSaved.center[0] <= city.bbox.n &&
+      rawSaved.center[1] >= city.bbox.w && rawSaved.center[1] <= city.bbox.e
+      ? rawSaved : null
     const controller = new MapController({
       onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
         setCurrentCenter(center)
+
+        if (zoom >= MIN_CITY_SWITCH_ZOOM) {
+          const [lat, lon] = center
+          const inCurrentCity =
+            lat >= city.bbox.s && lat <= city.bbox.n &&
+            lon >= city.bbox.w && lon <= city.bbox.e
+          if (!inCurrentCity) {
+            const target = cities.find(
+              (c) => c.id !== city.id &&
+                lat >= c.bbox.s && lat <= c.bbox.n &&
+                lon >= c.bbox.w && lon <= c.bbox.e,
+            )
+            if (target) {
+              savePosition(target.id, center, zoom)
+              navigate(`/${target.id}`)
+              return
+            }
+          }
+        }
+
         savePosition(city.id, center, zoom)
+
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
@@ -145,7 +171,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       setSelectedSpecies(null)
       setVisibleTrees([])
     }
-  }, [city, setSearchParams, setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
+  }, [city, cities, navigate, setSearchParams, setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)

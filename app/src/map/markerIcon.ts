@@ -27,7 +27,30 @@ function buildDivIcon(code: string): L.DivIcon {
   return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
 }
 
+function buildSelectedDivIcon(code: string): L.DivIcon {
+  const r = 17
+  const d = r * 2
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" style="display:block">` +
+    `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#81e0b4" stroke="#2d6a4f" stroke-width="1.5"/>` +
+    `<text x="${r}" y="${r + 4}" font-family="Arial" font-size="10"` +
+    ` font-weight="bold" text-anchor="middle" fill="#000000">${code}</text>` +
+    `</svg>`
+  return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
+}
+
 const iconCache = new Map<string, L.DivIcon>()
+const selectedIconCache = new Map<string, L.DivIcon>()
+
+export function createSelectedSpeciesIcon(speciesBinomial: string): L.DivIcon {
+  const code = speciesCode(speciesBinomial)
+  let icon = selectedIconCache.get(code)
+  if (!icon) {
+    icon = buildSelectedDivIcon(code)
+    selectedIconCache.set(code, icon)
+  }
+  return icon
+}
 
 export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
   const code = speciesCode(speciesBinomial)

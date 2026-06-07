@@ -42,6 +42,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const selectedSpecies = useStore((s) => s.selectedSpecies)
+  const selectedTree = useStore((s) => s.selectedTree)
 
   useEffect(() => {
     const el = containerRef.current
@@ -128,6 +129,10 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     controllerRef.current?.highlightSpecies(selectedSpecies)
   }, [selectedSpecies])
+
+  useEffect(() => {
+    controllerRef.current?.highlightTree(selectedTree)
+  }, [selectedTree])
 
   return controllerRef
 }

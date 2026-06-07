@@ -29,3 +29,10 @@ export interface SpeciesItem {
   species: string
   name_indigenous: string
 }
+
+export interface City {
+  id: string
+  name: string
+  center: [number, number]
+  bbox: { s: number; n: number; w: number; e: number }
+}

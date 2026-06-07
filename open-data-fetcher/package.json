@@ -1,11 +1,11 @@
 {
-  "name": "bomen-rotterdam",
-  "version": "1.0.0",
-  "description": "Fetch Rotterdam municipal trees from the city open WFS service",
+  "name": "bomen-fetcher",
+  "version": "2.0.0",
+  "description": "Fetch municipal tree datasets for Dutch cities",
   "type": "module",
-  "main": "bomen.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node bomen.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "sql.js": "^1.14.1",

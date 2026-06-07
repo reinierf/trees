@@ -4,6 +4,7 @@ import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { Popup } from './Popup'
+import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
 import { FullscreenButton } from './FullscreenButton'
 import type { City } from '../types'
@@ -30,7 +31,7 @@ function pickCity(lat: number, lon: number, cities: City[]): string {
 
 export function Map({ city, cities }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const controllerRef = useMap(containerRef, city)
+  const controllerRef = useMap(containerRef, city, cities)
   const navigate = useNavigate()
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
   const currentZoom = useStore((s) => s.currentZoom)
@@ -59,6 +60,7 @@ export function Map({ city, cities }: Props) {
       )}
       <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <FullscreenButton />
+      <CityButton city={city} cities={cities} />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {

@@ -28,7 +28,7 @@ function savePosition(cityId: string, center: [number, number], zoom: number): v
       `map-position-${cityId}`,
       JSON.stringify({ lat: center[0], lon: center[1], zoom, savedAt: Date.now() }),
     )
-  } catch {}
+  } catch {} // eslint-disable-line no-empty
 }
 
 export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
@@ -186,7 +186,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       closePopup()
       setVisibleTrees([])
     }
-  }, [city, cities, navigate, setSearchParams, openTreeDetail, openSpeciesDetail, closePopup, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
+  }, [city, cities, navigate, setSearchParams, openTreeDetail, openSpeciesDetail, closePopup, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)

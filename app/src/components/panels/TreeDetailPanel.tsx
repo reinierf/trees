@@ -55,8 +55,8 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
             {displayName}{cultivar}
           </button>
           {tree.name_indigenous && (
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {tree.name_indigenous.toLowerCase()}
+            <p className="text-sm mt-0.5">
+              {capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
             </p>
           )}
         </div>

@@ -75,6 +75,42 @@ function db(string $city): PDO
     return $pool[$city];
 }
 
+/**
+ * Returns species_names keyed by uppercase species_binomial.
+ * Each value is ['name_indigenous' => ..., 'name_indigenous_alt' => ..., 'source' => ...].
+ * Returns an empty array if species_names.db is not present.
+ */
+function species_names(): array
+{
+    static $map;
+    if ($map !== null) return $map;
+
+    $path = __DIR__ . '/species_names.db';
+    if (!file_exists($path)) { $map = []; return $map; }
+
+    $pdo = new PDO('sqlite:' . $path, null, null, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    $map = [];
+    foreach ($pdo->query('SELECT species_binomial, name_indigenous, name_indigenous_alt, source FROM species_names') as $row) {
+        $map[strtoupper($row['species_binomial'])] = [
+            'name_indigenous'     => $row['name_indigenous'],
+            'name_indigenous_alt' => $row['name_indigenous_alt'],
+            'source'              => $row['source'],
+        ];
+    }
+    return $map;
+}
+
+function enrich_name(array &$row): void
+{
+    $key = strtoupper($row['species_binomial'] ?? '');
+    if ($key === '') return;
+    $entry = species_names()[$key] ?? null;
+    if ($entry) $row['name_indigenous'] = $entry['name_indigenous'];
+}
+
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 function handle_cities(): void
@@ -169,6 +205,7 @@ function query_bbox(string $city, array $bboxes, ?string $species, bool $strict,
     foreach ($stmt->fetchAll() as $row) {
         if (!isset($seen[$row['id']])) {
             $seen[$row['id']] = true;
+            enrich_name($row);
             $rows[]           = cast_row($row);
         }
     }
@@ -207,7 +244,16 @@ function handle_species(): void
         $stmt->execute([':q' => $pattern, ':q2' => $pattern]);
     }
 
-    respond(200, $stmt->fetchAll());
+    $lookup = species_names();
+    $rows   = [];
+    foreach ($stmt->fetchAll() as $row) {
+        $key = strtoupper($row['species_binomial'] ?? '');
+        if ($key !== '' && isset($lookup[$key])) {
+            $row['name_indigenous'] = $lookup[$key]['name_indigenous'];
+        }
+        $rows[] = $row;
+    }
+    respond(200, $rows);
 }
 
 function handle_health(): void
@@ -226,7 +272,21 @@ function handle_health(): void
             $result[$city['id']] = ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-    respond(200, ['cities' => $result]);
+
+    $snPath = __DIR__ . '/species_names.db';
+    if (!file_exists($snPath)) {
+        $snStatus = ['status' => 'missing'];
+    } else {
+        try {
+            $pdo     = new PDO('sqlite:' . $snPath);
+            $row     = $pdo->query('SELECT COUNT(*) AS total FROM species_names')->fetch(PDO::FETCH_ASSOC);
+            $snStatus = ['status' => 'ok', 'entries' => (int) $row['total']];
+        } catch (Throwable $e) {
+            $snStatus = ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    respond(200, ['cities' => $result, 'species_names' => $snStatus]);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

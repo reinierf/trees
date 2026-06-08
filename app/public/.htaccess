@@ -1,0 +1,7 @@
+Options -MultiViews
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI}      ^(.*)/([a-z][a-z0-9-]+)/?$
+RewriteRule ^                   %1/#/%2 [R=301,L,NE]

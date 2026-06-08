@@ -6,9 +6,10 @@ import type { City } from '../types'
 interface Props {
   city: City
   cities: City[]
+  onCurrentCity: () => void
 }
 
-export function CityButton({ city, cities }: Props) {
+export function CityButton({ city, cities, onCurrentCity }: Props) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const ref = useRef<HTMLDivElement>(null)
@@ -38,7 +39,7 @@ export function CityButton({ city, cities }: Props) {
           {cities.map((c) => (
             <button
               key={c.id}
-              onClick={() => { navigate(`/${c.id}`, { state: { fromPicker: true } }); setOpen(false) }}
+              onClick={() => { if (c.id === city.id) { onCurrentCity(); setOpen(false) } else { navigate(`/${c.id}`, { state: { fromPicker: true } }); setOpen(false) } }}
               className={[
                 'block w-full text-left px-4 py-2 text-sm whitespace-nowrap transition-colors',
                 c.id === city.id

@@ -34,6 +34,7 @@ export function Map({ city, cities }: Props) {
   const controllerRef = useMap(containerRef, city, cities)
   const navigate = useNavigate()
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
+  const isLoading = useStore((s) => s.isLoading)
   const currentZoom = useStore((s) => s.currentZoom)
   const currentCenter = useStore((s) => s.currentCenter)
 
@@ -53,6 +54,16 @@ export function Map({ city, cities }: Props) {
           </div>
         </div>
       )}
+      {isLoading && !tooZoomedOut && (
+        <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
+          <div className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md">
+            <svg className="animate-spin h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+          </div>
+        </div>
+      )}
       {showDebug && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
@@ -60,7 +71,7 @@ export function Map({ city, cities }: Props) {
       )}
       <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <FullscreenButton />
-      <CityButton city={city} cities={cities} />
+      <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {

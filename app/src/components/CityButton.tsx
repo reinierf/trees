@@ -1,6 +1,6 @@
+import { Signpost } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2 } from 'lucide-react'
 import type { City } from '../types'
 
 interface Props {
@@ -31,7 +31,7 @@ export function CityButton({ city, cities }: Props) {
         className="rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"
         title={city.name}
       >
-        <Building2 className="w-4 h-4" />
+        <Signpost className="w-4 h-4" />
       </button>
       {open && (
         <div className="absolute left-0 mt-1 min-w-max bg-white rounded-lg shadow-lg overflow-hidden">

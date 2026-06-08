@@ -1,4 +1,4 @@
-import { ChevronRight, Info } from 'lucide-react'
+import { ChevronRight, GraduationCap, Info, Leaf } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
@@ -6,6 +6,7 @@ import { CloseButton, PopupShell } from '../InfoPopup'
 
 let savedScroll = 0
 let savedKey = ''
+let savedNameMode: 'scientific' | 'indigenous' = 'scientific'
 
 interface Props {
   expandedSpecies?: string
@@ -20,6 +21,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
   const closePopup = useStore((s) => s.closePopup)
 
   const [openSpecies, setOpenSpecies] = useState<string | null>(expandedSpecies ?? null)
+  const [nameMode, setNameMode] = useState<'scientific' | 'indigenous'>(savedNameMode)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const selectedRowRef = useRef<HTMLDivElement>(null)
@@ -30,8 +32,13 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
       const key = tree.species_binomial ?? tree.species
       counts.set(key, (counts.get(key) ?? 0) + 1)
     }
+    const indigenous = new Map<string, string | null>()
+    for (const tree of visibleTrees) {
+      const key = tree.species_binomial ?? tree.species
+      if (!indigenous.has(key)) indigenous.set(key, tree.name_indigenous)
+    }
     return Array.from(counts.entries())
-      .map(([name, count]) => ({ name, count }))
+      .map(([name, count]) => ({ name, count, nameIndigenous: indigenous.get(name) ?? null }))
       .sort((a, b) => a.count - b.count || a.name.localeCompare(b.name))
   }, [visibleTrees])
 
@@ -50,6 +57,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
       savedScroll = scrollRef.current.scrollTop
       savedKey = listKey
     }
+    savedNameMode = nameMode
     closePopup()
   }
 
@@ -85,15 +93,34 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
           Species in view{' '}
           <span className="text-muted-foreground font-normal">({speciesList.length})</span>
         </p>
-        <CloseButton onClick={handleClose} />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center border rounded overflow-hidden">
+            <button
+              title="Scientific names"
+              onClick={() => setNameMode('scientific')}
+              className={`p-1 ${nameMode === 'scientific' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <GraduationCap size={15} />
+            </button>
+            <button
+              title="Indigenous names"
+              onClick={() => setNameMode('indigenous')}
+              className={`p-1 ${nameMode === 'indigenous' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              <Leaf size={15} />
+            </button>
+          </div>
+          <CloseButton onClick={handleClose} />
+        </div>
       </div>
       <div ref={scrollRef} className="overflow-y-auto max-h-[60vh] border-t">
         {speciesList.length === 0 ? (
           <p className="px-4 py-3 text-sm text-muted-foreground">No trees in view</p>
         ) : (
-          speciesList.map(({ name, count }) => {
+          speciesList.map(({ name, count, nameIndigenous }) => {
             const isOpen = openSpecies === name
             const trees = treesBySpecies.get(name) ?? []
+            const displayName = nameMode === 'indigenous' && nameIndigenous ? nameIndigenous : name
 
             return (
               <div key={name}>
@@ -101,7 +128,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
                   onClick={() => toggleSpecies(name)}
                   className={`flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-gray-50 text-left ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}
                 >
-                  <span className="italic min-w-0 truncate pr-1">{capitalizeFirst(name)}</span>
+                  <span className={`${nameMode === 'scientific' ? 'italic' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>
                   <div className="flex items-center gap-2 shrink-0 ml-3">
                     <span className="text-muted-foreground text-xs">{count}</span>
                     <ChevronRight

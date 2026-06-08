@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { fetchTrees } from '../api/trees'
 import { useStore } from '../store'
-import { DEBOUNCE_MS, MAP_ZOOM, MAX_VIEWPORT_DEG2, MIN_CITY_SWITCH_ZOOM, MIN_FETCH_ZOOM } from '../config'
+import { DEBOUNCE_MS, MAP_ZOOM, MAX_VIEWPORT_DEG2, MIN_CITY_SWITCH_ZOOM, MIN_FETCH_ZOOM, RESTORE_CITY_POSITION } from '../config'
 import type { Bbox, City } from '../types'
 
 const POSITION_TTL = 86_400_000 // 1 day
@@ -33,6 +33,7 @@ function savePosition(cityId: string, center: [number, number], zoom: number): v
 
 export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
   const navigate = useNavigate()
+  const location = useLocation()
   const [, setSearchParams] = useSearchParams()
   const controllerRef = useRef<MapController | null>(null)
   const tileCacheRef = useRef(new TileCache())
@@ -102,7 +103,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       if (!isNaN(lat) && !isNaN(lon)) flyTarget = { lat, lon }
     }
 
-    const rawSaved = loadSavedPosition(city.id)
+    // fromPicker is true only when CityButton triggered this navigation.
+    // Clear it from history immediately so a page reload gets normal (saved) behavior.
+    const fromPicker = (location.state as { fromPicker?: boolean } | null)?.fromPicker === true
+    if (fromPicker) window.history.replaceState({ ...window.history.state, usr: null }, '')
+
+    const useSaved = fromPicker ? RESTORE_CITY_POSITION : true
+    const rawSaved = useSaved ? loadSavedPosition(city.id) : null
     const saved = rawSaved &&
       rawSaved.center[0] >= city.bbox.s && rawSaved.center[0] <= city.bbox.n &&
       rawSaved.center[1] >= city.bbox.w && rawSaved.center[1] <= city.bbox.e

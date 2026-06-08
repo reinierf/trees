@@ -38,7 +38,7 @@ export function CityButton({ city, cities }: Props) {
           {cities.map((c) => (
             <button
               key={c.id}
-              onClick={() => { navigate(`/${c.id}`); setOpen(false) }}
+              onClick={() => { navigate(`/${c.id}`, { state: { fromPicker: true } }); setOpen(false) }}
               className={[
                 'block w-full text-left px-4 py-2 text-sm whitespace-nowrap transition-colors',
                 c.id === city.id

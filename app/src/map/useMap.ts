@@ -15,6 +15,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const location = useLocation()
   const [, setSearchParams] = useSearchParams()
   const controllerRef = useRef<MapController | null>(null)
+  const prevPopupKind = useRef<string | undefined>(undefined)
+  const prevSelectedTreeId = useRef<string | undefined>(undefined)
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -105,6 +107,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     const pv = popupView
     let tree = null
     let species = null
+    let animate = false
 
     if (pv?.kind === 'tree-detail') {
       tree = pv.tree
@@ -113,10 +116,14 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       species = pv.expandedSpecies
       if (pv.selectedTreeId) {
         tree = visibleTrees.find((t) => t.id === pv.selectedTreeId) ?? null
+        animate = prevPopupKind.current === 'species-list' && pv.selectedTreeId !== prevSelectedTreeId.current
       }
     }
 
-    controllerRef.current?.highlightTree(tree)
+    prevPopupKind.current = pv?.kind
+    prevSelectedTreeId.current = pv?.kind === 'species-list' ? pv.selectedTreeId : undefined
+
+    controllerRef.current?.highlightTree(tree, animate)
     controllerRef.current?.highlightSpecies(species)
   }, [popupView, visibleTrees])
 

@@ -36,7 +36,7 @@ function buildSelectedDivIcon(code: string): L.DivIcon {
     `<text x="${r}" y="${r + 4}" font-family="Arial" font-size="10"` +
     ` font-weight="bold" text-anchor="middle" fill="#000000">${code}</text>` +
     `</svg>`
-  return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
+  return L.divIcon({ html: `<div class="selected-marker-inner">${svg}</div>`, className: '', iconSize: [d, d], iconAnchor: [r, r] })
 }
 
 const iconCache = new Map<string, L.DivIcon>()

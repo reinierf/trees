@@ -108,7 +108,7 @@ export class MapController {
         }
     }
 
-    highlightTree(tree: Tree | null): void {
+    highlightTree(tree: Tree | null, animate = false): void {
         if (!this.map) return
         if (!tree) {
             this.selectedRing?.remove()
@@ -125,6 +125,16 @@ export class MapController {
                 pane: 'selectionPane',
             }).addTo(this.map)
         }
+        if (animate) this.animateSelectedRing()
+    }
+
+    private animateSelectedRing(): void {
+        const inner = this.selectedRing?.getElement()?.querySelector<HTMLElement>('.selected-marker-inner')
+        if (!inner) return
+        inner.classList.remove('marker-pop')
+        void inner.offsetWidth
+        inner.classList.add('marker-pop')
+        inner.addEventListener('animationend', () => inner.classList.remove('marker-pop'), { once: true })
     }
 
     highlightSpecies(species: string | null): void {

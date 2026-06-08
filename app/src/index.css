@@ -117,6 +117,16 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes marker-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.7); }
+  100% { transform: scale(1); }
+}
+
+.selected-marker-inner.marker-pop {
+  animation: marker-pop 0.45s ease-out;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

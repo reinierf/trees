@@ -5,9 +5,9 @@ export const DEBOUNCE_MS = 300
 export const MIN_FETCH_ZOOM = 16        // zoom level below which fetch is skipped and "zoom in" banner shows
 export const MIN_CITY_SWITCH_ZOOM = 11  // zoom level below which auto city-switching is suppressed
 
-export const RESTORE_CITY_POSITION = true  // restore last saved position when switching city; false always opens at city center
+export const RESTORE_CITY_POSITION = false  // restore last saved position when switching city; false always opens at city center
 
-export const MAP_ZOOM = 17              // initial map zoom level
+export const MAP_ZOOM = 14              // initial map zoom level
 export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap
 export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual
 

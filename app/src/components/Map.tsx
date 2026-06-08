@@ -55,13 +55,11 @@ export function Map({ city, cities }: Props) {
         </div>
       )}
       {isLoading && !tooZoomedOut && (
-        <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
-          <div className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md">
-            <svg className="animate-spin h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-            </svg>
-          </div>
+        <div className="absolute inset-x-0 top-3 flex justify-center pointer-events-none z-[1000]">
+          <svg className="animate-spin h-5 w-5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]" style={{ color: '#333' }} viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+            <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z" />
+          </svg>
         </div>
       )}
       {showDebug && (

@@ -39,16 +39,16 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const setSelectedTree = useStore((s) => s.setSelectedTree)
-  const setSelectedSpecies = useStore((s) => s.setSelectedSpecies)
+  const openTreeDetail = useStore((s) => s.openTreeDetail)
+  const openSpeciesDetail = useStore((s) => s.openSpeciesDetail)
+  const closePopup = useStore((s) => s.closePopup)
   const setVisibleTrees = useStore((s) => s.setVisibleTrees)
   const setIsLoading = useStore((s) => s.setIsLoading)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
   const visibleTrees = useStore((s) => s.visibleTrees)
-  const selectedSpecies = useStore((s) => s.selectedSpecies)
-  const selectedTree = useStore((s) => s.selectedTree)
+  const popupView = useStore((s) => s.popupView)
 
   useEffect(() => {
     const el = containerRef.current
@@ -143,17 +143,28 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
       },
       onMapClick: () => {
-        setSelectedTree(null)
-        setSelectedSpecies(null)
+        const current = useStore.getState().popupView
+        if (current?.kind === 'tree-detail') {
+          if (current.fromSpecies) {
+            openSpeciesDetail(current.fromSpecies)
+          } else {
+            closePopup()
+          }
+        }
       },
       onMarkerClick: (tree) => {
-        const current = useStore.getState().selectedTree
-        if (current?.id === tree.id) {
-          setSelectedTree(null)
-          setSelectedSpecies(null)
+        const current = useStore.getState().popupView
+        if (current?.kind === 'tree-detail' && current.tree.id === tree.id) {
+          if (current.fromSpecies) {
+            openSpeciesDetail(current.fromSpecies)
+          } else {
+            closePopup()
+          }
         } else {
-          setSelectedTree(tree)
-          setSelectedSpecies(tree.species_binomial)
+          const fromSpecies =
+            current?.kind === 'species-detail' ? current.species :
+            current?.kind === 'tree-detail' ? current.fromSpecies : undefined
+          openTreeDetail(tree, fromSpecies)
         }
       },
     })
@@ -172,24 +183,24 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       abortController?.abort()
       controller.destroy()
       controllerRef.current = null
-      // Clear selection state so stale popup doesn't linger on city switch
-      setSelectedTree(null)
-      setSelectedSpecies(null)
+      closePopup()
       setVisibleTrees([])
     }
-  }, [city, cities, navigate, setSearchParams, setSelectedTree, setSelectedSpecies, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
+  }, [city, cities, navigate, setSearchParams, openTreeDetail, openSpeciesDetail, closePopup, setVisibleTrees, setIsLoading, setTooZoomedOut, setCurrentZoom, setCurrentCenter])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)
   }, [visibleTrees])
 
   useEffect(() => {
-    controllerRef.current?.highlightSpecies(selectedSpecies)
-  }, [selectedSpecies])
-
-  useEffect(() => {
-    controllerRef.current?.highlightTree(selectedTree)
-  }, [selectedTree])
+    const pv = popupView
+    const tree = pv?.kind === 'tree-detail' ? pv.tree : null
+    const species =
+      pv?.kind === 'tree-detail' ? pv.tree.species_binomial :
+      pv?.kind === 'species-detail' ? pv.species : null
+    controllerRef.current?.highlightTree(tree)
+    controllerRef.current?.highlightSpecies(species)
+  }, [popupView])
 
   return controllerRef
 }

@@ -1,17 +1,23 @@
 import { create } from 'zustand'
 import type { Tree } from './types'
 
+export type PopupView =
+  | { kind: 'species-list' }
+  | { kind: 'species-detail'; species: string }
+  | { kind: 'tree-detail'; tree: Tree; fromSpecies?: string }
+
 interface AppStore {
-  selectedSpecies: string | null
-  selectedTree: Tree | null
+  popupView: PopupView | null
   visibleTrees: Tree[]
   isLoading: boolean
   tooZoomedOut: boolean
   currentZoom: number
   currentCenter: [number, number] | null
 
-  setSelectedSpecies: (s: string | null) => void
-  setSelectedTree: (t: Tree | null) => void
+  openSpeciesList: () => void
+  openSpeciesDetail: (species: string) => void
+  openTreeDetail: (tree: Tree, fromSpecies?: string) => void
+  closePopup: () => void
   setVisibleTrees: (trees: Tree[]) => void
   setIsLoading: (v: boolean) => void
   setTooZoomedOut: (v: boolean) => void
@@ -20,16 +26,17 @@ interface AppStore {
 }
 
 export const useStore = create<AppStore>((set) => ({
-  selectedSpecies: null,
-  selectedTree: null,
+  popupView: null,
   visibleTrees: [],
   isLoading: false,
   tooZoomedOut: false,
   currentZoom: 0,
   currentCenter: null,
 
-  setSelectedSpecies: (s) => set({ selectedSpecies: s }),
-  setSelectedTree: (t) => set({ selectedTree: t }),
+  openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
+  openSpeciesDetail: (species) => set({ popupView: { kind: 'species-detail', species } }),
+  openTreeDetail: (tree, fromSpecies) => set({ popupView: { kind: 'tree-detail', tree, fromSpecies } }),
+  closePopup: () => set({ popupView: null }),
   setVisibleTrees: (trees) => set({ visibleTrees: trees }),
   setIsLoading: (v) => set({ isLoading: v }),
   setTooZoomedOut: (v) => set({ tooZoomedOut: v }),

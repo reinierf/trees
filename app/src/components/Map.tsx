@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
-import { Popup } from './Popup'
+import { InfoPopup } from './InfoPopup'
+import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
 import { FullscreenButton } from './FullscreenButton'
@@ -65,9 +66,10 @@ export function Map({ city, cities }: Props) {
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
         </div>
       )}
-      <Popup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
+      <InfoPopup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <FullscreenButton />
       <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} />
+      <SpeciesButton citiesCount={cities.length} />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {

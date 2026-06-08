@@ -15,20 +15,28 @@ define('MAX_LIMIT',     20000);
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 // ── Router ────────────────────────────────────────────────────────────────────
 
-$segment = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-$route   = '/' . ltrim(substr($segment, strrpos($segment, '/api') + 4), '/');
-$method  = $_SERVER['REQUEST_METHOD'];
+try {
+    $segment = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    $route   = '/' . ltrim(substr($segment, strrpos($segment, '/api') + 4), '/');
+    $method  = $_SERVER['REQUEST_METHOD'];
 
-match ($route) {
-    '/cities' => handle_cities(),
-    '/trees'  => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
-    '/species'=> handle_species(),
-    '/health' => handle_health(),
-    default   => respond(404, ['error' => 'Unknown endpoint']),
-};
+    match ($route) {
+        '/cities' => handle_cities(),
+        '/trees'  => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
+        '/species'=> handle_species(),
+        '/health' => handle_health(),
+        default   => respond(404, ['error' => 'Unknown endpoint']),
+    };
+} catch (Throwable $e) {
+    respond(500, ['error' => $e->getMessage(), 'file' => basename($e->getFile()), 'line' => $e->getLine()]);
+}
 
 // ── City registry ─────────────────────────────────────────────────────────────
 

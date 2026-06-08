@@ -47,7 +47,7 @@ export default {
     name: 'amsterdam',
     wfsUrl: WFS_URL,
     layer: LAYER,
-    outputFile: { json: 'bomen-amsterdam.json', sqlite: 'bomen-amsterdam.db' },
+    outputFile: { json: 'amsterdam.json', sqlite: 'amsterdam.db' },
     fetchOptions: { rejectUnauthorized: false },
 
     pageParams(layer, count, startIndex) {

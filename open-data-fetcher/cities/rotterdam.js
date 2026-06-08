@@ -96,7 +96,7 @@ export default {
     name: 'rotterdam',
     wfsUrl: WFS_URL,
     layer: 'ms:obs_bmn_alg',
-    outputFile: { json: 'bomen-rotterdam.json', sqlite: 'bomen-rotterdam.db' },
+    outputFile: { json: 'rotterdam.json', sqlite: 'rotterdam.db' },
     // Rotterdam's WFS server has a certificate chain issue; encoding bug: declares UTF-8 but sends latin1.
     fetchOptions: { rejectUnauthorized: false, encoding: 'latin1' },
 

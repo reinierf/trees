@@ -50,7 +50,7 @@ export default {
     name: 'den-haag',
     wfsUrl: BASE_URL,
     layer: null,
-    outputFile: { json: 'bomen-den-haag.json', sqlite: 'bomen-den-haag.db' },
+    outputFile: { json: 'den-haag.json', sqlite: 'den-haag.db' },
     // geoservices.denhaag.nl has an incomplete certificate chain
     fetchOptions: { rejectUnauthorized: false },
 

@@ -64,7 +64,7 @@ function db(string $city): PDO
 {
     static $pool = [];
     if (isset($pool[$city])) return $pool[$city];
-    $path = __DIR__ . '/bomen-' . $city . '.db';
+    $path = __DIR__ . '/' . $city . '.db';
     if (!file_exists($path)) {
         respond(503, ['error' => "Database not found for city \"{$city}\". Run the fetcher first."]);
     }
@@ -214,7 +214,7 @@ function handle_health(): void
 {
     $result = [];
     foreach (load_cities() as $city) {
-        $path = __DIR__ . '/bomen-' . $city['id'] . '.db';
+        $path = __DIR__ . '/' . $city['id'] . '.db';
         if (!file_exists($path)) {
             $result[$city['id']] = ['status' => 'missing'];
             continue;

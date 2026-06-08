@@ -44,7 +44,7 @@ export default {
     name: 'groningen',
     wfsUrl: WFS_URL,
     layer: LAYER,
-    outputFile: { json: 'bomen-groningen.json', sqlite: 'bomen-groningen.db' },
+    outputFile: { json: 'groningen.json', sqlite: 'groningen.db' },
     // GeoServer has an incomplete certificate chain (common for Dutch municipal servers)
     fetchOptions: { rejectUnauthorized: false },
 

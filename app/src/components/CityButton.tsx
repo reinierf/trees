@@ -35,7 +35,7 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
         <Signpost className="w-4 h-4" />
       </button>
       {open && (
-        <div className="absolute left-0 mt-1 min-w-max bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="absolute left-full top-0 ml-1 min-w-max bg-white rounded-lg shadow-lg overflow-hidden">
           {cities.map((c) => (
             <button
               key={c.id}

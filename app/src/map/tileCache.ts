@@ -106,7 +106,14 @@ export class TileCache {
       // Touch for LRU: move to end of Map insertion order
       this.cache.delete(key)
       this.cache.set(key, trees)
-      for (const tree of trees) byId.set(tree.id, tree)
+      for (const tree of trees) {
+        if (
+          tree.lat >= bbox.se.lat && tree.lat <= bbox.nw.lat &&
+          tree.lon >= bbox.nw.lon && tree.lon <= bbox.se.lon
+        ) {
+          byId.set(tree.id, tree)
+        }
+      }
     }
     return [...byId.values()]
   }

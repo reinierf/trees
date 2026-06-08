@@ -112,26 +112,25 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
         setCurrentZoom(zoom)
         setCurrentCenter(center)
 
-        if (zoom >= MIN_CITY_SWITCH_ZOOM) {
-          const [lat, lon] = center
-          const inCurrentCity =
-            lat >= city.bbox.s && lat <= city.bbox.n &&
-            lon >= city.bbox.w && lon <= city.bbox.e
-          if (!inCurrentCity) {
-            const target = cities.find(
-              (c) => c.id !== city.id &&
-                lat >= c.bbox.s && lat <= c.bbox.n &&
-                lon >= c.bbox.w && lon <= c.bbox.e,
-            )
-            if (target) {
-              savePosition(target.id, center, zoom)
-              navigate(`/${target.id}`)
-              return
-            }
+        const [lat, lon] = center
+        const inCurrentCity =
+          lat >= city.bbox.s && lat <= city.bbox.n &&
+          lon >= city.bbox.w && lon <= city.bbox.e
+
+        if (zoom >= MIN_CITY_SWITCH_ZOOM && !inCurrentCity) {
+          const target = cities.find(
+            (c) => c.id !== city.id &&
+              lat >= c.bbox.s && lat <= c.bbox.n &&
+              lon >= c.bbox.w && lon <= c.bbox.e,
+          )
+          if (target) {
+            savePosition(target.id, center, zoom)
+            navigate(`/${target.id}`)
+            return
           }
         }
 
-        savePosition(city.id, center, zoom)
+        if (inCurrentCity) savePosition(city.id, center, zoom)
 
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
         moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)

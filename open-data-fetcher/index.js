@@ -15,10 +15,14 @@
  * Available cities: rotterdam, groningen, amsterdam, den-haag
  */
 
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { CITIES } from './config.js';
 import { fetchRaw } from './lib/http.js';
 import { drawProgress } from './lib/progress.js';
 import { writeJSON, writeSQLite } from './lib/writers.js';
+
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
 
 function parseArgs(argv) {
     const args = {
@@ -111,7 +115,7 @@ async function main() {
             continue;
         }
 
-        const outFile = args.output ?? city.outputFile[args.format];
+        const outFile = args.output ?? path.join(DATA_DIR, city.outputFile[args.format]);
         if (!outFile) {
             throw new Error(`Unknown format "${args.format}". Use "json" or "sqlite".`);
         }

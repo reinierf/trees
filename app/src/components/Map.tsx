@@ -52,7 +52,7 @@ export function Map({ city, cities }: Props) {
       {tooZoomedOut && (
         <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
-            Zoom in to see trees
+            Zoom in {Math.ceil(MIN_FETCH_ZOOM - currentZoom)}x to see trees
           </div>
         </div>
       )}

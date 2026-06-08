@@ -12,7 +12,7 @@
  *   node index.js --city groningen --count 5 -d   # dry run: print to console
  *   node index.js --city rotterdam --layer ms:obs_bmn_bijz
  *
- * Available cities: rotterdam, groningen
+ * Available cities: rotterdam, groningen, amsterdam, den-haag
  */
 
 import { CITIES } from './config.js';

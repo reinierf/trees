@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
  * Fetch Wikipedia + Bomenbieb species data, merge with database vote results,
- * and write species_names.db with source priority:
+ * and write indigenous-names-nl.db with source priority:
  *   wikipedia > bomenbieb > database votes
  *
- * New columns: source (text), voorkomen (text)
- * Usage: node tools/merge-species-names.js
+ * Usage: node tools/indigenous-names/merge-indigenous-names.js [--no-cache]
  */
 
 import fs from 'fs/promises';
@@ -14,8 +13,8 @@ import { fileURLToPath } from 'url';
 import https from 'https';
 import initSqlJs from 'sql.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
-const OUT_FILE  = path.join(DATA_DIR, 'species_names.db');
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data');
+const OUT_FILE  = path.join(DATA_DIR, 'indigenous-names-nl.db');
 const SOURCES_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'sources');
 
 // ─── HTTP helper ──────────────────────────────────────────────────────────────
@@ -268,7 +267,7 @@ function isJunk(nameLow, spLow) {
 
 async function buildDatabaseVotes(SQL) {
     const dbFiles = (await fs.readdir(DATA_DIR))
-        .filter(f => f.endsWith('.db') && f !== 'species_names.db')
+        .filter(f => f.endsWith('.db') && f !== 'indigenous-names-nl.db')
         .map(f => path.join(DATA_DIR, f));
 
     const votes = new Map();
@@ -484,7 +483,7 @@ async function main() {
     // Write output database
     const outDb = new SQL.Database();
     outDb.run(`
-        CREATE TABLE species_names (
+        CREATE TABLE indigenous_names_nl (
             species_binomial    TEXT PRIMARY KEY,
             name_indigenous     TEXT NOT NULL,
             name_indigenous_alt TEXT,
@@ -492,7 +491,7 @@ async function main() {
         )
     `);
 
-    const stmt = outDb.prepare(`INSERT INTO species_names VALUES (?, ?, ?, ?)`);
+    const stmt = outDb.prepare(`INSERT INTO indigenous_names_nl VALUES (?, ?, ?, ?)`);
     for (const r of rows) {
         stmt.run([
             r.canonical,

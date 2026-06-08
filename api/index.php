@@ -76,16 +76,16 @@ function db(string $city): PDO
 }
 
 /**
- * Returns species_names keyed by uppercase species_binomial.
+ * Returns indigenous_names keyed by uppercase species_binomial.
  * Each value is ['name_indigenous' => ..., 'name_indigenous_alt' => ..., 'source' => ...].
- * Returns an empty array if species_names.db is not present.
+ * Returns an empty array if indigenous-names-nl.db is not present.
  */
-function species_names(): array
+function indigenous_names(): array
 {
     static $map;
     if ($map !== null) return $map;
 
-    $path = __DIR__ . '/species_names.db';
+    $path = __DIR__ . '/indigenous-names-nl.db';
     if (!file_exists($path)) { $map = []; return $map; }
 
     $pdo = new PDO('sqlite:' . $path, null, null, [
@@ -93,7 +93,7 @@ function species_names(): array
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
     $map = [];
-    foreach ($pdo->query('SELECT species_binomial, name_indigenous, name_indigenous_alt, source FROM species_names') as $row) {
+    foreach ($pdo->query('SELECT species_binomial, name_indigenous, name_indigenous_alt, source FROM indigenous_names_nl') as $row) {
         $map[strtoupper($row['species_binomial'])] = [
             'name_indigenous'     => $row['name_indigenous'],
             'name_indigenous_alt' => $row['name_indigenous_alt'],
@@ -107,7 +107,7 @@ function enrich_name(array &$row): void
 {
     $key = strtoupper($row['species_binomial'] ?? '');
     if ($key === '') return;
-    $entry = species_names()[$key] ?? null;
+    $entry = indigenous_names()[$key] ?? null;
     if ($entry) $row['name_indigenous'] = $entry['name_indigenous'];
 }
 
@@ -244,7 +244,7 @@ function handle_species(): void
         $stmt->execute([':q' => $pattern, ':q2' => $pattern]);
     }
 
-    $lookup = species_names();
+    $lookup = indigenous_names();
     $rows   = [];
     foreach ($stmt->fetchAll() as $row) {
         $key = strtoupper($row['species_binomial'] ?? '');
@@ -273,20 +273,20 @@ function handle_health(): void
         }
     }
 
-    $snPath = __DIR__ . '/species_names.db';
+    $snPath = __DIR__ . '/indigenous-names-nl.db';
     if (!file_exists($snPath)) {
         $snStatus = ['status' => 'missing'];
     } else {
         try {
             $pdo     = new PDO('sqlite:' . $snPath);
-            $row     = $pdo->query('SELECT COUNT(*) AS total FROM species_names')->fetch(PDO::FETCH_ASSOC);
+            $row     = $pdo->query('SELECT COUNT(*) AS total FROM indigenous_names_nl')->fetch(PDO::FETCH_ASSOC);
             $snStatus = ['status' => 'ok', 'entries' => (int) $row['total']];
         } catch (Throwable $e) {
             $snStatus = ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
 
-    respond(200, ['cities' => $result, 'species_names' => $snStatus]);
+    respond(200, ['cities' => $result, 'indigenous_names_nl' => $snStatus]);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

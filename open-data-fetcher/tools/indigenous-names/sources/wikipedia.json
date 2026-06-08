@@ -1,0 +1,1106 @@
+[
+  {
+    "dutch": "Hulst",
+    "binomial": "ILEX AQUIFOLIUM",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Ilex aquifolium"
+  },
+  {
+    "dutch": "Japanse hulst",
+    "binomial": "ILEX CRENATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ilex crenata"
+  },
+  {
+    "dutch": "Gele kornoelje",
+    "binomial": "CORNUS MAS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Cornus mas"
+  },
+  {
+    "dutch": "Rode kornoelje",
+    "binomial": "CORNUS SANGUINEA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Cornus sanguinea"
+  },
+  {
+    "dutch": "Vaantjesboom",
+    "binomial": "DAVIDIA INVOLUCRATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Davidia involucrata"
+  },
+  {
+    "dutch": "Gewone vlier",
+    "binomial": "SAMBUCUS NIGRA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Sambucus nigra"
+  },
+  {
+    "dutch": "Aardbeiboom",
+    "binomial": "ARBUTUS UNEDO",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Arbutus unedo"
+  },
+  {
+    "dutch": "Perzische slaapboom",
+    "binomial": "ALBIZIA JULIBRISSIN",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Albizia julibrissin"
+  },
+  {
+    "dutch": "Johannesbroodboom",
+    "binomial": "CERATONIA SILIQUA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ceratonia siliqua"
+  },
+  {
+    "dutch": "Judasboom",
+    "binomial": "CERCIS SILIQUASTRUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cercis siliquastrum"
+  },
+  {
+    "dutch": "Valse christusdoorn",
+    "binomial": "GLEDITSIA TRIACANTHOS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Gleditsia triacanthos"
+  },
+  {
+    "dutch": "Doodsbeenderenboom",
+    "binomial": "GYMNOCLADUS DIOICUS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Gymnocladus dioicus"
+  },
+  {
+    "dutch": "Gouden regen",
+    "binomial": "LABURNUM ANAGYROIDES",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Laburnum anagyroides"
+  },
+  {
+    "dutch": "Honingboom",
+    "binomial": "SOPHORA JAPONICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sophora japonica"
+  },
+  {
+    "dutch": "Hartbladige els",
+    "binomial": "ALNUS CORDATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Alnus cordata"
+  },
+  {
+    "dutch": "Zwarte els",
+    "binomial": "ALNUS GLUTINOSA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Alnus glutinosa"
+  },
+  {
+    "dutch": "Witte els",
+    "binomial": "ALNUS INCANA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Alnus incana"
+  },
+  {
+    "dutch": "Groene els",
+    "binomial": "ALNUS VIRIDIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Alnus viridis"
+  },
+  {
+    "dutch": "Japanse Kaukasische els",
+    "binomial": "ALNUS × SPAETHII",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Alnus × spaethii"
+  },
+  {
+    "dutch": "Chinese berk",
+    "binomial": "BETULA ALBOSINENSIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula albosinensis"
+  },
+  {
+    "dutch": "Goudberk",
+    "binomial": "BETULA ERMANII",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula ermanii"
+  },
+  {
+    "dutch": "Suikerberk",
+    "binomial": "BETULA LENTA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula lenta"
+  },
+  {
+    "dutch": "Grootbladige berk",
+    "binomial": "BETULA MAXIMOWICZIANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula maximowicziana"
+  },
+  {
+    "dutch": "Rode berk",
+    "binomial": "BETULA NIGRA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula nigra"
+  },
+  {
+    "dutch": "Papierberk",
+    "binomial": "BETULA PAPYRIFERA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula papyrifera"
+  },
+  {
+    "dutch": "Ruwe berk",
+    "binomial": "BETULA PENDULA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Betula pendula"
+  },
+  {
+    "dutch": "Zachte berk",
+    "binomial": "BETULA PUBESCENS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Betula pubescens"
+  },
+  {
+    "dutch": "Witte himalayaberk",
+    "binomial": "BETULA UTILIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Betula utilis"
+  },
+  {
+    "dutch": "Haagbeuk",
+    "binomial": "CARPINUS BETULUS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Carpinus betulus"
+  },
+  {
+    "dutch": "Hazelaar",
+    "binomial": "CORYLUS AVELLANA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Corylus avellana"
+  },
+  {
+    "dutch": "Boomhazelaar",
+    "binomial": "CORYLUS COLURNA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Corylus colurna"
+  },
+  {
+    "dutch": "Lambertsnoot",
+    "binomial": "CORYLUS MAXIMA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Corylus maxima"
+  },
+  {
+    "dutch": "Groene trompetboom",
+    "binomial": "CATALPA BIGNONIOIDES",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Catalpa bignonioides"
+  },
+  {
+    "dutch": "Tamme kastanje",
+    "binomial": "CASTANEA SATIVA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Castanea sativa"
+  },
+  {
+    "dutch": "Oosterse beuk",
+    "binomial": "FAGUS ORIENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Fagus orientalis"
+  },
+  {
+    "dutch": "Beuk",
+    "binomial": "FAGUS SYLVATICA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Fagus sylvatica"
+  },
+  {
+    "dutch": "Moseik",
+    "binomial": "QUERCUS CERRIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Quercus cerris"
+  },
+  {
+    "dutch": "Scharlaken eik",
+    "binomial": "QUERCUS COCCINEA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Quercus coccinea"
+  },
+  {
+    "dutch": "Hongaarse eik",
+    "binomial": "QUERCUS FRAINETTO",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Quercus frainetto"
+  },
+  {
+    "dutch": "Perzische eik",
+    "binomial": "QUERCUS MACRANTHERA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Quercus macranthera"
+  },
+  {
+    "dutch": "Moeraseik",
+    "binomial": "QUERCUS PALUSTRIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Quercus palustris"
+  },
+  {
+    "dutch": "Wintereik",
+    "binomial": "QUERCUS PETRAEA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Quercus petraea"
+  },
+  {
+    "dutch": "Zomereik",
+    "binomial": "QUERCUS ROBUR",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Quercus robur"
+  },
+  {
+    "dutch": "Amerikaanse eik",
+    "binomial": "QUERCUS RUBRA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Quercus rubra"
+  },
+  {
+    "dutch": "Zwarte walnoot",
+    "binomial": "JUGLANS NIGRA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Juglans nigra"
+  },
+  {
+    "dutch": "Walnoot",
+    "binomial": "JUGLANS REGIA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Juglans regia"
+  },
+  {
+    "dutch": "Kaukasische vleugelnoot",
+    "binomial": "PTEROCARYA FRAXINIFOLIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Pterocarya fraxinifolia"
+  },
+  {
+    "dutch": "Es",
+    "binomial": "FRAXINUS EXCELSIOR",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Fraxinus excelsior"
+  },
+  {
+    "dutch": "Smalbladige es",
+    "binomial": "FRAXINUS ANGUSTIFOLIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Fraxinus angustifolia"
+  },
+  {
+    "dutch": "Pluimes",
+    "binomial": "FRAXINUS ORNUS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Fraxinus ornus"
+  },
+  {
+    "dutch": "Olijfboom",
+    "binomial": "OLEA EUROPAEA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Olea europaea"
+  },
+  {
+    "dutch": "Anna Paulownaboom",
+    "binomial": "PAULOWNIA TOMENTOSA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Paulownia tomentosa"
+  },
+  {
+    "dutch": "Witte abeel",
+    "binomial": "POPULUS ALBA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Populus alba"
+  },
+  {
+    "dutch": "Ontariopopulier",
+    "binomial": "POPULUS BALSAMIFERA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Populus balsamifera"
+  },
+  {
+    "dutch": "Grauwe abeel",
+    "binomial": "POPULUS CANESCENS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Populus canescens"
+  },
+  {
+    "dutch": "Amerikaanse populier",
+    "binomial": "POPULUS DELTOIDES",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Populus deltoides"
+  },
+  {
+    "dutch": "Zwarte populier",
+    "binomial": "POPULUS NIGRA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Populus nigra"
+  },
+  {
+    "dutch": "Ratelpopulier",
+    "binomial": "POPULUS TREMULA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Populus tremula"
+  },
+  {
+    "dutch": "Zwarte balsempopulier",
+    "binomial": "POPULUS TRICHOCARPA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Populus trichocarpa"
+  },
+  {
+    "dutch": "Canadapopulier",
+    "binomial": "POPULUS × CANADENSIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Populus × canadensis"
+  },
+  {
+    "dutch": "Schietwilg",
+    "binomial": "SALIX ALBA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix alba"
+  },
+  {
+    "dutch": "Geoorde wilg",
+    "binomial": "SALIX AURITA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix aurita"
+  },
+  {
+    "dutch": "Treurwilg",
+    "binomial": "SALIX BABYLONICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Salix babylonica"
+  },
+  {
+    "dutch": "Boswilg",
+    "binomial": "SALIX CAPREA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix caprea"
+  },
+  {
+    "dutch": "Grauwe wilg",
+    "binomial": "SALIX CINEREA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix cinerea"
+  },
+  {
+    "dutch": "Berijpte wilg",
+    "binomial": "SALIX DAPHNOIDES",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Salix daphnoides"
+  },
+  {
+    "dutch": "Duitse dot",
+    "binomial": "SALIX DASYCLADOS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Salix dasyclados"
+  },
+  {
+    "dutch": "Grijze wilg",
+    "binomial": "SALIX ELAEAGNOS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Salix elaeagnos"
+  },
+  {
+    "dutch": "Kraakwilg",
+    "binomial": "SALIX FRAGILIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix fragilis"
+  },
+  {
+    "dutch": "Chinese wilg",
+    "binomial": "SALIX MATSUDANA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Salix matsudana"
+  },
+  {
+    "dutch": "Zwarte wilg",
+    "binomial": "SALIX NIGRICANS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Salix nigricans"
+  },
+  {
+    "dutch": "Laurierwilg",
+    "binomial": "SALIX PENTANDRA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix pentandra"
+  },
+  {
+    "dutch": "Bittere wilg",
+    "binomial": "SALIX PURPUREA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix purpurea"
+  },
+  {
+    "dutch": "Kruipwilg",
+    "binomial": "SALIX REPENS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix repens"
+  },
+  {
+    "dutch": "Amandelwilg",
+    "binomial": "SALIX TRIANDRA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix triandra"
+  },
+  {
+    "dutch": "Katwilg",
+    "binomial": "SALIX VIMINALIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Salix viminalis"
+  },
+  {
+    "dutch": "Amerikaanse linde",
+    "binomial": "TILIA AMERICANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Tilia americana"
+  },
+  {
+    "dutch": "Winterlinde",
+    "binomial": "TILIA CORDATA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Tilia cordata"
+  },
+  {
+    "dutch": "Zomerlinde",
+    "binomial": "TILIA PLATYPHYLLOS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Tilia platyphyllos"
+  },
+  {
+    "dutch": "Zilverlinde",
+    "binomial": "TILIA TOMENTOSA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Tilia tomentosa"
+  },
+  {
+    "dutch": "Hollandse linde",
+    "binomial": "TILIA × VULGARIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Tilia × vulgaris of Tilia × europaea"
+  },
+  {
+    "dutch": "Westerse plataan",
+    "binomial": "PLATANUS OCCIDENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Platanus occidentalis"
+  },
+  {
+    "dutch": "Oosterse plataan",
+    "binomial": "PLATANUS ORIENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Platanus orientalis"
+  },
+  {
+    "dutch": "Gewone plataan",
+    "binomial": "PLATANUS × HYBRIDA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Platanus × hybrida"
+  },
+  {
+    "dutch": "Europese netelboom",
+    "binomial": "CELTIS AUSTRALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Celtis australis"
+  },
+  {
+    "dutch": "Zwepenboom",
+    "binomial": "CELTIS OCCIDENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Celtis occidentalis"
+  },
+  {
+    "dutch": "Smalbladige olijfwilg",
+    "binomial": "ELAEAGNUS ANGUSTIFOLIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Elaeagnus angustifolia"
+  },
+  {
+    "dutch": "Duindoorn",
+    "binomial": "HIPPOPHAE RHAMNOIDES",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Hippophae rhamnoides"
+  },
+  {
+    "dutch": "Vijgenboom",
+    "binomial": "FICUS CARICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ficus carica"
+  },
+  {
+    "dutch": "Witte moerbei",
+    "binomial": "MORUS ALBA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Morus alba"
+  },
+  {
+    "dutch": "Zwarte moerbei",
+    "binomial": "MORUS NIGRA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Morus nigra"
+  },
+  {
+    "dutch": "Wegedoorn",
+    "binomial": "RHAMNUS CATHARTICA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Rhamnus cathartica"
+  },
+  {
+    "dutch": "Sporkehout",
+    "binomial": "RHAMNUS FRANGULA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Rhamnus frangula"
+  },
+  {
+    "dutch": "Tweestijlige meidoorn",
+    "binomial": "CRATAEGUS LAEVIGATA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Crataegus laevigata"
+  },
+  {
+    "dutch": "Eenstijlige meidoorn",
+    "binomial": "CRATAEGUS MONOGYNA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Crataegus monogyna"
+  },
+  {
+    "dutch": "Kweepeer",
+    "binomial": "CYDONIA OBLONGA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cydonia oblonga"
+  },
+  {
+    "dutch": "Appel",
+    "binomial": "MALUS DOMESTICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Malus domestica"
+  },
+  {
+    "dutch": "Wilde appel",
+    "binomial": "MALUS SYLVESTRIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Malus sylvestris"
+  },
+  {
+    "dutch": "Mispel",
+    "binomial": "MESPILUS GERMANICA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Mespilus germanica"
+  },
+  {
+    "dutch": "Zoete kers",
+    "binomial": "PRUNUS AVIUM",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Prunus avium"
+  },
+  {
+    "dutch": "Kerspruim",
+    "binomial": "PRUNUS CERASIFERA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Prunus cerasifera"
+  },
+  {
+    "dutch": "Zure kers",
+    "binomial": "PRUNUS CERASUS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Prunus cerasus"
+  },
+  {
+    "dutch": "Pruim",
+    "binomial": "PRUNUS DOMESTICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Prunus domestica"
+  },
+  {
+    "dutch": "Laurierkers",
+    "binomial": "PRUNUS LAUROCERASUS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Prunus laurocerasus"
+  },
+  {
+    "dutch": "Gewone vogelkers",
+    "binomial": "PRUNUS PADUS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Prunus padus"
+  },
+  {
+    "dutch": "Amerikaanse vogelkers",
+    "binomial": "PRUNUS SEROTINA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Prunus serotina"
+  },
+  {
+    "dutch": "Japanse sierkers",
+    "binomial": "PRUNUS SERRULATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Prunus serrulata"
+  },
+  {
+    "dutch": "Peer",
+    "binomial": "PYRUS COMMUNIS",
+    "voorkomen": null,
+    "raw_scientific": "Pyrus communis"
+  },
+  {
+    "dutch": "Wilde peer",
+    "binomial": "PYRUS PYRASTER",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Pyrus pyraster"
+  },
+  {
+    "dutch": "Meelbes",
+    "binomial": "SORBUS ARIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sorbus aria"
+  },
+  {
+    "dutch": "Wilde lijsterbes",
+    "binomial": "SORBUS AUCUPARIA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Sorbus aucuparia"
+  },
+  {
+    "dutch": "Zweedse lijsterbes",
+    "binomial": "SORBUS INTERMEDIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sorbus intermedia"
+  },
+  {
+    "dutch": "Elsbes",
+    "binomial": "SORBUS TORMINALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sorbus torminalis"
+  },
+  {
+    "dutch": "Ruwe iep",
+    "binomial": "ULMUS GLABRA",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Ulmus glabra"
+  },
+  {
+    "dutch": "Fladderiep",
+    "binomial": "ULMUS LAEVIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Ulmus laevis"
+  },
+  {
+    "dutch": "Gladde iep",
+    "binomial": "ULMUS MINOR",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Ulmus minor"
+  },
+  {
+    "dutch": "Hollandse iep",
+    "binomial": "ULMUS × HOLLANDICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ulmus × hollandica"
+  },
+  {
+    "dutch": "Zwepenboom",
+    "binomial": "ZELKOVA CARPINIFOLIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Zelkova carpinifolia"
+  },
+  {
+    "dutch": "Japanse zelkova",
+    "binomial": "ZELKOVA SERRATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Zelkova serrata"
+  },
+  {
+    "dutch": "Witte paardenkastanje",
+    "binomial": "AESCULUS HIPPOCASTANUM",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Aesculus hippocastanum"
+  },
+  {
+    "dutch": "Rode paardenkastanje",
+    "binomial": "AESCULUS × CARNEA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Aesculus × carnea"
+  },
+  {
+    "dutch": "Spaanse aak",
+    "binomial": "ACER CAMPESTRE",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Acer campestre"
+  },
+  {
+    "dutch": "Colchische esdoorn",
+    "binomial": "ACER CAPPADOCICUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer cappadocicum"
+  },
+  {
+    "dutch": "Amoeresdoorn",
+    "binomial": "ACER GINNALA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer ginnala"
+  },
+  {
+    "dutch": "Montpelieresdoorn",
+    "binomial": "ACER MONSPESSULANUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer monspessulanum"
+  },
+  {
+    "dutch": "Vederesdoorn",
+    "binomial": "ACER NEGUNDO",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer negundo"
+  },
+  {
+    "dutch": "Japanse esdoorn",
+    "binomial": "ACER PALMATUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer palmatum"
+  },
+  {
+    "dutch": "Noorse esdoorn",
+    "binomial": "ACER PLATANOIDES",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Acer platanoides"
+  },
+  {
+    "dutch": "Gewone esdoorn",
+    "binomial": "ACER PSEUDOPLATANUS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Acer pseudoplatanus"
+  },
+  {
+    "dutch": "Rode esdoorn",
+    "binomial": "ACER RUBRUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer rubrum"
+  },
+  {
+    "dutch": "Witte esdoorn",
+    "binomial": "ACER SACCHARINUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer saccharinum"
+  },
+  {
+    "dutch": "Suikeresdoorn",
+    "binomial": "ACER SACCHARUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer saccharum"
+  },
+  {
+    "dutch": "Tartaarse esdoorn",
+    "binomial": "ACER TATARICUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Acer tataricum"
+  },
+  {
+    "dutch": "Chinese vernisboom",
+    "binomial": "KOELREUTERIA PANICULATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Koelreuteria paniculata"
+  },
+  {
+    "dutch": "Hemelboom",
+    "binomial": "AILANTHUS ALTISSIMA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ailanthus altissima"
+  },
+  {
+    "dutch": "Amberboom",
+    "binomial": "LIQUIDAMBAR STYRACIFLUA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Liquidambar styraciflua"
+  },
+  {
+    "dutch": "Perzisch ijzerhout",
+    "binomial": "PARROTIA PERSICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Parrotia persica"
+  },
+  {
+    "dutch": "Slangenden",
+    "binomial": "ARAUCARIA ARAUCANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Araucaria araucana"
+  },
+  {
+    "dutch": "Chinese knoptaxus",
+    "binomial": "CEPHALOTAXUS FORTUNEI",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cephalotaxus fortunei"
+  },
+  {
+    "dutch": "Japanse knoptaxus",
+    "binomial": "CEPHALOTAXUS HARRINGTONIA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cephalotaxus harringtonia"
+  },
+  {
+    "dutch": "Wierookceder",
+    "binomial": "CALOCEDRUS DECURRENS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Calocedrus decurrens"
+  },
+  {
+    "dutch": "Californische cipres",
+    "binomial": "CHAMAECYPARIS LAWSONIANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Chamaecyparis lawsoniana"
+  },
+  {
+    "dutch": "Nootkacipres",
+    "binomial": "CHAMAECYPARIS NOOTKATENSIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Chamaecyparis nootkatensis"
+  },
+  {
+    "dutch": "Sikkelcipres",
+    "binomial": "CRYPTOMERIA JAPONICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cryptomeria japonica"
+  },
+  {
+    "dutch": "Montereycipres",
+    "binomial": "CUPRESSUS MACROCARPA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cupressus macrocarpa"
+  },
+  {
+    "dutch": "Italiaanse cipres",
+    "binomial": "CUPRESSUS SEMPERVIRENS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cupressus sempervirens"
+  },
+  {
+    "dutch": "Jeneverbes",
+    "binomial": "JUNIPERUS COMMUNIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Juniperus communis"
+  },
+  {
+    "dutch": "Watercipres",
+    "binomial": "METASEQUOIA GLYPTOSTROBOIDES",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Metasequoia glyptostroboides"
+  },
+  {
+    "dutch": "Oosterse levensboom",
+    "binomial": "PLATYCLADUS ORIENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Platycladus orientalis"
+  },
+  {
+    "dutch": "Mammoetboom",
+    "binomial": "SEQUOIADENDRON GIGANTEUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sequoiadendron giganteum"
+  },
+  {
+    "dutch": "Moerascipres",
+    "binomial": "TAXODIUM DISTICHUM",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Taxodium distichum"
+  },
+  {
+    "dutch": "Westerse levensboom",
+    "binomial": "THUJA OCCIDENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Thuja occidentalis"
+  },
+  {
+    "dutch": "Reuzenlevensboom",
+    "binomial": "THUJA PLICATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Thuja plicata"
+  },
+  {
+    "dutch": "Hibacipres",
+    "binomial": "THUJOPSIS DOLABRATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Thujopsis dolabrata"
+  },
+  {
+    "dutch": "Zilverspar",
+    "binomial": "ABIES ALBA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Abies alba"
+  },
+  {
+    "dutch": "Griekse zilverspar",
+    "binomial": "ABIES CEPHALONICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Abies cephalonica"
+  },
+  {
+    "dutch": "Coloradozilverspar",
+    "binomial": "ABIES CONCOLOR",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Abies concolor"
+  },
+  {
+    "dutch": "Reuzenzilverspar",
+    "binomial": "ABIES GRANDIS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Abies grandis"
+  },
+  {
+    "dutch": "Koreaanse zilverspar",
+    "binomial": "ABIES KOREANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Abies koreana"
+  },
+  {
+    "dutch": "Kaukasische zilverspar",
+    "binomial": "ABIES NORDMANNIANA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Abies nordmanniana"
+  },
+  {
+    "dutch": "Edelspar",
+    "binomial": "ABIES PROCERA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Abies procera"
+  },
+  {
+    "dutch": "Japanse zilverspar",
+    "binomial": "ABIES VEITCHII",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Abies veitchii"
+  },
+  {
+    "dutch": "Atlasceder",
+    "binomial": "CEDRUS ATLANTICA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cedrus atlantica"
+  },
+  {
+    "dutch": "Himalayaceder",
+    "binomial": "CEDRUS DEODARA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cedrus deodara"
+  },
+  {
+    "dutch": "Libanonceder",
+    "binomial": "CEDRUS LIBANI",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Cedrus libani"
+  },
+  {
+    "dutch": "Europese larix",
+    "binomial": "LARIX DECIDUA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Larix decidua"
+  },
+  {
+    "dutch": "Japanse larix",
+    "binomial": "LARIX KAEMPFERI",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Larix kaempferi"
+  },
+  {
+    "dutch": "Fijnspar",
+    "binomial": "PICEA ABIES",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Picea abies"
+  },
+  {
+    "dutch": "Servische spar",
+    "binomial": "PICEA OMORIKA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Picea omorika"
+  },
+  {
+    "dutch": "Kaukasische spar",
+    "binomial": "PICAE ORIENTALIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Picae orientalis"
+  },
+  {
+    "dutch": "Blauwe spar",
+    "binomial": "PICEA PUNGENS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Picea pungens"
+  },
+  {
+    "dutch": "Sitkaspar",
+    "binomial": "PICEA SITCHENSIS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Picea sitchensis"
+  },
+  {
+    "dutch": "Alpenden",
+    "binomial": "PINUS CEMBRA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Pinus cembra"
+  },
+  {
+    "dutch": "Bergden",
+    "binomial": "PINUS MUGO",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Pinus mugo"
+  },
+  {
+    "dutch": "Zwarte den",
+    "binomial": "PINUS NIGRA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Pinus nigra"
+  },
+  {
+    "dutch": "Macedonische den",
+    "binomial": "PINUS PEUCE",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Pinus peuce"
+  },
+  {
+    "dutch": "Weymouthden",
+    "binomial": "PINUS STROBUS",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Pinus strobus"
+  },
+  {
+    "dutch": "Grove den",
+    "binomial": "PINUS SYLVESTRIS",
+    "voorkomen": "Inheems",
+    "raw_scientific": "Pinus sylvestris"
+  },
+  {
+    "dutch": "Tranenden",
+    "binomial": "PINUS WALLICHIANA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Pinus wallichiana"
+  },
+  {
+    "dutch": "Douglasspar",
+    "binomial": "PSEUDOTSUGA MENZIESII",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Pseudotsuga menziesii"
+  },
+  {
+    "dutch": "Oostelijke hemlockspar",
+    "binomial": "TSUGA CANADENSIS",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Tsuga canadensis"
+  },
+  {
+    "dutch": "Westelijke hemlockspar",
+    "binomial": "TSUGA HETEROPHYLLA",
+    "voorkomen": "Niet inheems*",
+    "raw_scientific": "Tsuga heterophylla"
+  },
+  {
+    "dutch": "Kransspar",
+    "binomial": "SCIADOPITYS VERTICILLATA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Sciadopitys verticillata"
+  },
+  {
+    "dutch": "Japanse notenboom",
+    "binomial": "GINKGO BILOBA",
+    "voorkomen": "Niet inheems",
+    "raw_scientific": "Ginkgo biloba"
+  }
+]

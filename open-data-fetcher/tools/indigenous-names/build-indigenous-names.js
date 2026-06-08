@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build a species_names lookup table from all city databases.
+ * Build the indigenous-names-nl.db lookup table from all city databases.
  *
  * Conflict resolution pipeline:
  *   D - Compound entries ("X, Y") excluded from voting
@@ -8,7 +8,7 @@
  *   A - Genus placeholders detected; specificity only overrides those single-word names
  *   B - Genuine alternative names stored in name_indigenous_alt
  *
- * Usage: node tools/build-species-names.js
+ * Usage: node tools/indigenous-names/build-indigenous-names.js
  */
 
 import fs from 'fs/promises';
@@ -16,8 +16,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import initSqlJs from 'sql.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
-const OUT_FILE  = path.join(DATA_DIR, 'species_names.db');
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data');
+const OUT_FILE  = path.join(DATA_DIR, 'indigenous-names-nl.db');
 
 // Class C: applied to the vote key only — display keeps the majority-voted original form.
 // Order matters: word substitutions before hyphen stripping, whitespace collapse last.
@@ -58,7 +58,7 @@ async function main() {
     const SQL = await initSqlJs();
 
     const dbFiles = (await fs.readdir(DATA_DIR))
-        .filter(f => f.endsWith('.db') && f !== 'species_names.db')
+        .filter(f => f.endsWith('.db') && f !== 'indigenous-names-nl.db')
         .map(f => path.join(DATA_DIR, f));
 
     if (dbFiles.length === 0) {
@@ -208,7 +208,7 @@ async function main() {
     // Write output database
     const outDb = new SQL.Database();
     outDb.run(`
-        CREATE TABLE species_names (
+        CREATE TABLE indigenous_names_nl (
             species_binomial    TEXT PRIMARY KEY,
             name_indigenous     TEXT NOT NULL,
             name_indigenous_alt TEXT,
@@ -217,7 +217,7 @@ async function main() {
         )
     `);
 
-    const stmt = outDb.prepare(`INSERT INTO species_names VALUES (?, ?, ?, ?, ?)`);
+    const stmt = outDb.prepare(`INSERT INTO indigenous_names_nl VALUES (?, ?, ?, ?, ?)`);
     for (const r of rows) {
         stmt.run([r.species_binomial, r.name_indigenous, r.name_indigenous_alt ?? null, r.occurrences, r.sources]);
     }

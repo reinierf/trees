@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "fetch": "node index.js --all",
-    "build-species-names": "node tools/build-species-names.js",
-    "merge-species-names": "node tools/merge-species-names.js"
+    "build-indigenous-names": "node tools/indigenous-names/build-indigenous-names.js",
+    "merge-indigenous-names": "node tools/indigenous-names/merge-indigenous-names.js"
   },
   "dependencies": {
     "sql.js": "^1.14.1",

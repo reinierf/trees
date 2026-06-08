@@ -103,13 +103,22 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
   useEffect(() => {
     const pv = popupView
-    const tree = pv?.kind === 'tree-detail' ? pv.tree : null
-    const species =
-      pv?.kind === 'tree-detail' ? pv.tree.species_binomial :
-      pv?.kind === 'species-detail' ? pv.species : null
+    let tree = null
+    let species = null
+
+    if (pv?.kind === 'tree-detail') {
+      tree = pv.tree
+      species = pv.tree.species_binomial ?? null
+    } else if (pv?.kind === 'species-list' && pv.expandedSpecies) {
+      species = pv.expandedSpecies
+      if (pv.selectedTreeId) {
+        tree = visibleTrees.find((t) => t.id === pv.selectedTreeId) ?? null
+      }
+    }
+
     controllerRef.current?.highlightTree(tree)
     controllerRef.current?.highlightSpecies(species)
-  }, [popupView])
+  }, [popupView, visibleTrees])
 
   return controllerRef
 }

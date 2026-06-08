@@ -1,6 +1,5 @@
 import { useStore } from '../store'
 import { SpeciesListPanel } from './panels/SpeciesListPanel'
-import { SpeciesDetailPanel } from './panels/SpeciesDetailPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 
 export const BASE =
@@ -30,14 +29,15 @@ export function InfoPopup({ onCenter }: Props) {
   const popupView = useStore((s) => s.popupView)
 
   if (!popupView) return null
-  if (popupView.kind === 'species-list') return <SpeciesListPanel />
-  if (popupView.kind === 'species-detail')
-    return <SpeciesDetailPanel species={popupView.species} onCenter={onCenter} />
+  if (popupView.kind === 'species-list')
+    return (
+      <SpeciesListPanel
+        expandedSpecies={popupView.expandedSpecies}
+        selectedTreeId={popupView.selectedTreeId}
+        onCenter={onCenter}
+      />
+    )
   return (
-    <TreeDetailPanel
-      tree={popupView.tree}
-      fromSpecies={popupView.fromSpecies}
-      onCenter={onCenter}
-    />
+    <TreeDetailPanel tree={popupView.tree} onCenter={onCenter} />
   )
 }

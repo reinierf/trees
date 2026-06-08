@@ -1,4 +1,4 @@
-import { Crosshair, ChevronLeft } from 'lucide-react'
+import { Crosshair } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
@@ -32,12 +32,11 @@ function Row({ label, value }: { label: string; value: string | number | null | 
 
 interface Props {
   tree: Tree
-  fromSpecies?: string
   onCenter: (lat: number, lon: number) => void
 }
 
-export function TreeDetailPanel({ tree, fromSpecies, onCenter }: Props) {
-  const openSpeciesDetail = useStore((s) => s.openSpeciesDetail)
+export function TreeDetailPanel({ tree, onCenter }: Props) {
+  const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
   const closePopup = useStore((s) => s.closePopup)
 
   const binomial = tree.species_binomial
@@ -49,18 +48,8 @@ export function TreeDetailPanel({ tree, fromSpecies, onCenter }: Props) {
     <PopupShell>
       <div className="flex items-start justify-between gap-2 px-4 pt-4 pb-2">
         <div className="min-w-0">
-          {fromSpecies && (
-            <button
-              onClick={() => openSpeciesDetail(fromSpecies)}
-              className="flex items-center gap-0.5 text-muted-foreground hover:text-foreground text-xs mb-1 -ml-0.5"
-              aria-label="Back to species"
-            >
-              <ChevronLeft size={12} />
-              <span className="italic truncate">{capitalizeFirst(fromSpecies)}</span>
-            </button>
-          )}
-          <button
-            onClick={() => openSpeciesDetail(speciesKey)}
+<button
+            onClick={() => openSpeciesListAt(speciesKey, tree.id)}
             className="font-semibold text-sm leading-snug italic text-left hover:underline"
           >
             {displayName}{cultivar}

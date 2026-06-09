@@ -126,6 +126,9 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
               <div key={name}>
                 <button
                   onClick={() => toggleSpecies(name)}
+                  title={nameIndigenous
+                    ? (nameMode === 'scientific' ? capitalizeFirst(nameIndigenous) : capitalizeFirst(name))
+                    : undefined}
                   className={`flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-gray-50 text-left ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}
                 >
                   <span className={`${nameMode === 'scientific' ? 'italic' : ''} ${isOpen ? 'font-semibold' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>

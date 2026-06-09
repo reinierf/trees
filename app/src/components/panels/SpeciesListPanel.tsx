@@ -128,7 +128,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
                   onClick={() => toggleSpecies(name)}
                   className={`flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-gray-50 text-left ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}
                 >
-                  <span className={`${nameMode === 'scientific' ? 'italic' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>
+                  <span className={`${nameMode === 'scientific' ? 'italic' : ''} ${isOpen ? 'font-semibold' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>
                   <div className="flex items-center gap-2 shrink-0 ml-3">
                     <span className="text-muted-foreground text-xs">{count}</span>
                     <ChevronRight

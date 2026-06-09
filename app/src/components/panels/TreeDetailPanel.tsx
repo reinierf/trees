@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Crosshair, Share2 } from 'lucide-react'
+import { Crosshair, Share2, ArrowUp } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
@@ -93,6 +93,7 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
             onClick={() => openSpeciesListAt(speciesKey, tree.id)}
             className="font-semibold text-sm leading-snug italic text-left hover:underline"
           >
+            <ArrowUp size={12} className="inline-block mr-0.5 -mt-0.5 opacity-50" />
             {displayName}{cultivar}
           </button>
           {tree.name_indigenous && (

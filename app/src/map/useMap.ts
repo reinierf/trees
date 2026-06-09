@@ -25,6 +25,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
   const setPendingTreeId = useStore((s) => s.setPendingTreeId)
+  const openTreeDetail = useStore((s) => s.openTreeDetail)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const popupView = useStore((s) => s.popupView)
   const pendingTreeId = useStore((s) => s.pendingTreeId)
@@ -155,6 +156,14 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)
   }, [visibleTrees])
+
+  useEffect(() => {
+    if (!pendingTreeId) return
+    const pending = visibleTrees.find((t) => t.id === pendingTreeId)
+    if (!pending) return
+    openTreeDetail(pending)
+    setPendingTreeId(null)
+  }, [visibleTrees, pendingTreeId, openTreeDetail, setPendingTreeId])
 
   useEffect(() => {
     const pv = popupView

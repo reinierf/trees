@@ -85,8 +85,8 @@ export class MapController {
         this.map?.panTo([lat, lon])
     }
 
-    flyToLocation(lat: number, lon: number): void {
-        this.map?.flyTo([lat, lon], 16)
+    flyToLocation(lat: number, lon: number, zoom = 16): void {
+        this.map?.flyTo([lat, lon], zoom)
     }
 
     private selectedRing: L.Marker | null = null

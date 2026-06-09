@@ -1,4 +1,5 @@
-import { Crosshair } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Crosshair, Share2 } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
@@ -20,6 +21,17 @@ function googleUrl(binomial: string, cultivar?: string | null): string {
   return `https://www.google.com/search?q=${encodeURIComponent(query)}`
 }
 
+function buildShareUrl(tree: Tree): string {
+  const hash = window.location.hash
+  const qIdx = hash.indexOf('?')
+  const pathPart = qIdx !== -1 ? hash.slice(0, qIdx) : hash
+  const params = new URLSearchParams()
+  params.set('tree', tree.id)
+  params.set('lat', String(tree.lat))
+  params.set('lon', String(tree.lon))
+  return `${window.location.origin}${window.location.pathname}${pathPart}?${params}`
+}
+
 function Row({ label, value }: { label: string; value: string | number | null | undefined }) {
   if (value == null || value === '') return null
   return (
@@ -38,11 +50,40 @@ interface Props {
 export function TreeDetailPanel({ tree, onCenter }: Props) {
   const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
   const closePopup = useStore((s) => s.closePopup)
+  const [toast, setToast] = useState<string | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const binomial = tree.species_binomial
   const speciesKey = binomial ?? tree.species
   const displayName = capitalizeFirst(binomial ?? tree.species)
   const cultivar = tree.species_cultivar ? ` '${capitalizeFirst(tree.species_cultivar)}'` : ''
+
+  function showToast(msg: string) {
+    setToast(msg)
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), 2000)
+  }
+
+  async function handleShare() {
+    const url = buildShareUrl(tree)
+    const title = `${displayName}${cultivar}`
+
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title, url })
+        return
+      } catch (e) {
+        if (e instanceof Error && e.name === 'AbortError') return
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url)
+      showToast('Link gekopieerd')
+    } catch {
+      showToast(url)
+    }
+  }
 
   return (
     <PopupShell>
@@ -60,7 +101,14 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
             </p>
           )}
         </div>
-        <div className="flex items-center gap-3 shrink-0 mt-0.5">
+        <div className="relative flex items-center gap-3 shrink-0 mt-0.5">
+          <button
+            onClick={handleShare}
+            className="text-muted-foreground hover:text-foreground"
+            aria-label="Deel link naar boom"
+          >
+            <Share2 size={15} />
+          </button>
           <button
             onClick={() => onCenter(tree.lat, tree.lon)}
             className="text-muted-foreground hover:text-foreground"
@@ -69,6 +117,11 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
             <Crosshair size={15} />
           </button>
           <CloseButton onClick={closePopup} />
+          {toast && (
+            <div className="absolute top-full right-0 mt-1 bg-popover text-popover-foreground border text-xs rounded px-2 py-1 shadow-md max-w-[220px] truncate z-10">
+              {toast}
+            </div>
+          )}
         </div>
       </div>
 

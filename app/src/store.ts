@@ -12,6 +12,7 @@ interface AppStore {
   tooZoomedOut: boolean
   currentZoom: number
   currentCenter: [number, number] | null
+  pendingTreeId: string | null
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -23,6 +24,7 @@ interface AppStore {
   setTooZoomedOut: (v: boolean) => void
   setCurrentZoom: (z: number) => void
   setCurrentCenter: (c: [number, number]) => void
+  setPendingTreeId: (id: string | null) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -32,6 +34,7 @@ export const useStore = create<AppStore>((set) => ({
   tooZoomedOut: false,
   currentZoom: 0,
   currentCenter: null,
+  pendingTreeId: null,
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -48,4 +51,5 @@ export const useStore = create<AppStore>((set) => ({
   setTooZoomedOut: (v) => set({ tooZoomedOut: v }),
   setCurrentZoom: (z) => set({ currentZoom: z }),
   setCurrentCenter: (c) => set({ currentCenter: c }),
+  setPendingTreeId: (id) => set({ pendingTreeId: id }),
 }))

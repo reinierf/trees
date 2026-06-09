@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { useStore } from '../store'
-import { DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION } from '../config'
+import { DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM } from '../config'
 import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
@@ -13,10 +13,10 @@ import type { City } from '../types'
 
 export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
   const location = useLocation()
-  const [, setSearchParams] = useSearchParams()
   const controllerRef = useRef<MapController | null>(null)
   const prevPopupKind = useRef<string | undefined>(undefined)
   const prevSelectedTreeId = useRef<string | undefined>(undefined)
+  const pendingAnimatedRef = useRef<string | null>(null)
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -24,8 +24,10 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const setVisibleTrees = useStore((s) => s.setVisibleTrees)
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
+  const setPendingTreeId = useStore((s) => s.setPendingTreeId)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const popupView = useStore((s) => s.popupView)
+  const pendingTreeId = useStore((s) => s.pendingTreeId)
 
   const { load: loadTrees, abort: abortLoad } = useTreeLoader(city.id, tileCacheRef.current)
   const { onMapClick, onMarkerClick } = useMapClickHandlers()
@@ -35,15 +37,25 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     const el = containerRef.current
     if (!el) return
 
-    // Read fly-to coords passed via URL when location button switches city
     const hash = window.location.hash
     const qIdx = hash.indexOf('?')
-    let flyTarget: { lat: number; lon: number } | null = null
+
+    // Parse URL params: tree deep link takes precedence over plain lat/lon fly
+    let treeDeepLink: { lat: number; lon: number } | null = null
+    let locationFly: { lat: number; lon: number } | null = null
     if (qIdx !== -1) {
       const params = new URLSearchParams(hash.slice(qIdx))
       const lat = parseFloat(params.get('lat') ?? '')
       const lon = parseFloat(params.get('lon') ?? '')
-      if (!isNaN(lat) && !isNaN(lon)) flyTarget = { lat, lon }
+      const treeId = params.get('tree')
+      if (!isNaN(lat) && !isNaN(lon)) {
+        if (treeId) {
+          treeDeepLink = { lat, lon }
+          setPendingTreeId(treeId)
+        } else {
+          locationFly = { lat, lon }
+        }
+      }
     }
 
     // fromPicker is true only when CityButton triggered this navigation.
@@ -59,6 +71,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       rawSaved.center[1] >= city.bbox.w && rawSaved.center[1] <= city.bbox.e
         ? rawSaved
         : null
+
+    // For tree deep links initialise directly at the target so whenReady's
+    // invalidateSize() cannot interrupt a flyTo and leave the tree off-centre.
+    const initCenter = treeDeepLink
+      ? ([treeDeepLink.lat, treeDeepLink.lon] as [number, number])
+      : (saved?.center ?? city.center)
+    const initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? MAP_ZOOM)
 
     const controller = new MapController({
       onMoveEnd: (bounds, zoom, center) => {
@@ -80,13 +99,19 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       onMarkerClick,
     })
 
-    controller.init(el, saved?.center ?? city.center, saved?.zoom ?? MAP_ZOOM)
+    controller.init(el, initCenter, initZoom)
     controllerRef.current = controller
 
-    if (flyTarget) {
-      controller.flyToLocation(flyTarget.lat, flyTarget.lon)
-      controller.setLocationMarker(flyTarget.lat, flyTarget.lon)
-      setSearchParams({}, { replace: true })
+    if (locationFly) {
+      controller.flyToLocation(locationFly.lat, locationFly.lon)
+      controller.setLocationMarker(locationFly.lat, locationFly.lon)
+    }
+
+    if (treeDeepLink || locationFly) {
+      window.history.replaceState(
+        window.history.state, '',
+        window.location.pathname + hash.slice(0, qIdx)
+      )
     }
 
     return () => {
@@ -97,7 +122,35 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       closePopup()
       setVisibleTrees([])
     }
-  }, [city, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, location, setSearchParams, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [city, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle deep-link navigation when already on the page (e.g. pasting a share URL
+  // in an existing tab). The init effect above won't re-run because city didn't change,
+  // so we act directly on the existing controller.
+  useEffect(() => {
+    const hash = window.location.hash
+    const qIdx = hash.indexOf('?')
+    if (qIdx === -1) return
+
+    const params = new URLSearchParams(hash.slice(qIdx))
+    const lat = parseFloat(params.get('lat') ?? '')
+    const lon = parseFloat(params.get('lon') ?? '')
+    if (isNaN(lat) || isNaN(lon)) return
+
+    const treeId = params.get('tree')
+    if (treeId) {
+      setPendingTreeId(treeId)
+      controllerRef.current?.flyToLocation(lat, lon, SHARE_ZOOM)
+    } else {
+      controllerRef.current?.flyToLocation(lat, lon)
+      controllerRef.current?.setLocationMarker(lat, lon)
+    }
+
+    window.history.replaceState(
+      window.history.state, '',
+      window.location.pathname + hash.slice(0, qIdx)
+    )
+  }, [location.search, setPendingTreeId])
 
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)
@@ -118,6 +171,14 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
         tree = visibleTrees.find((t) => t.id === pv.selectedTreeId) ?? null
         animate = prevPopupKind.current === 'species-list' && pv.selectedTreeId !== prevSelectedTreeId.current
       }
+    } else if (pendingTreeId) {
+      const pending = visibleTrees.find((t) => t.id === pendingTreeId)
+      if (pending) {
+        tree = pending
+        species = pending.species_binomial ?? null
+        animate = pendingAnimatedRef.current !== pendingTreeId
+        pendingAnimatedRef.current = pendingTreeId
+      }
     }
 
     prevPopupKind.current = pv?.kind
@@ -125,7 +186,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     controllerRef.current?.highlightTree(tree, animate)
     controllerRef.current?.highlightSpecies(species)
-  }, [popupView, visibleTrees])
+  }, [popupView, visibleTrees, pendingTreeId])
 
   return controllerRef
 }

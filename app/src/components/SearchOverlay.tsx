@@ -68,7 +68,7 @@ export function SearchOverlay({ onSelect, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="absolute top-4 left-1/2 -translate-x-1/2 w-[min(90vw,352px)] bg-white rounded-xl shadow-2xl overflow-hidden"
+        className="absolute top-4 left-1/2 -translate-x-1/2 w-[min(90vw,292px)] bg-white rounded-xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Input row */}
@@ -134,13 +134,13 @@ export function SearchOverlay({ onSelect, onClose }: Props) {
                 >
                   <span className="flex flex-col min-w-0 mr-3">
                     <span
-                      className={`truncate ${nameMode === 'scientific' ? 'italic' : ''}`}
+                      className={`truncate pr-0.5 ${nameMode === 'scientific' ? 'italic' : ''}`}
                     >
                       {primaryName}
                     </span>
                     {secondaryName && (
                       <span
-                        className={`text-xs text-gray-400 truncate ${nameMode === 'indigenous' ? 'italic' : ''}`}
+                        className={`text-xs text-gray-400 truncate pr-0.5 ${nameMode === 'indigenous' ? 'italic' : ''}`}
                       >
                         {secondaryName}
                       </span>

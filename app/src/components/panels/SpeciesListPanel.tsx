@@ -2,13 +2,10 @@ import { ChevronRight, GraduationCap, Info, Leaf } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
-import { loadPreference, savePreference } from '../../lib/preferencesStorage'
 import { CloseButton, PopupShell } from '../InfoPopup'
 
 let savedScroll = 0
 let savedKey = ''
-
-const NAME_MODE_KEY = 'species-name-mode'
 
 interface Props {
   expandedSpecies?: string
@@ -23,9 +20,8 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
   const closePopup = useStore((s) => s.closePopup)
 
   const [openSpecies, setOpenSpecies] = useState<string | null>(expandedSpecies ?? null)
-  const [nameMode, setNameMode] = useState<'scientific' | 'indigenous'>(
-    loadPreference(NAME_MODE_KEY, 'scientific' as const),
-  )
+  const nameMode = useStore((s) => s.nameMode)
+  const setNameMode = useStore((s) => s.setNameMode)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const selectedRowRef = useRef<HTMLDivElement>(null)
@@ -61,7 +57,6 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
       savedScroll = scrollRef.current.scrollTop
       savedKey = listKey
     }
-    savePreference(NAME_MODE_KEY, nameMode)
     closePopup()
   }
 

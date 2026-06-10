@@ -1,9 +1,6 @@
 import { X } from 'lucide-react'
 import { useStore } from '../store'
 import { capitalizeFirst } from '../lib/utils'
-import { loadPreference } from '../lib/preferencesStorage'
-
-const NAME_MODE_KEY = 'species-name-mode'
 
 interface Props {
   onClear: () => void
@@ -14,10 +11,9 @@ export function SpeciesFilterBadge({ onClear }: Props) {
   const citySpecies = useStore((s) => s.citySpecies)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const isLoadingSpeciesFilter = useStore((s) => s.isLoadingSpeciesFilter)
+  const nameMode = useStore((s) => s.nameMode)
 
   if (!speciesFilter && !isLoadingSpeciesFilter) return null
-
-  const nameMode = loadPreference<'scientific' | 'indigenous'>(NAME_MODE_KEY, 'scientific')
   const speciesItem = citySpecies.find(
     (s) => (s.species_binomial ?? s.species) === speciesFilter,
   )

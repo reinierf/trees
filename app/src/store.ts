@@ -1,5 +1,9 @@
 import { create } from 'zustand'
 import type { Tree, SpeciesItem } from './types'
+import { loadPreference, savePreference } from './lib/preferencesStorage'
+
+const NAME_MODE_KEY = 'species-name-mode'
+export type NameMode = 'scientific' | 'indigenous'
 
 export type PopupView =
   | { kind: 'species-list'; expandedSpecies?: string; selectedTreeId?: string }
@@ -16,6 +20,7 @@ interface AppStore {
   citySpecies: SpeciesItem[]
   speciesFilter: string | null
   isLoadingSpeciesFilter: boolean
+  nameMode: NameMode
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -32,6 +37,7 @@ interface AppStore {
   setSpeciesFilter: (species: string, trees: Tree[]) => void
   clearSpeciesFilter: () => void
   setIsLoadingSpeciesFilter: (v: boolean) => void
+  setNameMode: (mode: NameMode) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -45,6 +51,7 @@ export const useStore = create<AppStore>((set) => ({
   citySpecies: [],
   speciesFilter: null,
   isLoadingSpeciesFilter: false,
+  nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -66,4 +73,5 @@ export const useStore = create<AppStore>((set) => ({
   setSpeciesFilter: (species, trees) => set({ speciesFilter: species, visibleTrees: trees, tooZoomedOut: false, isLoadingSpeciesFilter: false }),
   clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
   setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
+  setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
 }))

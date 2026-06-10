@@ -2,10 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, Search, X } from 'lucide-react'
 import { useStore } from '../store'
 import { capitalizeFirst } from '../lib/utils'
-import { loadPreference } from '../lib/preferencesStorage'
 
 const MAX_RESULTS = 100
-const NAME_MODE_KEY = 'species-name-mode'
 
 interface Props {
   onSelect: (speciesBinomial: string) => void
@@ -15,14 +13,11 @@ interface Props {
 export function SearchOverlay({ onSelect, onClose }: Props) {
   const citySpecies = useStore((s) => s.citySpecies)
   const isLoadingSpeciesFilter = useStore((s) => s.isLoadingSpeciesFilter)
+  const nameMode = useStore((s) => s.nameMode)
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
-
-  const [nameMode] = useState(() =>
-    loadPreference<'scientific' | 'indigenous'>(NAME_MODE_KEY, 'scientific'),
-  )
 
   const filtered = useMemo(() => {
     const q = query.trim().toUpperCase()

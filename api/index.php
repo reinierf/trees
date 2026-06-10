@@ -222,15 +222,16 @@ function handle_species(): void
     $strict = !empty($_GET['strict']) && $_GET['strict'] !== '0';
 
     if ($strict) {
-        $select = 'SELECT species, species_binomial, MIN(name_indigenous) AS name_indigenous
+        $select = 'SELECT species, species_binomial, MIN(name_indigenous) AS name_indigenous,
+                          COUNT(*) AS count
                    FROM trees WHERE species IS NOT NULL';
-        $group  = 'GROUP BY species ORDER BY species LIMIT 50';
+        $group  = 'GROUP BY species ORDER BY COUNT(*) DESC';
         $col    = 'species';
     } else {
         $select = 'SELECT species_binomial AS species, species_binomial,
-                          MIN(name_indigenous) AS name_indigenous
+                          MIN(name_indigenous) AS name_indigenous, COUNT(*) AS count
                    FROM trees WHERE species_binomial IS NOT NULL';
-        $group  = 'GROUP BY species_binomial ORDER BY species_binomial LIMIT 50';
+        $group  = 'GROUP BY species_binomial ORDER BY COUNT(*) DESC';
         $col    = 'species_binomial';
     }
 
@@ -251,6 +252,7 @@ function handle_species(): void
         if ($key !== '' && isset($lookup[$key])) {
             $row['name_indigenous'] = $lookup[$key]['name_indigenous'];
         }
+        $row['count'] = (int) $row['count'];
         $rows[] = $row;
     }
     respond(200, $rows);

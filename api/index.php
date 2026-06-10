@@ -188,7 +188,7 @@ function query_bbox(string $city, array $bboxes, ?string $species, bool $strict,
     $params = [];
 
     if ($species !== null && $species !== '') {
-        $col              = $strict ? 'species' : 'species_binomial';
+        $col              = $strict ? 'UPPER(species)' : 'UPPER(species_binomial)';
         $sql             .= " AND {$col} = :species";
         $params[':species'] = $species;
     }

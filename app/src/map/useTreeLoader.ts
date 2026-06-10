@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { fetchTrees } from '../api/trees'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, MAX_VIEWPORT_DEG2 } from '../config'
@@ -11,9 +11,13 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
   const setVisibleTrees = useStore((s) => s.setVisibleTrees)
   const speciesFilter = useStore((s) => s.speciesFilter)
+  // Ref so the load callback always reads the current value even when captured
+  // in a stale closure (e.g. the onMoveEnd handler in MapController).
+  const speciesFilterRef = useRef(speciesFilter)
+  useEffect(() => { speciesFilterRef.current = speciesFilter }, [speciesFilter])
 
   const load = useCallback(async (bounds: Bbox, zoom: number) => {
-    if (speciesFilter) return
+    if (speciesFilterRef.current) return
     if (zoom < MIN_FETCH_ZOOM) {
       setTooZoomedOut(true)
       setVisibleTrees([])
@@ -45,7 +49,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
     } finally {
       setIsLoading(false)
     }
-  }, [cityId, cache, setIsLoading, setTooZoomedOut, setVisibleTrees, speciesFilter])
+  }, [cityId, cache, setIsLoading, setTooZoomedOut, setVisibleTrees])
 
   const abort = useCallback(() => {
     abortControllerRef.current?.abort()

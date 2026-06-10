@@ -21,15 +21,20 @@ export function SearchOverlay({ onSelect, onClose }: Props) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toUpperCase()
-    if (!q) return citySpecies.slice(0, MAX_RESULTS)
-    return citySpecies
-      .filter(
-        (s) =>
-          s.species.toUpperCase().includes(q) ||
-          (s.name_indigenous?.toUpperCase().includes(q) ?? false),
-      )
-      .slice(0, MAX_RESULTS)
-  }, [query, citySpecies])
+    const matches = q
+      ? citySpecies.filter(
+          (s) =>
+            s.species.toUpperCase().includes(q) ||
+            (s.name_indigenous?.toUpperCase().includes(q) ?? false),
+        )
+      : citySpecies.slice()
+    matches.sort((a, b) => {
+      const nameA = nameMode === 'indigenous' && a.name_indigenous ? a.name_indigenous : a.species
+      const nameB = nameMode === 'indigenous' && b.name_indigenous ? b.name_indigenous : b.species
+      return nameA.localeCompare(nameB, 'nl')
+    })
+    return matches.slice(0, MAX_RESULTS)
+  }, [query, citySpecies, nameMode])
 
   useEffect(() => {
     setActiveIndex(0)

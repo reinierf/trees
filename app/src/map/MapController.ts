@@ -12,6 +12,7 @@ interface Callbacks {
 
 export class MapController {
     private map: L.Map | null = null
+    private tileLayer: L.TileLayer | null = null
     private readonly clusterLayer: L.MarkerClusterGroup
     private readonly callbacks: Callbacks
     private dragOccurred = false
@@ -31,7 +32,7 @@ export class MapController {
     init(el: HTMLDivElement, center: [number, number], zoom?: number): void {
         this.map = L.map(el, { center, zoom: zoom ?? MAP_ZOOM })
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        this.tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             maxZoom: MAP_MAX_ZOOM,
         }).addTo(this.map)
@@ -142,6 +143,13 @@ export class MapController {
         for (const { m, species: s } of this.markers) {
             m.setOpacity(species === null || species === s ? 1 : 0.5)
         }
+    }
+
+    switchTileLayer(url: string, attribution: string, maxZoom: number): void {
+        if (!this.map) return
+        this.tileLayer?.remove()
+        this.tileLayer = L.tileLayer(url, { attribution, maxZoom }).addTo(this.map)
+        this.tileLayer.bringToBack()
     }
 
     destroy(): void {

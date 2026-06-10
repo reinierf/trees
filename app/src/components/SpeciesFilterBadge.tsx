@@ -31,7 +31,7 @@ export function SpeciesFilterBadge({ onClear }: Props) {
       ) : (
         <>
           <span
-            className={`truncate ${nameMode === 'scientific' ? 'italic' : ''}`}
+            className={`truncate pr-0.5 ${nameMode === 'scientific' ? 'italic' : ''}`}
             title={speciesFilter ?? undefined}
           >
             {displayName}

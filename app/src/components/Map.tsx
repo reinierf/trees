@@ -13,6 +13,7 @@ import { LoadingSpinner } from './LoadingSpinner'
 import { SearchButton } from './SearchButton'
 import { SearchOverlay } from './SearchOverlay'
 import { SpeciesFilterBadge } from './SpeciesFilterBadge'
+import { LayerButton } from './LayerButton'
 import type { City } from '../types'
 
 interface Props {
@@ -119,6 +120,7 @@ export function Map({ city, cities }: Props) {
       <InfoPopup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <SpeciesFilterBadge onClear={handleClearFilter} />
       <FullscreenButton />
+      <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
       <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} />
       <SpeciesButton citiesCount={cities.length} />
       <SearchButton

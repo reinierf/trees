@@ -10,8 +10,10 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
   const setIsLoading = useStore((s) => s.setIsLoading)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
   const setVisibleTrees = useStore((s) => s.setVisibleTrees)
+  const speciesFilter = useStore((s) => s.speciesFilter)
 
   const load = useCallback(async (bounds: Bbox, zoom: number) => {
+    if (speciesFilter) return
     if (zoom < MIN_FETCH_ZOOM) {
       setTooZoomedOut(true)
       setVisibleTrees([])
@@ -43,7 +45,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
     } finally {
       setIsLoading(false)
     }
-  }, [cityId, cache, setIsLoading, setTooZoomedOut, setVisibleTrees])
+  }, [cityId, cache, setIsLoading, setTooZoomedOut, setVisibleTrees, speciesFilter])
 
   const abort = useCallback(() => {
     abortControllerRef.current?.abort()

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Tree } from './types'
+import type { Tree, SpeciesItem } from './types'
 
 export type PopupView =
   | { kind: 'species-list'; expandedSpecies?: string; selectedTreeId?: string }
@@ -13,6 +13,9 @@ interface AppStore {
   currentZoom: number
   currentCenter: [number, number] | null
   pendingTreeId: string | null
+  citySpecies: SpeciesItem[]
+  speciesFilter: string | null
+  isLoadingSpeciesFilter: boolean
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -25,6 +28,10 @@ interface AppStore {
   setCurrentZoom: (z: number) => void
   setCurrentCenter: (c: [number, number]) => void
   setPendingTreeId: (id: string | null) => void
+  setCitySpecies: (species: SpeciesItem[]) => void
+  setSpeciesFilter: (species: string, trees: Tree[]) => void
+  clearSpeciesFilter: () => void
+  setIsLoadingSpeciesFilter: (v: boolean) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -35,6 +42,9 @@ export const useStore = create<AppStore>((set) => ({
   currentZoom: 0,
   currentCenter: null,
   pendingTreeId: null,
+  citySpecies: [],
+  speciesFilter: null,
+  isLoadingSpeciesFilter: false,
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -52,4 +62,8 @@ export const useStore = create<AppStore>((set) => ({
   setCurrentZoom: (z) => set({ currentZoom: z }),
   setCurrentCenter: (c) => set({ currentCenter: c }),
   setPendingTreeId: (id) => set({ pendingTreeId: id }),
+  setCitySpecies: (species) => set({ citySpecies: species }),
+  setSpeciesFilter: (species, trees) => set({ speciesFilter: species, visibleTrees: trees, tooZoomedOut: false, isLoadingSpeciesFilter: false }),
+  clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
+  setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
 }))

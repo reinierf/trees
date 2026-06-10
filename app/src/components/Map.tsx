@@ -1,14 +1,18 @@
-import { useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
+import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, CITY_OVERVIEW_ZOOM } from '../config'
+import { fetchCitySpecies, fetchTreesBySpecies } from '../api/trees'
 import { InfoPopup } from './InfoPopup'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
 import { FullscreenButton } from './FullscreenButton'
 import { LoadingSpinner } from './LoadingSpinner'
+import { SearchButton } from './SearchButton'
+import { SearchOverlay } from './SearchOverlay'
+import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import type { City } from '../types'
 
 interface Props {
@@ -21,7 +25,6 @@ function pickCity(lat: number, lon: number, cities: City[]): string {
     (c) => lat >= c.bbox.s && lat <= c.bbox.n && lon >= c.bbox.w && lon <= c.bbox.e,
   )
   if (contained.length === 1) return contained[0].id
-  // Euclidean distance in degrees is fine for Netherlands-scale distances
   let nearest = cities[0]
   let minDist = Infinity
   for (const c of cities) {
@@ -39,6 +42,53 @@ export function Map({ city, cities }: Props) {
   const isLoading = useStore((s) => s.isLoading)
   const currentZoom = useStore((s) => s.currentZoom)
   const currentCenter = useStore((s) => s.currentCenter)
+  const speciesFilter = useStore((s) => s.speciesFilter)
+  const setCitySpecies = useStore((s) => s.setCitySpecies)
+  const setSpeciesFilter = useStore((s) => s.setSpeciesFilter)
+  const clearSpeciesFilter = useStore((s) => s.clearSpeciesFilter)
+  const setIsLoadingSpeciesFilter = useStore((s) => s.setIsLoadingSpeciesFilter)
+  const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
+
+  const [searchOpen, setSearchOpen] = useState(false)
+  const speciesAbortRef = useRef<AbortController | null>(null)
+
+  // Fetch species roster for the city once on mount; also clears any filter from a previous city
+  useEffect(() => {
+    clearSpeciesFilter()
+    fetchCitySpecies(city.id).then(setCitySpecies).catch(console.error)
+  }, [city.id, setCitySpecies, clearSpeciesFilter])
+
+  const handleSpeciesSelect = useCallback(async (speciesBinomial: string) => {
+    setSearchOpen(false)
+    setIsLoadingSpeciesFilter(true)
+
+    speciesAbortRef.current?.abort()
+    speciesAbortRef.current = new AbortController()
+
+    try {
+      const trees = await fetchTreesBySpecies(
+        city.id,
+        speciesBinomial,
+        city.bbox,
+        speciesAbortRef.current.signal,
+      )
+      setSpeciesFilter(speciesBinomial, trees)
+      controllerRef.current?.flyToLocation(city.center[0], city.center[1], CITY_OVERVIEW_ZOOM)
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') {
+        console.error('Failed to fetch species trees', e)
+        setIsLoadingSpeciesFilter(false)
+      }
+    }
+  }, [city, setIsLoadingSpeciesFilter, setSpeciesFilter, controllerRef])
+
+  function handleClearFilter() {
+    speciesAbortRef.current?.abort()
+    clearSpeciesFilter()
+    if (currentZoom < MIN_FETCH_ZOOM) {
+      setTooZoomedOut(true)
+    }
+  }
 
   const centerStr = currentCenter
     ? `[${currentCenter[0].toFixed(4)}, ${currentCenter[1].toFixed(4)}]`
@@ -49,7 +99,7 @@ export function Map({ city, cities }: Props) {
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
-      {tooZoomedOut && (
+      {tooZoomedOut && !speciesFilter && (
         <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
             Zoom in {Math.ceil(MIN_FETCH_ZOOM - currentZoom)}x to see trees
@@ -67,9 +117,15 @@ export function Map({ city, cities }: Props) {
         </div>
       )}
       <InfoPopup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
+      <SpeciesFilterBadge onClear={handleClearFilter} />
       <FullscreenButton />
       <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} />
       <SpeciesButton citiesCount={cities.length} />
+      <SearchButton
+        citiesCount={cities.length}
+        onClick={() => setSearchOpen((o) => !o)}
+        active={searchOpen || speciesFilter !== null}
+      />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {
@@ -79,6 +135,12 @@ export function Map({ city, cities }: Props) {
           controllerRef.current?.setLocationMarker(lat, lon)
         }
       }} />
+      {searchOpen && (
+        <SearchOverlay
+          onSelect={handleSpeciesSelect}
+          onClose={() => setSearchOpen(false)}
+        />
+      )}
     </div>
   )
 }

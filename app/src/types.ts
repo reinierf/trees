@@ -27,7 +27,9 @@ export interface Tree {
 
 export interface SpeciesItem {
   species: string
-  name_indigenous: string
+  species_binomial: string | null
+  name_indigenous: string | null
+  count: number
 }
 
 export interface City {

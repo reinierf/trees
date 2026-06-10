@@ -1,6 +1,9 @@
 import { create } from 'zustand'
 import type { Tree, SpeciesItem } from './types'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
+import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
+
+export type { TileLayerId }
 
 const NAME_MODE_KEY = 'species-name-mode'
 export type NameMode = 'scientific' | 'indigenous'
@@ -21,6 +24,7 @@ interface AppStore {
   speciesFilter: string | null
   isLoadingSpeciesFilter: boolean
   nameMode: NameMode
+  tileLayerId: TileLayerId
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -38,6 +42,7 @@ interface AppStore {
   clearSpeciesFilter: () => void
   setIsLoadingSpeciesFilter: (v: boolean) => void
   setNameMode: (mode: NameMode) => void
+  setTileLayerId: (id: TileLayerId) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -52,6 +57,7 @@ export const useStore = create<AppStore>((set) => ({
   speciesFilter: null,
   isLoadingSpeciesFilter: false,
   nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
+  tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -74,4 +80,5 @@ export const useStore = create<AppStore>((set) => ({
   clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
   setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
   setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
+  setTileLayerId: (id) => { savePreference(TILE_LAYER_KEY, id); set({ tileLayerId: id }) },
 }))

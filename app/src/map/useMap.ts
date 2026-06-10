@@ -9,6 +9,7 @@ import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
 import { useCitySwitcher } from './useCitySwitcher'
+import { LAYERS } from './layers'
 import type { City } from '../types'
 
 export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
@@ -102,6 +103,12 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     controller.init(el, initCenter, initZoom)
     controllerRef.current = controller
+
+    const storedLayerId = useStore.getState().tileLayerId
+    if (storedLayerId !== 'streets') {
+      const layer = LAYERS.find((l) => l.id === storedLayerId)
+      if (layer) controller.switchTileLayer(layer.url, layer.attribution, layer.maxZoom)
+    }
 
     if (locationFly) {
       controller.flyToLocation(locationFly.lat, locationFly.lon)

@@ -3,7 +3,7 @@ import { Crosshair, Heart, Share2, ArrowUp } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
-import { PopupShell, CloseButton } from '../InfoPopup'
+import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
 import type { Tree } from '../../types'
 
 function wikiUrl(binomial: string): string {
@@ -55,6 +55,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const toggleFavourite = useStore((s) => s.toggleFavourite)
   const favourites = useStore((s) => s.favourites)
+  const [collapsed, setCollapsed] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -102,80 +103,92 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
 
   return (
     <PopupShell>
-      <div className="flex items-start justify-between gap-2 px-4 pt-4 pb-2">
-        <div className="min-w-0">
+      <div className="px-4 pt-2 pb-2">
+        <div className="flex items-center justify-between gap-2">
           <button
             onClick={handleUpButton}
-            className="font-semibold text-sm leading-snug italic text-left hover:underline"
+            className="font-semibold text-sm leading-snug italic text-left hover:underline min-w-0"
           >
             <ArrowUp size={12} className="inline-block mr-0.5 -mt-0.5 opacity-50" />
             {displayName}{cultivar}
           </button>
-          {tree.name_indigenous && (
-            <p className="text-sm mt-0.5">
-              {capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
-            </p>
-          )}
+          <div className="flex items-center gap-2 shrink-0">
+            <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
+            <CloseButton onClick={closePopup} />
+          </div>
         </div>
-        <div className="relative flex items-center gap-3 shrink-0 mt-0.5">
-          <button
-            onClick={() => toggleFavourite(cityId, tree)}
-            className={`${isFav ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
-            aria-label={isFav ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
-          >
-            <Heart size={15} className={isFav ? 'fill-red-400' : ''} />
-          </button>
-          <button
-            onClick={handleShare}
-            className="text-muted-foreground hover:text-foreground"
-            aria-label="Deel link naar boom"
-          >
-            <Share2 size={15} />
-          </button>
-          <button
-            onClick={() => setPendingCenter([tree.lat, tree.lon])}
-            className="text-muted-foreground hover:text-foreground"
-            aria-label="Center map on tree"
-          >
-            <Crosshair size={15} />
-          </button>
-          <CloseButton onClick={closePopup} />
-          {toast && (
-            <div className="absolute top-full right-0 mt-1 bg-popover text-popover-foreground border text-xs rounded px-2 py-1 shadow-md max-w-[220px] truncate z-10">
-              {toast}
+
+        {!collapsed && tree.name_indigenous && (
+          <p className="text-sm mt-0.5">
+            {capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
+          </p>
+        )}
+      </div>
+
+      {!collapsed && (
+        <>
+          <div className="px-4 pb-3 space-y-1 border-t pt-2">
+            <Row label="Geplant" value={tree.year_planted} />
+            <Row label="Straat" value={capitalize(tree.street)} />
+            <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
+            <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
+          </div>
+
+          <div className="px-4 pb-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {binomial && (
+                <>
+                  <a
+                    href={wikiUrl(binomial)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Wikipedia"
+                    className="opacity-70 hover:opacity-100"
+                  >
+                    <WikipediaIcon />
+                  </a>
+                  <a
+                    href={googleUrl(binomial, tree.species_cultivar)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Google search"
+                    className="opacity-70 hover:opacity-100"
+                  >
+                    <GoogleIcon />
+                  </a>
+                </>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="px-4 pb-3 space-y-1 border-t pt-2">
-        <Row label="Geplant" value={tree.year_planted} />
-        <Row label="Straat" value={capitalize(tree.street)} />
-        <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
-        <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
-      </div>
-
-      {binomial && (
-        <div className="px-4 pb-3 flex items-center gap-3">
-          <a
-            href={wikiUrl(binomial)}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Wikipedia"
-            className="opacity-70 hover:opacity-100"
-          >
-            <WikipediaIcon />
-          </a>
-          <a
-            href={googleUrl(binomial, tree.species_cultivar)}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Google search"
-            className="opacity-70 hover:opacity-100"
-          >
-            <GoogleIcon />
-          </a>
-        </div>
+            <div className="relative flex items-center gap-3">
+              <button
+                onClick={() => toggleFavourite(cityId, tree)}
+                className={`${isFav ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
+                aria-label={isFav ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
+              >
+                <Heart size={15} className={isFav ? 'fill-red-400' : ''} />
+              </button>
+              <button
+                onClick={handleShare}
+                className="text-muted-foreground hover:text-foreground"
+                aria-label="Deel link naar boom"
+              >
+                <Share2 size={15} />
+              </button>
+              <button
+                onClick={() => setPendingCenter([tree.lat, tree.lon])}
+                className="text-muted-foreground hover:text-foreground"
+                aria-label="Center map on tree"
+              >
+                <Crosshair size={15} />
+              </button>
+              {toast && (
+                <div className="absolute top-full right-0 mt-1 bg-popover text-popover-foreground border text-xs rounded px-2 py-1 shadow-md max-w-[220px] truncate z-10">
+                  {toast}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </PopupShell>
   )

@@ -3,7 +3,7 @@ import { ChevronRight, Info } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
-import { CloseButton, PopupShell } from '../InfoPopup'
+import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
 import type { City, Tree } from '../../types'
 
@@ -34,6 +34,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
   const [openCities, setOpenCities] = useState<Set<string>>(
     () => new Set(citiesWithFavs.map((c) => c.id)),
   )
+  const [collapsed, setCollapsed] = useState(false)
 
   function toggleCity(cityId: string) {
     setOpenCities((prev) => {
@@ -52,17 +53,18 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
 
   return (
     <PopupShell>
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+      <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
           Favorieten{' '}
           <span className="text-muted-foreground font-normal">({totalFavs})</span>
         </p>
         <div className="flex items-center gap-2">
           <NameModeToggle />
+          <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
           <CloseButton onClick={closePopup} />
         </div>
       </div>
-      <div className="overflow-y-auto max-h-[60vh] border-t">
+      {!collapsed && <div className="overflow-y-auto max-h-[60vh] border-t">
         {citiesWithFavs.length === 0 ? (
           <p className="px-4 py-3 text-sm text-muted-foreground">Geen favorieten</p>
         ) : (
@@ -113,8 +115,15 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
                             >
                               {primaryName}
                             </span>
-                            <span className="text-xs text-muted-foreground truncate w-full">
-                              {capitalize(tree.street)}
+                            <span className="flex items-center gap-2 w-full min-w-0">
+                              <span className="text-xs text-muted-foreground truncate">
+                                {capitalize(tree.street)}
+                              </span>
+                              {tree.year_planted && (
+                                <span className="text-xs text-muted-foreground shrink-0">
+                                  {tree.year_planted}
+                                </span>
+                              )}
                             </span>
                           </button>
                           <button
@@ -133,7 +142,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
             )
           })
         )}
-      </div>
+      </div>}
     </PopupShell>
   )
 }

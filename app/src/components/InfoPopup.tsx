@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react'
 import { useStore } from '../store'
 import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
@@ -19,6 +20,18 @@ export function CloseButton({ onClick }: { onClick: () => void }) {
       aria-label="Close"
     >
       ×
+    </button>
+  )
+}
+
+export function CollapseButton({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="text-muted-foreground hover:text-foreground"
+      aria-label={collapsed ? 'Uitklappen' : 'Inklappen'}
+    >
+      <ChevronDown size={16} className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
     </button>
   )
 }

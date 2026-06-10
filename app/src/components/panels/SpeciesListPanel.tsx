@@ -2,7 +2,7 @@ import { ChevronRight, Info } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
-import { CloseButton, PopupShell } from '../InfoPopup'
+import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
 
 let savedScroll = 0
@@ -20,6 +20,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
   const closePopup = useStore((s) => s.closePopup)
 
   const [openSpecies, setOpenSpecies] = useState<string | null>(expandedSpecies ?? null)
+  const [collapsed, setCollapsed] = useState(false)
   const nameMode = useStore((s) => s.nameMode)
 
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -86,17 +87,18 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
 
   return (
     <PopupShell>
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+      <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
           Species in view{' '}
           <span className="text-muted-foreground font-normal">({speciesList.length})</span>
         </p>
         <div className="flex items-center gap-2">
           <NameModeToggle />
+          <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
           <CloseButton onClick={handleClose} />
         </div>
       </div>
-      <div ref={scrollRef} className="overflow-y-auto max-h-[60vh] border-t">
+      {!collapsed && <div ref={scrollRef} className="overflow-y-auto max-h-[60vh] border-t">
         {speciesList.length === 0 ? (
           <p className="px-4 py-3 text-sm text-muted-foreground">No trees in view</p>
         ) : (
@@ -166,7 +168,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
             )
           })
         )}
-      </div>
+      </div>}
     </PopupShell>
   )
 }

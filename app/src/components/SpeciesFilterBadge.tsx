@@ -25,7 +25,7 @@ export function SpeciesFilterBadge({ onClear }: Props) {
     : ''
 
   return (
-    <div className="absolute bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg text-sm max-w-[calc(100vw-8rem)] pointer-events-auto">
+    <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md text-sm max-w-[calc(100vw-8rem)] pointer-events-auto">
       {isLoadingSpeciesFilter ? (
         <span className="text-gray-500">Bomen laden…</span>
       ) : (

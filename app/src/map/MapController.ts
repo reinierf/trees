@@ -3,6 +3,7 @@ import 'leaflet.markercluster'
 import type { Bbox, Tree } from '../types'
 import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { createSpeciesIcon, createClusterIcon, createSelectedSpeciesIcon } from './markerIcon'
+import { capitalizeFirst } from '../lib/utils'
 
 interface Callbacks {
     onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
@@ -71,13 +72,47 @@ export class MapController {
     private markers: Array<{ m: L.Marker; species: string }> = []
     private favMode = false
 
+    private static tooltipContent(tree: Tree): string {
+        const species = `<span style="font-style:italic;font-weight:600">${capitalizeFirst(tree.species_binomial ?? tree.species)}</span>`
+        if (!tree.name_indigenous) return species
+        const indigenous = capitalizeFirst(tree.name_indigenous.toLowerCase())
+            .replace(/'([a-z])/g, (_, c: string) => `'${c.toUpperCase()}`)
+        return `${species}, ${indigenous}`
+    }
+
+    private tooltipGen = 0
+
+    private addDelayedTooltip(m: L.Marker, tree: Tree, gen: number): void {
+        let timer: ReturnType<typeof setTimeout> | null = null
+        let tip: L.Tooltip | null = null
+        m.on('mouseover', () => {
+            if (timer !== null) clearTimeout(timer)
+            timer = setTimeout(() => {
+                timer = null
+                if (gen !== this.tooltipGen || !this.map) return
+                tip = L.tooltip({ direction: 'top', offset: [0, -8] })
+                    .setLatLng(m.getLatLng())
+                    .setContent(MapController.tooltipContent(tree))
+                    .addTo(this.map)
+            }, 500)
+        })
+        m.on('mouseout', () => {
+            if (timer !== null) { clearTimeout(timer); timer = null }
+            tip?.remove()
+            tip = null
+        })
+    }
+
     setTrees(trees: Tree[]): void {
+        this.tooltipGen++
         this.clusterLayer.clearLayers()
         this.markers = []
         const layerMarkers: L.Marker[] = []
+        const gen = this.tooltipGen
         for (const tree of trees) {
             if (!tree.species_binomial) continue
             const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
+            this.addDelayedTooltip(m, tree, gen)
             m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
             this.markers.push({ m, species: tree.species_binomial })
             layerMarkers.push(m)
@@ -87,13 +122,16 @@ export class MapController {
     }
 
     setFavouriteMarkers(trees: Tree[]): void {
+        this.tooltipGen++
         this.favouriteLayer.clearLayers()
+        const gen = this.tooltipGen
         for (const tree of trees) {
             if (!tree.species_binomial) continue
             const m = L.marker([tree.lat, tree.lon], {
                 icon: createSpeciesIcon(tree.species_binomial),
                 pane: 'favouritePane',
             })
+            this.addDelayedTooltip(m, tree, gen)
             m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
             this.favouriteLayer.addLayer(m)
         }

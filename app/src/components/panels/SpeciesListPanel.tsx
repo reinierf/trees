@@ -1,8 +1,9 @@
-import { ChevronRight, GraduationCap, Info, Leaf } from 'lucide-react'
+import { ChevronRight, Info } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
 import { CloseButton, PopupShell } from '../InfoPopup'
+import { NameModeToggle } from '../NameModeToggle'
 
 let savedScroll = 0
 let savedKey = ''
@@ -10,7 +11,6 @@ let savedKey = ''
 interface Props {
   expandedSpecies?: string
   selectedTreeId?: string
-  onCenter: (lat: number, lon: number) => void
 }
 
 export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
@@ -21,7 +21,6 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
 
   const [openSpecies, setOpenSpecies] = useState<string | null>(expandedSpecies ?? null)
   const nameMode = useStore((s) => s.nameMode)
-  const setNameMode = useStore((s) => s.setNameMode)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const selectedRowRef = useRef<HTMLDivElement>(null)
@@ -93,22 +92,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
           <span className="text-muted-foreground font-normal">({speciesList.length})</span>
         </p>
         <div className="flex items-center gap-2">
-          <div className="flex items-center border rounded overflow-hidden">
-            <button
-              title="Scientific names"
-              onClick={() => setNameMode('scientific')}
-              className={`p-1 ${nameMode === 'scientific' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              <GraduationCap size={15} />
-            </button>
-            <button
-              title="Indigenous names"
-              onClick={() => setNameMode('indigenous')}
-              className={`p-1 ${nameMode === 'indigenous' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-            >
-              <Leaf size={15} />
-            </button>
-          </div>
+          <NameModeToggle />
           <CloseButton onClick={handleClose} />
         </div>
       </div>

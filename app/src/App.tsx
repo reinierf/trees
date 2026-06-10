@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCities } from './api/trees'
 import { Map } from './components/Map'
+import { InfoPopup } from './components/InfoPopup'
 import type { City } from './types'
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
   return (
     <div className="w-screen h-dvh">
       <Map key={currentCity.id} city={currentCity} cities={cities} />
+      <InfoPopup cities={cities} currentCityId={currentCity.id} />
     </div>
   )
 }

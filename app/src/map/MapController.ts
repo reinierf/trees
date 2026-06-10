@@ -14,6 +14,7 @@ export class MapController {
     private map: L.Map | null = null
     private tileLayer: L.TileLayer | null = null
     private readonly clusterLayer: L.MarkerClusterGroup
+    private readonly favouriteLayer: L.LayerGroup = L.layerGroup()
     private readonly callbacks: Callbacks
     private dragOccurred = false
     private currentHighlight: string | null = null
@@ -37,9 +38,11 @@ export class MapController {
             maxZoom: MAP_MAX_ZOOM,
         }).addTo(this.map)
 
-        this.map.createPane('selectionPane').style.zIndex = '650'
+        this.map.createPane('favouritePane').style.zIndex = '620'
+        this.map.createPane('selectionPane').style.zIndex = '640'
 
         this.clusterLayer.addTo(this.map)
+        this.favouriteLayer.addTo(this.map)
 
         this.map.on('moveend', () => this.fireMoveEnd())
         this.map.on('drag', () => { this.dragOccurred = true })
@@ -66,6 +69,7 @@ export class MapController {
     }
 
     private markers: Array<{ m: L.Marker; species: string }> = []
+    private favMode = false
 
     setTrees(trees: Tree[]): void {
         this.clusterLayer.clearLayers()
@@ -79,7 +83,20 @@ export class MapController {
             layerMarkers.push(m)
         }
         this.clusterLayer.addLayers(layerMarkers)
-        this.highlightSpecies(this.currentHighlight)
+        this.applyOpacities()
+    }
+
+    setFavouriteMarkers(trees: Tree[]): void {
+        this.favouriteLayer.clearLayers()
+        for (const tree of trees) {
+            if (!tree.species_binomial) continue
+            const m = L.marker([tree.lat, tree.lon], {
+                icon: createSpeciesIcon(tree.species_binomial),
+                pane: 'favouritePane',
+            })
+            m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
+            this.favouriteLayer.addLayer(m)
+        }
     }
 
     panTo(lat: number, lon: number): void {
@@ -138,10 +155,22 @@ export class MapController {
         inner.addEventListener('animationend', () => inner.classList.remove('marker-pop'), { once: true })
     }
 
+    setFavouritesMode(active: boolean): void {
+        this.favMode = active
+        this.applyOpacities()
+    }
+
     highlightSpecies(species: string | null): void {
         this.currentHighlight = species
-        for (const { m, species: s } of this.markers) {
-            m.setOpacity(species === null || species === s ? 1 : 0.5)
+        this.applyOpacities()
+    }
+
+    private applyOpacities(): void {
+        for (const { m, species } of this.markers) {
+            const opacity = this.favMode
+                ? 0.4
+                : (this.currentHighlight === null || this.currentHighlight === species ? 1 : 0.5)
+            m.setOpacity(opacity)
         }
     }
 

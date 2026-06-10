@@ -26,10 +26,15 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
   const setPendingTreeId = useStore((s) => s.setPendingTreeId)
+  const setPendingCenter = useStore((s) => s.setPendingCenter)
+  const setPendingHighlight = useStore((s) => s.setPendingHighlight)
   const openTreeDetail = useStore((s) => s.openTreeDetail)
   const visibleTrees = useStore((s) => s.visibleTrees)
   const popupView = useStore((s) => s.popupView)
   const pendingTreeId = useStore((s) => s.pendingTreeId)
+  const pendingCenter = useStore((s) => s.pendingCenter)
+  const pendingHighlight = useStore((s) => s.pendingHighlight)
+  const favourites = useStore((s) => s.favourites)
 
   const { load: loadTrees, abort: abortLoad } = useTreeLoader(city.id, tileCacheRef.current)
   const { onMapClick, onMarkerClick } = useMapClickHandlers()
@@ -127,7 +132,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       abortLoad()
       controller.destroy()
       controllerRef.current = null
-      closePopup()
+      if (useStore.getState().popupView?.kind !== 'favourites') closePopup()
       setVisibleTrees([])
     }
   }, [city, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -163,6 +168,26 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   useEffect(() => {
     controllerRef.current?.setTrees(visibleTrees)
   }, [visibleTrees])
+
+  useEffect(() => {
+    if (!pendingCenter) return
+    controllerRef.current?.panTo(pendingCenter[0], pendingCenter[1])
+    setPendingCenter(null)
+  }, [pendingCenter, setPendingCenter])
+
+  useEffect(() => {
+    if (!pendingHighlight) return
+    controllerRef.current?.highlightTree(pendingHighlight, true)
+    setPendingHighlight(null)
+  }, [pendingHighlight, setPendingHighlight])
+
+  useEffect(() => {
+    const inFavMode = popupView?.kind === 'favourites' ||
+      (popupView?.kind === 'tree-detail' && popupView.returnTo === 'favourites')
+    const trees = inFavMode ? (favourites[city.id] ?? []) : []
+    controllerRef.current?.setFavouriteMarkers(trees)
+    controllerRef.current?.setFavouritesMode(inFavMode)
+  }, [popupView, favourites, city.id])
 
   useEffect(() => {
     if (!pendingTreeId) return

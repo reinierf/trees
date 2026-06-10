@@ -4,7 +4,6 @@ import { useMap } from '../map/useMap'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, CITY_OVERVIEW_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies } from '../api/trees'
-import { InfoPopup } from './InfoPopup'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
@@ -14,6 +13,7 @@ import { SearchButton } from './SearchButton'
 import { SearchOverlay } from './SearchOverlay'
 import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
+import { FavouritesButton } from './FavouritesButton'
 import type { City } from '../types'
 
 interface Props {
@@ -117,7 +117,6 @@ export function Map({ city, cities }: Props) {
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
         </div>
       )}
-      <InfoPopup onCenter={(lat, lon) => controllerRef.current?.panTo(lat, lon)} />
       <SpeciesFilterBadge onClear={handleClearFilter} />
       <FullscreenButton />
       <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
@@ -128,6 +127,7 @@ export function Map({ city, cities }: Props) {
         onClick={() => setSearchOpen((o) => !o)}
         active={searchOpen || speciesFilter !== null}
       />
+      <FavouritesButton citiesCount={cities.length} />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Crosshair, Share2, ArrowUp } from 'lucide-react'
+import { Crosshair, Heart, Share2, ArrowUp } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
@@ -44,14 +44,21 @@ function Row({ label, value }: { label: string; value: string | number | null | 
 
 interface Props {
   tree: Tree
-  onCenter: (lat: number, lon: number) => void
+  returnTo: 'species-list' | 'favourites'
+  cityId: string
 }
 
-export function TreeDetailPanel({ tree, onCenter }: Props) {
+export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
+  const openFavourites = useStore((s) => s.openFavourites)
   const closePopup = useStore((s) => s.closePopup)
+  const setPendingCenter = useStore((s) => s.setPendingCenter)
+  const toggleFavourite = useStore((s) => s.toggleFavourite)
+  const favourites = useStore((s) => s.favourites)
   const [toast, setToast] = useState<string | null>(null)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const isFav = (favourites[cityId] ?? []).some((t) => t.id === tree.id)
 
   const binomial = tree.species_binomial
   const speciesKey = binomial ?? tree.species
@@ -85,12 +92,20 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
     }
   }
 
+  function handleUpButton() {
+    if (returnTo === 'favourites') {
+      openFavourites()
+    } else {
+      openSpeciesListAt(speciesKey, tree.id)
+    }
+  }
+
   return (
     <PopupShell>
       <div className="flex items-start justify-between gap-2 px-4 pt-4 pb-2">
         <div className="min-w-0">
-<button
-            onClick={() => openSpeciesListAt(speciesKey, tree.id)}
+          <button
+            onClick={handleUpButton}
             className="font-semibold text-sm leading-snug italic text-left hover:underline"
           >
             <ArrowUp size={12} className="inline-block mr-0.5 -mt-0.5 opacity-50" />
@@ -104,6 +119,13 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
         </div>
         <div className="relative flex items-center gap-3 shrink-0 mt-0.5">
           <button
+            onClick={() => toggleFavourite(cityId, tree)}
+            className={`${isFav ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
+            aria-label={isFav ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
+          >
+            <Heart size={15} className={isFav ? 'fill-red-400' : ''} />
+          </button>
+          <button
             onClick={handleShare}
             className="text-muted-foreground hover:text-foreground"
             aria-label="Deel link naar boom"
@@ -111,7 +133,7 @@ export function TreeDetailPanel({ tree, onCenter }: Props) {
             <Share2 size={15} />
           </button>
           <button
-            onClick={() => onCenter(tree.lat, tree.lon)}
+            onClick={() => setPendingCenter([tree.lat, tree.lon])}
             className="text-muted-foreground hover:text-foreground"
             aria-label="Center map on tree"
           >

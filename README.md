@@ -11,7 +11,8 @@ Interactive map of municipal trees for Dutch cities. Data is loaded on demand fo
 - **Viewport-based loading** — trees are fetched only for the visible bounding box. A spatial tile cache avoids redundant requests when panning.
 - **Species markers** — each tree is rendered as a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*). Markers cluster at lower zoom levels.
 - **Species list panel** — shows all species in the current view with counts; expanding a species lists individual trees; clicking navigates the map to the tree.
-- **Tree detail panel** — full tree info (species, Dutch name, year planted, street, trunk diameter, crown spread) with a Wikipedia link.
+- **Tree detail panel** — full tree info (species, Dutch name, year planted, street, trunk diameter, crown spread) with a Wikipedia link and a photo thumbnail.
+- **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
 - **Species filter** — search the full city species list; filter the map to a single species. Active filter persists across map moves.
 - **Favourites** — save trees across cities; stored in `localStorage`.
 - **Name mode toggle** — switch between scientific and Dutch indigenous names throughout the UI.
@@ -239,6 +240,7 @@ src/
   main.tsx
   api/
     trees.ts                    POST /api/trees, GET /api/species, GET /api/cities
+    useTreePhotos.ts            iNaturalist two-step fetch + session cache
   map/
     MapController.ts            Leaflet wrapper class, no React imports
     useMap.ts                   React ↔ MapController bridge
@@ -263,9 +265,10 @@ src/
     CityButton.tsx
     NameModeToggle.tsx          scientific ↔ indigenous name display
     LoadingSpinner.tsx
+    TreeImageModal.tsx          species photo viewer (portal, swipeable gallery)
     panels/
       SpeciesListPanel.tsx      tree count + expandable species list
-      TreeDetailPanel.tsx       full tree detail + Wikipedia link
+      TreeDetailPanel.tsx       full tree detail + Wikipedia link + photo thumbnail
       FavouritesPanel.tsx       saved favourites grouped by city
 ```
 

@@ -4,6 +4,8 @@ import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
 import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
+import { useTreePhotos } from '../../api/useTreePhotos'
+import { TreeImageModal } from '../TreeImageModal'
 import type { Tree } from '../../types'
 
 function wikiUrl(binomial: string): string {
@@ -57,7 +59,15 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const favourites = useStore((s) => s.favourites)
   const [collapsed, setCollapsed] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const [photoModalOpen, setPhotoModalOpen] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const { thumbnail, photos, loadPhotos } = useTreePhotos(tree.species_binomial)
+
+  function openPhotos() {
+    setPhotoModalOpen(true)
+    void loadPhotos()
+  }
 
   const isFav = (favourites[cityId] ?? []).some((t) => t.id === tree.id)
 
@@ -102,6 +112,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   }
 
   return (
+    <>
     <PopupShell>
       <div className="px-4 pt-2 pb-2">
         <div className="flex items-center justify-between gap-2">
@@ -127,11 +138,28 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
 
       {!collapsed && (
         <>
-          <div className="px-4 pb-3 space-y-1 border-t pt-2">
-            <Row label="Geplant" value={tree.year_planted} />
-            <Row label="Straat" value={capitalize(tree.street)} />
-            <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
-            <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
+          <div className="flex gap-2 px-4 pb-3 border-t pt-2">
+            <div className="flex-1 space-y-1 min-w-0">
+              <Row label="Geplant" value={tree.year_planted} />
+              <Row label="Straat" value={capitalize(tree.street)} />
+              <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
+              <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
+            </div>
+            {thumbnail !== null && (
+              <div className="w-11 h-11 shrink-0 self-start">
+                {thumbnail === undefined ? (
+                  <div className="w-full h-full rounded-sm bg-muted animate-pulse" />
+                ) : (
+                  <button
+                    onClick={openPhotos}
+                    className="w-full h-full rounded-sm overflow-hidden block"
+                    aria-label="Bekijk foto's"
+                  >
+                    <img src={thumbnail.mediumUrl} alt="" className="w-full h-full object-cover" />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="px-4 pb-3 flex items-center justify-between">
@@ -191,5 +219,13 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         </>
       )}
     </PopupShell>
+    {photoModalOpen && thumbnail && (
+      <TreeImageModal
+        thumbnail={thumbnail}
+        photos={photos}
+        onClose={() => setPhotoModalOpen(false)}
+      />
+    )}
+    </>
   )
 }

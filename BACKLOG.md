@@ -10,6 +10,10 @@ Nice-to-have improvements to pick up later.
 - [ ] Prune fields in fetcher
 - [ ] Have tree images in the TreeDetailPanel: tree, leaf, bark, optionally: fruit/flower
 - [ ] Guard api against outside usage
+- [ ] Fix build warning: (!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
 
 ## UI / Components
 

@@ -205,7 +205,6 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     if (pv?.kind === 'tree-detail') {
       tree = pv.tree
-      species = pv.tree.species_binomial ?? null
     } else if (pv?.kind === 'species-list' && pv.expandedSpecies) {
       species = pv.expandedSpecies
       if (pv.selectedTreeId) {
@@ -216,7 +215,6 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       const pending = visibleTrees.find((t) => t.id === pendingTreeId)
       if (pending) {
         tree = pending
-        species = pending.species_binomial ?? null
         animate = pendingAnimatedRef.current !== pendingTreeId
         pendingAnimatedRef.current = pendingTreeId
       }

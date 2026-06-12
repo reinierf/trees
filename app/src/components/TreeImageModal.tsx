@@ -68,20 +68,19 @@ export function TreeImageModal({ thumbnail, photos, speciesName, indigenousName,
       </div>
 
       {/* Large image */}
-      <div className="relative flex-1 overflow-hidden p-1">
+      <div className="flex-1 overflow-hidden p-1 min-h-0">
         <img
           key={current.largeUrl}
           src={current.largeUrl}
           alt=""
           className="w-full h-full object-contain"
         />
-        {/* Attribution */}
-        <div className="absolute bottom-3 inset-x-0 flex justify-center pointer-events-none">
-          <span className="bg-black/40 text-white/85 text-[11px] leading-snug px-2.5 py-1 rounded max-w-[80%] text-center">
-            {current.attribution}
-          </span>
-        </div>
       </div>
+
+      {/* Attribution */}
+      <p className="shrink-0 text-[11px] text-muted-foreground text-center leading-snug px-4 py-1 truncate">
+        {current.attribution}
+      </p>
 
       {/* Thumb strip — outer scrolls, inner centers */}
       <div className="shrink-0 overflow-x-auto border-t border-gray-100">

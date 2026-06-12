@@ -1,11 +1,13 @@
 import { useState, useRef } from 'react'
-import { Crosshair, Heart, Share2, ArrowUp, Image, ImageOff } from 'lucide-react'
+import { Crosshair, Heart, Share2, ArrowUp, Image, ImageOff, Flag } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
 import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
 import { useTreePhotos } from '../../api/useTreePhotos'
 import { TreeImageModal } from '../TreeImageModal'
+import { FlagModal } from '../FlagModal'
+import { flagTree } from '../../api/trees'
 import type { Tree } from '../../types'
 
 function wikiUrl(binomial: string): string {
@@ -57,9 +59,11 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const toggleFavourite = useStore((s) => s.toggleFavourite)
   const favourites = useStore((s) => s.favourites)
+  const debugMode = useStore((s) => s.debugMode)
   const [collapsed, setCollapsed] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [photoModalOpen, setPhotoModalOpen] = useState(false)
+  const [flagOpen, setFlagOpen] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { thumbnail, photos, loadPhotos } = useTreePhotos(tree.species_binomial)
@@ -190,6 +194,15 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
                   </a>
                 </>
               )}
+              {debugMode && (
+                <button
+                  onClick={() => setFlagOpen(true)}
+                  className="text-muted-foreground hover:text-foreground"
+                  aria-label="Markeer datafout"
+                >
+                  <Flag size={15} />
+                </button>
+              )}
             </div>
             <div className="relative flex items-center gap-3">
               <button
@@ -232,6 +245,16 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
           ? capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)
           : null}
         onClose={() => setPhotoModalOpen(false)}
+      />
+    )}
+    {flagOpen && (
+      <FlagModal
+        tree={tree}
+        onClose={() => setFlagOpen(false)}
+        onSubmit={async (fields, note) => {
+          await flagTree(cityId, tree.id, tree.species_binomial ?? tree.species, tree.name_indigenous, fields, note)
+          showToast('Gemeld')
+        }}
       />
     )}
     </>

@@ -34,6 +34,22 @@ export async function fetchCitySpecies(city: string): Promise<SpeciesItem[]> {
   return response.json() as Promise<SpeciesItem[]>
 }
 
+export async function flagTree(
+  city: string,
+  treeId: string,
+  binomial: string,
+  dutchName: string | null,
+  fields: { name: string; value: string }[],
+  note: string,
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/flag`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ city, tree_id: treeId, binomial, dutch_name: dutchName ?? '', fields, note }),
+  })
+  if (!response.ok) throw new Error(`API ${response.status}`)
+}
+
 export async function fetchTreesBySpecies(
   city: string,
   speciesBinomial: string,

@@ -4,6 +4,7 @@ export const binomialCorrections = {
     'METASQUOIA':    'METASEQUOIA',   // Rotterdam typo
     'PTEROCAYRA':    'PTEROCARYA',    // Rotterdam typo
     'HIBISCUS SYR.': 'HIBISCUS SYRIACUS', // Rotterdam abbreviation
+    'ELKOVA': 'ZELKOVA', // Groningen typo
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are
@@ -19,5 +20,5 @@ export const filterSpecies = [
 // Canonical binomial (uppercase) → preferred Dutch common name.
 // Applied last, overriding whatever indigenous name came from the source.
 export const indigenousNameOverrides = {
-    // 'QUERCUS ROBUR': 'Zomereik',
+    'QUERCUS ROBUR': 'Zomereik',
 };

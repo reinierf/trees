@@ -18,6 +18,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const prevPopupKind = useRef<string | undefined>(undefined)
   const prevSelectedTreeId = useRef<string | undefined>(undefined)
   const pendingAnimatedRef = useRef<string | null>(null)
+  const highlightedIssueIdRef = useRef<string | null>(null)
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -34,6 +35,10 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const pendingTreeId = useStore((s) => s.pendingTreeId)
   const pendingCenter = useStore((s) => s.pendingCenter)
   const pendingHighlight = useStore((s) => s.pendingHighlight)
+  const pendingFlyTo = useStore((s) => s.pendingFlyTo)
+  const setPendingFlyTo = useStore((s) => s.setPendingFlyTo)
+  const pendingHighlightId = useStore((s) => s.pendingHighlightId)
+  const setPendingHighlightId = useStore((s) => s.setPendingHighlightId)
   const favourites = useStore((s) => s.favourites)
 
   const { load: loadTrees, abort: abortLoad } = useTreeLoader(city.id, tileCacheRef.current)
@@ -176,6 +181,14 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   }, [pendingCenter, setPendingCenter])
 
   useEffect(() => {
+    if (!pendingFlyTo) return
+    const { lat, lon, minZoom } = pendingFlyTo
+    const zoom = Math.max(useStore.getState().currentZoom, minZoom)
+    controllerRef.current?.flyToLocation(lat, lon, zoom)
+    setPendingFlyTo(null)
+  }, [pendingFlyTo, setPendingFlyTo])
+
+  useEffect(() => {
     if (!pendingHighlight) return
     controllerRef.current?.highlightTree(pendingHighlight, true)
     setPendingHighlight(null)
@@ -205,8 +218,10 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     if (pv?.kind === 'tree-detail') {
       tree = pv.tree
+      highlightedIssueIdRef.current = null
     } else if (pv?.kind === 'species-list' && pv.expandedSpecies) {
       species = pv.expandedSpecies
+      highlightedIssueIdRef.current = null
       if (pv.selectedTreeId) {
         tree = visibleTrees.find((t) => t.id === pv.selectedTreeId) ?? null
         animate = prevPopupKind.current === 'species-list' && pv.selectedTreeId !== prevSelectedTreeId.current
@@ -218,6 +233,17 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
         animate = pendingAnimatedRef.current !== pendingTreeId
         pendingAnimatedRef.current = pendingTreeId
       }
+      highlightedIssueIdRef.current = null
+    } else if (pendingHighlightId) {
+      const pending = visibleTrees.find((t) => t.id === pendingHighlightId)
+      if (pending) {
+        animate = highlightedIssueIdRef.current !== pendingHighlightId
+        highlightedIssueIdRef.current = pendingHighlightId
+        setPendingHighlightId(null)
+        tree = pending
+      }
+    } else if (highlightedIssueIdRef.current) {
+      tree = visibleTrees.find((t) => t.id === highlightedIssueIdRef.current!) ?? null
     }
 
     prevPopupKind.current = pv?.kind
@@ -225,7 +251,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     controllerRef.current?.highlightTree(tree, animate)
     controllerRef.current?.highlightSpecies(species)
-  }, [popupView, visibleTrees, pendingTreeId])
+  }, [popupView, visibleTrees, pendingTreeId, pendingHighlightId, setPendingHighlightId])
 
   return controllerRef
 }

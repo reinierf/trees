@@ -61,8 +61,20 @@ export function Map({ city, cities }: Props) {
     fetchIssues().then(({ trees, species }) => setIssues(trees, species)).catch(console.error)
   }, [debugMode, setIssues])
 
+  const pendingSearch    = useStore((s) => s.pendingSearch)
+  const setPendingSearch = useStore((s) => s.setPendingSearch)
+
   const [searchOpen, setSearchOpen] = useState(false)
+  const [searchInitialQuery, setSearchInitialQuery] = useState<string | undefined>(undefined)
   const speciesAbortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    if (pendingSearch !== null) {
+      setSearchInitialQuery(pendingSearch)
+      setPendingSearch(null)
+      setSearchOpen(true)
+    }
+  }, [pendingSearch, setPendingSearch])
 
   // Fetch species roster for the city once on mount; also clears any filter from a previous city
   useEffect(() => {
@@ -150,7 +162,8 @@ export function Map({ city, cities }: Props) {
       {searchOpen && (
         <SearchOverlay
           onSelect={handleSpeciesSelect}
-          onClose={() => setSearchOpen(false)}
+          initialQuery={searchInitialQuery}
+          onClose={() => { setSearchOpen(false); setSearchInitialQuery(undefined) }}
         />
       )}
     </div>

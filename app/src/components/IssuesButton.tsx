@@ -21,7 +21,7 @@ export function IssuesButton({ citiesCount }: Props) {
   return (
     <button
       onClick={isActive ? closePopup : openIssues}
-      title={total > 0 ? `Datafoutmeldingen (${total})` : 'Datafoutmeldingen'}
+      title={total > 0 ? `Data issues (${total})` : 'Data issues'}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         citiesCount > 1 ? 'top-[264px]' : 'top-[228px]',

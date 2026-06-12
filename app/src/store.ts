@@ -34,6 +34,8 @@ interface AppStore {
   debugMode: boolean
   treeIssues: TreeIssue[]
   speciesIssues: SpeciesIssue[]
+  pendingFlyTo: { lat: number; lon: number; minZoom: number } | null
+  pendingHighlightId: string | null
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -57,6 +59,10 @@ interface AppStore {
   setTileLayerId: (id: TileLayerId) => void
   toggleFavourite: (cityId: string, tree: Tree) => void
   setDebugMode: (v: boolean) => void
+  pendingSearch: string | null
+  setPendingSearch: (q: string | null) => void
+  setPendingFlyTo: (v: { lat: number; lon: number; minZoom: number } | null) => void
+  setPendingHighlightId: (id: string | null) => void
   openIssues: () => void
   setIssues: (trees: TreeIssue[], species: SpeciesIssue[]) => void
   upsertTreeIssue: (issue: TreeIssue) => void
@@ -84,6 +90,9 @@ export const useStore = create<AppStore>((set) => ({
   debugMode: import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1',
   treeIssues: [],
   speciesIssues: [],
+  pendingSearch: null,
+  pendingFlyTo: null,
+  pendingHighlightId: null,
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -121,6 +130,9 @@ export const useStore = create<AppStore>((set) => ({
       saveFavourites(updated)
       return { favourites: updated }
     }),
+  setPendingSearch: (q) => set({ pendingSearch: q }),
+  setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
+  setPendingHighlightId: (id) => set({ pendingHighlightId: id }),
   openIssues: () => set({ popupView: { kind: 'issues' } }),
   setIssues: (trees, species) => set({ treeIssues: trees, speciesIssues: species }),
   upsertTreeIssue: (issue) => set((state) => {

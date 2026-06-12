@@ -8,13 +8,14 @@ const MAX_RESULTS = 100
 interface Props {
   onSelect: (speciesBinomial: string) => void
   onClose: () => void
+  initialQuery?: string
 }
 
-export function SearchOverlay({ onSelect, onClose }: Props) {
+export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
   const citySpecies = useStore((s) => s.citySpecies)
   const isLoadingSpeciesFilter = useStore((s) => s.isLoadingSpeciesFilter)
   const nameMode = useStore((s) => s.nameMode)
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(initialQuery ?? '')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)

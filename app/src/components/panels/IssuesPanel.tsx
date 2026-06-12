@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Check } from 'lucide-react'
+import { Check, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
 import { resolveIssue } from '../../api/trees'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { TREE_FLAGS, SPECIES_FLAGS } from '../FlagModal'
+import { CLUSTER_DISABLE_ZOOM } from '../../config'
 import type { City } from '../../types'
 
 const treeFlagLabel   = Object.fromEntries(TREE_FLAGS.map((f) => [f.id, f.label]))
@@ -17,16 +18,19 @@ interface Props {
 }
 
 export function IssuesPanel({ cities, currentCityId }: Props) {
-  const treeIssues     = useStore((s) => s.treeIssues)
-  const speciesIssues  = useStore((s) => s.speciesIssues)
+  const treeIssues         = useStore((s) => s.treeIssues)
+  const speciesIssues      = useStore((s) => s.speciesIssues)
   const removeTreeIssue    = useStore((s) => s.removeTreeIssue)
   const removeSpeciesIssue = useStore((s) => s.removeSpeciesIssue)
-  const setPendingCenter   = useStore((s) => s.setPendingCenter)
-  const closePopup         = useStore((s) => s.closePopup)
+  const setPendingFlyTo        = useStore((s) => s.setPendingFlyTo)
+  const setPendingHighlightId  = useStore((s) => s.setPendingHighlightId)
+  const setPendingSearch       = useStore((s) => s.setPendingSearch)
+  const closePopup             = useStore((s) => s.closePopup)
   const navigate = useNavigate()
 
-  const [collapsed, setCollapsed] = useState(false)
-  const [resolving, setResolving] = useState<string | null>(null)
+  const [collapsed, setCollapsed]   = useState(false)
+  const [confirmKey, setConfirmKey] = useState<string | null>(null)
+  const [resolving, setResolving]   = useState<string | null>(null)
 
   const total = treeIssues.length + speciesIssues.length
 
@@ -35,6 +39,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
   async function handleResolveTree(city: string, treeId: string) {
     const key = `tree:${city}:${treeId}`
     setResolving(key)
+    setConfirmKey(null)
     try {
       await resolveIssue({ type: 'tree', city, treeId })
       removeTreeIssue(city, treeId)
@@ -46,6 +51,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
   async function handleResolveSpecies(binomial: string) {
     const key = `species:${binomial}`
     setResolving(key)
+    setConfirmKey(null)
     try {
       await resolveIssue({ type: 'species', speciesBinomial: binomial })
       removeSpeciesIssue(binomial)
@@ -54,18 +60,22 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
     }
   }
 
-  function flyToTree(city: string, lat: number | null, lon: number | null) {
+  function handleTreeClick(city: string, treeId: string, lat: number | null, lon: number | null) {
     if (!lat || !lon) return
     if (city !== currentCityId) navigate(`/${city}`)
-    setPendingCenter([lat, lon])
-    closePopup()
+    setPendingFlyTo({ lat, lon, minZoom: CLUSTER_DISABLE_ZOOM })
+    setPendingHighlightId(treeId)
+  }
+
+  function handleSpeciesSearch(binomial: string) {
+    setPendingSearch(binomial)
   }
 
   return (
     <PopupShell>
       <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
-          Datafoutmeldingen{' '}
+          Data issues{' '}
           <span className="text-muted-foreground font-normal">({total})</span>
         </p>
         <div className="flex items-center gap-2">
@@ -83,26 +93,24 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                 Bomen
               </p>
               {treeIssues.map((issue) => {
-                const key      = `tree:${issue.city}:${issue.tree_id}`
-                const name     = issue.species_binomial
-                  ? capitalizeFirst(issue.species_binomial)
-                  : '?'
-                const dutch    = issue.name_indigenous
+                const key         = `tree:${issue.city}:${issue.tree_id}`
+                const name        = issue.species_binomial ? capitalizeFirst(issue.species_binomial) : '?'
+                const dutch       = issue.name_indigenous
                   ? ` (${capitalizeFirst(issue.name_indigenous.toLowerCase())})`
                   : ''
-                const canFly   = issue.lat !== null && issue.lon !== null
-                const flagText = issue.flags.map((f) => treeFlagLabel[f] ?? f).join(', ')
+                const canFly      = issue.lat !== null && issue.lon !== null
+                const flagText    = issue.flags.map((f) => treeFlagLabel[f] ?? f).join(', ')
+                const isConfirm   = confirmKey === key
+                const isResolving = resolving === key
 
                 return (
                   <div key={key} className="flex items-start gap-2 border-b last:border-b-0">
                     <button
-                      onClick={() => canFly ? flyToTree(issue.city, issue.lat, issue.lon) : undefined}
+                      onClick={() => canFly ? handleTreeClick(issue.city, issue.tree_id, issue.lat, issue.lon) : undefined}
                       disabled={!canFly}
                       className={`flex-1 text-left py-2 pl-4 min-w-0 ${canFly ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default'}`}
                     >
-                      <span className="block text-sm italic truncate">
-                        {name}{dutch}
-                      </span>
+                      <span className="block text-sm italic truncate">{name}{dutch}</span>
                       <span className="block text-xs text-muted-foreground truncate">
                         {issue.street && `${issue.street} · `}{cityName(issue.city)}
                       </span>
@@ -113,15 +121,36 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                         <span className="block text-xs text-muted-foreground italic truncate">"{issue.note}"</span>
                       )}
                     </button>
-                    <button
-                      onClick={() => void handleResolveTree(issue.city, issue.tree_id)}
-                      disabled={resolving === key}
-                      className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
-                      aria-label="Opgelost"
-                      title="Markeer als opgelost"
-                    >
-                      <Check size={14} />
-                    </button>
+                    {isConfirm ? (
+                      <div className="flex items-center gap-1 shrink-0 p-2 mt-1">
+                        <span className="text-xs text-muted-foreground mr-0.5">Zeker?</span>
+                        <button
+                          onClick={() => void handleResolveTree(issue.city, issue.tree_id)}
+                          disabled={isResolving}
+                          className="text-green-600 hover:text-green-700 disabled:opacity-40"
+                          aria-label="Bevestig oplossen"
+                        >
+                          <Check size={14} />
+                        </button>
+                        <button
+                          onClick={() => setConfirmKey(null)}
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label="Annuleer"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmKey(key)}
+                        disabled={isResolving}
+                        className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
+                        aria-label="Markeer als opgelost"
+                        title="Markeer als opgelost"
+                      >
+                        <Check size={14} />
+                      </button>
+                    )}
                   </div>
                 )
               })}
@@ -135,17 +164,25 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                 Soorten
               </p>
               {speciesIssues.map((issue) => {
-                const key      = `species:${issue.species_binomial}`
-                const name     = capitalizeFirst(issue.species_binomial)
-                const dutch    = issue.name_indigenous
+                const key         = `species:${issue.species_binomial}`
+                const name        = capitalizeFirst(issue.species_binomial)
+                const dutch       = issue.name_indigenous
                   ? ` (${capitalizeFirst(issue.name_indigenous.toLowerCase())})`
                   : ''
-                const flagText = issue.flags.map((f) => speciesFlagLabel[f] ?? f).join(', ')
+                const flagText    = issue.flags.map((f) => speciesFlagLabel[f] ?? f).join(', ')
+                const isConfirm   = confirmKey === key
+                const isResolving = resolving === key
 
                 return (
                   <div key={key} className="flex items-start gap-2 border-b last:border-b-0">
                     <div className="flex-1 py-2 pl-4 min-w-0">
-                      <span className="block text-sm italic truncate">{name}{dutch}</span>
+                      <button
+                        onClick={() => handleSpeciesSearch(issue.species_binomial)}
+                        className="text-sm italic truncate hover:underline text-left w-full"
+                        title="Zoek op soort"
+                      >
+                        {name}{dutch}
+                      </button>
                       {flagText && (
                         <span className="block text-xs text-amber-600 mt-0.5 truncate">{flagText}</span>
                       )}
@@ -153,15 +190,36 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                         <span className="block text-xs text-muted-foreground italic truncate">"{issue.note}"</span>
                       )}
                     </div>
-                    <button
-                      onClick={() => void handleResolveSpecies(issue.species_binomial)}
-                      disabled={resolving === key}
-                      className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
-                      aria-label="Opgelost"
-                      title="Markeer als opgelost"
-                    >
-                      <Check size={14} />
-                    </button>
+                    {isConfirm ? (
+                      <div className="flex items-center gap-1 shrink-0 p-2 mt-1">
+                        <span className="text-xs text-muted-foreground mr-0.5">Zeker?</span>
+                        <button
+                          onClick={() => void handleResolveSpecies(issue.species_binomial)}
+                          disabled={isResolving}
+                          className="text-green-600 hover:text-green-700 disabled:opacity-40"
+                          aria-label="Bevestig oplossen"
+                        >
+                          <Check size={14} />
+                        </button>
+                        <button
+                          onClick={() => setConfirmKey(null)}
+                          className="text-muted-foreground hover:text-foreground"
+                          aria-label="Annuleer"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmKey(key)}
+                        disabled={isResolving}
+                        className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
+                        aria-label="Markeer als opgelost"
+                        title="Markeer als opgelost"
+                      >
+                        <Check size={14} />
+                      </button>
+                    )}
                   </div>
                 )
               })}

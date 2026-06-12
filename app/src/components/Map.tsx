@@ -50,8 +50,26 @@ export function Map({ city, cities }: Props) {
   const setIsLoadingSpeciesFilter = useStore((s) => s.setIsLoadingSpeciesFilter)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
 
+  const debugMode = useStore((s) => s.debugMode)
+  const setDebugMode = useStore((s) => s.setDebugMode)
+
   const [searchOpen, setSearchOpen] = useState(false)
   const speciesAbortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    const buf: string[] = []
+    const handleKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.key.length !== 1) return
+      buf.push(e.key.toLowerCase())
+      if (buf.length > 3) buf.shift()
+      if (buf.join('') === 'dbg') setDebugMode(true)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [setDebugMode])
 
   // Fetch species roster for the city once on mount; also clears any filter from a previous city
   useEffect(() => {
@@ -95,8 +113,6 @@ export function Map({ city, cities }: Props) {
     ? `[${currentCenter[0].toFixed(4)}, ${currentCenter[1].toFixed(4)}]`
     : ''
 
-  const showDebug = import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1'
-
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
@@ -112,7 +128,7 @@ export function Map({ city, cities }: Props) {
           <LoadingSpinner />
         </div>
       )}
-      {showDebug && (
+      {debugMode && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
         </div>

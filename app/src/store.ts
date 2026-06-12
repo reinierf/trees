@@ -30,6 +30,7 @@ interface AppStore {
   nameMode: NameMode
   tileLayerId: TileLayerId
   favourites: Favourites
+  debugMode: boolean
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -52,6 +53,7 @@ interface AppStore {
   setNameMode: (mode: NameMode) => void
   setTileLayerId: (id: TileLayerId) => void
   toggleFavourite: (cityId: string, tree: Tree) => void
+  setDebugMode: (v: boolean) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -70,6 +72,7 @@ export const useStore = create<AppStore>((set) => ({
   nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
   tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
   favourites: loadFavourites(),
+  debugMode: import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1',
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -97,6 +100,7 @@ export const useStore = create<AppStore>((set) => ({
   setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
   setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
   setTileLayerId: (id) => { savePreference(TILE_LAYER_KEY, id); set({ tileLayerId: id }) },
+  setDebugMode: (v) => set({ debugMode: v }),
   toggleFavourite: (cityId, tree) =>
     set((state) => {
       const cityFavs = state.favourites[cityId] ?? []

@@ -32,6 +32,7 @@ try {
         '/trees'  => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
         '/species'=> handle_species(),
         '/health' => handle_health(),
+        '/flag'   => handle_flag(),
         default   => respond(404, ['error' => 'Unknown endpoint']),
     };
 } catch (Throwable $e) {
@@ -289,6 +290,49 @@ function handle_health(): void
     }
 
     respond(200, ['cities' => $result, 'indigenous_names_nl' => $snStatus]);
+}
+
+function handle_flag(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        respond(405, ['error' => 'Method not allowed']);
+    }
+
+    $body = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($body)) respond(400, ['error' => 'Invalid JSON body']);
+
+    $city     = trim((string) ($body['city']     ?? ''));
+    $tree_id  = trim((string) ($body['tree_id']  ?? ''));
+    $binomial = trim((string) ($body['binomial'] ?? ''));
+    $dutch    = trim((string) ($body['dutch_name'] ?? ''));
+    $fields   = is_array($body['fields'] ?? null) ? $body['fields'] : [];
+    $note     = trim((string) ($body['note']     ?? ''));
+
+    if ($tree_id === '') respond(400, ['error' => 'tree_id is required']);
+
+    $dt      = (new DateTime('now', new DateTimeZone('Europe/Amsterdam')))->format('Y-m-d H:i:s');
+    $ref     = $city !== '' ? "{$city}#{$tree_id}" : $tree_id;
+    $nameStr = $binomial !== '' ? $binomial : '?';
+    if ($dutch !== '') $nameStr .= " ({$dutch})";
+
+    $fieldParts = [];
+    foreach ($fields as $f) {
+        $name  = trim((string) ($f['name']  ?? ''));
+        $value = trim((string) ($f['value'] ?? ''));
+        if ($name !== '') $fieldParts[] = "{$name}={$value}";
+    }
+    $fieldsStr = implode(', ', $fieldParts);
+
+    // Format: 2026-06-12 14:30:22 | rotterdam#12345 | Quercus robur (Zomereik) | year_planted=1950, trunk_diameter=0.45 | note text
+    $parts = array_filter([$dt, $ref, $nameStr, $fieldsStr, $note], fn($s) => $s !== '');
+    $line  = implode(' | ', $parts) . "\n";
+
+    $logPath = __DIR__ . '/flags.txt';
+    if (file_put_contents($logPath, $line, FILE_APPEND | LOCK_EX) === false) {
+        respond(500, ['error' => 'Failed to write flag log']);
+    }
+
+    respond(200, ['ok' => true]);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

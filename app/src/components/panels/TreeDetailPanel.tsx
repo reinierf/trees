@@ -227,6 +227,10 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
       <TreeImageModal
         thumbnail={thumbnail}
         photos={photos}
+        speciesName={`${displayName}${cultivar}`}
+        indigenousName={tree.name_indigenous
+          ? capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)
+          : null}
         onClose={() => setPhotoModalOpen(false)}
       />
     )}

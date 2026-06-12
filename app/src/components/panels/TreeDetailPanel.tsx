@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Crosshair, Heart, Share2, ArrowUp } from 'lucide-react'
+import { Crosshair, Heart, Share2, ArrowUp, Image, ImageOff } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
 import { useStore } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
@@ -145,11 +145,15 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
               <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
               <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
             </div>
-            {thumbnail !== null && (
-              <div className="w-11 h-11 shrink-0 self-start">
-                {thumbnail === undefined ? (
-                  <div className="w-full h-full rounded-sm bg-muted animate-pulse" />
-                ) : (
+            {binomial && (
+              <div className="w-11 h-11 shrink-0 self-start flex items-center justify-center">
+                {thumbnail === undefined && (
+                  <Image size={22} className="text-muted-foreground opacity-40" />
+                )}
+                {thumbnail === null && (
+                  <ImageOff size={22} className="text-muted-foreground opacity-40" />
+                )}
+                {thumbnail && (
                   <button
                     onClick={openPhotos}
                     className="w-full h-full rounded-sm overflow-hidden block"

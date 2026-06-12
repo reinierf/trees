@@ -65,7 +65,7 @@ async function fetchTaxon(normalized: string): Promise<CachedTaxon | null> {
 
 async function fetchPhotos(taxonId: number): Promise<TreePhoto[]> {
   const res = await fetch(`https://api.inaturalist.org/v1/taxa/${taxonId}?all_photos=true`)
-  if (!res.ok) return []
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const data = await res.json() as { results: Array<{ taxon_photos?: Array<{ photo: Record<string, unknown> }> }> }
   const taxonPhotos = data.results?.[0]?.taxon_photos ?? []
   return taxonPhotos
@@ -110,11 +110,8 @@ export function useTreePhotos(binomial: string | null) {
       taxonCache.set(normalized, result)
       setTaxon(result)
     }).catch(() => {
-      if (!cancelled) {
-        fetchedBinomials.add(normalized)
-        taxonCache.set(normalized, null)
-        setTaxon(null)
-      }
+      if (!cancelled) setTaxon(null)
+      // Don't cache network errors — allow retry on next mount
     })
     return () => { cancelled = true }
   }, [normalized])

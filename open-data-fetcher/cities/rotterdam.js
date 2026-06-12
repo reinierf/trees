@@ -1,5 +1,5 @@
 import { parseStringPromise, processors } from 'xml2js';
-import { extractSpeciesBinomial, extractSpeciesCultivar } from '../lib/species.js';
+import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
 const MAP      = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
@@ -19,20 +19,6 @@ const FIELD_MAP = {
 
 const PROPERTY_NAMES = ['GEOM', ...Object.keys(FIELD_MAP)].join(',');
 
-const NON_BOTANICAL = new Set([
-    'ASSORTIMENT ONBEKEND',
-    'CONIFEREN',
-    'OVERIG',
-    'NIET (REGULIER) INBOETEN',
-]);
-
-function applySpeciesTypoCorrections(s) {
-    return s
-        .replace(/\bMETASQUOIA\b/, 'METASEQUOIA')
-        .replace(/\bPTEROCAYRA\b/, 'PTEROCARYA')
-        .replace(/HIBISCUS SYR\./, 'HIBISCUS SYRIACUS');
-}
-
 function applyIndigenousTypoCorrections(s) {
     return s.replace(/\bSIERAPPPEL\b/, 'SIERAPPEL');
 }
@@ -50,14 +36,12 @@ function sanitiseIndigenousName(s) {
 
 function sanitiseTree(tree) {
     if (!tree) return null;
-    const rawSpecies = ((tree.species ?? '').trim().replace(/\s+/g, ' ')).toUpperCase();
-    if (NON_BOTANICAL.has(rawSpecies)) return null;
-    const corrected = applySpeciesTypoCorrections(rawSpecies);
-    tree.species_binomial = extractSpeciesBinomial(corrected);
-    if (!tree.species_binomial) return null;
-    tree.species_cultivar  = extractSpeciesCultivar(corrected);
+    const result = processSpecies(tree.species);
+    if (!result) return null;
+    Object.assign(tree, result);
     const rawIndigenous = (tree.name_indigenous ?? '').trim().replace(/\s+/g, ' ');
     tree.name_indigenous = sanitiseIndigenousName(applyIndigenousTypoCorrections(rawIndigenous));
+    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
     return tree;
 }
 

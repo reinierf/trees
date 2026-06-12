@@ -1,4 +1,4 @@
-import { extractSpeciesBinomial, extractSpeciesCultivar } from '../lib/species.js';
+import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
 
 // ArcGIS MapServer query — layer 0 = Straatboom (street trees), 127k trees
 const BASE_URL = 'https://geoservices.denhaag.nl/arcgis/rest/services'
@@ -20,11 +20,8 @@ function toTree(feature, fetchYear) {
     if (!g?.x || !g?.y) return null;
 
     const rawSpecies = (a.BOOMSOORT_WETENSCHAPPELIJ ?? '').trim();
-    if (!rawSpecies) return null;
-
-    const upper = rawSpecies.toUpperCase().replace(/\s+/g, ' ');
-    const species_binomial = extractSpeciesBinomial(upper);
-    if (!species_binomial) return null;
+    const speciesResult = processSpecies(rawSpecies);
+    if (!speciesResult) return null;
 
     const age = a.LEEFTIJD;
 
@@ -33,9 +30,8 @@ function toTree(feature, fetchYear) {
         lat:             +parseFloat(g.y).toFixed(7),
         lon:             +parseFloat(g.x).toFixed(7),
         species:         rawSpecies,
-        species_binomial,
-        species_cultivar: extractSpeciesCultivar(upper),
-        name_indigenous: a.BOOMSOORT_NEDERLANDS || null,
+        ...speciesResult,
+        name_indigenous: applyIndigenousOverride(speciesResult.species_binomial, a.BOOMSOORT_NEDERLANDS || null),
         year_planted:    age ? String(fetchYear - age) : null,
         genus:           null,
         neighbourhood:   a.BUURT || null,

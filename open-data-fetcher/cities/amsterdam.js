@@ -1,4 +1,4 @@
-import { extractSpeciesBinomial, extractSpeciesCultivar } from '../lib/species.js';
+import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://api.data.amsterdam.nl/v1/wfs/bomen/';
 const LAYER   = 'app:stamgegevens';
@@ -10,10 +10,10 @@ function extractIndigenous(s) {
 
 function sanitiseTree(tree) {
     if (!tree?.species) return null;
-    const upper = tree.species.trim().replace(/\s+/g, ' ').toUpperCase();
-    tree.species_binomial = extractSpeciesBinomial(upper);
-    if (!tree.species_binomial) return null;
-    tree.species_cultivar = extractSpeciesCultivar(upper);
+    const result = processSpecies(tree.species);
+    if (!result) return null;
+    Object.assign(tree, result);
+    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
     return tree;
 }
 

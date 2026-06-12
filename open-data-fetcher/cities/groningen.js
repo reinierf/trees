@@ -1,16 +1,14 @@
-import { extractSpeciesBinomial, extractSpeciesCultivar } from '../lib/species.js';
+import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://maps.groningen.nl/geoserver/geo-data/ows';
 const LAYER   = 'geo-data:Bomen gemeente Groningen';
 
 function sanitiseTree(tree) {
     if (!tree) return null;
-    const rawLatin = (tree.species ?? '').trim().replace(/\s+/g, ' ');
-    if (!rawLatin) return null;
-    const upper = rawLatin.toUpperCase();
-    tree.species_binomial = extractSpeciesBinomial(upper);
-    if (!tree.species_binomial) return null;
-    tree.species_cultivar = extractSpeciesCultivar(upper);
+    const result = processSpecies(tree.species);
+    if (!result) return null;
+    Object.assign(tree, result);
+    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
     return tree;
 }
 

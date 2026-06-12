@@ -32,6 +32,29 @@ export interface SpeciesItem {
   count: number
 }
 
+export interface TreeIssue {
+  city: string
+  tree_id: string
+  lat: number | null
+  lon: number | null
+  species_binomial: string | null
+  name_indigenous: string | null
+  street: string | null
+  flags: string[]
+  note: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface SpeciesIssue {
+  species_binomial: string
+  name_indigenous: string | null
+  flags: string[]
+  note: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface City {
   id: string
   name: string

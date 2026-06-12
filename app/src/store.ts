@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Tree, SpeciesItem } from './types'
+import type { Tree, SpeciesItem, TreeIssue, SpeciesIssue } from './types'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
 import { loadFavourites, saveFavourites, type Favourites } from './lib/favouritesStorage'
 import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
@@ -13,6 +13,7 @@ export type PopupView =
   | { kind: 'species-list'; expandedSpecies?: string; selectedTreeId?: string }
   | { kind: 'tree-detail'; tree: Tree; returnTo: 'species-list' | 'favourites' }
   | { kind: 'favourites' }
+  | { kind: 'issues' }
 
 interface AppStore {
   popupView: PopupView | null
@@ -31,6 +32,8 @@ interface AppStore {
   tileLayerId: TileLayerId
   favourites: Favourites
   debugMode: boolean
+  treeIssues: TreeIssue[]
+  speciesIssues: SpeciesIssue[]
 
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
@@ -54,6 +57,12 @@ interface AppStore {
   setTileLayerId: (id: TileLayerId) => void
   toggleFavourite: (cityId: string, tree: Tree) => void
   setDebugMode: (v: boolean) => void
+  openIssues: () => void
+  setIssues: (trees: TreeIssue[], species: SpeciesIssue[]) => void
+  upsertTreeIssue: (issue: TreeIssue) => void
+  upsertSpeciesIssue: (issue: SpeciesIssue) => void
+  removeTreeIssue: (city: string, treeId: string) => void
+  removeSpeciesIssue: (binomial: string) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -73,6 +82,8 @@ export const useStore = create<AppStore>((set) => ({
   tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
   favourites: loadFavourites(),
   debugMode: import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1',
+  treeIssues: [],
+  speciesIssues: [],
 
   openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
   openSpeciesListAt: (species, selectedTreeId) =>
@@ -110,4 +121,20 @@ export const useStore = create<AppStore>((set) => ({
       saveFavourites(updated)
       return { favourites: updated }
     }),
+  openIssues: () => set({ popupView: { kind: 'issues' } }),
+  setIssues: (trees, species) => set({ treeIssues: trees, speciesIssues: species }),
+  upsertTreeIssue: (issue) => set((state) => {
+    const rest = state.treeIssues.filter((i) => !(i.city === issue.city && i.tree_id === issue.tree_id))
+    return { treeIssues: [issue, ...rest] }
+  }),
+  upsertSpeciesIssue: (issue) => set((state) => {
+    const rest = state.speciesIssues.filter((i) => i.species_binomial !== issue.species_binomial)
+    return { speciesIssues: [issue, ...rest] }
+  }),
+  removeTreeIssue: (city, treeId) => set((state) => ({
+    treeIssues: state.treeIssues.filter((i) => !(i.city === city && i.tree_id === treeId)),
+  })),
+  removeSpeciesIssue: (binomial) => set((state) => ({
+    speciesIssues: state.speciesIssues.filter((i) => i.species_binomial !== binomial),
+  })),
 }))

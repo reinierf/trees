@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
+import { IssuesPanel } from './panels/IssuesPanel'
 import type { City } from '../types'
 
 export const BASE =
@@ -47,6 +48,8 @@ export function InfoPopup({ cities, currentCityId }: Props) {
   if (!popupView) return null
   if (popupView.kind === 'favourites')
     return <FavouritesPanel cities={cities} currentCityId={currentCityId} />
+  if (popupView.kind === 'issues')
+    return <IssuesPanel cities={cities} currentCityId={currentCityId} />
   if (popupView.kind === 'species-list')
     return (
       <SpeciesListPanel

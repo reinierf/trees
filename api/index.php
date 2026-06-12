@@ -28,12 +28,14 @@ try {
     $method  = $_SERVER['REQUEST_METHOD'];
 
     match ($route) {
-        '/cities' => handle_cities(),
-        '/trees'  => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
-        '/species'=> handle_species(),
-        '/health' => handle_health(),
-        '/flag'   => handle_flag(),
-        default   => respond(404, ['error' => 'Unknown endpoint']),
+        '/cities'          => handle_cities(),
+        '/trees'           => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
+        '/species'         => handle_species(),
+        '/health'          => handle_health(),
+        '/flag'            => handle_flag(),
+        '/issues'          => handle_issues_get(),
+        '/issues/resolve'  => handle_issues_resolve(),
+        default            => respond(404, ['error' => 'Unknown endpoint']),
     };
 } catch (Throwable $e) {
     respond(500, ['error' => $e->getMessage(), 'file' => basename($e->getFile()), 'line' => $e->getLine()]);
@@ -294,45 +296,143 @@ function handle_health(): void
 
 function handle_flag(): void
 {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        respond(405, ['error' => 'Method not allowed']);
-    }
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') respond(405, ['error' => 'Method not allowed']);
 
     $body = json_decode(file_get_contents('php://input'), true);
     if (!is_array($body)) respond(400, ['error' => 'Invalid JSON body']);
 
-    $city     = trim((string) ($body['city']     ?? ''));
-    $tree_id  = trim((string) ($body['tree_id']  ?? ''));
-    $binomial = trim((string) ($body['binomial'] ?? ''));
-    $dutch    = trim((string) ($body['dutch_name'] ?? ''));
-    $fields   = is_array($body['fields'] ?? null) ? $body['fields'] : [];
-    $note     = trim((string) ($body['note']     ?? ''));
+    $type  = trim((string) ($body['type'] ?? ''));
+    $flags = is_array($body['flags'] ?? null) ? array_values(array_filter(array_map('strval', $body['flags']))) : [];
+    $note  = trim((string) ($body['note'] ?? '')) ?: null;
+    $now   = (new DateTime('now', new DateTimeZone('Europe/Amsterdam')))->format('Y-m-d H:i:s');
+    $db    = issues_db();
 
-    if ($tree_id === '') respond(400, ['error' => 'tree_id is required']);
+    if ($type === 'tree') {
+        $city    = trim((string) ($body['city']    ?? ''));
+        $tree_id = trim((string) ($body['tree_id'] ?? ''));
+        if ($city === '' || $tree_id === '') respond(400, ['error' => 'city and tree_id required']);
 
-    $dt      = (new DateTime('now', new DateTimeZone('Europe/Amsterdam')))->format('Y-m-d H:i:s');
-    $ref     = $city !== '' ? "{$city}#{$tree_id}" : $tree_id;
-    $nameStr = $binomial !== '' ? $binomial : '?';
-    if ($dutch !== '') $nameStr .= " ({$dutch})";
+        $lat     = is_numeric($body['lat'] ?? null) ? (float) $body['lat'] : null;
+        $lon     = is_numeric($body['lon'] ?? null) ? (float) $body['lon'] : null;
+        $bin     = trim((string) ($body['species_binomial'] ?? '')) ?: null;
+        $dutch   = trim((string) ($body['name_indigenous']  ?? '')) ?: null;
+        $street  = trim((string) ($body['street']           ?? '')) ?: null;
 
-    $fieldParts = [];
-    foreach ($fields as $f) {
-        $name  = trim((string) ($f['name']  ?? ''));
-        $value = trim((string) ($f['value'] ?? ''));
-        if ($name !== '') $fieldParts[] = "{$name}={$value}";
-    }
-    $fieldsStr = implode(', ', $fieldParts);
+        $existing = $db->prepare('SELECT created_at FROM tree_issues WHERE city=? AND tree_id=?');
+        $existing->execute([$city, $tree_id]);
+        $row = $existing->fetch();
 
-    // Format: 2026-06-12 14:30:22 | rotterdam#12345 | Quercus robur (Zomereik) | year_planted=1950, trunk_diameter=0.45 | note text
-    $parts = array_filter([$dt, $ref, $nameStr, $fieldsStr, $note], fn($s) => $s !== '');
-    $line  = implode(' | ', $parts) . "\n";
+        if ($row) {
+            $db->prepare('UPDATE tree_issues SET lat=?,lon=?,species_binomial=?,name_indigenous=?,street=?,flags=?,note=?,updated_at=? WHERE city=? AND tree_id=?')
+               ->execute([$lat,$lon,$bin,$dutch,$street,json_encode($flags),$note,$now,$city,$tree_id]);
+        } else {
+            $db->prepare('INSERT INTO tree_issues (city,tree_id,lat,lon,species_binomial,name_indigenous,street,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)')
+               ->execute([$city,$tree_id,$lat,$lon,$bin,$dutch,$street,json_encode($flags),$note,$now,$now]);
+        }
 
-    $logPath = __DIR__ . '/flags.txt';
-    if (file_put_contents($logPath, $line, FILE_APPEND | LOCK_EX) === false) {
-        respond(500, ['error' => 'Failed to write flag log']);
+    } elseif ($type === 'species') {
+        $bin = trim((string) ($body['species_binomial'] ?? ''));
+        if ($bin === '') respond(400, ['error' => 'species_binomial required']);
+
+        $dutch = trim((string) ($body['name_indigenous'] ?? '')) ?: null;
+
+        $existing = $db->prepare('SELECT created_at FROM species_issues WHERE species_binomial=?');
+        $existing->execute([$bin]);
+        $row = $existing->fetch();
+
+        if ($row) {
+            $db->prepare('UPDATE species_issues SET name_indigenous=?,flags=?,note=?,updated_at=? WHERE species_binomial=?')
+               ->execute([$dutch,json_encode($flags),$note,$now,$bin]);
+        } else {
+            $db->prepare('INSERT INTO species_issues (species_binomial,name_indigenous,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?)')
+               ->execute([$bin,$dutch,json_encode($flags),$note,$now,$now]);
+        }
+    } else {
+        respond(400, ['error' => 'type must be "tree" or "species"']);
     }
 
     respond(200, ['ok' => true]);
+}
+
+function handle_issues_get(): void
+{
+    $db      = issues_db();
+    $trees   = $db->query('SELECT * FROM tree_issues ORDER BY updated_at DESC')->fetchAll();
+    $species = $db->query('SELECT * FROM species_issues ORDER BY updated_at DESC')->fetchAll();
+
+    respond(200, [
+        'trees'   => array_map(fn($r) => array_merge($r, [
+            'lat'   => $r['lat']  !== null ? (float) $r['lat']  : null,
+            'lon'   => $r['lon']  !== null ? (float) $r['lon']  : null,
+            'flags' => json_decode($r['flags'], true),
+        ]), $trees),
+        'species' => array_map(fn($r) => array_merge($r, [
+            'flags' => json_decode($r['flags'], true),
+        ]), $species),
+    ]);
+}
+
+function handle_issues_resolve(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') respond(405, ['error' => 'Method not allowed']);
+
+    $body = json_decode(file_get_contents('php://input'), true);
+    if (!is_array($body)) respond(400, ['error' => 'Invalid JSON body']);
+
+    $type = trim((string) ($body['type'] ?? ''));
+    $db   = issues_db();
+
+    if ($type === 'tree') {
+        $city    = trim((string) ($body['city']    ?? ''));
+        $tree_id = trim((string) ($body['tree_id'] ?? ''));
+        if ($city === '' || $tree_id === '') respond(400, ['error' => 'city and tree_id required']);
+        $db->prepare('DELETE FROM tree_issues WHERE city=? AND tree_id=?')->execute([$city, $tree_id]);
+    } elseif ($type === 'species') {
+        $bin = trim((string) ($body['species_binomial'] ?? ''));
+        if ($bin === '') respond(400, ['error' => 'species_binomial required']);
+        $db->prepare('DELETE FROM species_issues WHERE species_binomial=?')->execute([$bin]);
+    } else {
+        respond(400, ['error' => 'type must be "tree" or "species"']);
+    }
+
+    respond(200, ['ok' => true]);
+}
+
+// ── Issues database ───────────────────────────────────────────────────────────
+
+function issues_db(): PDO
+{
+    static $db;
+    if ($db !== null) return $db;
+
+    $path = __DIR__ . '/issues.db';
+    $db   = new PDO('sqlite:' . $path, null, null, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    $db->exec('CREATE TABLE IF NOT EXISTS tree_issues (
+        city             TEXT NOT NULL,
+        tree_id          TEXT NOT NULL,
+        lat              REAL,
+        lon              REAL,
+        species_binomial TEXT,
+        name_indigenous  TEXT,
+        street           TEXT,
+        flags            TEXT NOT NULL DEFAULT \'[]\',
+        note             TEXT,
+        created_at       TEXT NOT NULL,
+        updated_at       TEXT NOT NULL,
+        PRIMARY KEY (city, tree_id)
+    )');
+    $db->exec('CREATE TABLE IF NOT EXISTS species_issues (
+        species_binomial TEXT NOT NULL PRIMARY KEY,
+        name_indigenous  TEXT,
+        flags            TEXT NOT NULL DEFAULT \'[]\',
+        note             TEXT,
+        created_at       TEXT NOT NULL,
+        updated_at       TEXT NOT NULL
+    )');
+    return $db;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

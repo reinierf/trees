@@ -7,8 +7,8 @@ import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
 import { useTreePhotos } from '../../api/useTreePhotos'
 import { TreeImageModal } from '../TreeImageModal'
 import { FlagModal } from '../FlagModal'
-import { flagTree } from '../../api/trees'
-import type { Tree } from '../../types'
+import { flagTree, flagSpecies } from '../../api/trees'
+import type { Tree, TreeIssue, SpeciesIssue } from '../../types'
 
 function wikiUrl(binomial: string): string {
   const parts = binomial.trim().split(/\s+/).filter((p) => p !== '×')
@@ -59,11 +59,16 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const toggleFavourite = useStore((s) => s.toggleFavourite)
   const favourites = useStore((s) => s.favourites)
-  const debugMode = useStore((s) => s.debugMode)
+  const debugMode        = useStore((s) => s.debugMode)
+  const upsertTreeIssue  = useStore((s) => s.upsertTreeIssue)
+  const upsertSpeciesIssue = useStore((s) => s.upsertSpeciesIssue)
+  const hasTreeIssue     = useStore((s) => s.treeIssues.some((i) => i.city === cityId && i.tree_id === tree.id))
+  const hasSpeciesIssue  = useStore((s) => s.speciesIssues.some((i) => i.species_binomial === tree.species_binomial))
   const [collapsed, setCollapsed] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [photoModalOpen, setPhotoModalOpen] = useState(false)
-  const [flagOpen, setFlagOpen] = useState(false)
+  const [treeFlagOpen, setTreeFlagOpen]       = useState(false)
+  const [speciesFlagOpen, setSpeciesFlagOpen] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { thumbnail, photos, loadPhotos } = useTreePhotos(tree.species_binomial)
@@ -128,6 +133,16 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
             {displayName}{cultivar}
           </button>
           <div className="flex items-center gap-2 shrink-0">
+            {debugMode && binomial && (
+              <button
+                onClick={() => setSpeciesFlagOpen(true)}
+                className={hasSpeciesIssue ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground'}
+                aria-label="Markeer datafout voor soort"
+                title={hasSpeciesIssue ? 'Soort al gemeld — klik om te bewerken' : 'Markeer datafout voor soort'}
+              >
+                <Flag size={13} className={hasSpeciesIssue ? 'fill-amber-500' : ''} />
+              </button>
+            )}
             <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
             <CloseButton onClick={closePopup} />
           </div>
@@ -196,11 +211,12 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
               )}
               {debugMode && (
                 <button
-                  onClick={() => setFlagOpen(true)}
-                  className="text-muted-foreground hover:text-foreground"
-                  aria-label="Markeer datafout"
+                  onClick={() => setTreeFlagOpen(true)}
+                  className={hasTreeIssue ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground'}
+                  aria-label="Markeer datafout voor boom"
+                  title={hasTreeIssue ? 'Boom al gemeld — klik om te bewerken' : 'Markeer datafout voor boom'}
                 >
-                  <Flag size={15} />
+                  <Flag size={15} className={hasTreeIssue ? 'fill-amber-500' : ''} />
                 </button>
               )}
             </div>
@@ -247,13 +263,31 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         onClose={() => setPhotoModalOpen(false)}
       />
     )}
-    {flagOpen && (
+    {treeFlagOpen && (
       <FlagModal
+        mode="tree"
         tree={tree}
+        cityId={cityId}
         noImages={thumbnail === null}
-        onClose={() => setFlagOpen(false)}
-        onSubmit={async (fields, note) => {
-          await flagTree(cityId, tree.id, tree.species_binomial ?? tree.species, tree.name_indigenous, fields, note)
+        onClose={() => setTreeFlagOpen(false)}
+        onSubmit={async (flags, note) => {
+          await flagTree(cityId, tree.id, tree.lat, tree.lon, tree.species_binomial, tree.name_indigenous, tree.street, flags, note)
+          const now = new Date().toISOString()
+          upsertTreeIssue({ city: cityId, tree_id: tree.id, lat: tree.lat, lon: tree.lon, species_binomial: tree.species_binomial, name_indigenous: tree.name_indigenous, street: tree.street, flags, note: note || null, created_at: now, updated_at: now } as TreeIssue)
+        }}
+      />
+    )}
+    {speciesFlagOpen && binomial && (
+      <FlagModal
+        mode="species"
+        tree={tree}
+        cityId={cityId}
+        noImages={thumbnail === null}
+        onClose={() => setSpeciesFlagOpen(false)}
+        onSubmit={async (flags, note) => {
+          await flagSpecies(binomial, tree.name_indigenous, flags, note)
+          const now = new Date().toISOString()
+          upsertSpeciesIssue({ species_binomial: binomial, name_indigenous: tree.name_indigenous, flags, note: note || null, created_at: now, updated_at: now } as SpeciesIssue)
         }}
       />
     )}

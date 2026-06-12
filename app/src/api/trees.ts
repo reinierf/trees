@@ -1,4 +1,4 @@
-import type { Bbox, City, SpeciesItem, Tree } from '../types'
+import type { Bbox, City, SpeciesItem, Tree, TreeIssue, SpeciesIssue } from '../types'
 import { API_BASE, API_LIMIT } from '../config'
 
 export async function fetchCities(): Promise<City[]> {
@@ -34,18 +34,57 @@ export async function fetchCitySpecies(city: string): Promise<SpeciesItem[]> {
   return response.json() as Promise<SpeciesItem[]>
 }
 
+export async function fetchIssues(): Promise<{ trees: TreeIssue[]; species: SpeciesIssue[] }> {
+  const response = await fetch(`${API_BASE}/issues`)
+  if (!response.ok) throw new Error(`API ${response.status}`)
+  return response.json() as Promise<{ trees: TreeIssue[]; species: SpeciesIssue[] }>
+}
+
 export async function flagTree(
   city: string,
   treeId: string,
-  binomial: string,
-  dutchName: string | null,
-  fields: { name: string; value: string }[],
+  lat: number,
+  lon: number,
+  speciesBinomial: string | null,
+  nameIndigenous: string | null,
+  street: string | null,
+  flags: string[],
   note: string,
 ): Promise<void> {
   const response = await fetch(`${API_BASE}/flag`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ city, tree_id: treeId, binomial, dutch_name: dutchName ?? '', fields, note }),
+    body: JSON.stringify({ type: 'tree', city, tree_id: treeId, lat, lon, species_binomial: speciesBinomial, name_indigenous: nameIndigenous, street, flags, note }),
+  })
+  if (!response.ok) throw new Error(`API ${response.status}`)
+}
+
+export async function flagSpecies(
+  speciesBinomial: string,
+  nameIndigenous: string | null,
+  flags: string[],
+  note: string,
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/flag`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'species', species_binomial: speciesBinomial, name_indigenous: nameIndigenous, flags, note }),
+  })
+  if (!response.ok) throw new Error(`API ${response.status}`)
+}
+
+export async function resolveIssue(
+  params:
+    | { type: 'tree'; city: string; treeId: string }
+    | { type: 'species'; speciesBinomial: string },
+): Promise<void> {
+  const body = params.type === 'tree'
+    ? { type: 'tree', city: params.city, tree_id: params.treeId }
+    : { type: 'species', species_binomial: params.speciesBinomial }
+  const response = await fetch(`${API_BASE}/issues/resolve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   })
   if (!response.ok) throw new Error(`API ${response.status}`)
 }

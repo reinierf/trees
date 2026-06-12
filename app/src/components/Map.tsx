@@ -4,7 +4,7 @@ import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, CITY_OVERVIEW_ZOOM } from '../config'
-import { fetchCitySpecies, fetchTreesBySpecies } from '../api/trees'
+import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
@@ -15,6 +15,7 @@ import { SearchOverlay } from './SearchOverlay'
 import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
+import { IssuesButton } from './IssuesButton'
 import type { City } from '../types'
 
 interface Props {
@@ -52,7 +53,13 @@ export function Map({ city, cities }: Props) {
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
 
   const debugMode = useStore((s) => s.debugMode)
+  const setIssues = useStore((s) => s.setIssues)
   useDebugMode()
+
+  useEffect(() => {
+    if (!debugMode) return
+    fetchIssues().then(({ trees, species }) => setIssues(trees, species)).catch(console.error)
+  }, [debugMode, setIssues])
 
   const [searchOpen, setSearchOpen] = useState(false)
   const speciesAbortRef = useRef<AbortController | null>(null)
@@ -130,6 +137,7 @@ export function Map({ city, cities }: Props) {
         active={searchOpen || speciesFilter !== null}
       />
       <FavouritesButton citiesCount={cities.length} />
+      <IssuesButton citiesCount={cities.length} />
       <LocationButton onLocate={(lat, lon) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {

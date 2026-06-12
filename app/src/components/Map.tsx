@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
+import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, CITY_OVERVIEW_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies } from '../api/trees'
@@ -51,25 +52,10 @@ export function Map({ city, cities }: Props) {
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
 
   const debugMode = useStore((s) => s.debugMode)
-  const setDebugMode = useStore((s) => s.setDebugMode)
+  useDebugMode()
 
   const [searchOpen, setSearchOpen] = useState(false)
   const speciesAbortRef = useRef<AbortController | null>(null)
-
-  useEffect(() => {
-    const buf: string[] = []
-    const handleKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return
-      if (e.metaKey || e.ctrlKey || e.altKey) return
-      if (e.key.length !== 1) return
-      buf.push(e.key.toLowerCase())
-      if (buf.length > 3) buf.shift()
-      if (buf.join('') === 'dbg') setDebugMode(true)
-    }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [setDebugMode])
 
   // Fetch species roster for the city once on mount; also clears any filter from a previous city
   useEffect(() => {

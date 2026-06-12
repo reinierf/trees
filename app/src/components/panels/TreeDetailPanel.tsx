@@ -250,10 +250,10 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
     {flagOpen && (
       <FlagModal
         tree={tree}
+        noImages={thumbnail === null}
         onClose={() => setFlagOpen(false)}
         onSubmit={async (fields, note) => {
           await flagTree(cityId, tree.id, tree.species_binomial ?? tree.species, tree.name_indigenous, fields, note)
-          showToast('Gemeld')
         }}
       />
     )}

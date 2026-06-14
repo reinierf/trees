@@ -28,14 +28,15 @@ try {
     $method  = $_SERVER['REQUEST_METHOD'];
 
     match ($route) {
-        '/cities'          => handle_cities(),
-        '/trees'           => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
-        '/species'         => handle_species(),
-        '/health'          => handle_health(),
-        '/flag'            => handle_flag(),
-        '/issues'          => handle_issues_get(),
-        '/issues/resolve'  => handle_issues_resolve(),
-        default            => respond(404, ['error' => 'Unknown endpoint']),
+        '/cities'            => handle_cities(),
+        '/trees'             => $method === 'POST' ? handle_trees_post() : handle_trees_get(),
+        '/species'           => handle_species(),
+        '/vernacular-names'  => handle_vernacular_names(),
+        '/health'            => handle_health(),
+        '/flag'              => handle_flag(),
+        '/issues'            => handle_issues_get(),
+        '/issues/resolve'    => handle_issues_resolve(),
+        default              => respond(404, ['error' => 'Unknown endpoint']),
     };
 } catch (Throwable $e) {
     respond(500, ['error' => $e->getMessage(), 'file' => basename($e->getFile()), 'line' => $e->getLine()]);
@@ -79,16 +80,15 @@ function db(string $city): PDO
 }
 
 /**
- * Returns indigenous_names keyed by uppercase species_binomial.
- * Each value is ['name_indigenous' => ..., 'name_indigenous_alt' => ..., 'source' => ...].
- * Returns an empty array if indigenous-names-nl.db is not present.
+ * Curated Dutch vernacular name overrides, keyed by uppercase species_binomial.
+ * Returns an empty array if vernacular-nl.db is not present.
  */
-function indigenous_names(): array
+function vernacular_overrides(): array
 {
     static $map;
     if ($map !== null) return $map;
 
-    $path = __DIR__ . '/indigenous-names-nl.db';
+    $path = __DIR__ . '/vernacular-nl.db';
     if (!file_exists($path)) { $map = []; return $map; }
 
     $pdo = new PDO('sqlite:' . $path, null, null, [
@@ -96,22 +96,43 @@ function indigenous_names(): array
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
     $map = [];
-    foreach ($pdo->query('SELECT species_binomial, name_indigenous, name_indigenous_alt, source FROM indigenous_names_nl') as $row) {
+    foreach ($pdo->query('SELECT species_binomial, name_vernacular, name_vernacular_alt, source FROM vernacular_nl') as $row) {
         $map[strtoupper($row['species_binomial'])] = [
-            'name_indigenous'     => $row['name_indigenous'],
-            'name_indigenous_alt' => $row['name_indigenous_alt'],
+            'name_vernacular'     => $row['name_vernacular'],
+            'name_vernacular_alt' => $row['name_vernacular_alt'],
             'source'              => $row['source'],
         ];
     }
     return $map;
 }
 
-function enrich_name(array &$row): void
+/**
+ * iNaturalist base vernacular names for all languages, keyed by uppercase species_binomial.
+ * Returns an empty array if vernacular-base.db is not present.
+ */
+function vernacular_base(): array
 {
-    $key = strtoupper($row['species_binomial'] ?? '');
-    if ($key === '') return;
-    $entry = indigenous_names()[$key] ?? null;
-    if ($entry) $row['name_indigenous'] = $entry['name_indigenous'];
+    static $map;
+    if ($map !== null) return $map;
+
+    $path = __DIR__ . '/vernacular-base.db';
+    if (!file_exists($path)) { $map = []; return $map; }
+
+    $pdo = new PDO('sqlite:' . $path, null, null, [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    $map = [];
+    foreach ($pdo->query('SELECT species_binomial, inat_id, nl, en, de, fr FROM vernacular_base') as $row) {
+        $map[strtoupper($row['species_binomial'])] = [
+            'inat_id' => $row['inat_id'],
+            'nl'      => $row['nl'],
+            'en'      => $row['en'],
+            'de'      => $row['de'],
+            'fr'      => $row['fr'],
+        ];
+    }
+    return $map;
 }
 
 // ── Handlers ──────────────────────────────────────────────────────────────────
@@ -208,7 +229,6 @@ function query_bbox(string $city, array $bboxes, ?string $species, bool $strict,
     foreach ($stmt->fetchAll() as $row) {
         if (!isset($seen[$row['id']])) {
             $seen[$row['id']] = true;
-            enrich_name($row);
             $rows[]           = cast_row($row);
         }
     }
@@ -225,14 +245,14 @@ function handle_species(): void
     $strict = !empty($_GET['strict']) && $_GET['strict'] !== '0';
 
     if ($strict) {
-        $select = 'SELECT species, species_binomial, MIN(name_indigenous) AS name_indigenous,
+        $select = 'SELECT species, species_binomial, MIN(name_vernacular) AS name_vernacular,
                           COUNT(*) AS count
                    FROM trees WHERE species IS NOT NULL';
         $group  = 'GROUP BY species ORDER BY COUNT(*) DESC';
         $col    = 'species';
     } else {
         $select = 'SELECT species_binomial AS species, species_binomial,
-                          MIN(name_indigenous) AS name_indigenous, COUNT(*) AS count
+                          MIN(name_vernacular) AS name_vernacular, COUNT(*) AS count
                    FROM trees WHERE species_binomial IS NOT NULL';
         $group  = 'GROUP BY species_binomial ORDER BY COUNT(*) DESC';
         $col    = 'species_binomial';
@@ -243,18 +263,13 @@ function handle_species(): void
     } else {
         $pattern = '%' . strtoupper($q) . '%';
         $stmt    = db($city)->prepare(
-            "{$select} AND ({$col} LIKE :q OR name_indigenous LIKE :q2) {$group}"
+            "{$select} AND ({$col} LIKE :q OR name_vernacular LIKE :q2) {$group}"
         );
         $stmt->execute([':q' => $pattern, ':q2' => $pattern]);
     }
 
-    $lookup = indigenous_names();
-    $rows   = [];
+    $rows = [];
     foreach ($stmt->fetchAll() as $row) {
-        $key = strtoupper($row['species_binomial'] ?? '');
-        if ($key !== '' && isset($lookup[$key])) {
-            $row['name_indigenous'] = $lookup[$key]['name_indigenous'];
-        }
         $row['count'] = (int) $row['count'];
         $rows[] = $row;
     }
@@ -278,20 +293,47 @@ function handle_health(): void
         }
     }
 
-    $snPath = __DIR__ . '/indigenous-names-nl.db';
-    if (!file_exists($snPath)) {
-        $snStatus = ['status' => 'missing'];
-    } else {
+    $check = function(string $file, string $table) {
+        $path = __DIR__ . '/' . $file;
+        if (!file_exists($path)) return ['status' => 'missing'];
         try {
-            $pdo     = new PDO('sqlite:' . $snPath);
-            $row     = $pdo->query('SELECT COUNT(*) AS total FROM indigenous_names_nl')->fetch(PDO::FETCH_ASSOC);
-            $snStatus = ['status' => 'ok', 'entries' => (int) $row['total']];
+            $pdo = new PDO('sqlite:' . $path);
+            $row = $pdo->query("SELECT COUNT(*) AS total FROM {$table}")->fetch(PDO::FETCH_ASSOC);
+            return ['status' => 'ok', 'entries' => (int) $row['total']];
         } catch (Throwable $e) {
-            $snStatus = ['status' => 'error', 'message' => $e->getMessage()];
+            return ['status' => 'error', 'message' => $e->getMessage()];
         }
+    };
+
+    respond(200, [
+        'cities'         => $result,
+        'vernacular_nl'  => $check('vernacular-nl.db',   'vernacular_nl'),
+        'vernacular_base'=> $check('vernacular-base.db', 'vernacular_base'),
+    ]);
+}
+
+function handle_vernacular_names(): void
+{
+    $overrides = vernacular_overrides();
+    $base      = vernacular_base();
+
+    // Merge: start from base, overlay nl overrides, return all known species
+    $all = [];
+    foreach (array_keys($base + $overrides) as $key) {
+        $entry = [];
+        if (isset($base[$key])) {
+            if ($base[$key]['nl']) $entry['nl'] = $base[$key]['nl'];
+            if ($base[$key]['en']) $entry['en'] = $base[$key]['en'];
+            if ($base[$key]['de']) $entry['de'] = $base[$key]['de'];
+            if ($base[$key]['fr']) $entry['fr'] = $base[$key]['fr'];
+        }
+        if (isset($overrides[$key])) {
+            $entry['nl'] = $overrides[$key]['name_vernacular'];  // override wins
+        }
+        if (!empty($entry)) $all[$key] = $entry;
     }
 
-    respond(200, ['cities' => $result, 'indigenous_names_nl' => $snStatus]);
+    respond(200, $all);
 }
 
 function handle_flag(): void
@@ -315,7 +357,7 @@ function handle_flag(): void
         $lat     = is_numeric($body['lat'] ?? null) ? (float) $body['lat'] : null;
         $lon     = is_numeric($body['lon'] ?? null) ? (float) $body['lon'] : null;
         $bin     = trim((string) ($body['species_binomial'] ?? '')) ?: null;
-        $dutch   = trim((string) ($body['name_indigenous']  ?? '')) ?: null;
+        $dutch   = trim((string) ($body['name_vernacular']  ?? '')) ?: null;
         $street  = trim((string) ($body['street']           ?? '')) ?: null;
 
         $existing = $db->prepare('SELECT created_at FROM tree_issues WHERE city=? AND tree_id=?');
@@ -323,10 +365,10 @@ function handle_flag(): void
         $row = $existing->fetch();
 
         if ($row) {
-            $db->prepare('UPDATE tree_issues SET lat=?,lon=?,species_binomial=?,name_indigenous=?,street=?,flags=?,note=?,updated_at=? WHERE city=? AND tree_id=?')
+            $db->prepare('UPDATE tree_issues SET lat=?,lon=?,species_binomial=?,name_vernacular=?,street=?,flags=?,note=?,updated_at=? WHERE city=? AND tree_id=?')
                ->execute([$lat,$lon,$bin,$dutch,$street,json_encode($flags),$note,$now,$city,$tree_id]);
         } else {
-            $db->prepare('INSERT INTO tree_issues (city,tree_id,lat,lon,species_binomial,name_indigenous,street,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)')
+            $db->prepare('INSERT INTO tree_issues (city,tree_id,lat,lon,species_binomial,name_vernacular,street,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)')
                ->execute([$city,$tree_id,$lat,$lon,$bin,$dutch,$street,json_encode($flags),$note,$now,$now]);
         }
 
@@ -334,17 +376,17 @@ function handle_flag(): void
         $bin = trim((string) ($body['species_binomial'] ?? ''));
         if ($bin === '') respond(400, ['error' => 'species_binomial required']);
 
-        $dutch = trim((string) ($body['name_indigenous'] ?? '')) ?: null;
+        $dutch = trim((string) ($body['name_vernacular'] ?? '')) ?: null;
 
         $existing = $db->prepare('SELECT created_at FROM species_issues WHERE species_binomial=?');
         $existing->execute([$bin]);
         $row = $existing->fetch();
 
         if ($row) {
-            $db->prepare('UPDATE species_issues SET name_indigenous=?,flags=?,note=?,updated_at=? WHERE species_binomial=?')
+            $db->prepare('UPDATE species_issues SET name_vernacular=?,flags=?,note=?,updated_at=? WHERE species_binomial=?')
                ->execute([$dutch,json_encode($flags),$note,$now,$bin]);
         } else {
-            $db->prepare('INSERT INTO species_issues (species_binomial,name_indigenous,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?)')
+            $db->prepare('INSERT INTO species_issues (species_binomial,name_vernacular,flags,note,created_at,updated_at) VALUES (?,?,?,?,?,?)')
                ->execute([$bin,$dutch,json_encode($flags),$note,$now,$now]);
         }
     } else {
@@ -416,7 +458,7 @@ function issues_db(): PDO
         lat              REAL,
         lon              REAL,
         species_binomial TEXT,
-        name_indigenous  TEXT,
+        name_vernacular  TEXT,
         street           TEXT,
         flags            TEXT NOT NULL DEFAULT \'[]\',
         note             TEXT,
@@ -426,12 +468,19 @@ function issues_db(): PDO
     )');
     $db->exec('CREATE TABLE IF NOT EXISTS species_issues (
         species_binomial TEXT NOT NULL PRIMARY KEY,
-        name_indigenous  TEXT,
+        name_vernacular  TEXT,
         flags            TEXT NOT NULL DEFAULT \'[]\',
         note             TEXT,
         created_at       TEXT NOT NULL,
         updated_at       TEXT NOT NULL
     )');
+    // Migrate existing issues.db if it still has the old column name
+    try {
+        $db->exec('ALTER TABLE tree_issues    RENAME COLUMN name_indigenous TO name_vernacular');
+        $db->exec('ALTER TABLE species_issues RENAME COLUMN name_indigenous TO name_vernacular');
+    } catch (Throwable) {
+        // Column already renamed or doesn't exist — safe to ignore
+    }
     return $db;
 }
 

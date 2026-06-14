@@ -48,6 +48,7 @@ export class MapController {
         this.map.on('moveend', () => this.fireMoveEnd())
         this.map.on('drag', () => { this.dragOccurred = true })
         this.map.on('click', () => { if (!this.dragOccurred) this.callbacks.onMapClick() })
+        this.map.on('zoomstart', () => this.clearActiveTip())
         el.addEventListener('pointerdown', this.onPointerDown)
         this.map.whenReady(() => {
             this.map?.invalidateSize()
@@ -86,26 +87,28 @@ export class MapController {
 
     private tooltipGen = 0
     private favTooltipGen = 0
+    private activeTip: L.Tooltip | null = null
+    private activeTimer: ReturnType<typeof setTimeout> | null = null
+
+    private clearActiveTip(): void {
+        if (this.activeTimer !== null) { clearTimeout(this.activeTimer); this.activeTimer = null }
+        this.activeTip?.remove()
+        this.activeTip = null
+    }
 
     private addDelayedTooltip(m: L.Marker, tree: Tree, gen: number, getGen: () => number): void {
-        let timer: ReturnType<typeof setTimeout> | null = null
-        let tip: L.Tooltip | null = null
         m.on('mouseover', () => {
-            if (timer !== null) clearTimeout(timer)
-            timer = setTimeout(() => {
-                timer = null
+            this.clearActiveTip()
+            this.activeTimer = setTimeout(() => {
+                this.activeTimer = null
                 if (gen !== getGen() || !this.map) return
-                tip = L.tooltip({ direction: 'top', offset: [0, -8] })
+                this.activeTip = L.tooltip({ direction: 'top', offset: [0, -8] })
                     .setLatLng(m.getLatLng())
                     .setContent(MapController.tooltipContent(tree))
                     .addTo(this.map)
             }, 500)
         })
-        m.on('mouseout', () => {
-            if (timer !== null) { clearTimeout(timer); timer = null }
-            tip?.remove()
-            tip = null
-        })
+        m.on('mouseout', () => this.clearActiveTip())
     }
 
     setTrees(trees: Tree[]): void {

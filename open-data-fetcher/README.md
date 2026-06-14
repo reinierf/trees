@@ -66,7 +66,7 @@ npm run merge-vernacular-nl
 npm run build-vernacular-nl
 ```
 
-After running, copy the resulting `.db` files into `api/` alongside the city databases.
+After running, copy the resulting `.db` files into `api/data/` alongside the city databases.
 
 ---
 

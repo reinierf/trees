@@ -68,7 +68,7 @@ function db(string $city): PDO
 {
     static $pool = [];
     if (isset($pool[$city])) return $pool[$city];
-    $path = __DIR__ . '/' . $city . '.db';
+    $path = __DIR__ . '/data/' . $city . '.db';
     if (!file_exists($path)) {
         respond(503, ['error' => "Database not found for city \"{$city}\". Run the fetcher first."]);
     }
@@ -88,7 +88,7 @@ function vernacular_overrides(): array
     static $map;
     if ($map !== null) return $map;
 
-    $path = __DIR__ . '/vernacular-nl.db';
+    $path = __DIR__ . '/data/vernacular-nl.db';
     if (!file_exists($path)) { $map = []; return $map; }
 
     $pdo = new PDO('sqlite:' . $path, null, null, [
@@ -115,7 +115,7 @@ function vernacular_base(): array
     static $map;
     if ($map !== null) return $map;
 
-    $path = __DIR__ . '/vernacular-base.db';
+    $path = __DIR__ . '/data/vernacular-base.db';
     if (!file_exists($path)) { $map = []; return $map; }
 
     $pdo = new PDO('sqlite:' . $path, null, null, [
@@ -280,7 +280,7 @@ function handle_health(): void
 {
     $result = [];
     foreach (load_cities() as $city) {
-        $path = __DIR__ . '/' . $city['id'] . '.db';
+        $path = __DIR__ . '/data/' . $city['id'] . '.db';
         if (!file_exists($path)) {
             $result[$city['id']] = ['status' => 'missing'];
             continue;
@@ -294,7 +294,7 @@ function handle_health(): void
     }
 
     $check = function(string $file, string $table) {
-        $path = __DIR__ . '/' . $file;
+        $path = __DIR__ . '/data/' . $file;
         if (!file_exists($path)) return ['status' => 'missing'];
         try {
             $pdo = new PDO('sqlite:' . $path);
@@ -447,7 +447,8 @@ function issues_db(): PDO
     static $db;
     if ($db !== null) return $db;
 
-    $path = __DIR__ . '/issues.db';
+    @mkdir(__DIR__ . '/data', 0755, true);
+    $path = __DIR__ . '/data/issues.db';
     $db   = new PDO('sqlite:' . $path, null, null, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

@@ -62,7 +62,8 @@ Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/t
 ## Deployment
 
 - PHP server with `pdo_sqlite` (enabled by default on most shared hosting)
-- Upload `api/index.php`, `api/.htaccess`, `api/cities.json`, and the city `*.db` files
+- Upload `api/index.php`, `api/.htaccess`, `api/cities.json`
+- Upload city databases and vernacular databases into `api/data/` (e.g. `api/data/rotterdam.db`, `api/data/vernacular-nl.db`)
 - Upload `app/dist/` as the web root (or a subdirectory)
 - No database server, no Node.js on the server
 - `VITE_API_BASE` env var overrides the API base URL for subdirectory deployments
@@ -82,7 +83,7 @@ npm install
 node index.js --all --format sqlite   # → bomen-rotterdam.db (~200k trees)
 ```
 
-Copy the resulting `.db` into `api/` alongside `index.php`.
+Copy the resulting `.db` into `api/data/`.
 
 **Key design choices in the fetcher:**
 - Uses WFS `GetFeature` requests (not scraping) — stable and within the open-data licence
@@ -184,7 +185,7 @@ scripts in `open-data-fetcher/tools/vernacular/` — see
 
 ## SQLite schema
 
-One database per city, placed in `api/`. Filename matches the city `id` in `cities.json`.
+One database per city, placed in `api/data/`. Filename matches the city `id` in `cities.json`.
 
 ```sql
 CREATE TABLE trees (

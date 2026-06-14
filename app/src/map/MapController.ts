@@ -149,6 +149,12 @@ export class MapController {
         this.map?.flyTo([lat, lon], zoom)
     }
 
+    fitTrees(trees: { lat: number; lon: number }[]): void {
+        if (!this.map || trees.length === 0) return
+        const bounds = L.latLngBounds(trees.map((t) => [t.lat, t.lon] as [number, number]))
+        this.map.fitBounds(bounds, { padding: [60, 60], maxZoom: MAP_ZOOM })
+    }
+
     private selectedRing: L.Marker | null = null
     private locationMarker: L.CircleMarker | null = null
 

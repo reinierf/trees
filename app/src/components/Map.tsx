@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, CITY_OVERVIEW_ZOOM } from '../config'
+import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
@@ -99,7 +99,7 @@ export function Map({ city, cities }: Props) {
         speciesAbortRef.current.signal,
       )
       setSpeciesFilter(speciesBinomial, trees)
-      controllerRef.current?.flyToLocation(city.center[0], city.center[1], CITY_OVERVIEW_ZOOM)
+      controllerRef.current?.fitTrees(trees)
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         console.error('Failed to fetch species trees', e)

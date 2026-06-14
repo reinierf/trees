@@ -58,7 +58,7 @@ async function main() {
     const SQL = await initSqlJs();
 
     const dbFiles = (await fs.readdir(DATA_DIR))
-        .filter(f => f.endsWith('.db') && !f.startsWith('vernacular'))
+        .filter(f => f.endsWith('.db') && !f.startsWith('vernacular') && !f.startsWith('indigenous'))
         .map(f => path.join(DATA_DIR, f));
 
     if (dbFiles.length === 0) {

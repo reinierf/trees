@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * Fetch Wikipedia + Bomenbieb species data, merge with database vote results,
- * and write indigenous-names-nl.db with source priority:
+ * and write vernacular-nl.db with source priority:
  *   wikipedia > bomenbieb > database votes
  *
- * Usage: node tools/indigenous-names/merge-indigenous-names.js [--no-cache]
+ * Usage: node tools/vernacular/nl/merge.js [--no-cache]
  */
 
 import fs from 'fs/promises';
@@ -13,8 +13,8 @@ import { fileURLToPath } from 'url';
 import https from 'https';
 import initSqlJs from 'sql.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data');
-const OUT_FILE  = path.join(DATA_DIR, 'indigenous-names-nl.db');
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data');
+const OUT_FILE  = path.join(DATA_DIR, 'vernacular-nl.db');
 const SOURCES_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'sources');
 
 // ─── HTTP helper ──────────────────────────────────────────────────────────────
@@ -267,7 +267,7 @@ function isJunk(nameLow, spLow) {
 
 async function buildDatabaseVotes(SQL) {
     const dbFiles = (await fs.readdir(DATA_DIR))
-        .filter(f => f.endsWith('.db') && f !== 'indigenous-names-nl.db')
+        .filter(f => f.endsWith('.db') && !f.startsWith('vernacular'))
         .map(f => path.join(DATA_DIR, f));
 
     const votes = new Map();
@@ -330,7 +330,7 @@ async function buildDatabaseVotes(SQL) {
     process.stderr.write(`Genus placeholders (${genusPlaceholders.size}): ${[...genusPlaceholders].sort().join(', ')}\n`);
 
     // Resolve votes to winners
-    const resolved = new Map(); // spLow → { canonical, name_indigenous, name_indigenous_alt }
+    const resolved = new Map(); // spLow → { canonical, name_vernacular, name_vernacular_alt }
 
     for (const [spLow, { canonical, names }] of votes) {
         if (names.size === 0) continue;
@@ -367,8 +367,8 @@ async function buildDatabaseVotes(SQL) {
 
         resolved.set(spLow, {
             canonical,
-            name_indigenous:     winner.display,
-            name_indigenous_alt: alt?.display ?? null,
+            name_vernacular:     winner.display,
+            name_vernacular_alt: alt?.display ?? null,
         });
     }
 
@@ -447,21 +447,21 @@ async function main() {
         // DB vote key is lowercase
         const dbEntry  = dbVotes.get(key.toLowerCase());
 
-        let name_indigenous, name_indigenous_alt, source;
+        let name_vernacular, name_vernacular_alt, source;
 
         if (wiki) {
-            name_indigenous     = wiki.dutch;
-            name_indigenous_alt = bomen && normalize(bomen) !== normalize(wiki.dutch) ? bomen : (dbEntry?.name_indigenous_alt ?? null);
+            name_vernacular     = wiki.dutch;
+            name_vernacular_alt = bomen && normalize(bomen) !== normalize(wiki.dutch) ? bomen : (dbEntry?.name_vernacular_alt ?? null);
             source              = 'wikipedia';
             wikiWins++;
         } else if (bomen) {
-            name_indigenous     = bomen;
-            name_indigenous_alt = dbEntry?.name_indigenous_alt ?? null;
+            name_vernacular     = bomen;
+            name_vernacular_alt = dbEntry?.name_vernacular_alt ?? null;
             source              = 'bomenbieb';
             bomenbiebWins++;
         } else if (dbEntry) {
-            name_indigenous     = dbEntry.name_indigenous;
-            name_indigenous_alt = dbEntry.name_indigenous_alt ?? null;
+            name_vernacular     = dbEntry.name_vernacular;
+            name_vernacular_alt = dbEntry.name_vernacular_alt ?? null;
             source              = 'databases';
             dbWins++;
         } else {
@@ -471,7 +471,7 @@ async function main() {
         // Canonical form: use db canonical if available (preserves original database capitalisation)
         const canonical = dbEntry?.canonical ?? bin;
 
-        rows.push({ canonical, name_indigenous, name_indigenous_alt, source });
+        rows.push({ canonical, name_vernacular, name_vernacular_alt, source });
     }
 
     process.stderr.write(`\nMerge results:\n`);
@@ -483,20 +483,20 @@ async function main() {
     // Write output database
     const outDb = new SQL.Database();
     outDb.run(`
-        CREATE TABLE indigenous_names_nl (
+        CREATE TABLE vernacular_nl (
             species_binomial    TEXT PRIMARY KEY,
-            name_indigenous     TEXT NOT NULL,
-            name_indigenous_alt TEXT,
+            name_vernacular     TEXT NOT NULL,
+            name_vernacular_alt TEXT,
             source              TEXT
         )
     `);
 
-    const stmt = outDb.prepare(`INSERT INTO indigenous_names_nl VALUES (?, ?, ?, ?)`);
+    const stmt = outDb.prepare(`INSERT INTO vernacular_nl VALUES (?, ?, ?, ?)`);
     for (const r of rows) {
         stmt.run([
             r.canonical,
-            r.name_indigenous,
-            r.name_indigenous_alt ?? null,
+            r.name_vernacular,
+            r.name_vernacular_alt ?? null,
             r.source,
         ]);
     }

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * Build the indigenous-names-nl.db lookup table from all city databases.
+ * Build the vernacular-nl.db lookup table from all city databases.
  *
  * Conflict resolution pipeline:
  *   D - Compound entries ("X, Y") excluded from voting
  *   C - Spelling variants collapsed to one vote key; display picks the majority form
  *   A - Genus placeholders detected; specificity only overrides those single-word names
- *   B - Genuine alternative names stored in name_indigenous_alt
+ *   B - Genuine alternative names stored in name_vernacular_alt
  *
- * Usage: node tools/indigenous-names/build-indigenous-names.js
+ * Usage: node tools/vernacular/nl/build.js
  */
 
 import fs from 'fs/promises';
@@ -16,8 +16,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import initSqlJs from 'sql.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data');
-const OUT_FILE  = path.join(DATA_DIR, 'indigenous-names-nl.db');
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data');
+const OUT_FILE  = path.join(DATA_DIR, 'vernacular-nl.db');
 
 // Class C: applied to the vote key only — display keeps the majority-voted original form.
 // Order matters: word substitutions before hyphen stripping, whitespace collapse last.
@@ -58,7 +58,7 @@ async function main() {
     const SQL = await initSqlJs();
 
     const dbFiles = (await fs.readdir(DATA_DIR))
-        .filter(f => f.endsWith('.db') && f !== 'indigenous-names-nl.db')
+        .filter(f => f.endsWith('.db') && !f.startsWith('vernacular'))
         .map(f => path.join(DATA_DIR, f));
 
     if (dbFiles.length === 0) {
@@ -192,8 +192,8 @@ async function main() {
 
         rows.push({
             species_binomial:    canonical,
-            name_indigenous:     winner.display,
-            name_indigenous_alt: alt?.display ?? null,
+            name_vernacular:     winner.display,
+            name_vernacular_alt: alt?.display ?? null,
             occurrences:         winner.count,
             sources:             JSON.stringify([...winner.sources].sort()),
         });
@@ -208,18 +208,18 @@ async function main() {
     // Write output database
     const outDb = new SQL.Database();
     outDb.run(`
-        CREATE TABLE indigenous_names_nl (
+        CREATE TABLE vernacular_nl (
             species_binomial    TEXT PRIMARY KEY,
-            name_indigenous     TEXT NOT NULL,
-            name_indigenous_alt TEXT,
+            name_vernacular     TEXT NOT NULL,
+            name_vernacular_alt TEXT,
             occurrences         INTEGER,
             sources             TEXT
         )
     `);
 
-    const stmt = outDb.prepare(`INSERT INTO indigenous_names_nl VALUES (?, ?, ?, ?, ?)`);
+    const stmt = outDb.prepare(`INSERT INTO vernacular_nl VALUES (?, ?, ?, ?, ?)`);
     for (const r of rows) {
-        stmt.run([r.species_binomial, r.name_indigenous, r.name_indigenous_alt ?? null, r.occurrences, r.sources]);
+        stmt.run([r.species_binomial, r.name_vernacular, r.name_vernacular_alt ?? null, r.occurrences, r.sources]);
     }
     stmt.free();
 

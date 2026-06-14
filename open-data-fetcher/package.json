@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node index.js",
     "fetch": "node index.js --all",
-    "build-indigenous-names": "node tools/indigenous-names/build-indigenous-names.js",
-    "merge-indigenous-names": "node tools/indigenous-names/merge-indigenous-names.js"
+    "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
+    "build-vernacular-nl": "node tools/vernacular/nl/build.js",
+    "merge-vernacular-nl": "node tools/vernacular/nl/merge.js"
   },
   "dependencies": {
     "sql.js": "^1.14.1",

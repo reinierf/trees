@@ -1,36 +1,35 @@
-# Tools
+# vernacular/nl — Dutch vernacular names
 
-## indigenous-names-nl.db
+Builds `vernacular-nl.db`: a curated Dutch common-name lookup for all tree species, used by the PHP API as the high-priority override layer above the iNaturalist base (`vernacular-base.db`).
 
-A lookup table mapping `species_binomial → name_indigenous` used by the PHP API at query time (JOIN) to fill in Dutch names that are missing or inconsistent across city databases.
+## Schema
 
-Schema:
 ```sql
 species_binomial    TEXT PRIMARY KEY
-name_indigenous     TEXT NOT NULL
-name_indigenous_alt TEXT          -- genuine alternative name (e.g. Bomenbieb disagrees with Wikipedia)
+name_vernacular     TEXT NOT NULL
+name_vernacular_alt TEXT          -- genuine alternative name (e.g. Bomenbieb disagrees with Wikipedia)
 source              TEXT          -- 'wikipedia' | 'bomenbieb' | 'databases'
 ```
 
-### Building
+## Building
 
 ```
-npm run merge-species-names
+npm run merge-vernacular-nl
 ```
 
-Fetches Wikipedia and Bomenbieb on first run and caches results in `tools/sources/`. Subsequent runs use the cache. Add `--no-cache` to re-fetch.
+Fetches Wikipedia and Bomenbieb on first run and caches results in `sources/`. Subsequent runs use the cache. Add `--no-cache` to re-fetch.
 
 ```
-npm run merge-species-names -- --no-cache
+npm run merge-vernacular-nl -- --no-cache
 ```
 
-### Source priority
+## Source priority
 
-1. **Wikipedia** (`nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland`) — curated reference, ~184 species. Provides the canonical Dutch name. When Bomenbieb disagrees the Bomenbieb name is stored as `name_indigenous_alt`.
+1. **Wikipedia** (`nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland`) — curated reference, ~184 species. Provides the canonical Dutch name. When Bomenbieb disagrees the Bomenbieb name is stored as `name_vernacular_alt`.
 2. **Bomenbieb** (`bomenbieb.nl/alle-boomsoorten`) — professional arborist catalogue, ~290 species-level entries (cultivar entries filtered out). Used for species not covered by Wikipedia.
 3. **Database votes** — majority vote across city databases (Amsterdam, Den Haag, Groningen, Rotterdam) with spelling normalisation and genus-placeholder detection. Fallback for ~482 species not in either web source.
 
-### Investigated sources — not added
+## Investigated sources — not added
 
 **bomengids.nl/bomen.html**
 Flat list of ~237 North-European species. Not added because:

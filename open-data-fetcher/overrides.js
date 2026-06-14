@@ -17,8 +17,8 @@ export const filterSpecies = [
     'NIET (REGULIER) INBOETEN',
 ];
 
-// Canonical binomial (uppercase) → preferred Dutch common name.
-// Applied last, overriding whatever indigenous name came from the source.
-export const indigenousNameOverrides = {
+// Canonical binomial (uppercase) → preferred vernacular name for the source language.
+// Applied last, overriding whatever vernacular name came from the source.
+export const vernacularNameOverrides = {
     'QUERCUS ROBUR': 'Zomereik',
 };

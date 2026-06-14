@@ -279,12 +279,12 @@ async function buildDatabaseVotes(SQL) {
         const db  = new SQL.Database(buf);
 
         const result = db.exec(`
-            SELECT species_binomial, name_indigenous, COUNT(*) AS cnt
+            SELECT species_binomial, name_vernacular, COUNT(*) AS cnt
             FROM trees
-            WHERE name_indigenous IS NOT NULL AND name_indigenous != ''
+            WHERE name_vernacular IS NOT NULL AND name_vernacular != ''
               AND species_binomial IS NOT NULL AND species_binomial != ''
-              AND name_indigenous NOT LIKE '%,%'
-            GROUP BY species_binomial, name_indigenous
+              AND name_vernacular NOT LIKE '%,%'
+            GROUP BY species_binomial, name_vernacular
         `);
 
         if (result.length > 0) {

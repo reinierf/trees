@@ -1,4 +1,4 @@
-import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
+import { processSpecies, applyVernacularOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://maps.groningen.nl/geoserver/geo-data/ows';
 const LAYER   = 'geo-data:Bomen gemeente Groningen';
@@ -8,7 +8,7 @@ function sanitiseTree(tree) {
     const result = processSpecies(tree.species);
     if (!result) return null;
     Object.assign(tree, result);
-    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
+    tree.name_vernacular = applyVernacularOverride(tree.species_binomial, tree.name_vernacular);
     return tree;
 }
 
@@ -21,7 +21,7 @@ function toTree(feature) {
         id:            String(p.OBJECT ?? ''),
         street:        p.STRAAT        || null,
         neighbourhood: p.BUURT         || null,
-        name_indigenous: p.BOOMSOORT   || null,
+        name_vernacular: p.BOOMSOORT   || null,
         species:       p.LATIJNSE_NAAM || null,
         year_planted:  p.KIEMJAAR      || null,
         trunk_diameter: null,

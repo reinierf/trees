@@ -1,4 +1,4 @@
-import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
+import { processSpecies, applyVernacularOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://api.data.amsterdam.nl/v1/wfs/bomen/';
 const LAYER   = 'app:stamgegevens';
@@ -13,7 +13,7 @@ function sanitiseTree(tree) {
     const result = processSpecies(tree.species);
     if (!result) return null;
     Object.assign(tree, result);
-    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
+    tree.name_vernacular = applyVernacularOverride(tree.species_binomial, tree.name_vernacular);
     return tree;
 }
 
@@ -26,7 +26,7 @@ function toTree(feature) {
         id:              String(p.id ?? ''),
         species:         p.soortnaam       || null,
         genus:           p.soortnaam_kort  || null,
-        name_indigenous: extractIndigenous(p.soortnaam_top),
+        name_vernacular: extractIndigenous(p.soortnaam_top),
         year_planted:    p.jaar_van_aanleg || null,
         last_updated:    p.mutatie_datum   || null,
         neighbourhood:   null,

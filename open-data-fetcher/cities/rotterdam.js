@@ -1,5 +1,5 @@
 import { parseStringPromise, processors } from 'xml2js';
-import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
+import { processSpecies, applyVernacularOverride } from '../lib/species.js';
 
 const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
 const MAP      = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
@@ -7,7 +7,7 @@ const MAP      = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
 const FIELD_MAP = {
     ID: 'id',
     AANLEGJAAR: 'year_planted',
-    BOOMSORTIMENT_NEDERLANDS: 'name_indigenous',
+    BOOMSORTIMENT_NEDERLANDS: 'name_vernacular',
     BOOMSORTIMENT: 'species',
     GESLACHT: 'genus',
     WIJK: 'neighbourhood',
@@ -19,11 +19,11 @@ const FIELD_MAP = {
 
 const PROPERTY_NAMES = ['GEOM', ...Object.keys(FIELD_MAP)].join(',');
 
-function applyIndigenousTypoCorrections(s) {
+function applyVernacularTypoCorrections(s) {
     return s.replace(/\bSIERAPPPEL\b/, 'SIERAPPEL');
 }
 
-function sanitiseIndigenousName(s) {
+function sanitiseVernacularName(s) {
     if (!s) return null;
     s = s.trim().replace(/\s+/g, ' ');
     if (s.startsWith('-')) return null;
@@ -39,9 +39,9 @@ function sanitiseTree(tree) {
     const result = processSpecies(tree.species);
     if (!result) return null;
     Object.assign(tree, result);
-    const rawIndigenous = (tree.name_indigenous ?? '').trim().replace(/\s+/g, ' ');
-    tree.name_indigenous = sanitiseIndigenousName(applyIndigenousTypoCorrections(rawIndigenous));
-    tree.name_indigenous = applyIndigenousOverride(tree.species_binomial, tree.name_indigenous);
+    const rawIndigenous = (tree.name_vernacular ?? '').trim().replace(/\s+/g, ' ');
+    tree.name_vernacular = sanitiseVernacularName(applyVernacularTypoCorrections(rawIndigenous));
+    tree.name_vernacular = applyVernacularOverride(tree.species_binomial, tree.name_vernacular);
     return tree;
 }
 

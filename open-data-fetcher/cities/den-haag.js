@@ -1,4 +1,4 @@
-import { processSpecies, applyIndigenousOverride } from '../lib/species.js';
+import { processSpecies, applyVernacularOverride } from '../lib/species.js';
 
 // ArcGIS MapServer query — layer 0 = Straatboom (street trees), 127k trees
 const BASE_URL = 'https://geoservices.denhaag.nl/arcgis/rest/services'
@@ -31,7 +31,7 @@ function toTree(feature, fetchYear) {
         lon:             +parseFloat(g.x).toFixed(7),
         species:         rawSpecies,
         ...speciesResult,
-        name_indigenous: applyIndigenousOverride(speciesResult.species_binomial, a.BOOMSOORT_NEDERLANDS || null),
+        name_vernacular: applyVernacularOverride(speciesResult.species_binomial, a.BOOMSOORT_NEDERLANDS || null),
         year_planted:    age ? String(fetchYear - age) : null,
         genus:           null,
         neighbourhood:   a.BUURT || null,

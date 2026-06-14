@@ -15,7 +15,7 @@ Interactive map of municipal trees for Dutch cities. Data is loaded on demand fo
 - **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
 - **Species filter** — search the full city species list; filter the map to a single species. Active filter persists across map moves.
 - **Favourites** — save trees across cities; stored in `localStorage`.
-- **Name mode toggle** — switch between scientific and Dutch indigenous names throughout the UI.
+- **Name mode toggle** — switch between scientific and vernacular (common) names throughout the UI.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
 - **Current location** — geolocation button flies to user position and places a location dot.
 - **Multi-city routing** — URL is `/:city` (e.g. `/rotterdam`); auto-switches city when the map centre crosses a city boundary.
@@ -102,6 +102,7 @@ PHP reads city SQLite databases. The active city is selected via a `city` query 
 | POST | `/api/trees` | JSON body (see below) | array of tree objects |
 | GET | `/api/species` | `city`, `q?` (search string) | array of species items |
 | GET | `/api/cities` | — | array of city objects from `cities.json` |
+| GET | `/api/vernacular-names` | — | map of `species_binomial → {nl?, en?, de?, fr?}` |
 | GET | `/api/health` | — | `{status, trees}` |
 
 `s/n/w/e` are WGS84 lat/lon for south/north/west/east of the viewport. Default limit 500, max 20 000.
@@ -129,7 +130,7 @@ Optional `strict` param (default `false`):
   "lon": 4.5144985,
   "id": "67112",
   "year_planted": "1948",
-  "name_indigenous": "WITTE ABEEL",
+  "name_vernacular": "WITTE ABEEL",
   "species": "POPULUS NIGRA 'VEREECKEN'",
   "species_binomial": "POPULUS NIGRA",
   "species_cultivar": "VEREECKEN",
@@ -147,10 +148,37 @@ Optional `strict` param (default `false`):
 {
   "species": "QUERCUS ROBUR",
   "species_binomial": "QUERCUS ROBUR",
-  "name_indigenous": "ZOMEREIK",
+  "name_vernacular": "ZOMEREIK",
   "count": 4231
 }
 ```
+
+### Vernacular names
+
+`GET /api/vernacular-names` is fetched once at app startup and stored in the
+Zustand store. Components resolve names client-side — language switching requires
+no re-fetch.
+
+The response is a flat map keyed by `species_binomial` (proper-cased):
+
+```json
+{
+  "Quercus robur": { "nl": "Zomereik", "en": "English oak", "de": "Stieleiche" },
+  "Acer platanoides": { "nl": "Noorse esdoorn", "en": "Norway maple" }
+}
+```
+
+The API merges two layers in priority order:
+
+| Layer | Source | File |
+|---|---|---|
+| Override | Dutch curated names (Wikipedia + Bomenbieb + DB votes) | `vernacular-nl.db` |
+| Base | iNaturalist vernacular names for all languages | `vernacular-base.db` |
+
+Dutch names from the override layer take precedence over iNaturalist. English,
+German, and French always come from iNaturalist. Both databases are built by
+scripts in `open-data-fetcher/tools/vernacular/` — see
+[open-data-fetcher/README.md](open-data-fetcher/README.md) for details.
 
 ---
 
@@ -164,7 +192,7 @@ CREATE TABLE trees (
     lon              REAL,
     id               TEXT,
     year_planted     TEXT,
-    name_indigenous  TEXT,   -- sanitised Dutch name, e.g. "ZOMEREIK"; NULL if none
+    name_vernacular  TEXT,   -- sanitised Dutch name from source, e.g. "ZOMEREIK"; NULL if none
     species          TEXT,   -- original full value, e.g. "QUERCUS ROBUR 'FASTIGIATA KOSTER'"
     species_binomial TEXT,   -- clean binomial, e.g. "QUERCUS ROBUR" or "ACER × FREEMANII"
     species_cultivar TEXT,   -- normalised cultivar/trade code; NULL if none
@@ -181,7 +209,7 @@ CREATE INDEX idx_species_binomial ON trees (species_binomial);
 CREATE INDEX idx_species_cultivar ON trees (species_binomial, species_cultivar);
 ```
 
-`species_binomial`, `species_cultivar`, and `name_indigenous` are written by the fetcher at import time. Non-botanical entries (`ASSORTIMENT ONBEKEND`, `OVERIG`, etc.) are dropped entirely and never written to the DB.
+`species_binomial`, `species_cultivar`, and `name_vernacular` are written by the fetcher at import time. Non-botanical entries (`ASSORTIMENT ONBEKEND`, `OVERIG`, etc.) are dropped entirely and never written to the DB.
 
 ---
 
@@ -239,7 +267,7 @@ src/
   App.tsx                       city routing, cities fetch
   main.tsx
   api/
-    trees.ts                    POST /api/trees, GET /api/species, GET /api/cities
+    trees.ts                    POST /api/trees, GET /api/species, GET /api/cities, GET /api/vernacular-names
     useTreePhotos.ts            iNaturalist two-step fetch + session cache
   map/
     MapController.ts            Leaflet wrapper class, no React imports
@@ -263,7 +291,7 @@ src/
     SpeciesButton.tsx
     SpeciesFilterBadge.tsx      active filter indicator + clear button
     CityButton.tsx
-    NameModeToggle.tsx          scientific ↔ indigenous name display
+    NameModeToggle.tsx          scientific ↔ vernacular name display
     LoadingSpinner.tsx
     TreeImageModal.tsx          species photo viewer (portal, swipeable gallery)
     panels/
@@ -279,11 +307,12 @@ src/
 | `popupView` | Which panel is open (`species-list`, `tree-detail`, `favourites`) or `null` |
 | `visibleTrees` | Trees in the current viewport; drives the species list |
 | `speciesFilter` | Active species filter (`null` = no filter) |
-| `nameMode` | `'scientific'` or `'indigenous'`; persisted in `localStorage` |
+| `nameMode` | `'scientific'` or `'vernacular'`; persisted in `localStorage` |
 | `tileLayerId` | Active map layer; persisted in `localStorage` |
 | `favourites` | Saved trees per city ID; persisted in `localStorage` |
 | `currentZoom` / `currentCenter` | Live map position; drives the debug overlay |
 | `citySpecies` | Full species list for the current city; used by search |
+| `vernacularNames` | `species_binomial → {nl?, en?, de?, fr?}`; fetched once at startup from `/api/vernacular-names` |
 | `pendingTreeId` / `pendingCenter` | Coordinate a "fly to and highlight" when navigating from the favourites panel |
 
 ### Configuration constants (`src/config.ts`)
@@ -330,4 +359,4 @@ The fetcher extracts structured fields from the raw source string at import time
 
 **Genus-only entries** (one word in `species_binomial`): marker code uses `Ge??`, Wikipedia links to the genus article.
 
-See [open-data-fetcher/README.md](open-data-fetcher/README.md) for the full sanitisation pipeline (binomial extraction, cultivar extraction, indigenous name cleaning, typo corrections).
+See [open-data-fetcher/README.md](open-data-fetcher/README.md) for the full sanitisation pipeline (binomial extraction, cultivar extraction, vernacular name cleaning, typo corrections).

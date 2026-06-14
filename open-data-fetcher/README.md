@@ -1,11 +1,11 @@
 # open-data-fetcher
 
-Fetches all municipal trees from Rotterdam's public WFS service and writes them
-to a local JSON or SQLite file for use by the web-app API.
+Fetches all municipal trees from Dutch cities' public WFS services and writes
+them to local SQLite files for use by the web-app API. Includes tooling to
+build vernacular name lookup databases from multiple sources.
 
-**Data source:** Gemeente Rotterdam, Beheer Buitenruimte  
-**License:** Creative Commons Public Domain Mark 1.0  
-**Dataset size:** ~200 000 trees (as of 2026), updated daily by the municipality
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen  
+**License:** Creative Commons Public Domain Mark 1.0
 
 ---
 
@@ -18,41 +18,55 @@ to a local JSON or SQLite file for use by the web-app API.
 
 ## Usage
 
-```sh
-# Full dataset → SQLite (recommended for production)
-node index.js --all --format sqlite
+### Fetching city tree data
 
-# Full dataset → JSON
-node index.js --all --format json
+```sh
+# All cities, full datasets → SQLite (recommended)
+node index.js --city rotterdam,amsterdam,den-haag,groningen --all
+
+# Single city
+node index.js --city rotterdam --all
 
 # Sample: first 100 trees (default), print to console
-node index.js -d
+node index.js --city rotterdam -d
 
 # Specific count and page
-node index.js --count 500
-node index.js --count 500 --page 2
+node index.js --city rotterdam --count 500 --page 2
 
 # Different layer
-node index.js --all --layer ms:obs_bmn_bijz
+node index.js --city rotterdam --all --layer ms:obs_bmn_bijz
 ```
 
 ### Arguments
 
 | Argument | Default | Description |
 |---|---|---|
+| `--city NAME` | — | Comma-separated list of city IDs to fetch |
 | `--all` | off | Fetch entire dataset in pages of 1000 |
 | `--count N` | 100 | Number of trees to fetch (single request) |
 | `--page N` | 0 | Page offset when using `--count` |
-| `--format json\|sqlite` | `json` | Output format |
-| `--layer NAME` | `ms:obs_bmn_alg` | WFS layer to query |
+| `--format json\|sqlite` | `sqlite` | Output format |
+| `--layer NAME` | `ms:obs_bmn_alg` | WFS layer to query (Rotterdam only) |
 | `-d` | off | Dry run — print JSON to stdout, write no file |
 
 ### Output files
 
-| Format | File |
-|---|---|
-| JSON | `bomen-rotterdam.json` |
-| SQLite | `bomen-rotterdam.db` |
+Output is written to `data/<city>.db` (e.g. `data/rotterdam.db`).
+
+### Vernacular name tools
+
+```sh
+# Fetch iNaturalist vernacular names for all species → data/vernacular-base.db
+npm run fetch-vernacular-base
+
+# Build Dutch name DB from Wikipedia + Bomenbieb + city DB votes → data/vernacular-nl.db
+npm run merge-vernacular-nl
+
+# Low-level: aggregate votes only (no web sources) → data/vernacular-nl.db
+npm run build-vernacular-nl
+```
+
+After running, copy the resulting `.db` files into `api/` alongside the city databases.
 
 ---
 
@@ -78,7 +92,7 @@ Each tree record contains:
 | `lon` | float | WGS84 longitude |
 | `id` | string | Municipality's internal tree ID |
 | `year_planted` | string | e.g. `"1993"` |
-| `name_indigenous` | string\|null | Sanitised Dutch common name, e.g. `"ZOMEREIK"` |
+| `name_vernacular` | string\|null | Sanitised Dutch common name from source, e.g. `"ZOMEREIK"` |
 | `species` | string | Original full value from source, e.g. `"QUERCUS ROBUR 'FASTIGIATA KOSTER'"` |
 | `species_binomial` | string\|null | Extracted binomial, e.g. `"QUERCUS ROBUR"` or `"ACER × FREEMANII"` |
 | `species_cultivar` | string\|null | Extracted cultivar/trade name, e.g. `"FASTIGIATA KOSTER"` |
@@ -91,6 +105,72 @@ Each tree record contains:
 
 The SQLite database also carries indexes on `(lat, lon)`, `species`,
 `species_binomial`, and `(species_binomial, species_cultivar)`.
+
+---
+
+## Vernacular name tools
+
+Three scripts under `tools/vernacular/` build the name lookup databases that the
+API serves via `GET /api/vernacular-names`.
+
+### `tools/vernacular/base/fetch.js`
+
+Fetches vernacular names in multiple languages for every species found across
+all city databases, using the [iNaturalist V1 API](https://api.inaturalist.org/v1/).
+
+**Two-call pattern per species:**
+1. `GET /taxa?q={binomial}&rank=species` — resolve to a taxon ID
+2. `GET /taxa/{id}?all_names=true` — fetch all vernacular names
+
+Rate-limited to ~85 requests/minute (under iNaturalist's 100/min cap). Results
+are cached to `tools/vernacular/base/cache.json` between runs; interrupted runs
+resume from cache. Full run over ~1 000 species takes ~23 minutes.
+
+**Output:** `data/vernacular-base.db`
+
+```sql
+CREATE TABLE vernacular_base (
+    species_binomial TEXT PRIMARY KEY,  -- e.g. "Quercus robur"
+    inat_id          INTEGER,
+    nl               TEXT,              -- Dutch
+    en               TEXT,              -- English
+    de               TEXT,              -- German
+    fr               TEXT               -- French
+)
+```
+
+### `tools/vernacular/nl/merge.js`
+
+Builds a curated Dutch vernacular name database by merging three sources in
+priority order:
+
+1. **Wikipedia** — [Lijst van boomsoorten in Nederland](https://nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland)
+2. **Bomenbieb** — bomenbieb.nl species catalogue
+3. **Database votes** — majority-voted names from all city tree databases
+
+Also stores a `source` column and a `name_vernacular_alt` for genuine
+alternative names (where a runner-up got at least 25 % of the winning vote
+count and is not a substring of the winner).
+
+**Output:** `data/vernacular-nl.db`
+
+```sql
+CREATE TABLE vernacular_nl (
+    species_binomial    TEXT PRIMARY KEY,
+    name_vernacular     TEXT NOT NULL,
+    name_vernacular_alt TEXT,
+    source              TEXT   -- 'wikipedia' | 'bomenbieb' | 'databases'
+)
+```
+
+Web-scraped sources are cached in `tools/vernacular/nl/sources/` (Wikipedia and
+Bomenbieb JSON); pass `--no-cache` to force a fresh fetch.
+
+### `tools/vernacular/nl/build.js`
+
+Lower-level variant of the merge script: aggregates only the database votes
+(no web fetches) and writes the same `vernacular-nl.db` schema. Useful for
+testing the vote-resolution logic without hitting the web.
 
 ---
 
@@ -140,7 +220,7 @@ The pipeline applied to every tree at import time:
    (or hybrid `×`) name.
 4. **`species_cultivar` extraction** — prefers ICNCP codes in parentheses
    `('CODE')`, falls back to quoted names `'NAME'`, then bare suffix words.
-5. **`name_indigenous` sanitisation** — strips leading-dash admin entries,
+5. **`name_vernacular` sanitisation** — strips leading-dash admin entries,
    ` -` admin suffixes, and trailing `(CV)` / `(V)` markers.
 
 All cleaning logic lives here in the fetcher. The API and frontend receive only

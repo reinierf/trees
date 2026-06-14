@@ -1,4 +1,4 @@
-import type { Bbox, City, SpeciesItem, Tree, TreeIssue, SpeciesIssue } from '../types'
+import type { Bbox, City, SpeciesItem, Tree, TreeIssue, SpeciesIssue, VernacularNames } from '../types'
 import { API_BASE, API_LIMIT } from '../config'
 
 export async function fetchCities(): Promise<City[]> {
@@ -40,13 +40,19 @@ export async function fetchIssues(): Promise<{ trees: TreeIssue[]; species: Spec
   return response.json() as Promise<{ trees: TreeIssue[]; species: SpeciesIssue[] }>
 }
 
+export async function fetchVernacularNames(): Promise<VernacularNames> {
+  const response = await fetch(`${API_BASE}/vernacular-names`)
+  if (!response.ok) throw new Error(`API ${response.status}`)
+  return response.json() as Promise<VernacularNames>
+}
+
 export async function flagTree(
   city: string,
   treeId: string,
   lat: number,
   lon: number,
   speciesBinomial: string | null,
-  nameIndigenous: string | null,
+  nameVernacular: string | null,
   street: string | null,
   flags: string[],
   note: string,
@@ -54,21 +60,21 @@ export async function flagTree(
   const response = await fetch(`${API_BASE}/flag`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'tree', city, tree_id: treeId, lat, lon, species_binomial: speciesBinomial, name_indigenous: nameIndigenous, street, flags, note }),
+    body: JSON.stringify({ type: 'tree', city, tree_id: treeId, lat, lon, species_binomial: speciesBinomial, name_vernacular: nameVernacular, street, flags, note }),
   })
   if (!response.ok) throw new Error(`API ${response.status}`)
 }
 
 export async function flagSpecies(
   speciesBinomial: string,
-  nameIndigenous: string | null,
+  nameVernacular: string | null,
   flags: string[],
   note: string,
 ): Promise<void> {
   const response = await fetch(`${API_BASE}/flag`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'species', species_binomial: speciesBinomial, name_indigenous: nameIndigenous, flags, note }),
+    body: JSON.stringify({ type: 'species', species_binomial: speciesBinomial, name_vernacular: nameVernacular, flags, note }),
   })
   if (!response.ok) throw new Error(`API ${response.status}`)
 }

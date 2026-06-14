@@ -15,9 +15,9 @@ export function NameModeToggle() {
         <GraduationCap size={15} />
       </button>
       <button
-        title="Indigenous names"
-        onClick={() => setNameMode('indigenous')}
-        className={`p-1 ${nameMode === 'indigenous' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+        title="Vernacular names"
+        onClick={() => setNameMode('vernacular')}
+        className={`p-1 ${nameMode === 'vernacular' ? 'bg-gray-100 text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
       >
         <Leaf size={15} />
       </button>

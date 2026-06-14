@@ -94,12 +94,12 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
                     {trees.map((tree) => {
                       const speciesKey = tree.species_binomial ?? tree.species
                       const primaryName =
-                        nameMode === 'indigenous' && tree.name_indigenous
-                          ? capitalizeFirst(tree.name_indigenous)
+                        nameMode === 'vernacular' && tree.name_vernacular
+                          ? capitalizeFirst(tree.name_vernacular)
                           : capitalizeFirst(speciesKey)
-                      const titleAttr = tree.name_indigenous
+                      const titleAttr = tree.name_vernacular
                         ? nameMode === 'scientific'
-                          ? capitalizeFirst(tree.name_indigenous)
+                          ? capitalizeFirst(tree.name_vernacular)
                           : capitalizeFirst(speciesKey)
                         : undefined
 

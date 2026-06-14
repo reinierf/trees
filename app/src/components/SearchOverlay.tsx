@@ -26,12 +26,12 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
       ? citySpecies.filter(
           (s) =>
             s.species.toUpperCase().includes(q) ||
-            (s.name_indigenous?.toUpperCase().includes(q) ?? false),
+            (s.name_vernacular?.toUpperCase().includes(q) ?? false),
         )
       : citySpecies.slice()
     matches.sort((a, b) => {
-      const nameA = nameMode === 'indigenous' && a.name_indigenous ? a.name_indigenous : a.species
-      const nameB = nameMode === 'indigenous' && b.name_indigenous ? b.name_indigenous : b.species
+      const nameA = nameMode === 'vernacular' && a.name_vernacular ? a.name_vernacular : a.species
+      const nameB = nameMode === 'vernacular' && b.name_vernacular ? b.name_vernacular : b.species
       return nameA.localeCompare(nameB, 'nl')
     })
     return matches.slice(0, MAX_RESULTS)
@@ -117,14 +117,14 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
           <div ref={listRef} className="overflow-y-auto max-h-[min(60vh,400px)]">
             {filtered.map((item, i) => {
               const primaryName =
-                nameMode === 'indigenous' && item.name_indigenous
-                  ? capitalizeFirst(item.name_indigenous)
+                nameMode === 'vernacular' && item.name_vernacular
+                  ? capitalizeFirst(item.name_vernacular)
                   : capitalizeFirst(item.species)
               const secondaryName =
-                nameMode === 'indigenous' && item.name_indigenous
+                nameMode === 'vernacular' && item.name_vernacular
                   ? capitalizeFirst(item.species)
-                  : item.name_indigenous
-                    ? capitalizeFirst(item.name_indigenous)
+                  : item.name_vernacular
+                    ? capitalizeFirst(item.name_vernacular)
                     : null
 
               return (
@@ -146,7 +146,7 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
                     </span>
                     {secondaryName && (
                       <span
-                        className={`text-xs text-gray-400 truncate pr-0.5 ${nameMode === 'indigenous' ? 'italic' : ''}`}
+                        className={`text-xs text-gray-400 truncate pr-0.5 ${nameMode === 'vernacular' ? 'italic' : ''}`}
                       >
                         {secondaryName}
                       </span>

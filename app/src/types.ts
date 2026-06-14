@@ -13,7 +13,7 @@ export interface Tree {
   lon: number
   id: string
   year_planted: string
-  name_indigenous: string | null
+  name_vernacular: string | null
   species: string
   species_binomial: string | null
   species_cultivar: string | null
@@ -28,7 +28,7 @@ export interface Tree {
 export interface SpeciesItem {
   species: string
   species_binomial: string | null
-  name_indigenous: string | null
+  name_vernacular: string | null
   count: number
 }
 
@@ -38,7 +38,7 @@ export interface TreeIssue {
   lat: number | null
   lon: number | null
   species_binomial: string | null
-  name_indigenous: string | null
+  name_vernacular: string | null
   street: string | null
   flags: string[]
   note: string | null
@@ -48,12 +48,14 @@ export interface TreeIssue {
 
 export interface SpeciesIssue {
   species_binomial: string
-  name_indigenous: string | null
+  name_vernacular: string | null
   flags: string[]
   note: string | null
   created_at: string
   updated_at: string
 }
+
+export type VernacularNames = Record<string, { nl?: string; en?: string; de?: string; fr?: string }>
 
 export interface City {
   id: string

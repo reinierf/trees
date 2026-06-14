@@ -3,12 +3,13 @@
 Nice-to-have improvements to pick up later.
 
 - [ ] Filter on species from fav list entry/details
-- [ ] Dutch name overrides
+- [ ] Dutch name overrides (on api level?). Same for other data issue overrides.
 - [ ] Filters + zoeken
 - [ ] Somehow show selected tree if below popup
 - [ ] Prune fields in fetcher
 - [ ] Have tree images in the TreeDetailPanel: tree, leaf, bark, optionally: fruit/flower
 - [ ] Guard api against outside usage
+- [ ] Localisation? Propose a way to obtain and use common names in other languages (using INaturalist V1 api vs DwC-A export)
 
 ## UI / Components
 

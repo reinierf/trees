@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Tree, SpeciesItem, TreeIssue, SpeciesIssue } from './types'
+import type { Tree, SpeciesItem, TreeIssue, SpeciesIssue, VernacularNames } from './types'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
 import { loadFavourites, saveFavourites, type Favourites } from './lib/favouritesStorage'
 import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
@@ -7,7 +7,7 @@ import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
 export type { TileLayerId }
 
 const NAME_MODE_KEY = 'species-name-mode'
-export type NameMode = 'scientific' | 'indigenous'
+export type NameMode = 'scientific' | 'vernacular'
 
 export type PopupView =
   | { kind: 'species-list'; expandedSpecies?: string; selectedTreeId?: string }
@@ -30,6 +30,7 @@ interface AppStore {
   isLoadingSpeciesFilter: boolean
   nameMode: NameMode
   tileLayerId: TileLayerId
+  vernacularNames: VernacularNames
   favourites: Favourites
   debugMode: boolean
   treeIssues: TreeIssue[]
@@ -56,6 +57,7 @@ interface AppStore {
   clearSpeciesFilter: () => void
   setIsLoadingSpeciesFilter: (v: boolean) => void
   setNameMode: (mode: NameMode) => void
+  setVernacularNames: (names: VernacularNames) => void
   setTileLayerId: (id: TileLayerId) => void
   toggleFavourite: (cityId: string, tree: Tree) => void
   setDebugMode: (v: boolean) => void
@@ -87,6 +89,7 @@ export const useStore = create<AppStore>((set) => ({
   speciesFilter: null,
   isLoadingSpeciesFilter: false,
   nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
+  vernacularNames: {},
   tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
   favourites: loadFavourites(),
   debugMode: import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1',
@@ -122,6 +125,7 @@ export const useStore = create<AppStore>((set) => ({
   clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
   setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
   setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
+  setVernacularNames: (names) => set({ vernacularNames: names }),
   setTileLayerId: (id) => { savePreference(TILE_LAYER_KEY, id); set({ tileLayerId: id }) },
   setDebugMode: (v) => set({ debugMode: v }),
   toggleFavourite: (cityId, tree) =>

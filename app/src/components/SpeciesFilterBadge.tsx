@@ -19,8 +19,8 @@ export function SpeciesFilterBadge({ onClear }: Props) {
   )
 
   const displayName = speciesFilter
-    ? nameMode === 'indigenous' && speciesItem?.name_indigenous
-      ? capitalizeFirst(speciesItem.name_indigenous)
+    ? nameMode === 'vernacular' && speciesItem?.name_vernacular
+      ? capitalizeFirst(speciesItem.name_vernacular)
       : capitalizeFirst(speciesFilter)
     : ''
 

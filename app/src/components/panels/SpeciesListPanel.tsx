@@ -33,13 +33,13 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
       const key = tree.species_binomial ?? tree.species
       counts.set(key, (counts.get(key) ?? 0) + 1)
     }
-    const indigenous = new Map<string, string | null>()
+    const vernacular = new Map<string, string | null>()
     for (const tree of visibleTrees) {
       const key = tree.species_binomial ?? tree.species
-      if (!indigenous.has(key)) indigenous.set(key, tree.name_indigenous)
+      if (!vernacular.has(key)) vernacular.set(key, tree.name_vernacular)
     }
     return Array.from(counts.entries())
-      .map(([name, count]) => ({ name, count, nameIndigenous: indigenous.get(name) ?? null }))
+      .map(([name, count]) => ({ name, count, nameVernacular: vernacular.get(name) ?? null }))
       .sort((a, b) => a.count - b.count || a.name.localeCompare(b.name))
   }, [visibleTrees])
 
@@ -103,18 +103,18 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
         {speciesList.length === 0 ? (
           <p className="px-4 py-3 text-sm text-muted-foreground">No trees in view</p>
         ) : (
-          speciesList.map(({ name, count, nameIndigenous }) => {
+          speciesList.map(({ name, count, nameVernacular }) => {
             const isOpen = openSpecies === name
             const trees = treesBySpecies.get(name) ?? []
-            const displayName = nameMode === 'indigenous' && nameIndigenous ? nameIndigenous : name
+            const displayName = nameMode === 'vernacular' && nameVernacular ? nameVernacular : name
 
             return (
               <div key={name}>
                 <div className={`flex items-center w-full text-sm hover:bg-gray-50 ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}>
                   <button
                     onClick={() => toggleSpecies(name)}
-                    title={nameIndigenous
-                      ? (nameMode === 'scientific' ? capitalizeFirst(nameIndigenous) : capitalizeFirst(name))
+                    title={nameVernacular
+                      ? (nameMode === 'scientific' ? capitalizeFirst(nameVernacular) : capitalizeFirst(name))
                       : undefined}
                     className="flex-1 flex items-center justify-between px-4 py-2 text-left min-w-0"
                   >

@@ -7,11 +7,11 @@ interface Props {
   thumbnail: TreePhoto
   photos: TreePhoto[] | null
   speciesName: string
-  indigenousName: string | null
+  vernacularName: string | null
   onClose: () => void
 }
 
-export function TreeImageModal({ thumbnail, photos, speciesName, indigenousName, onClose }: Props) {
+export function TreeImageModal({ thumbnail, photos, speciesName, vernacularName, onClose }: Props) {
   const allPhotos = photos !== null && photos.length > 0 ? photos : [thumbnail]
   const [index, setIndex] = useState(0)
   const touchRef = useRef<{ x: number; y: number } | null>(null)
@@ -58,8 +58,8 @@ export function TreeImageModal({ thumbnail, photos, speciesName, indigenousName,
       <div className="relative flex items-center px-4 pt-3 pb-2 shrink-0 border-b border-gray-100">
         <p className="w-full text-sm text-center truncate px-8">
           <span className="font-semibold italic">{speciesName}</span>
-          {indigenousName && (
-            <span className="text-muted-foreground ml-2">{indigenousName}</span>
+          {vernacularName && (
+            <span className="text-muted-foreground ml-2">{vernacularName}</span>
           )}
         </p>
         <div className="absolute right-4">

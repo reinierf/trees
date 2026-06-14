@@ -78,10 +78,10 @@ export class MapController {
 
     private static tooltipContent(tree: Tree): string {
         const species = `<span style="font-style:italic;font-weight:600">${capitalizeFirst(tree.species_binomial ?? tree.species)}</span>`
-        if (!tree.name_indigenous) return species
-        const indigenous = capitalizeFirst(tree.name_indigenous.toLowerCase())
+        if (!tree.name_vernacular) return species
+        const vernacular = capitalizeFirst(tree.name_vernacular.toLowerCase())
             .replace(/'([a-z])/g, (_, c: string) => `'${c.toUpperCase()}`)
-        return `${species}, ${indigenous}`
+        return `${species}, ${vernacular}`
     }
 
     private tooltipGen = 0

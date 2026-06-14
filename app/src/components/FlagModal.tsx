@@ -101,7 +101,7 @@ export function FlagModal({ mode, tree, cityId, noImages, onClose, onSubmit }: P
     }
   }
 
-  const nameStr = formatName(tree.species_binomial, tree.species_cultivar, tree.name_indigenous)
+  const nameStr = formatName(tree.species_binomial, tree.species_cultivar, tree.name_vernacular)
   const header  = mode === 'tree' ? 'Markeer datafout voor boom' : 'Markeer datafout voor soort'
 
   return createPortal(

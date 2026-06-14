@@ -95,8 +95,8 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
               {treeIssues.map((issue) => {
                 const key         = `tree:${issue.city}:${issue.tree_id}`
                 const name        = issue.species_binomial ? capitalizeFirst(issue.species_binomial) : '?'
-                const dutch       = issue.name_indigenous
-                  ? ` (${capitalizeFirst(issue.name_indigenous.toLowerCase())})`
+                const dutch       = issue.name_vernacular
+                  ? ` (${capitalizeFirst(issue.name_vernacular.toLowerCase())})`
                   : ''
                 const canFly      = issue.lat !== null && issue.lon !== null
                 const flagText    = issue.flags.map((f) => treeFlagLabel[f] ?? f).join(', ')
@@ -166,8 +166,8 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
               {speciesIssues.map((issue) => {
                 const key         = `species:${issue.species_binomial}`
                 const name        = capitalizeFirst(issue.species_binomial)
-                const dutch       = issue.name_indigenous
-                  ? ` (${capitalizeFirst(issue.name_indigenous.toLowerCase())})`
+                const dutch       = issue.name_vernacular
+                  ? ` (${capitalizeFirst(issue.name_vernacular.toLowerCase())})`
                   : ''
                 const flagText    = issue.flags.map((f) => speciesFlagLabel[f] ?? f).join(', ')
                 const isConfirm   = confirmKey === key

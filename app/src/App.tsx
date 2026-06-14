@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { fetchCities } from './api/trees'
+import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
+import { useStore } from './store'
 import type { City } from './types'
 
 export default function App() {
   const { city: cityParam } = useParams<{ city?: string }>()
   const navigate = useNavigate()
   const [cities, setCities] = useState<City[] | null>(null)
+  const setVernacularNames = useStore((s) => s.setVernacularNames)
 
   useEffect(() => {
     fetchCities().then((data) => setCities(data)).catch(console.error)
+    fetchVernacularNames().then(setVernacularNames).catch(console.error)
   }, [])
 
   useEffect(() => {

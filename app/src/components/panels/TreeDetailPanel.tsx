@@ -148,9 +148,9 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
           </div>
         </div>
 
-        {!collapsed && tree.name_indigenous && (
+        {!collapsed && tree.name_vernacular && (
           <p className="text-sm mt-0.5">
-            {capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
+            {capitalizeFirst(tree.name_vernacular.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
           </p>
         )}
       </div>
@@ -257,8 +257,8 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         thumbnail={thumbnail}
         photos={photos}
         speciesName={`${displayName}${cultivar}`}
-        indigenousName={tree.name_indigenous
-          ? capitalizeFirst(tree.name_indigenous.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)
+        vernacularName={tree.name_vernacular
+          ? capitalizeFirst(tree.name_vernacular.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)
           : null}
         onClose={() => setPhotoModalOpen(false)}
       />
@@ -271,9 +271,9 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         noImages={thumbnail === null}
         onClose={() => setTreeFlagOpen(false)}
         onSubmit={async (flags, note) => {
-          await flagTree(cityId, tree.id, tree.lat, tree.lon, tree.species_binomial, tree.name_indigenous, tree.street, flags, note)
+          await flagTree(cityId, tree.id, tree.lat, tree.lon, tree.species_binomial, tree.name_vernacular, tree.street, flags, note)
           const now = new Date().toISOString()
-          upsertTreeIssue({ city: cityId, tree_id: tree.id, lat: tree.lat, lon: tree.lon, species_binomial: tree.species_binomial, name_indigenous: tree.name_indigenous, street: tree.street, flags, note: note || null, created_at: now, updated_at: now } as TreeIssue)
+          upsertTreeIssue({ city: cityId, tree_id: tree.id, lat: tree.lat, lon: tree.lon, species_binomial: tree.species_binomial, name_vernacular: tree.name_vernacular, street: tree.street, flags, note: note || null, created_at: now, updated_at: now } as TreeIssue)
         }}
       />
     )}
@@ -285,9 +285,9 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         noImages={thumbnail === null}
         onClose={() => setSpeciesFlagOpen(false)}
         onSubmit={async (flags, note) => {
-          await flagSpecies(binomial, tree.name_indigenous, flags, note)
+          await flagSpecies(binomial, tree.name_vernacular, flags, note)
           const now = new Date().toISOString()
-          upsertSpeciesIssue({ species_binomial: binomial, name_indigenous: tree.name_indigenous, flags, note: note || null, created_at: now, updated_at: now } as SpeciesIssue)
+          upsertSpeciesIssue({ species_binomial: binomial, name_vernacular: tree.name_vernacular, flags, note: note || null, created_at: now, updated_at: now } as SpeciesIssue)
         }}
       />
     )}

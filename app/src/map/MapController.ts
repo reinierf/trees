@@ -55,6 +55,10 @@ export class MapController {
         })
     }
 
+    refresh(): void {
+        this.fireMoveEnd()
+    }
+
     private fireMoveEnd(): void {
         if (!this.map) return
         const b = this.map.getBounds()

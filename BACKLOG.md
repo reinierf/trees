@@ -2,7 +2,6 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Check fetch trees when clearing filter, or keep fetching in fav mode
 - [ ] Filter on species from fav list entry/details
 - [ ] Dutch name overrides
 - [ ] Filters + zoeken

@@ -63,6 +63,8 @@ export function Map({ city, cities }: Props) {
 
   const pendingSearch    = useStore((s) => s.pendingSearch)
   const setPendingSearch = useStore((s) => s.setPendingSearch)
+  const pendingSpeciesSelect    = useStore((s) => s.pendingSpeciesSelect)
+  const setPendingSpeciesSelect = useStore((s) => s.setPendingSpeciesSelect)
 
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState<string | undefined>(undefined)
@@ -105,6 +107,13 @@ export function Map({ city, cities }: Props) {
       }
     }
   }, [city, setIsLoadingSpeciesFilter, setSpeciesFilter, controllerRef])
+
+  useEffect(() => {
+    if (pendingSpeciesSelect !== null) {
+      setPendingSpeciesSelect(null)
+      handleSpeciesSelect(pendingSpeciesSelect)
+    }
+  }, [pendingSpeciesSelect, setPendingSpeciesSelect, handleSpeciesSelect])
 
   function handleClearFilter() {
     speciesAbortRef.current?.abort()

@@ -21,6 +21,17 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'leaflet-vendor': ['leaflet', 'leaflet.markercluster'],
+          'ui-vendor': ['radix-ui', 'lucide-react'],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/api': 'http://localhost:8000',

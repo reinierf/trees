@@ -1,4 +1,4 @@
-import { ChevronRight, Info } from 'lucide-react'
+import { ChevronRight, Filter, Info } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
@@ -18,6 +18,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
   const selectTreeInList = useStore((s) => s.selectTreeInList)
   const openTreeDetail = useStore((s) => s.openTreeDetail)
   const closePopup = useStore((s) => s.closePopup)
+  const setPendingSpeciesSelect = useStore((s) => s.setPendingSpeciesSelect)
 
   const [openSpecies, setOpenSpecies] = useState<string | null>(expandedSpecies ?? null)
   const [collapsed, setCollapsed] = useState(false)
@@ -77,7 +78,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
         key,
         list.sort(
           (a, b) =>
-            capitalize(a.street).localeCompare(capitalize(b.street)) ||
+            capitalize(a.street ?? '').localeCompare(capitalize(b.street ?? '')) ||
             (Number(b.year_planted) || 0) - (Number(a.year_planted) || 0),
         ),
       )
@@ -109,22 +110,32 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
 
             return (
               <div key={name}>
-                <button
-                  onClick={() => toggleSpecies(name)}
-                  title={nameIndigenous
-                    ? (nameMode === 'scientific' ? capitalizeFirst(nameIndigenous) : capitalizeFirst(name))
-                    : undefined}
-                  className={`flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-gray-50 text-left ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}
-                >
-                  <span className={`${nameMode === 'scientific' ? 'italic' : ''} ${isOpen ? 'font-semibold' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>
-                  <div className="flex items-center gap-2 shrink-0 ml-3">
-                    <span className="text-muted-foreground text-xs">{count}</span>
-                    <ChevronRight
-                      size={14}
-                      className={`text-muted-foreground transition-transform ${isOpen ? 'rotate-90' : ''}`}
-                    />
-                  </div>
-                </button>
+                <div className={`flex items-center w-full text-sm hover:bg-gray-50 ${isOpen ? 'sticky top-0 z-10 bg-white border-b' : ''}`}>
+                  <button
+                    onClick={() => toggleSpecies(name)}
+                    title={nameIndigenous
+                      ? (nameMode === 'scientific' ? capitalizeFirst(nameIndigenous) : capitalizeFirst(name))
+                      : undefined}
+                    className="flex-1 flex items-center justify-between px-4 py-2 text-left min-w-0"
+                  >
+                    <span className={`${nameMode === 'scientific' ? 'italic' : ''} ${isOpen ? 'font-semibold' : ''} min-w-0 truncate pr-1`}>{capitalizeFirst(displayName)}</span>
+                    <div className="flex items-center gap-2 shrink-0 ml-3">
+                      <span className="text-muted-foreground text-xs">{count}</span>
+                      <ChevronRight
+                        size={14}
+                        className={`text-muted-foreground transition-transform ${isOpen ? 'rotate-90' : ''}`}
+                      />
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setPendingSpeciesSelect(name); closePopup() }}
+                    className="shrink-0 p-1.5 pr-3 text-muted-foreground hover:text-foreground"
+                    aria-label="Filter by species"
+                    title="Show all trees of this species on the map"
+                  >
+                    <Filter size={13} />
+                  </button>
+                </div>
                 {isOpen && (
                   <div className="bg-gray-50 border-t border-b">
                     {trees.map((tree, i) => {

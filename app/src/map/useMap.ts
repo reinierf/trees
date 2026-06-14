@@ -40,8 +40,17 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const pendingHighlightId = useStore((s) => s.pendingHighlightId)
   const setPendingHighlightId = useStore((s) => s.setPendingHighlightId)
   const favourites = useStore((s) => s.favourites)
+  const speciesFilter = useStore((s) => s.speciesFilter)
 
   const { load: loadTrees, abort: abortLoad } = useTreeLoader(city.id, tileCacheRef.current)
+  const prevSpeciesFilterRef = useRef<string | null>(speciesFilter)
+  useEffect(() => {
+    if (prevSpeciesFilterRef.current !== null && speciesFilter === null) {
+      controllerRef.current?.refresh()
+    }
+    prevSpeciesFilterRef.current = speciesFilter
+  }, [speciesFilter])
+
   const { onMapClick, onMarkerClick } = useMapClickHandlers()
   const checkCitySwitch = useCitySwitcher(city, cities)
 

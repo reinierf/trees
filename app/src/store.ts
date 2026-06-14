@@ -61,6 +61,8 @@ interface AppStore {
   setDebugMode: (v: boolean) => void
   pendingSearch: string | null
   setPendingSearch: (q: string | null) => void
+  pendingSpeciesSelect: string | null
+  setPendingSpeciesSelect: (species: string | null) => void
   setPendingFlyTo: (v: { lat: number; lon: number; minZoom: number } | null) => void
   setPendingHighlightId: (id: string | null) => void
   openIssues: () => void
@@ -91,6 +93,7 @@ export const useStore = create<AppStore>((set) => ({
   treeIssues: [],
   speciesIssues: [],
   pendingSearch: null,
+  pendingSpeciesSelect: null,
   pendingFlyTo: null,
   pendingHighlightId: null,
 
@@ -131,6 +134,7 @@ export const useStore = create<AppStore>((set) => ({
       return { favourites: updated }
     }),
   setPendingSearch: (q) => set({ pendingSearch: q }),
+  setPendingSpeciesSelect: (species) => set({ pendingSpeciesSelect: species }),
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
   setPendingHighlightId: (id) => set({ pendingHighlightId: id }),
   openIssues: () => set({ popupView: { kind: 'issues' } }),

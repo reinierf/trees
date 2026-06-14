@@ -13,10 +13,17 @@
 define('DEFAULT_LIMIT', 500);
 define('MAX_LIMIT',     20000);
 
+// Origins allowed to call the API from a browser. Add your production domain here.
+define('ALLOWED_ORIGINS', [
+    'http://localhost:5173',   // Vite dev server
+    'http://localhost:8000',   // PHP built-in dev server
+    'https://boxofchocolates.nl',
+]);
+
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+cors_origin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
@@ -494,6 +501,19 @@ function cast_row(array $row): array
     $row['trunk_diameter'] = $row['trunk_diameter'] !== null ? (float) $row['trunk_diameter'] : null;
     $row['crown_spread']   = $row['crown_spread']   !== null ? (float) $row['crown_spread']   : null;
     return $row;
+}
+
+function cors_origin(): void
+{
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? null;
+    if ($origin === null) return; // same-origin request or non-browser client — allow
+    if (!in_array($origin, ALLOWED_ORIGINS, true)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Origin not allowed']);
+        exit;
+    }
+    header("Access-Control-Allow-Origin: {$origin}");
+    header('Vary: Origin');
 }
 
 function respond(int $status, mixed $body): never

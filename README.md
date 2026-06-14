@@ -67,6 +67,7 @@ Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/t
 - Upload `app/dist/` as the web root (or a subdirectory)
 - No database server, no Node.js on the server
 - `VITE_API_BASE` env var overrides the API base URL for subdirectory deployments
+- Add your production domain to the `ALLOWED_ORIGINS` array in `api/index.php` (see [API access control](#api-access-control) below)
 
 ---
 
@@ -153,6 +154,20 @@ Optional `strict` param (default `false`):
   "count": 4231
 }
 ```
+
+### API access control
+
+The API rejects cross-origin browser requests from unknown origins. `ALLOWED_ORIGINS` in [api/index.php](api/index.php) controls the allowlist:
+
+```php
+define('ALLOWED_ORIGINS', [
+    'http://localhost:5173',   // Vite dev server
+    'http://localhost:8000',   // PHP built-in dev server
+    // 'https://bomen.example.com',
+]);
+```
+
+Add your production domain to this array before deploying. Requests with no `Origin` header (same-origin browser requests in production, direct tool calls) are always allowed. Requests with an `Origin` not in the list receive a `403`.
 
 ### Vernacular names
 

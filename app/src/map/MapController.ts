@@ -85,15 +85,16 @@ export class MapController {
     }
 
     private tooltipGen = 0
+    private favTooltipGen = 0
 
-    private addDelayedTooltip(m: L.Marker, tree: Tree, gen: number): void {
+    private addDelayedTooltip(m: L.Marker, tree: Tree, gen: number, getGen: () => number): void {
         let timer: ReturnType<typeof setTimeout> | null = null
         let tip: L.Tooltip | null = null
         m.on('mouseover', () => {
             if (timer !== null) clearTimeout(timer)
             timer = setTimeout(() => {
                 timer = null
-                if (gen !== this.tooltipGen || !this.map) return
+                if (gen !== getGen() || !this.map) return
                 tip = L.tooltip({ direction: 'top', offset: [0, -8] })
                     .setLatLng(m.getLatLng())
                     .setContent(MapController.tooltipContent(tree))
@@ -116,7 +117,7 @@ export class MapController {
         for (const tree of trees) {
             if (!tree.species_binomial) continue
             const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
-            this.addDelayedTooltip(m, tree, gen)
+            this.addDelayedTooltip(m, tree, gen, () => this.tooltipGen)
             m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
             this.markers.push({ m, species: tree.species_binomial })
             layerMarkers.push(m)
@@ -126,16 +127,16 @@ export class MapController {
     }
 
     setFavouriteMarkers(trees: Tree[]): void {
-        this.tooltipGen++
+        this.favTooltipGen++
         this.favouriteLayer.clearLayers()
-        const gen = this.tooltipGen
+        const gen = this.favTooltipGen
         for (const tree of trees) {
             if (!tree.species_binomial) continue
             const m = L.marker([tree.lat, tree.lon], {
                 icon: createSpeciesIcon(tree.species_binomial),
                 pane: 'favouritePane',
             })
-            this.addDelayedTooltip(m, tree, gen)
+            this.addDelayedTooltip(m, tree, gen, () => this.favTooltipGen)
             m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
             this.favouriteLayer.addLayer(m)
         }

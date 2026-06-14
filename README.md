@@ -161,13 +161,13 @@ The API rejects cross-origin browser requests from unknown origins. `ALLOWED_ORI
 
 ```php
 define('ALLOWED_ORIGINS', [
-    'http://localhost:5173',   // Vite dev server
-    'http://localhost:8000',   // PHP built-in dev server
-    // 'https://bomen.example.com',
+    'http://localhost:5173',       // Vite dev server
+    'http://localhost:8000',       // PHP built-in dev server
+    'https://boxofchocolates.nl',  // production
 ]);
 ```
 
-Add your production domain to this array before deploying. Requests with no `Origin` header (same-origin browser requests in production, direct tool calls) are always allowed. Requests with an `Origin` not in the list receive a `403`.
+Add or replace the production domain in this array. Requests with no `Origin` header (same-origin browser requests in production, direct tool calls) are always allowed. Requests with an `Origin` not in the list receive a `403`.
 
 ### Vernacular names
 

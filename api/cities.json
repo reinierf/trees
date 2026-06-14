@@ -3,7 +3,7 @@
     "id": "rotterdam",
     "name": "Rotterdam",
     "center": [51.9225, 4.4792],
-    "bbox": { "s": 51.83, "n": 52.00, "w": 4.28, "e": 4.65 }
+    "bbox": { "s": 51.83, "n": 52.00, "w": 4.10, "e": 4.65 }
   },
   {
     "id": "groningen",

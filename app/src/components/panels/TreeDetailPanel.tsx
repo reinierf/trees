@@ -160,7 +160,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
           <div className="flex gap-2 px-4 pb-3 border-t pt-2">
             <div className="flex-1 space-y-1 min-w-0">
               <Row label="Geplant" value={tree.year_planted} />
-              <Row label="Straat" value={capitalize(tree.street)} />
+              <Row label="Straat" value={tree.street != null ? capitalize(tree.street) : null} />
               <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
               <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
             </div>

@@ -57,7 +57,23 @@ function load_cities(): array
     if ($cities !== null) return $cities;
     $path = __DIR__ . '/cities.json';
     if (!file_exists($path)) respond(503, ['error' => 'cities.json not found']);
-    $cities = json_decode(file_get_contents($path), true);
+    $raw    = json_decode(file_get_contents($path), true);
+    $margin = 0.01;
+    $cities = [];
+    foreach ($raw as $city) {
+        if (file_exists(__DIR__ . '/data/' . $city['id'] . '.db')) {
+            $row = db($city['id'])
+                ->query('SELECT MIN(lat) AS s, MAX(lat) AS n, MIN(lon) AS w, MAX(lon) AS e FROM trees')
+                ->fetch();
+            $city['bbox'] = [
+                's' => (float) $row['s'] - $margin,
+                'n' => (float) $row['n'] + $margin,
+                'w' => (float) $row['w'] - $margin,
+                'e' => (float) $row['e'] + $margin,
+            ];
+        }
+        $cities[] = $city;
+    }
     return $cities;
 }
 

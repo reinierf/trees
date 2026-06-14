@@ -2,25 +2,21 @@
   {
     "id": "rotterdam",
     "name": "Rotterdam",
-    "center": [51.9225, 4.4792],
-    "bbox": { "s": 51.83, "n": 52.00, "w": 4.10, "e": 4.65 }
+    "center": [51.9225, 4.4792]
   },
   {
     "id": "groningen",
     "name": "Groningen",
-    "center": [53.2194, 6.5665],
-    "bbox": { "s": 53.10, "n": 53.35, "w": 6.40, "e": 6.75 }
+    "center": [53.2194, 6.5665]
   },
   {
     "id": "den-haag",
     "name": "Den Haag",
-    "center": [52.0705, 4.3007],
-    "bbox": { "s": 51.95, "n": 52.15, "w": 4.15, "e": 4.45 }
+    "center": [52.0705, 4.3007]
   },
   {
     "id": "amsterdam",
     "name": "Amsterdam",
-    "center": [52.3676, 4.9041],
-    "bbox": { "s": 52.28, "n": 52.43, "w": 4.73, "e": 5.08 }
+    "center": [52.3676, 4.9041]
   }
 ]

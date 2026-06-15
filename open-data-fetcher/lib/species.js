@@ -29,12 +29,13 @@ export function applyVernacularOverride(binomial, current) {
 // Rank markers that indicate a subspecies / variety / forma — not a cultivar.
 export const RANK_MARKERS = new Set([
     'SUBSP.', 'SUBSP', 'VAR.', 'VAR', 'F.', 'CV.', 'CV*', 'CV',
+    'SPEC.', 'SPEC', 'SPECIES',
 ]);
 
 export function extractSpeciesBinomial(s) {
     if (!s) return null;
     s = s.replace(/'.*$/, '').replace(/\(.*$/, '').trim();
-    s = s.replace(/\s+(SUBSP\.|SUBSP|VAR\.|VAR|F\.|CV\.|CV\*|CV)(\s|$).*/i, '').trim();
+    s = s.replace(/\s+(SUBSP\.|SUBSP|VAR\.|VAR|F\.|CV\.|CV\*|CV|SPEC\.|SPEC|SPECIES)(\s|$).*/i, '').trim();
     const words = s.split(/\s+/).filter(Boolean);
     if (words.length === 0) return null;
     if (words.length === 1) return words[0];

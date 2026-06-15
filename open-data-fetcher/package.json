@@ -8,6 +8,7 @@
     "start": "node index.js",
     "fetch": "node index.js --all",
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
+    "suggest-corrections": "node tools/vernacular/base/suggest-corrections.js",
     "build-vernacular-nl": "node tools/vernacular/nl/build.js",
     "merge-vernacular-nl": "node tools/vernacular/nl/merge.js"
   },

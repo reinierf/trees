@@ -2,14 +2,12 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Data issue: Den Haag trees have height for diameter
-- [ ] Filter on species from fav list entry/details
+- [ ] Data issue: Den Haag trees have very large values for diameter. Maybe not meters? E.g: https://boxofchocolates.nl/bomen/#/den-haag?tree=130&lat=52.0764067&lon=4.2943064
 - [ ] Dutch name overrides (on api level?). Same for other data issue overrides.
 - [ ] Filters + zoeken
-- [ ] Somehow show selected tree if below popup
-- [ ] Prune fields in fetcher
-- [ ] Have tree images in the TreeDetailPanel: tree, leaf, bark, optionally: fruit/flower
-- [ ] Localisation? Propose a way to obtain and use common names in other languages (using INaturalist V1 api vs DwC-A export)
+- [ ] Somehow show selected tree if behind popup (or indicate that is behind)
+- [ ] Prune unused fields in fetcher and dbs
+- [ ] Localisation of UI: implement i18next. 
 
 ## UI / Components
 

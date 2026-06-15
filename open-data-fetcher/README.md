@@ -64,6 +64,9 @@ npm run merge-vernacular-nl
 
 # Low-level: aggregate votes only (no web sources) → data/vernacular-nl.db
 npm run build-vernacular-nl
+
+# Scan cache.json for nulls and suggest binomialCorrections entries (stdout)
+npm run suggest-corrections
 ```
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases.
@@ -171,6 +174,69 @@ Bomenbieb JSON); pass `--no-cache` to force a fresh fetch.
 Lower-level variant of the merge script: aggregates only the database votes
 (no web fetches) and writes the same `vernacular-nl.db` schema. Useful for
 testing the vote-resolution logic without hitting the web.
+
+---
+
+## Data quality: fixing misspelled species names
+
+Some source databases contain misspelled binomials (e.g. `ACER FREMANII` instead
+of `ACER FREEMANII`). These end up as `null` entries in `cache.json` because
+iNaturalist cannot match them. The correction cycle is:
+
+### 1. Identify misspellings
+
+```sh
+npm run suggest-corrections > corrections.txt
+```
+
+The script reads all `null` entries from `cache.json`, queries iNaturalist
+without a rank filter, and prints paste-ready JS entries to stdout. Entries
+matched by edit distance (≤ 2 characters) are flagged `// fuzzy` — review those
+before accepting.
+
+Progress is printed to stderr; redirect or ignore it separately:
+
+```sh
+npm run suggest-corrections 2>/dev/null > corrections.txt
+```
+
+### 2. Apply corrections
+
+Open `overrides.js` and paste the suggested entries into `binomialCorrections`.
+Remove any `// fuzzy` lines you are not confident about.
+
+### 3. Rebuild city databases
+
+```sh
+node index.js --city rotterdam,amsterdam,den-haag,groningen --all
+```
+
+`processSpecies()` applies `binomialCorrections` at import time, so the
+corrected `species_binomial` is what gets written to each city `.db`.
+
+### 4. Re-fetch vernacular names from scratch
+
+```sh
+npm run fetch-vernacular-base -- --no-cache
+```
+
+`--no-cache` discards the old `cache.json` entirely and re-derives the species
+list from the now-corrected city databases. Previously null entries for
+misspelled names disappear; the corrected names are fetched fresh.
+
+### 5. Rebuild the Dutch vernacular database
+
+```sh
+npm run merge-vernacular-nl
+```
+
+### 6. Deploy
+
+Copy all updated `.db` files from `data/` into `api/data/`.
+
+Running `suggest-corrections` again after this cycle will no longer suggest the
+same corrections — the misspelled names are gone from the city databases and
+therefore absent from the new cache.
 
 ---
 

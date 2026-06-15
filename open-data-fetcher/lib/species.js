@@ -6,7 +6,7 @@ const _filterPatterns = filterSpecies.filter(e => e instanceof RegExp);
 function applyBinomialCorrections(s) {
     for (const [wrong, right] of Object.entries(binomialCorrections)) {
         const escaped = wrong.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        s = s.replace(new RegExp(escaped, 'gi'), right);
+        s = s.replace(new RegExp(`\\b${escaped}`, 'gi'), right);
     }
     return s;
 }

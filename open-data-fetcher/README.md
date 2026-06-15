@@ -69,7 +69,7 @@ npm run build-vernacular-nl
 npm run suggest-corrections
 ```
 
-After running, copy the resulting `.db` files into `api/data/` alongside the city databases.
+After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
 
 ---
 
@@ -232,7 +232,11 @@ npm run merge-vernacular-nl
 
 ### 6. Deploy
 
-Copy all updated `.db` files from `data/` into `api/data/`.
+```sh
+npm run copy-data
+```
+
+Copies all `.db` files from `data/` into `api/data/`.
 
 Running `suggest-corrections` again after this cycle will no longer suggest the
 same corrections — the misspelled names are gone from the city databases and

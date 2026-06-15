@@ -6,5 +6,6 @@ import utrecht    from './cities/utrecht.js';
 import arnhem     from './cities/arnhem.js';
 import nijmegen   from './cities/nijmegen.js';
 import zwolle     from './cities/zwolle.js';
+import eindhoven  from './cities/eindhoven.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven };

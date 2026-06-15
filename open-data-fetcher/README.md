@@ -4,7 +4,7 @@ Fetches all municipal trees from Dutch cities' public WFS services and writes
 them to local SQLite files for use by the web-app API. Includes tooling to
 build vernacular name lookup databases from multiple sources.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle  
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven  
 **License:** Creative Commons Public Domain Mark 1.0
 
 ---
@@ -64,9 +64,18 @@ npm run merge-vernacular-nl
 
 # Low-level: aggregate votes only (no web sources) → data/vernacular-nl.db
 npm run build-vernacular-nl
+```
 
-# Scan cache.json for nulls and suggest binomialCorrections entries (stdout)
-npm run suggest-corrections
+### Species quality tools
+
+```sh
+# Check for stale binomials and unresolvable species; suggest overrides.js entries
+npm run validate-species
+
+# Re-apply overrides.js corrections to city DBs in-place (no re-import needed)
+npm run patch-binomials
+npm run patch-binomials -- --dry       # preview changes without writing
+npm run patch-binomials -- --city amsterdam
 ```
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
@@ -192,38 +201,44 @@ testing the vote-resolution logic without hitting the web.
 
 Some source databases contain misspelled binomials (e.g. `ACER FREMANII` instead
 of `ACER FREEMANII`). These end up as `null` entries in `cache.json` because
-iNaturalist cannot match them. The correction cycle is:
+iNaturalist cannot match them.
 
-### 1. Identify misspellings
-
-```sh
-npm run suggest-corrections > corrections.txt
-```
-
-The script reads all `null` entries from `cache.json`, queries iNaturalist
-without a rank filter, and prints paste-ready JS entries to stdout. Entries
-matched by edit distance (≤ 2 characters) are flagged `// fuzzy` — review those
-before accepting.
-
-Progress is printed to stderr; redirect or ignore it separately:
+### 1. Identify misspellings and stale entries
 
 ```sh
-npm run suggest-corrections 2>/dev/null > corrections.txt
+npm run validate-species 2>/dev/null > corrections.txt
 ```
 
-### 2. Apply corrections
+`validate-species` does two things:
 
-Open `overrides.js` and paste the suggested entries into `binomialCorrections`.
+- **Stale check** — finds rows where `species_binomial` in the DB no longer
+  matches what the current `overrides.js` would produce (i.e. a correction was
+  added after the last import). Reports to stderr; fix with `patch-binomials`.
+- **Unresolvable check** — finds `species_binomial` values that iNaturalist
+  cannot match, and suggests `binomialCorrections` entries using edit-distance
+  matching (≤ 2 characters) with an iNaturalist fallback. Suggested entries go
+  to stdout. Entries flagged `// fuzzy` should be reviewed before accepting.
+
+Run `--no-inat` to skip the iNaturalist pass (cache-internal matching only):
+
+```sh
+npm run validate-species -- --no-inat
+```
+
+### 2. Add corrections to overrides.js
+
+Paste the suggested entries into `binomialCorrections` in `overrides.js`.
 Remove any `// fuzzy` lines you are not confident about.
 
-### 3. Rebuild city databases
+### 3. Patch city databases
 
 ```sh
-node index.js --city all --all
+npm run patch-binomials
 ```
 
-`processSpecies()` applies `binomialCorrections` at import time, so the
-corrected `species_binomial` is what gets written to each city `.db`.
+Re-applies `processSpecies()` to the stored raw `species` field in every city
+DB and updates `species_binomial` / `species_cultivar` in-place. No re-fetch
+from source APIs needed. Run `--dry` to preview changes first.
 
 ### 4. Re-fetch vernacular names
 
@@ -231,29 +246,16 @@ corrected `species_binomial` is what gets written to each city `.db`.
 npm run fetch-vernacular-base
 ```
 
-The species list is derived from the current city databases, so the old
-misspelled names are no longer present and are not queried. Corrected names
-not yet in `cache.json` are fetched fresh; previously confirmed nulls are
-skipped (they are excluded from the todo list by the cache filter on line 97
-of `fetch.js`).
+Newly-corrected binomials not yet in `cache.json` are fetched from iNaturalist.
+Previously-confirmed nulls (old misspellings) are no longer present in the city
+DBs and are skipped automatically.
 
-### 5. Rebuild the Dutch vernacular database
+### 5. Rebuild and deploy
 
 ```sh
 npm run merge-vernacular-nl
-```
-
-### 6. Deploy
-
-```sh
 npm run copy-data
 ```
-
-Copies all `.db` files from `data/` into `api/data/`.
-
-Running `suggest-corrections` again after this cycle will no longer suggest the
-same corrections — the misspelled names are gone from the city databases and
-therefore never appear in the species list that drives the cache.
 
 ---
 

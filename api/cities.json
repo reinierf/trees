@@ -18,5 +18,25 @@
     "id": "amsterdam",
     "name": "Amsterdam",
     "center": [52.3676, 4.9041]
+  },
+  {
+    "id": "utrecht",
+    "name": "Utrecht",
+    "center": [52.0907, 5.1214]
+  },
+  {
+    "id": "arnhem",
+    "name": "Arnhem",
+    "center": [51.9851, 5.8987]
+  },
+  {
+    "id": "nijmegen",
+    "name": "Nijmegen",
+    "center": [51.8426, 5.8546]
+  },
+  {
+    "id": "zwolle",
+    "name": "Zwolle",
+    "center": [52.5168, 6.0830]
   }
 ]

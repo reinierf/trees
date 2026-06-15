@@ -20,6 +20,7 @@ import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import initSqlJs from 'sql.js';
+import { CITIES } from '../../../config.js';
 
 const DIR      = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(DIR, '..', '..', '..', 'data');
@@ -31,8 +32,9 @@ const RATE_MS  = 700;   // ~85 req/min, safely under the 100/min unauthenticated
 
 const LANGS = new Set(['nl', 'en', 'de', 'fr']);
 
-const DB_PATHS = ['rotterdam', 'amsterdam', 'den-haag', 'groningen']
-    .map(c => path.join(DATA_DIR, `${c}.db`));
+const DB_PATHS = Object.values(CITIES)
+    .map(c => path.join(DATA_DIR, c.outputFile.sqlite))
+    .filter(p => existsSync(p));
 
 // "QUERCUS ROBUR" → "Quercus robur"  (iNaturalist expects proper scientific case)
 function toProperCase(binomial) {

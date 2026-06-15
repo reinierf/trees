@@ -28,8 +28,7 @@ const OUT_FILE = path.join(DATA_DIR, 'vernacular-base.db');
 const API      = 'https://api.inaturalist.org/v1';
 const RATE_MS  = 700;   // ~85 req/min, safely under the 100/min unauthenticated cap
 
-// iNaturalist lexicon names (lowercase-hyphenated) → ISO 639-1 codes
-const LEXICONS = { dutch: 'nl', english: 'en', german: 'de', french: 'fr' };
+const LANGS = new Set(['nl', 'en', 'de', 'fr']);
 
 const DB_PATHS = ['rotterdam', 'amsterdam', 'den-haag', 'groningen']
     .map(c => path.join(DATA_DIR, `${c}.db`));
@@ -75,9 +74,8 @@ async function resolveTaxon(name) {
 async function fetchVernacularNames(taxonId) {
     const data  = await fetchJson(`${API}/taxa/${taxonId}?all_names=true`);
     const names = {};
-    for (const { lexicon, name } of data.results[0]?.names ?? []) {
-        const lang = LEXICONS[lexicon];
-        if (lang && !names[lang]) names[lang] = name;
+    for (const { locale, name } of data.results[0]?.names ?? []) {
+        if (LANGS.has(locale) && !names[locale]) names[locale] = name;
     }
     return names;
 }

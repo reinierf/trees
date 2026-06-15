@@ -4,7 +4,7 @@ Fetches all municipal trees from Dutch cities' public WFS services and writes
 them to local SQLite files for use by the web-app API. Includes tooling to
 build vernacular name lookup databases from multiple sources.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen  
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle  
 **License:** Creative Commons Public Domain Mark 1.0
 
 ---
@@ -22,7 +22,7 @@ build vernacular name lookup databases from multiple sources.
 
 ```sh
 # All cities, full datasets → SQLite (recommended)
-node index.js --city rotterdam,amsterdam,den-haag,groningen --all
+node index.js --city all --all
 
 # Single city
 node index.js --city rotterdam --all
@@ -100,7 +100,7 @@ Each tree record contains:
 | `species_binomial` | string\|null | Extracted binomial, e.g. `"QUERCUS ROBUR"` or `"ACER × FREEMANII"` |
 | `species_cultivar` | string\|null | Extracted cultivar/trade name, e.g. `"FASTIGIATA KOSTER"` |
 | `genus` | string | e.g. `"QUERCUS"` |
-| `neighbourhood` | string | Rotterdam wijk |
+| `neighbourhood` | string | Neighbourhood / district |
 | `street` | string | |
 | `trunk_diameter` | string | Metres, e.g. `"0.49"` |
 | `crown_spread` | string | Metres, e.g. `"11"` |
@@ -219,7 +219,7 @@ Remove any `// fuzzy` lines you are not confident about.
 ### 3. Rebuild city databases
 
 ```sh
-node index.js --city rotterdam,amsterdam,den-haag,groningen --all
+node index.js --city all --all
 ```
 
 `processSpecies()` applies `binomialCorrections` at import time, so the

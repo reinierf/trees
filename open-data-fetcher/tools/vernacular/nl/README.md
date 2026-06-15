@@ -27,7 +27,7 @@ npm run merge-vernacular-nl -- --no-cache
 
 1. **Wikipedia** (`nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland`) — curated reference, ~184 species. Provides the canonical Dutch name. When Bomenbieb disagrees the Bomenbieb name is stored as `name_vernacular_alt`.
 2. **Bomenbieb** (`bomenbieb.nl/alle-boomsoorten`) — professional arborist catalogue, ~290 species-level entries (cultivar entries filtered out). Used for species not covered by Wikipedia.
-3. **Database votes** — majority vote across city databases (Amsterdam, Den Haag, Groningen, Rotterdam) with spelling normalisation and genus-placeholder detection. Fallback for ~482 species not in either web source.
+3. **Database votes** — majority vote across all city databases with spelling normalisation and genus-placeholder detection. Fallback for species not in either web source.
 
 ## Investigated sources — not added
 

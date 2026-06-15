@@ -2,9 +2,11 @@ import L from 'leaflet'
 
 function speciesCode(binomial: string): string {
   const parts = binomial.trim().split(/\s+/)
-  const genus = parts[0]
-  // "ACER × FREEMANII" → parts[1] is '×', epithet is parts[2]
-  const epithet = parts[1] === '×' ? parts[2] : parts[1]
+  // "× CHITALPA TASHKENTENSIS" → leading ×, genus is parts[1]
+  const offset  = parts[0] === '×' ? 1 : 0
+  const genus   = parts[offset]
+  // "ACER × FREEMANII" → parts[offset+1] is '×', epithet is parts[offset+2]
+  const epithet = parts[offset + 1] === '×' ? parts[offset + 2] : parts[offset + 1]
 
   const g1 = genus[0]?.toUpperCase() ?? '?'
   const g2 = genus[1]?.toLowerCase() ?? '?'

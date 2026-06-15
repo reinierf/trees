@@ -56,8 +56,9 @@ function toBinomial(sci) {
     for (const w of words) {
         if (STOP.has(w)) break;
         result.push(w);
-        // Standard binomial: 2 words; hybrid binomial: genus + × + epithet = 3 words
-        if (result.length >= 2 && result[1] !== '×') break;
+        // Standard binomial: 2 words; intrageneric hybrid: genus + × + epithet = 3 words;
+        // nothogenus (intergeneric hybrid): × + genus + epithet = 3 words
+        if (result.length >= 2 && result[1] !== '×' && result[0] !== '×') break;
         if (result.length >= 3) break;
     }
     const binomial = result.join(' ').trim();

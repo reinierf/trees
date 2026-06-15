@@ -37,7 +37,8 @@ const DB_PATHS = ['rotterdam', 'amsterdam', 'den-haag', 'groningen']
 // "QUERCUS ROBUR" → "Quercus robur"  (iNaturalist expects proper scientific case)
 function toProperCase(binomial) {
     const parts = binomial.toLowerCase().split(' ');
-    parts[0] = parts[0][0].toUpperCase() + parts[0].slice(1);
+    const i = parts[0] === '×' ? 1 : 0;
+    parts[i] = parts[i][0].toUpperCase() + parts[i].slice(1);
     return parts.join(' ');
 }
 

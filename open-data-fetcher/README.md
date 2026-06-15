@@ -214,15 +214,17 @@ node index.js --city rotterdam,amsterdam,den-haag,groningen --all
 `processSpecies()` applies `binomialCorrections` at import time, so the
 corrected `species_binomial` is what gets written to each city `.db`.
 
-### 4. Re-fetch vernacular names from scratch
+### 4. Re-fetch vernacular names
 
 ```sh
-npm run fetch-vernacular-base -- --no-cache
+npm run fetch-vernacular-base
 ```
 
-`--no-cache` discards the old `cache.json` entirely and re-derives the species
-list from the now-corrected city databases. Previously null entries for
-misspelled names disappear; the corrected names are fetched fresh.
+The species list is derived from the current city databases, so the old
+misspelled names are no longer present and are not queried. Corrected names
+not yet in `cache.json` are fetched fresh; previously confirmed nulls are
+skipped (they are excluded from the todo list by the cache filter on line 97
+of `fetch.js`).
 
 ### 5. Rebuild the Dutch vernacular database
 
@@ -240,7 +242,7 @@ Copies all `.db` files from `data/` into `api/data/`.
 
 Running `suggest-corrections` again after this cycle will no longer suggest the
 same corrections — the misspelled names are gone from the city databases and
-therefore absent from the new cache.
+therefore never appear in the species list that drives the cache.
 
 ---
 

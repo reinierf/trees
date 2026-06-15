@@ -94,6 +94,11 @@ async function main() {
 
     const all  = await getDistinctSpecies();
     const hasNames = e => e && (e.nl || e.en || e.de || e.fr);
+    // Fetch if: (a) not in cache yet, or (b) has an iNat ID but no vernacular names —
+    // either because the community has added names since the last run, or because the
+    // names call was interrupted. Confirmed-absent entries (null) are skipped for
+    // speed; run with --no-cache periodically to re-check them, as new taxa can be
+    // added to iNaturalist over time.
     const todo = all.filter(s => !(s in cache) || (cache[s] !== null && !hasNames(cache[s])));
     process.stderr.write(`${all.length} species total — ${todo.length} to fetch\n`);
 

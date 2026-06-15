@@ -28,8 +28,8 @@ const OUT_FILE = path.join(DATA_DIR, 'vernacular-base.db');
 const API      = 'https://api.inaturalist.org/v1';
 const RATE_MS  = 700;   // ~85 req/min, safely under the 100/min unauthenticated cap
 
-// iNaturalist lexicon names → ISO 639-1 codes
-const LEXICONS = { Dutch: 'nl', English: 'en', German: 'de', French: 'fr' };
+// iNaturalist lexicon names (lowercase-hyphenated) → ISO 639-1 codes
+const LEXICONS = { dutch: 'nl', english: 'en', german: 'de', french: 'fr' };
 
 const DB_PATHS = ['rotterdam', 'amsterdam', 'den-haag', 'groningen']
     .map(c => path.join(DATA_DIR, `${c}.db`));
@@ -75,7 +75,7 @@ async function resolveTaxon(name) {
 async function fetchVernacularNames(taxonId) {
     const data  = await fetchJson(`${API}/taxa/${taxonId}?all_names=true`);
     const names = {};
-    for (const { lexicon, name } of data.results[0]?.taxon_names ?? []) {
+    for (const { lexicon, name } of data.results[0]?.names ?? []) {
         const lang = LEXICONS[lexicon];
         if (lang && !names[lang]) names[lang] = name;
     }
@@ -89,7 +89,8 @@ async function main() {
         : {};
 
     const all  = await getDistinctSpecies();
-    const todo = all.filter(s => !(s in cache));
+    const hasNames = e => e && (e.nl || e.en || e.de || e.fr);
+    const todo = all.filter(s => !(s in cache) || (cache[s] !== null && !hasNames(cache[s])));
     process.stderr.write(`${all.length} species total — ${todo.length} to fetch\n`);
 
     let fetched = 0, notFound = 0, errors = 0;

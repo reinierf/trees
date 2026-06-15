@@ -7,7 +7,10 @@ export function fetchRaw(url, params, { rejectUnauthorized = true, encoding = 'u
             : undefined;
         // URLSearchParams uses '+' for spaces; WFS servers expect '%20'
         const qs = params.toString().replace(/\+/g, '%20');
-        const req = https.get(`${url}?${qs}`, agent ? { agent } : {}, res => {
+        // Some ArcGIS/IIS servers silently drop requests without a User-Agent header.
+        const options = { headers: { 'User-Agent': 'bomen-fetcher/1.0' } };
+        if (agent) options.agent = agent;
+        const req = https.get(`${url}?${qs}`, options, res => {
             if (res.statusCode !== 200) {
                 reject(new Error(`HTTP ${res.statusCode} ${res.statusMessage}`));
                 res.resume();

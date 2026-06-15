@@ -1,4 +1,4 @@
-import { processSpecies, applyVernacularOverride } from '../lib/species.js';
+import { processSpecies } from '../lib/species.js';
 
 const WFS_URL = 'https://api.data.amsterdam.nl/v1/wfs/bomen/';
 const LAYER   = 'app:stamgegevens';
@@ -13,7 +13,6 @@ function sanitiseTree(tree) {
     const result = processSpecies(tree.species);
     if (!result) return null;
     Object.assign(tree, result);
-    tree.name_vernacular = applyVernacularOverride(tree.species_binomial, tree.name_vernacular);
     return tree;
 }
 

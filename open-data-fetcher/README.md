@@ -144,16 +144,17 @@ CREATE TABLE vernacular_base (
 
 ### `tools/vernacular/nl/merge.js`
 
-Builds a curated Dutch vernacular name database by merging three sources in
+Builds a curated Dutch vernacular name database by merging four sources in
 priority order:
 
-1. **Wikipedia** — [Lijst van boomsoorten in Nederland](https://nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland)
-2. **Bomenbieb** — bomenbieb.nl species catalogue
-3. **Database votes** — majority-voted names from all city tree databases
+1. **Overrides** — `tools/vernacular/nl/overrides-nl.js` (see below)
+2. **Wikipedia** — [Lijst van boomsoorten in Nederland](https://nl.wikipedia.org/wiki/Lijst_van_boomsoorten_in_Nederland)
+3. **Bomenbieb** — bomenbieb.nl species catalogue
+4. **Database votes** — majority-voted names from all city tree databases
 
-Also stores a `source` column and a `name_vernacular_alt` for genuine
-alternative names (where a runner-up got at least 25 % of the winning vote
-count and is not a substring of the winner).
+Also stores a `source` column (`'override' | 'wikipedia' | 'bomenbieb' | 'databases'`)
+and a `name_vernacular_alt` for genuine alternative names (where a runner-up got
+at least 25 % of the winning vote count and is not a substring of the winner).
 
 **Output:** `data/vernacular-nl.db`
 
@@ -162,12 +163,22 @@ CREATE TABLE vernacular_nl (
     species_binomial    TEXT PRIMARY KEY,
     name_vernacular     TEXT NOT NULL,
     name_vernacular_alt TEXT,
-    source              TEXT   -- 'wikipedia' | 'bomenbieb' | 'databases'
+    source              TEXT   -- 'override' | 'wikipedia' | 'bomenbieb' | 'databases'
 )
 ```
 
 Web-scraped sources are cached in `tools/vernacular/nl/sources/` (Wikipedia and
 Bomenbieb JSON); pass `--no-cache` to force a fresh fetch.
+
+### `tools/vernacular/nl/overrides-nl.js`
+
+A curated map of uppercase `species_binomial → preferred Dutch name` that takes
+priority over all automated sources (Wikipedia, Bomenbieb, database votes). Use
+this to correct names that automated sources get wrong, e.g. preferring
+`'Magnolia'` over the Wikipedia name `'Beverboom'`.
+
+Adding or changing an override does **not** require a city database re-fetch.
+Only `npm run merge-vernacular-nl && npm run copy-data` is needed.
 
 ### `tools/vernacular/nl/build.js`
 
@@ -295,7 +306,10 @@ The pipeline applied to every tree at import time:
 5. **`name_vernacular` sanitisation** — strips leading-dash admin entries,
    ` -` admin suffixes, and trailing `(CV)` / `(V)` markers.
 
-All cleaning logic lives here in the fetcher. The API and frontend receive only
+All cleaning logic for species identification lives here in the fetcher. Dutch
+vernacular name preferences are handled separately in
+`tools/vernacular/nl/overrides-nl.js` and applied during the merge step, so
+they can be updated without a city re-fetch. The API and frontend receive only
 clean, typed values and have no knowledge of source-specific quirks.
 
 ### sql.js instead of better-sqlite3

@@ -12,6 +12,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import https from 'https';
 import initSqlJs from 'sql.js';
+import { vernacularOverridesNl } from './overrides-nl.js';
 
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'data');
 const OUT_FILE  = path.join(DATA_DIR, 'vernacular-nl.db');
@@ -426,16 +427,17 @@ async function main() {
     const SQL      = await initSqlJs();
     const dbVotes  = await buildDatabaseVotes(SQL);
 
-    // Collect all unique binomials across all sources
+    // Collect all unique binomials across all sources (including override-only entries)
     const allBinomials = new Set([
+        ...Object.keys(vernacularOverridesNl),
         ...wikiMap.keys(),
         ...bomenbiebMap.keys(),
         ...[...dbVotes.values()].map(v => v.canonical.toUpperCase()),
     ]);
 
-    // Merge with priority: wikipedia > bomenbieb > database
+    // Merge with priority: override > wikipedia > bomenbieb > database
     const rows = [];
-    let wikiWins = 0, bomenbiebWins = 0, dbWins = 0;
+    let overrideWins = 0, wikiWins = 0, bomenbiebWins = 0, dbWins = 0;
 
     // Normalise a binomial to uppercase for map lookup
     const normKey = s => s.toUpperCase().replace(/\s+/g, ' ').trim();
@@ -443,6 +445,7 @@ async function main() {
     for (const bin of allBinomials) {
         const key = normKey(bin);
 
+        const override = vernacularOverridesNl[key];
         const wiki     = wikiMap.get(key);
         const bomen    = bomenbiebMap.get(key);
         // DB vote key is lowercase
@@ -450,7 +453,12 @@ async function main() {
 
         let name_vernacular, name_vernacular_alt, source;
 
-        if (wiki) {
+        if (override) {
+            name_vernacular     = override;
+            name_vernacular_alt = null;
+            source              = 'override';
+            overrideWins++;
+        } else if (wiki) {
             name_vernacular     = wiki.dutch;
             name_vernacular_alt = bomen && normalize(bomen) !== normalize(wiki.dutch) ? bomen : (dbEntry?.name_vernacular_alt ?? null);
             source              = 'wikipedia';
@@ -476,6 +484,7 @@ async function main() {
     }
 
     process.stderr.write(`\nMerge results:\n`);
+    process.stderr.write(`  Override wins:   ${overrideWins}\n`);
     process.stderr.write(`  Wikipedia wins:  ${wikiWins}\n`);
     process.stderr.write(`  Bomenbieb wins:  ${bomenbiebWins}\n`);
     process.stderr.write(`  Database wins:   ${dbWins}\n`);

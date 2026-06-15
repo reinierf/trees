@@ -1,5 +1,5 @@
 import { parseStringPromise, processors } from 'xml2js';
-import { processSpecies, applyVernacularOverride } from '../lib/species.js';
+import { processSpecies } from '../lib/species.js';
 
 const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
 const MAP      = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
@@ -41,7 +41,6 @@ function sanitiseTree(tree) {
     Object.assign(tree, result);
     const rawIndigenous = (tree.name_vernacular ?? '').trim().replace(/\s+/g, ' ');
     tree.name_vernacular = sanitiseVernacularName(applyVernacularTypoCorrections(rawIndigenous));
-    tree.name_vernacular = applyVernacularOverride(tree.species_binomial, tree.name_vernacular);
     return tree;
 }
 

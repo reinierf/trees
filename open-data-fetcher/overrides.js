@@ -115,9 +115,3 @@ export const filterSpecies = [
     'WEET NIET',
     'NIET (REGULIER) INBOETEN',
 ];
-
-// Canonical binomial (uppercase) → preferred vernacular name for the source language.
-// Applied last, overriding whatever vernacular name came from the source.
-export const vernacularNameOverrides = {
-    'QUERCUS ROBUR': 'Zomereik',
-};

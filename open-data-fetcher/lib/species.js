@@ -1,4 +1,4 @@
-import { binomialCorrections, filterSpecies, vernacularNameOverrides } from '../overrides.js';
+import { binomialCorrections, filterSpecies } from '../overrides.js';
 
 const _filterSet      = new Set(filterSpecies.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
 const _filterPatterns = filterSpecies.filter(e => e instanceof RegExp);
@@ -22,10 +22,6 @@ export function processSpecies(raw) {
     return { species_binomial, species_cultivar: extractSpeciesCultivar(corrected) };
 }
 
-export function applyVernacularOverride(binomial, current) {
-    if (!binomial) return current;
-    return vernacularNameOverrides[binomial.toUpperCase()] ?? current;
-}
 
 // Rank markers that indicate a subspecies / variety / forma — not a cultivar.
 export const RANK_MARKERS = new Set([

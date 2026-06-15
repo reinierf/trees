@@ -8,7 +8,8 @@
  *   2. GET /taxa/{id}?all_names=true    — fetch all vernacular names at once
  *
  * Results are cached in cache.json so the script is safe to re-run after
- * interruption. Only species absent from the cache are fetched.
+ * interruption. Skipped: species confirmed absent from iNaturalist (null).
+ * Re-fetched: species with a taxon ID but no vernacular names yet.
  *
  * Usage: node tools/vernacular/base/fetch.js [--no-cache]
  * Runtime: ~23 min for 1000 species (700 ms × 2 calls each)

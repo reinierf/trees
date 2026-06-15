@@ -12,7 +12,7 @@
  *   node index.js --city groningen --count 5 -d   # dry run: print to console
  *   node index.js --city rotterdam --layer ms:obs_bmn_bijz
  *
- * Available cities: rotterdam, groningen, amsterdam, den-haag
+ * Available cities: rotterdam, groningen, amsterdam, den-haag, utrecht
  */
 
 import path from 'path';
@@ -56,37 +56,45 @@ function selectCities(cityArg) {
 }
 
 async function fetchCity(city, args, fetchedAt) {
-    const layer = args.layer ?? city.layer;
-    let trees   = [];
+    const layers     = args.layer ? [args.layer] : (city.layers ?? [city.layer]);
+    const multiLayer = layers.length > 1;
+    let trees        = [];
 
-    if (args.all) {
-        const pageSize = 1000;
-        let startIndex = 0;
+    for (const layer of layers) {
+        const url = typeof city.wfsUrl === 'function' ? city.wfsUrl(layer) : city.wfsUrl;
+        const tag = multiLayer ? ` (layer ${layer})` : '';
 
-        process.stderr.write(`[${city.name}] Counting trees...\n`);
-        const countRaw = await fetchRaw(city.wfsUrl, city.countParams(layer), city.fetchOptions);
-        const total    = await city.parseCount(countRaw);
-        process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
-        drawProgress(0, total);
+        if (args.all) {
+            const pageSize = 1000;
+            let startIndex = 0;
+            let layerCount = 0;
 
-        while (true) {
-            const raw = await fetchRaw(city.wfsUrl, city.pageParams(layer, pageSize, startIndex), city.fetchOptions);
-            const { trees: page, rawCount } = await city.parse(raw, layer);
+            process.stderr.write(`[${city.name}] Counting trees${tag}...\n`);
+            const countRaw = await fetchRaw(url, city.countParams(layer), city.fetchOptions);
+            const total    = await city.parseCount(countRaw);
+            process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
+            drawProgress(0, total);
+
+            while (true) {
+                const raw = await fetchRaw(url, city.pageParams(layer, pageSize, startIndex), city.fetchOptions);
+                const { trees: page, rawCount } = await city.parse(raw, layer);
+                trees.push(...page);
+                layerCount += page.length;
+                drawProgress(layerCount, total);
+                if (rawCount < pageSize) break;
+                startIndex += pageSize;
+            }
+        } else {
+            const startIndex = args.page * args.count;
+            const raw = await fetchRaw(url, city.pageParams(layer, args.count, startIndex), city.fetchOptions);
+            const { trees: page } = await city.parse(raw, layer);
             trees.push(...page);
-            drawProgress(trees.length, total);
-            if (rawCount < pageSize) break;
-            startIndex += pageSize;
+            drawProgress(trees.length, args.count);
         }
-    } else {
-        const startIndex = args.page * args.count;
-        const raw = await fetchRaw(city.wfsUrl, city.pageParams(layer, args.count, startIndex), city.fetchOptions);
-        const { trees: page } = await city.parse(raw, layer);
-        trees = page;
-        drawProgress(trees.length, args.count);
     }
 
     for (const t of trees) {
-        t.city        = city.name;
+        t.city         = city.name;
         t.last_fetched = fetchedAt;
     }
 

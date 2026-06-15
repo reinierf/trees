@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { useStore } from '../store'
@@ -14,6 +14,7 @@ import type { City } from '../types'
 
 export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
   const location = useLocation()
+  const navigate = useNavigate()
   const controllerRef = useRef<MapController | null>(null)
   const prevPopupKind = useRef<string | undefined>(undefined)
   const prevSelectedTreeId = useRef<string | undefined>(undefined)
@@ -123,6 +124,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     controller.init(el, initCenter, initZoom)
     controllerRef.current = controller
 
+    controller.setCityMarkers(cities, (id) => navigate(`/${id}`))
+
     const storedLayerId = useStore.getState().tileLayerId
     if (storedLayerId !== 'streets') {
       const layer = LAYERS.find((l) => l.id === storedLayerId)
@@ -149,7 +152,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       if (useStore.getState().popupView?.kind !== 'favourites') closePopup()
       setVisibleTrees([])
     }
-  }, [city, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [city, cities, navigate, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle deep-link navigation when already on the page (e.g. pasting a share URL
   // in an existing tab). The init effect above won't re-run because city didn't change,

@@ -1,4 +1,5 @@
 import L from 'leaflet'
+import type { City } from '../types'
 
 function speciesCode(binomial: string): string {
   const parts = binomial.trim().split(/\s+/)
@@ -62,6 +63,22 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
     iconCache.set(code, icon)
   }
   return icon
+}
+
+export function createCityCircleMarker(city: City): L.CircleMarker {
+  const m = L.circleMarker(city.center, {
+    radius: 10,
+    fillColor: '#2d6a4f',
+    fillOpacity: 1,
+    color: 'white',
+    weight: 2,
+  })
+  const count = city.tree_count.toLocaleString('nl-NL')
+  m.bindTooltip(`<strong>${city.name}</strong><br>${count} bomen`, {
+    direction: 'top',
+    offset: [0, -12],
+  })
+  return m
 }
 
 export function createClusterIcon(count: number): L.DivIcon {

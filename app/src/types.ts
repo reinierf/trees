@@ -62,4 +62,5 @@ export interface City {
   name: string
   center: [number, number]
   bbox: { s: number; n: number; w: number; e: number }
+  tree_count: number
 }

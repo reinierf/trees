@@ -3,8 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
+import { OverviewMap } from './components/OverviewMap'
 import { useStore } from './store'
 import type { City } from './types'
+
+function hasVisitedAnyCity(cities: City[]): boolean {
+  return cities.some((c) => localStorage.getItem(`map-position-${c.id}`) !== null)
+}
 
 export default function App() {
   const { city: cityParam } = useParams<{ city?: string }>()
@@ -19,7 +24,13 @@ export default function App() {
 
   useEffect(() => {
     if (!cities) return
-    if (!cityParam || !cities.find((c) => c.id === cityParam)) {
+    if (!cityParam) {
+      // Root path: only redirect if the user has visited a city before
+      if (hasVisitedAnyCity(cities)) {
+        navigate(`/${cities[0].id}`, { replace: true })
+      }
+    } else if (!cities.find((c) => c.id === cityParam)) {
+      // Unknown city param: redirect to first city
       navigate(`/${cities[0].id}`, { replace: true })
     }
   }, [cities, cityParam, navigate])
@@ -27,7 +38,17 @@ export default function App() {
   if (!cities) return null
 
   const currentCity = cities.find((c) => c.id === cityParam)
-  if (!currentCity) return null
+
+  if (!currentCity) {
+    // Suppress flash while redirect is in flight (invalid param or returning visitor)
+    if (cityParam || hasVisitedAnyCity(cities)) return null
+    // First visit: show Netherlands overview
+    return (
+      <div className="w-screen h-dvh">
+        <OverviewMap cities={cities} />
+      </div>
+    )
+  }
 
   return (
     <div className="w-screen h-dvh">

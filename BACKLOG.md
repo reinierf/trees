@@ -4,7 +4,8 @@ Nice-to-have improvements to pick up later.
 
 - [ ] Apply filterSpecies and binomialOverrides to existing dbs instead of having to re-fetch all databases.
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.
-- [ ] At zoom <= 11, show markers for cities (tooltip: city name + nr of trees). - - [ ] When no city in localstorage, show netherlands with city markers.
+- [x] At zoom <= 11, show markers for cities (tooltip: city name + nr of trees).
+- [x] When no city in localstorage, show netherlands with city markers.
 - [ ] Filters + zoeken
 - [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
 - [ ] Prune unused fields in fetcher and dbs

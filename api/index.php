@@ -71,6 +71,9 @@ function load_cities(): array
                 'w' => (float) $row['w'] - $margin,
                 'e' => (float) $row['e'] + $margin,
             ];
+            $city['tree_count'] = (int) db($city['id'])
+                ->query('SELECT COUNT(*) FROM trees')
+                ->fetchColumn();
         }
         $cities[] = $city;
     }

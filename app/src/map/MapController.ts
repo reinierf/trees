@@ -1,8 +1,8 @@
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import type { Bbox, Tree } from '../types'
-import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
-import { createSpeciesIcon, createClusterIcon, createSelectedSpeciesIcon } from './markerIcon'
+import type { Bbox, City, Tree } from '../types'
+import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM } from '../config'
+import { createSpeciesIcon, createClusterIcon, createSelectedSpeciesIcon, createCityCircleMarker } from './markerIcon'
 import { capitalizeFirst } from '../lib/utils'
 
 interface Callbacks {
@@ -20,6 +20,7 @@ export class MapController {
     private dragOccurred = false
     private currentHighlight: string | null = null
     private readonly onPointerDown = () => { this.dragOccurred = false }
+    private readonly cityMarkersLayer: L.LayerGroup = L.layerGroup()
 
     constructor(callbacks: Callbacks) {
         this.callbacks = callbacks
@@ -64,14 +65,25 @@ export class MapController {
         if (!this.map) return
         const b = this.map.getBounds()
         const c = this.map.getCenter()
+        const zoom = this.map.getZoom()
+        this.updateCityMarkersVisibility(zoom)
         this.callbacks.onMoveEnd(
             {
                 nw: { lat: b.getNorth(), lon: b.getWest() },
                 se: { lat: b.getSouth(), lon: b.getEast() },
             },
-            this.map.getZoom(),
+            zoom,
             [c.lat, c.lng],
         )
+    }
+
+    private updateCityMarkersVisibility(zoom: number): void {
+        if (!this.map || this.cityMarkersLayer.getLayers().length === 0) return
+        if (zoom <= MIN_CITY_SWITCH_ZOOM) {
+            this.cityMarkersLayer.addTo(this.map)
+        } else {
+            this.cityMarkersLayer.remove()
+        }
     }
 
     private markers: Array<{ m: L.Marker; species: string }> = []
@@ -224,6 +236,16 @@ export class MapController {
                 : (this.currentHighlight === null || this.currentHighlight === species ? 1 : 0.5)
             m.setOpacity(opacity)
         }
+    }
+
+    setCityMarkers(cities: City[], onCityClick: (id: string) => void): void {
+        this.cityMarkersLayer.clearLayers()
+        for (const city of cities) {
+            const m = createCityCircleMarker(city)
+            m.on('click', (e) => { L.DomEvent.stopPropagation(e); onCityClick(city.id) })
+            this.cityMarkersLayer.addLayer(m)
+        }
+        if (this.map) this.updateCityMarkersVisibility(this.map.getZoom())
     }
 
     switchTileLayer(url: string, attribution: string, maxZoom: number): void {

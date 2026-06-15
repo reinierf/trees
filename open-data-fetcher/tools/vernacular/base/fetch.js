@@ -62,10 +62,14 @@ async function fetchJson(url) {
     return res.json();
 }
 
-// Step 1: resolve scientific name → iNaturalist taxon (prefers exact name match)
+// Step 1: resolve scientific name → iNaturalist taxon (prefers exact name match).
+// Hybrids (containing ×) are not ranked 'species' in iNaturalist, so the rank
+// filter is omitted for them.
 async function resolveTaxon(name) {
-    const data = await fetchJson(`${API}/taxa?q=${encodeURIComponent(name)}&rank=species&per_page=5`);
-    const lower = name.toLowerCase();
+    const isHybrid = name.includes('×');
+    const rank     = isHybrid ? '' : '&rank=species';
+    const data     = await fetchJson(`${API}/taxa?q=${encodeURIComponent(name)}${rank}&per_page=5`);
+    const lower    = name.toLowerCase();
     return data.results.find(t => t.name.toLowerCase() === lower)
         ?? data.results[0]
         ?? null;

@@ -4,13 +4,13 @@ import { processSpecies, applyVernacularOverride } from '../lib/species.js';
 const BASE_URL = 'https://geoservices.denhaag.nl/arcgis/rest/services'
     + '/V4_5_Natuur_en_milieu/Natuur_en_landschapsbeheer/MapServer/0/query';
 
-// "50-75 cm" → 62.5, "< 20 cm" → 10, "> 75 cm" → null
+// "50-75 cm" → 0.625, "< 20 cm" → 0.1, "> 75 cm" → null (result in metres)
 function parseDiameterClass(s) {
     if (!s) return null;
     const range = s.match(/(\d+)\s*-\s*(\d+)/);
-    if (range) return (parseInt(range[1], 10) + parseInt(range[2], 10)) / 2;
+    if (range) return (parseInt(range[1], 10) + parseInt(range[2], 10)) / 2 / 100;
     const lt = s.match(/<\s*(\d+)/);
-    if (lt) return parseInt(lt[1], 10) / 2;
+    if (lt) return parseInt(lt[1], 10) / 2 / 100;
     return null;
 }
 

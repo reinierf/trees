@@ -8,6 +8,8 @@ export const binomialCorrections = {
     'ANTHOXYLUM': 'ZANTHOXYLUM',
     "QUERCUS LIBANERRIS": "QUERCUS x LIBANERRIS",
     'FRAXINUS OXYCARPA': 'FRAXINUS ANGUSTIFOLIA',
+    'ZZANTHOXYLUM': 'ZANTHOXYLUM',
+    'ZZIZIPHUS': 'ZIZIPHUS',
 
     'ABIES BALSEMEA': 'ABIES BALSAMEA',
     'ACER CAPPADOCIUM': 'ACER CAPPADOCICUM',
@@ -106,8 +108,8 @@ export const binomialCorrections = {
 // Raw species values (after uppercasing + whitespace normalisation) that are
 // administrative notes or categories rather than real taxa — records are dropped.
 export const filterSpecies = [
-    'VERWIJDERD',
-    'ASSORTIMENT ONBEKEND',
+    /^VERWIJDERD/i,
+    /^ASSORTIMENT/i,
     'CONIFEREN',
     'OVERIG',
     'NVT',

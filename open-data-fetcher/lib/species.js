@@ -1,6 +1,7 @@
 import { binomialCorrections, filterSpecies, vernacularNameOverrides } from '../overrides.js';
 
-const _filterSet = new Set(filterSpecies.map(s => s.toUpperCase()));
+const _filterSet      = new Set(filterSpecies.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
+const _filterPatterns = filterSpecies.filter(e => e instanceof RegExp);
 
 function applyBinomialCorrections(s) {
     for (const [wrong, right] of Object.entries(binomialCorrections)) {
@@ -14,7 +15,7 @@ function applyBinomialCorrections(s) {
 export function processSpecies(raw) {
     if (!raw) return null;
     const upper = raw.trim().replace(/\s+/g, ' ').toUpperCase();
-    if (_filterSet.has(upper)) return null;
+    if (_filterSet.has(upper) || _filterPatterns.some(p => p.test(upper))) return null;
     const corrected = applyBinomialCorrections(upper);
     const species_binomial = extractSpeciesBinomial(corrected);
     if (!species_binomial) return null;

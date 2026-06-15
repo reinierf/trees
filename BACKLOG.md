@@ -2,10 +2,11 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Data issue: Den Haag trees have very large values for diameter. Maybe not meters? E.g: https://boxofchocolates.nl/bomen/#/den-haag?tree=130&lat=52.0764067&lon=4.2943064
-- [ ] Dutch name overrides (on api level?). Same for other data issue overrides.
+- [ ] Apply filterSpecies and binomialOverrides to existing dbs instead of having to re-fetch all databases.
+- [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.
+- [ ] At zoom <= 11, show markers for cities (tooltip: city name + nr of trees). - - [ ] When no city in localstorage, show netherlands with city markers.
 - [ ] Filters + zoeken
-- [ ] Somehow show selected tree if behind popup (or indicate that is behind)
+- [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
 - [ ] Prune unused fields in fetcher and dbs
 - [ ] Localisation of UI: implement i18next. 
 

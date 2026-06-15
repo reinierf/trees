@@ -43,5 +43,10 @@
     "id": "eindhoven",
     "name": "Eindhoven",
     "center": [51.4416, 5.4697]
+  },
+  {
+    "id": "amersfoort",
+    "name": "Amersfoort",
+    "center": [52.1561, 5.3878]
   }
 ]

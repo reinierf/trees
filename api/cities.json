@@ -38,5 +38,10 @@
     "id": "zwolle",
     "name": "Zwolle",
     "center": [52.5168, 6.0830]
+  },
+  {
+    "id": "eindhoven",
+    "name": "Eindhoven",
+    "center": [51.4416, 5.4697]
   }
 ]

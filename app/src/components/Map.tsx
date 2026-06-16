@@ -5,6 +5,7 @@ import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
+import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
@@ -82,7 +83,7 @@ export function Map({ city, cities }: Props) {
   // Fetch species roster for the city once on mount; also clears any filter from a previous city
   useEffect(() => {
     clearSpeciesFilter()
-    fetchCitySpecies(city.id).then(setCitySpecies).catch(console.error)
+    fetchCitySpecies(city.id).then((species) => setCitySpecies(applyVernacularNames(species))).catch(console.error)
   }, [city.id, setCitySpecies, clearSpeciesFilter])
 
   const handleSpeciesSelect = useCallback(async (speciesBinomial: string) => {
@@ -93,12 +94,12 @@ export function Map({ city, cities }: Props) {
     speciesAbortRef.current = new AbortController()
 
     try {
-      const trees = await fetchTreesBySpecies(
+      const trees = applyVernacularNames(await fetchTreesBySpecies(
         city.id,
         speciesBinomial,
         city.bbox,
         speciesAbortRef.current.signal,
-      )
+      ))
       setSpeciesFilter(speciesBinomial, trees)
       controllerRef.current?.fitTrees(trees)
     } catch (e) {

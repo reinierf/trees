@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { fetchTrees } from '../api/trees'
+import { applyVernacularNames } from '../lib/vernacular'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, MAX_VIEWPORT_DEG2 } from '../config'
 import type { TileCache } from './tileCache'
@@ -42,7 +43,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
     try {
       const bboxes = cache.mergeMissingToBboxes(missing)
       const trees = await fetchTrees(bboxes, cityId, signal)
-      cache.storeFetchResult(missing, trees)
+      cache.storeFetchResult(missing, applyVernacularNames(trees))
       setVisibleTrees(cache.getVisibleTrees(bounds))
     } catch (e) {
       if ((e as Error).name !== 'AbortError') console.error('fetch trees failed', e)

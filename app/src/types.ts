@@ -17,12 +17,10 @@ export interface Tree {
   species: string
   species_binomial: string | null
   species_cultivar: string | null
-  genus: string
   neighbourhood: string
   street: string
   trunk_diameter: number | null
   crown_spread: number | null
-  last_updated: string
 }
 
 export interface SpeciesItem {

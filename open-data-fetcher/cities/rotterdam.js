@@ -9,12 +9,10 @@ const FIELD_MAP = {
     AANLEGJAAR: 'year_planted',
     BOOMSORTIMENT_NEDERLANDS: 'name_vernacular',
     BOOMSORTIMENT: 'species',
-    GESLACHT: 'genus',
     WIJK: 'neighbourhood',
     STRAAT: 'street',
     DIAMETER: 'trunk_diameter',
     KROONOMVANG: 'crown_spread',
-    LAATSTE_MUTATIE: 'last_updated',
 };
 
 const PROPERTY_NAMES = ['GEOM', ...Object.keys(FIELD_MAP)].join(',');

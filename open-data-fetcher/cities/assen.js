@@ -25,8 +25,6 @@ function toTree(feature) {
         street:          a.Straatnaam || null,
         trunk_diameter:  a.DBH ?? null,
         crown_spread:    null,
-        genus:           null,
-        last_updated:    null,
     };
 }
 

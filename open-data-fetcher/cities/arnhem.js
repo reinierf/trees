@@ -35,8 +35,6 @@ function toTree(feature) {
         street:          a.STRAATNAAM || null,
         trunk_diameter:  parseDiameterClass(a.STAMDIAMETERKLASSE),
         crown_spread:    null,
-        genus:           null,
-        last_updated:    null,
     };
 }
 

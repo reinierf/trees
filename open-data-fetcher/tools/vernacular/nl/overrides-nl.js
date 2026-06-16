@@ -11,4 +11,5 @@ export const vernacularOverridesNl = {
   'MAGNOLIA × SOULANGEANA': 'Magnolia',
   'QUERCUS ROBUR': 'Zomereik',
   'ARAUCARIA ARAUCANA': 'Slangenden',
+  'LABURNUM × WATERERI': 'Bastaard-goudenregen',
 };

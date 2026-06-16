@@ -33,12 +33,10 @@ function toTree(feature, fetchYear) {
         ...speciesResult,
         name_vernacular: a.BOOMSOORT_NEDERLANDS || null,
         year_planted:    age ? String(fetchYear - age) : null,
-        genus:           null,
         neighbourhood:   a.BUURT || null,
         street:          a.STRAATNAAM || null,
         trunk_diameter:  parseDiameterClass(a.STAMDIAMETERKLASSE),
         crown_spread:    null,
-        last_updated:    null,
     };
 }
 

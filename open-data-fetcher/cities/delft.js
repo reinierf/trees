@@ -31,8 +31,6 @@ function toTree(feature) {
         street:          null,
         trunk_diameter:  a.DIAMETER != null ? a.DIAMETER / 100 : null,
         crown_spread:    null,
-        genus:           null,
-        last_updated:    null,
     };
 }
 

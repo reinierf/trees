@@ -63,5 +63,15 @@
     "id": "delft",
     "name": "Delft",
     "center": [52.0116, 4.3571]
+  },
+  {
+    "id": "haarlem",
+    "name": "Haarlem",
+    "center": [52.3874, 4.6462]
+  },
+  {
+    "id": "zandvoort",
+    "name": "Zandvoort",
+    "center": [52.3725, 4.5325]
   }
 ]

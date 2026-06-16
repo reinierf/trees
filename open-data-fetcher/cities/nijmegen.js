@@ -3,6 +3,8 @@ import { processSpecies } from '../lib/species.js';
 const WFS_URL = 'https://services.nijmegen.nl/geoservices/extern_BOR_Groen/ows';
 const LAYER   = 'extern_BOR_Groen:GRN_BOMEN';
 
+const PROPERTY_NAMES = 'GEOMETRIE,ID,BOOMSOORT,PLANTJAAR,WIJKNAAM,STRAATNAAM,KROONDIAMETER';
+
 function sanitiseTree(tree) {
     if (!tree?.species) return null;
     const result = processSpecies(tree.species);
@@ -21,14 +23,12 @@ function toTree(feature) {
     const tree = {
         id:              String(p.ID ?? ''),
         species:         p.BOOMSOORT   || null,
-        genus:           null,
         name_vernacular: null,
         year_planted:    p.PLANTJAAR != null ? String(p.PLANTJAAR) : null,
         neighbourhood:   p.WIJKNAAM   || null,
         street:          p.STRAATNAAM || null,
         trunk_diameter:  null,
         crown_spread:    crown,
-        last_updated:    null,
     };
 
     if (Array.isArray(coords) && coords.length >= 2) {
@@ -52,6 +52,7 @@ export default {
             typeName: layer, maxFeatures: String(count), startIndex: String(startIndex),
             sortBy: 'ID',
             outputFormat: 'application/json', srsName: 'EPSG:4326',
+            PROPERTYNAME: PROPERTY_NAMES,
         });
     },
 

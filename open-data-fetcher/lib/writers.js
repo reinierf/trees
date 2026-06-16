@@ -4,8 +4,8 @@ import initSqlJs from 'sql.js';
 export const DB_COLS = [
     'city', 'lat', 'lon', 'id', 'year_planted', 'name_vernacular',
     'species', 'species_binomial', 'species_cultivar',
-    'genus', 'neighbourhood', 'street',
-    'trunk_diameter', 'crown_spread', 'last_updated', 'last_fetched',
+    'neighbourhood', 'street',
+    'trunk_diameter', 'crown_spread', 'last_fetched',
 ];
 
 export async function writeJSON(trees, file) {

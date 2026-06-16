@@ -2,7 +2,9 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Apply filterSpecies and binomialOverrides to existing dbs instead of having to re-fetch all databases.
+- [ ] Sort species list by name or count
+- [ ] Notable trees - filter, different marker icon
+- [ ] Replace city menu with overviewmap?
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.
 - [x] At zoom <= 11, show markers for cities (tooltip: city name + nr of trees).
 - [x] When no city in localstorage, show netherlands with city markers.

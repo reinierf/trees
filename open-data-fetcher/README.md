@@ -4,7 +4,7 @@ Fetches all municipal trees from Dutch cities' public WFS services and writes
 them to local SQLite files for use by the web-app API. Includes tooling to
 build vernacular name lookup databases from multiple sources.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft  
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort  
 **License:** Creative Commons Public Domain Mark 1.0
 
 ---
@@ -100,12 +100,17 @@ Steps: check each city up front for an existing `data/<city>.db` — if found,
 asks whether to refetch (`[y/N]`, declining reuses the file on disk) — then
 fetch full dataset(s) for whichever cities need it → `validate-species` for
 the given city/cities → (pause here if it suggests `overrides.js` entries —
-paste them in manually, then press Enter) → `patch-binomials` across **all**
-cities → `fetch-vernacular-base` → `merge-vernacular-nl` → `copy-data`.
+paste them in manually, then press Enter) → patch binomials → rebuild
+vernacular names → `copy-data`.
 
 Under `--yes`, the existing-data check defaults to **not** refetching — the
 point of `--yes` there is to skip needless network calls, not to force a
 refetch.
+
+The patch step asks for a scope rather than a plain yes/no: `[a]ll` cities,
+`[n]ewly added only` (the cities passed via `--city`, and the default — a
+correction found for this batch is usually only relevant to it), or
+`[s]kip`. `--yes` defaults to "newly added only".
 
 The override-review pause is not skipped by `--yes` — pasting suggested
 corrections into `overrides.js` requires a human judgment call (especially
@@ -140,12 +145,10 @@ Each tree record contains:
 | `species` | string | Original full value from source, e.g. `"QUERCUS ROBUR 'FASTIGIATA KOSTER'"` |
 | `species_binomial` | string\|null | Extracted binomial, e.g. `"QUERCUS ROBUR"` or `"ACER × FREEMANII"` |
 | `species_cultivar` | string\|null | Extracted cultivar/trade name, e.g. `"FASTIGIATA KOSTER"` |
-| `genus` | string | e.g. `"QUERCUS"` |
 | `neighbourhood` | string | Neighbourhood / district |
 | `street` | string | |
 | `trunk_diameter` | string | Metres, e.g. `"0.49"` |
 | `crown_spread` | string | Metres, e.g. `"11"` |
-| `last_updated` | string | `"YYYY-MM-DD HH:MM:SS"` |
 
 The SQLite database also carries indexes on `(lat, lon)`, `species`,
 `species_binomial`, and `(species_binomial, species_cultivar)`.

@@ -3,6 +3,8 @@ import { processSpecies } from '../lib/species.js';
 const WFS_URL = 'https://maps.groningen.nl/geoserver/geo-data/ows';
 const LAYER   = 'geo-data:Bomen gemeente Groningen';
 
+const PROPERTY_NAMES = 'GEOM,OBJECT,STRAAT,BUURT,BOOMSOORT,LATIJNSE_NAAM,KIEMJAAR';
+
 function sanitiseTree(tree) {
     if (!tree) return null;
     const result = processSpecies(tree.species);
@@ -25,8 +27,6 @@ function toTree(feature) {
         year_planted:  p.KIEMJAAR      || null,
         trunk_diameter: null,
         crown_spread:   null,
-        genus:          null,
-        last_updated:   null,
     };
 
     if (Array.isArray(coords) && coords.length >= 2) {
@@ -52,6 +52,7 @@ export default {
             // sortBy is required for GeoServer to accept startIndex (needs an ordering key)
             sortBy: 'OBJECT',
             outputFormat: 'application/json', srsName: 'EPSG:4326',
+            PROPERTYNAME: PROPERTY_NAMES,
         });
     },
 

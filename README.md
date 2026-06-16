@@ -2,7 +2,7 @@
 
 Interactive map of municipal trees for Dutch cities. Data is loaded on demand for the visible viewport; no full dataset is downloaded upfront.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort
 
 ---
 
@@ -136,12 +136,10 @@ Optional `strict` param (default `false`):
   "species": "POPULUS NIGRA 'VEREECKEN'",
   "species_binomial": "POPULUS NIGRA",
   "species_cultivar": "VEREECKEN",
-  "genus": "POPULUS",
   "neighbourhood": "VREEWIJK",
   "street": "SMEETSLANDSEDIJK",
   "trunk_diameter": 1.11,
-  "crown_spread": 20,
-  "last_updated": "2026-02-19 00:00:00"
+  "crown_spread": 20
 }
 ```
 
@@ -212,12 +210,10 @@ CREATE TABLE trees (
     species          TEXT,   -- original full value, e.g. "QUERCUS ROBUR 'FASTIGIATA KOSTER'"
     species_binomial TEXT,   -- clean binomial, e.g. "QUERCUS ROBUR" or "ACER × FREEMANII"
     species_cultivar TEXT,   -- normalised cultivar/trade code; NULL if none
-    genus            TEXT,   -- e.g. "QUERCUS"
     neighbourhood    TEXT,
     street           TEXT,
     trunk_diameter   TEXT,   -- metres
-    crown_spread     TEXT,   -- metres
-    last_updated     TEXT    -- "YYYY-MM-DD HH:MM:SS"
+    crown_spread     TEXT    -- metres
 );
 CREATE INDEX idx_lat_lon          ON trees (lat, lon);
 CREATE INDEX idx_species          ON trees (species);

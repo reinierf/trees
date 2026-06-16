@@ -3,6 +3,8 @@ import { processSpecies } from '../lib/species.js';
 const WFS_URL = 'https://api.data.amsterdam.nl/v1/wfs/bomen/';
 const LAYER   = 'app:stamgegevens';
 
+const PROPERTY_NAMES = 'geometrie,id,soortnaam,soortnaam_top,jaar_van_aanleg';
+
 function extractIndigenous(s) {
     if (!s) return null;
     return s.replace(/\s*\([^)]+\)\s*$/, '').trim() || null;
@@ -24,10 +26,8 @@ function toTree(feature) {
     const tree = {
         id:              String(p.id ?? ''),
         species:         p.soortnaam       || null,
-        genus:           p.soortnaam_kort  || null,
         name_vernacular: extractIndigenous(p.soortnaam_top),
         year_planted:    p.jaar_van_aanleg || null,
-        last_updated:    p.mutatie_datum   || null,
         neighbourhood:   null,
         street:          null,
         trunk_diameter:  null,
@@ -55,6 +55,7 @@ export default {
             TYPENAMES: layer,
             OUTPUTFORMAT: 'geojson', SRSNAME: 'EPSG:4326',
             COUNT: String(count), STARTINDEX: String(startIndex),
+            PROPERTYNAME: PROPERTY_NAMES,
         });
     },
 

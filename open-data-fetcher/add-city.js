@@ -89,6 +89,29 @@ function runCapturingStdout(cmd, args) {
     return result.stdout;
 }
 
+// Corrections found by validate-species are derived from this batch's
+// species, so patching just the newly added city/cities is usually enough —
+// a binomialCorrections entry only matters for cities that actually contain
+// the misspelled value. It can still affect other cities if the same typo
+// happens to exist there too, which is why "all" remains an option.
+async function askPatchScope(hasSuggestions, cityArg, yes) {
+    const note = hasSuggestions
+        ? `New overrides were found for ${cityArg}. They almost always fix typos specific to this batch — patching just these cities is usually enough; "all" only matters if the same misspelling exists elsewhere too.`
+        : `No automatic suggestions were found. If you added overrides manually, they most likely target species in ${cityArg} specifically.`;
+    process.stdout.write(`\n${note}\n`);
+
+    if (yes) {
+        process.stdout.write(`→ Patch binomials: newly added city/cities only (${cityArg}) (auto)\n`);
+        return 'new';
+    }
+
+    const answer = await ask(`→ Patch binomials — [a]ll cities, [n]ewly added only (${cityArg}, default), [s]kip? [a/n/s] `);
+    const choice = answer.trim().toLowerCase();
+    if (choice === 'a') return 'all';
+    if (choice === 's') return 'skip';
+    return 'new';
+}
+
 // Per city, up front: if data/<city>.db already exists, ask whether to
 // refetch. Returns the subset of cities that should actually be fetched.
 async function resolveCitiesToFetch(cities, yes) {
@@ -152,12 +175,13 @@ async function main() {
         process.stdout.write('  No new overrides needed.\n');
     }
 
-    const patchLabel = hasSuggestions
-        ? 'Patch binomials across all city databases'
-        : 'No suggestions found — patch anyway (e.g. for overrides added manually)';
-
-    if (await confirm(patchLabel, yes)) {
+    const patchScope = await askPatchScope(hasSuggestions, cityArg, yes);
+    if (patchScope === 'all') {
         run('node', ['patch-binomials.js']);
+    } else if (patchScope === 'new') {
+        run('node', ['patch-binomials.js', '--city', cityArg]);
+    } else {
+        process.stdout.write('  Skipped.\n');
     }
 
     if (await confirm('Fetch vernacular names for newly-resolved species', yes)) {

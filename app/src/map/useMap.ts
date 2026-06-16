@@ -3,7 +3,7 @@ import type { RefObject } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
-import { useStore } from '../store'
+import { useStore, PopupKind } from '../store'
 import { DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM } from '../config'
 import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
@@ -149,7 +149,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       abortLoad()
       controller.destroy()
       controllerRef.current = null
-      if (useStore.getState().popupView?.kind !== 'favourites') closePopup()
+      if (useStore.getState().popupView?.kind !== PopupKind.Favourites) closePopup()
       setVisibleTrees([])
     }
   }, [city, cities, navigate, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -207,8 +207,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   }, [pendingHighlight, setPendingHighlight])
 
   useEffect(() => {
-    const inFavMode = popupView?.kind === 'favourites' ||
-      (popupView?.kind === 'tree-detail' && popupView.returnTo === 'favourites')
+    const inFavMode = popupView?.kind === PopupKind.Favourites ||
+      (popupView?.kind === PopupKind.TreeDetail && popupView.returnTo === PopupKind.Favourites)
     const trees = inFavMode ? (favourites[city.id] ?? []) : []
     controllerRef.current?.setFavouriteMarkers(trees)
     controllerRef.current?.setFavouritesMode(inFavMode)
@@ -228,15 +228,15 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     let species = null
     let animate = false
 
-    if (pv?.kind === 'tree-detail') {
+    if (pv?.kind === PopupKind.TreeDetail) {
       tree = pv.tree
       highlightedIssueIdRef.current = null
-    } else if (pv?.kind === 'species-list' && pv.expandedSpecies) {
+    } else if (pv?.kind === PopupKind.SpeciesList && pv.expandedSpecies) {
       species = pv.expandedSpecies
       highlightedIssueIdRef.current = null
       if (pv.selectedTreeId) {
         tree = visibleTrees.find((t) => t.id === pv.selectedTreeId) ?? null
-        animate = prevPopupKind.current === 'species-list' && pv.selectedTreeId !== prevSelectedTreeId.current
+        animate = prevPopupKind.current === PopupKind.SpeciesList && pv.selectedTreeId !== prevSelectedTreeId.current
       }
     } else if (pendingTreeId) {
       const pending = visibleTrees.find((t) => t.id === pendingTreeId)
@@ -259,7 +259,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     }
 
     prevPopupKind.current = pv?.kind
-    prevSelectedTreeId.current = pv?.kind === 'species-list' ? pv.selectedTreeId : undefined
+    prevSelectedTreeId.current = pv?.kind === PopupKind.SpeciesList ? pv.selectedTreeId : undefined
 
     controllerRef.current?.highlightTree(tree, animate)
     controllerRef.current?.highlightSpecies(species)

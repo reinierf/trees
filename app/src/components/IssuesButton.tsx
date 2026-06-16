@@ -1,5 +1,5 @@
 import { Flag } from 'lucide-react'
-import { useStore } from '../store'
+import { useStore, PopupKind } from '../store'
 
 interface Props {
   citiesCount: number
@@ -15,7 +15,7 @@ export function IssuesButton({ citiesCount }: Props) {
 
   if (!debugMode) return null
 
-  const isActive = popupView?.kind === 'issues'
+  const isActive = popupView?.kind === PopupKind.Issues
   const total    = treeIssues.length + speciesIssues.length
 
   return (

@@ -1,5 +1,5 @@
 import { Heart } from 'lucide-react'
-import { useStore } from '../store'
+import { useStore, PopupKind } from '../store'
 
 interface Props {
   citiesCount: number
@@ -13,8 +13,8 @@ export function FavouritesButton({ citiesCount }: Props) {
 
   const totalFavs = Object.values(favourites).reduce((sum, trees) => sum + trees.length, 0)
   const isActive =
-    popupView?.kind === 'favourites' ||
-    (popupView?.kind === 'tree-detail' && popupView.returnTo === 'favourites')
+    popupView?.kind === PopupKind.Favourites ||
+    (popupView?.kind === PopupKind.TreeDetail && popupView.returnTo === PopupKind.Favourites)
 
   function toggle() {
     if (isActive) closePopup()

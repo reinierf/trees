@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react'
-import { useStore } from '../store'
+import { useStore, PopupKind } from '../store'
 import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
@@ -46,11 +46,11 @@ export function InfoPopup({ cities, currentCityId }: Props) {
   const popupView = useStore((s) => s.popupView)
 
   if (!popupView) return null
-  if (popupView.kind === 'favourites')
+  if (popupView.kind === PopupKind.Favourites)
     return <FavouritesPanel cities={cities} currentCityId={currentCityId} />
-  if (popupView.kind === 'issues')
+  if (popupView.kind === PopupKind.Issues)
     return <IssuesPanel cities={cities} currentCityId={currentCityId} />
-  if (popupView.kind === 'species-list')
+  if (popupView.kind === PopupKind.SpeciesList)
     return (
       <SpeciesListPanel
         expandedSpecies={popupView.expandedSpecies}

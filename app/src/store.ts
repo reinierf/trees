@@ -9,11 +9,21 @@ export type { TileLayerId }
 const NAME_MODE_KEY = 'species-name-mode'
 export type NameMode = 'scientific' | 'vernacular'
 
+export const PopupKind = {
+  SpeciesList: 'species-list',
+  TreeDetail: 'tree-detail',
+  Favourites: 'favourites',
+  Issues: 'issues',
+} as const
+export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
+
+export type PopupReturnTo = typeof PopupKind.SpeciesList | typeof PopupKind.Favourites
+
 export type PopupView =
-  | { kind: 'species-list'; expandedSpecies?: string; selectedTreeId?: string }
-  | { kind: 'tree-detail'; tree: Tree; returnTo: 'species-list' | 'favourites' }
-  | { kind: 'favourites' }
-  | { kind: 'issues' }
+  | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: string; selectedTreeId?: string }
+  | { kind: typeof PopupKind.TreeDetail; tree: Tree; returnTo: PopupReturnTo }
+  | { kind: typeof PopupKind.Favourites }
+  | { kind: typeof PopupKind.Issues }
 
 interface AppStore {
   popupView: PopupView | null
@@ -41,7 +51,7 @@ interface AppStore {
   openSpeciesList: () => void
   openSpeciesListAt: (species: string, selectedTreeId?: string) => void
   selectTreeInList: (treeId: string) => void
-  openTreeDetail: (tree: Tree, returnTo?: 'species-list' | 'favourites') => void
+  openTreeDetail: (tree: Tree, returnTo?: PopupReturnTo) => void
   openFavourites: () => void
   closePopup: () => void
   setVisibleTrees: (trees: Tree[]) => void
@@ -100,17 +110,17 @@ export const useStore = create<AppStore>((set) => ({
   pendingFlyTo: null,
   pendingHighlightId: null,
 
-  openSpeciesList: () => set({ popupView: { kind: 'species-list' } }),
+  openSpeciesList: () => set({ popupView: { kind: PopupKind.SpeciesList } }),
   openSpeciesListAt: (species, selectedTreeId) =>
-    set({ popupView: { kind: 'species-list', expandedSpecies: species, selectedTreeId } }),
+    set({ popupView: { kind: PopupKind.SpeciesList, expandedSpecies: species, selectedTreeId } }),
   selectTreeInList: (treeId) =>
     set((state) => {
-      if (state.popupView?.kind !== 'species-list') return state
+      if (state.popupView?.kind !== PopupKind.SpeciesList) return state
       return { popupView: { ...state.popupView, selectedTreeId: treeId } }
     }),
-  openTreeDetail: (tree, returnTo = 'species-list') =>
-    set({ popupView: { kind: 'tree-detail', tree, returnTo } }),
-  openFavourites: () => set({ popupView: { kind: 'favourites' } }),
+  openTreeDetail: (tree, returnTo = PopupKind.SpeciesList) =>
+    set({ popupView: { kind: PopupKind.TreeDetail, tree, returnTo } }),
+  openFavourites: () => set({ popupView: { kind: PopupKind.Favourites } }),
   closePopup: () => set({ popupView: null }),
   setVisibleTrees: (trees) => set({ visibleTrees: trees }),
   setIsLoading: (v) => set({ isLoading: v }),
@@ -141,7 +151,7 @@ export const useStore = create<AppStore>((set) => ({
   setPendingSpeciesSelect: (species) => set({ pendingSpeciesSelect: species }),
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
   setPendingHighlightId: (id) => set({ pendingHighlightId: id }),
-  openIssues: () => set({ popupView: { kind: 'issues' } }),
+  openIssues: () => set({ popupView: { kind: PopupKind.Issues } }),
   setIssues: (trees, species) => set({ treeIssues: trees, speciesIssues: species }),
   upsertTreeIssue: (issue) => set((state) => {
     const rest = state.treeIssues.filter((i) => !(i.city === issue.city && i.tree_id === issue.tree_id))

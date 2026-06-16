@@ -1,5 +1,5 @@
 import { Trees } from 'lucide-react'
-import { useStore } from '../store'
+import { useStore, PopupKind } from '../store'
 
 interface Props {
   citiesCount: number
@@ -12,7 +12,7 @@ export function SpeciesButton({ citiesCount }: Props) {
   const tooZoomedOut = useStore((s) => s.tooZoomedOut)
 
   function toggle() {
-    if (popupView?.kind === 'species-list') {
+    if (popupView?.kind === PopupKind.SpeciesList) {
       closePopup()
     } else {
       openSpeciesList()

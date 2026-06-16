@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Crosshair, Heart, Share2, ArrowUp, Image, ImageOff, Flag } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
-import { useStore } from '../../store'
+import { useStore, PopupKind, type PopupReturnTo } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
 import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
 import { useTreePhotos } from '../../api/useTreePhotos'
@@ -48,7 +48,7 @@ function Row({ label, value }: { label: string; value: string | number | null | 
 
 interface Props {
   tree: Tree
-  returnTo: 'species-list' | 'favourites'
+  returnTo: PopupReturnTo
   cityId: string
 }
 
@@ -113,7 +113,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   }
 
   function handleUpButton() {
-    if (returnTo === 'favourites') {
+    if (returnTo === PopupKind.Favourites) {
       openFavourites()
     } else {
       openSpeciesListAt(speciesKey, tree.id)

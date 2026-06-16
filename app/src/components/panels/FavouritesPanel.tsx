@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ChevronRight, Info } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
-import { useStore } from '../../store'
+import { useStore, PopupKind } from '../../store'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
 import type { City, Tree } from '../../types'
@@ -127,7 +127,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
                             </span>
                           </button>
                           <button
-                            onClick={() => openTreeDetail(tree, 'favourites')}
+                            onClick={() => openTreeDetail(tree, PopupKind.Favourites)}
                             className="shrink-0 p-1.5 text-muted-foreground hover:text-foreground"
                             aria-label="Open boomdetails"
                           >

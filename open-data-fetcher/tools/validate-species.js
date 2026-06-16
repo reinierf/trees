@@ -206,13 +206,14 @@ async function main() {
     // Only check binomials actually present in city DBs
     const nulls     = [...current].filter(b => b in cache && cache[b] === null);
     const notCached = [...current].filter(b => !(b in cache));
+    // Both groups lack a confirmed iNat match — fuzzy-match both against
+    // already-resolved binomials, so a typo from a newly-added city (never
+    // seen before, hence "notCached" rather than a cached null) still gets
+    // caught instead of going straight to a raw iNat lookup in fetch.js.
+    const unresolved = [...nulls, ...notCached];
 
-    if (notCached.length) {
-        process.stderr.write(`  ${notCached.length} binomials not yet in cache — run fetch-vernacular-base to populate.\n\n`);
-    }
-
-    process.stderr.write(`Phase 1: cache-internal matching (${nulls.length} nulls vs ${found.length} found)...\n`);
-    const { matched: cacheMatches, remaining } = matchFromCache(nulls, found);
+    process.stderr.write(`Phase 1: cache-internal matching (${unresolved.length} unresolved vs ${found.length} found)...\n`);
+    const { matched: cacheMatches, remaining } = matchFromCache(unresolved, found);
     process.stderr.write(`  ${cacheMatches.length} matched, ${remaining.length} need iNat lookup\n\n`);
 
     const inatMatches = [];

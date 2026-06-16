@@ -2,7 +2,6 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Add cities: Oss
 - [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056)
 - [ ] Sort species list by name or count
 - [ ] Notable trees - filter, different marker icon

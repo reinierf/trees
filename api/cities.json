@@ -73,5 +73,10 @@
     "id": "zandvoort",
     "name": "Zandvoort",
     "center": [52.3725, 4.5325]
+  },
+  {
+    "id": "oss",
+    "name": "Oss",
+    "center": [51.7649, 5.5181]
   }
 ]

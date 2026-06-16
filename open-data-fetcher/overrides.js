@@ -176,6 +176,7 @@ export const binomialCorrections = {
   'QUERCUS CS': 'QUERCUS',
   'TILIA MONGOLYCA': 'TILIA MONGOLICA',
   'GLEDISTIA TRIACANTHOS': 'GLEDITSIA TRIACANTHOS',
+  'SOPHORA JAPONICA': 'STYPHNOLOBIUM JAPONICUM', // new name
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are

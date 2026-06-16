@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { X } from 'lucide-react'
 import L from 'leaflet'
 import { LAYERS } from '../map/layers'
 import { createCityCircleMarker } from '../map/markerIcon'
@@ -10,9 +11,10 @@ const NL_ZOOM = 7
 
 interface Props {
   cities: City[]
+  onClose?: () => void
 }
 
-export function OverviewMap({ cities }: Props) {
+export function OverviewMap({ cities, onClose }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const navigate = useNavigate()
@@ -49,6 +51,15 @@ export function OverviewMap({ cities }: Props) {
           Kies een stad om bomen te verkennen
         </div>
       </div>
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-[1000] rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"
+          aria-label="Sluiten"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
     </div>
   )
 }

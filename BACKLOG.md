@@ -2,12 +2,11 @@
 
 Nice-to-have improvements to pick up later.
 
+- [ ] Add cities: Oss
+- [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056)
 - [ ] Sort species list by name or count
 - [ ] Notable trees - filter, different marker icon
-- [ ] Replace city menu with overviewmap?
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.
-- [x] At zoom <= 11, show markers for cities (tooltip: city name + nr of trees).
-- [x] When no city in localstorage, show netherlands with city markers.
 - [ ] Filters + zoeken
 - [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
 - [ ] Prune unused fields in fetcher and dbs

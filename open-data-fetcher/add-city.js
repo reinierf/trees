@@ -152,9 +152,11 @@ async function main() {
         process.stdout.write('  No new overrides needed.\n');
     }
 
-    if (!hasSuggestions) {
-        process.stdout.write('\n→ No corrections to apply — skipping patch step.\n');
-    } else if (await confirm('Patch binomials across all city databases', yes)) {
+    const patchLabel = hasSuggestions
+        ? 'Patch binomials across all city databases'
+        : 'No suggestions found — patch anyway (e.g. for overrides added manually)';
+
+    if (await confirm(patchLabel, yes)) {
         run('node', ['patch-binomials.js']);
     }
 
@@ -162,9 +164,11 @@ async function main() {
         run('node', ['tools/vernacular/base/fetch.js']);
     }
 
-    if (!hasSuggestions) {
-        process.stdout.write('\n→ No corrections to apply — skipping vernacular-nl rebuild.\n');
-    } else if (await confirm('Rebuild vernacular-nl.db', yes)) {
+    const vernacularLabel = hasSuggestions
+        ? 'Rebuild vernacular-nl.db'
+        : 'No suggestions found — rebuild vernacular-nl.db anyway (e.g. for overrides-nl.js edits)';
+
+    if (await confirm(vernacularLabel, yes)) {
         run('node', ['tools/vernacular/nl/merge.js']);
     }
 

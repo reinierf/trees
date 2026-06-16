@@ -2,11 +2,16 @@ import { ChevronRight, Filter, Info } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
+import type { Tree } from '../../types'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
 
 let savedScroll = 0
 let savedKey = ''
+
+function treeLocation(tree: Tree) {
+  return tree.street ?? tree.neighbourhood ?? ''
+}
 
 interface Props {
   expandedSpecies?: string
@@ -78,7 +83,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
         key,
         list.sort(
           (a, b) =>
-            capitalize(a.street ?? '').localeCompare(capitalize(b.street ?? '')) ||
+            capitalize(treeLocation(a)).localeCompare(capitalize(treeLocation(b))) ||
             (Number(b.year_planted) || 0) - (Number(a.year_planted) || 0),
         ),
       )
@@ -155,7 +160,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
                               <span className={`w-5 text-right shrink-0 text-xs font-mono ${isSelected ? 'text-blue-500' : 'text-muted-foreground'}`}>
                                 {ordinal}.
                               </span>
-                              <span className="min-w-0 truncate">{capitalize(tree.street)}</span>
+                              <span className="min-w-0 truncate">{capitalize(treeLocation(tree))}</span>
                             </span>
                             {tree.year_planted && (
                               <span className={`text-xs ml-3 shrink-0 ${isSelected ? 'text-blue-700' : 'text-muted-foreground'}`}>

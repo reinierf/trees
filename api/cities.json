@@ -78,5 +78,10 @@
     "id": "oss",
     "name": "Oss",
     "center": [51.7649, 5.5181]
+  },
+  {
+    "id": "voorschoten",
+    "name": "Voorschoten",
+    "center": [52.1291, 4.4482]
   }
 ]

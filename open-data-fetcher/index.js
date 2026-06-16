@@ -64,7 +64,14 @@ async function fetchCity(city, args, fetchedAt) {
         const url = typeof city.wfsUrl === 'function' ? city.wfsUrl(layer) : city.wfsUrl;
         const tag = multiLayer ? ` (layer ${layer})` : '';
 
-        if (args.all) {
+        if (city.singleFetch) {
+            process.stderr.write(`[${city.name}] Fetching dataset${tag}...\n`);
+            const raw = await fetchRaw(url, new URLSearchParams(), city.fetchOptions);
+            const { trees: all } = await city.parse(raw, layer);
+            const page = args.all ? all : all.slice(args.page * args.count, args.page * args.count + args.count);
+            trees.push(...page);
+            drawProgress(page.length, args.all ? all.length : args.count);
+        } else if (args.all) {
             const pageSize = 1000;
             let startIndex = 0;
             let layerCount = 0;

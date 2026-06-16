@@ -177,6 +177,7 @@ export const binomialCorrections = {
   'TILIA MONGOLYCA': 'TILIA MONGOLICA',
   'GLEDISTIA TRIACANTHOS': 'GLEDITSIA TRIACANTHOS',
   'SOPHORA JAPONICA': 'STYPHNOLOBIUM JAPONICUM', // new name
+  'BETULA UTILUS': 'BETULA UTILIS',
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are

@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "fetch": "node index.js --all",
+    "add-city": "node add-city.js",
     "patch-binomials": "node patch-binomials.js",
     "validate-species": "node tools/validate-species.js",
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",

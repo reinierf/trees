@@ -80,6 +80,38 @@ npm run patch-binomials -- --city amsterdam
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
 
+### End-to-end pipeline for a new (or refreshed) city
+
+Once `cities/<id>.js` exists and is registered in `config.js`, run the whole
+fetch → override-check → patch → vernacular → copy sequence in one go:
+
+```sh
+node add-city.js --city utrecht
+
+# Multiple cities in one run — global steps (patch/vernacular/copy) run once
+# for the whole batch instead of once per city
+node add-city.js --city utrecht,arnhem,nijmegen
+
+# Skip the "continue? [Y/n]" prompts between steps
+node add-city.js --city utrecht,arnhem --yes
+```
+
+Steps: check each city up front for an existing `data/<city>.db` — if found,
+asks whether to refetch (`[y/N]`, declining reuses the file on disk) — then
+fetch full dataset(s) for whichever cities need it → `validate-species` for
+the given city/cities → (pause here if it suggests `overrides.js` entries —
+paste them in manually, then press Enter) → `patch-binomials` across **all**
+cities → `fetch-vernacular-base` → `merge-vernacular-nl` → `copy-data`.
+
+Under `--yes`, the existing-data check defaults to **not** refetching — the
+point of `--yes` there is to skip needless network calls, not to force a
+refetch.
+
+The override-review pause is not skipped by `--yes` — pasting suggested
+corrections into `overrides.js` requires a human judgment call (especially
+entries flagged `// fuzzy`), so the script always stops and waits for Enter
+when `validate-species` produces output.
+
 ---
 
 ## Available layers

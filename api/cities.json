@@ -48,5 +48,10 @@
     "id": "amersfoort",
     "name": "Amersfoort",
     "center": [52.1561, 5.3878]
+  },
+  {
+    "id": "breda",
+    "name": "Breda",
+    "center": [51.5719, 4.7683]
   }
 ]

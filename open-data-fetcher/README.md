@@ -4,7 +4,7 @@ Fetches all municipal trees from Dutch cities' public WFS services and writes
 them to local SQLite files for use by the web-app API. Includes tooling to
 build vernacular name lookup databases from multiple sources.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven  
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda  
 **License:** Creative Commons Public Domain Mark 1.0
 
 ---

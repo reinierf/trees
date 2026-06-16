@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { LocateFixed, Loader2 } from 'lucide-react'
 
 interface Props {
-  onLocate: (lat: number, lon: number) => void
+  onLocate: (lat: number, lon: number, accuracy: number) => void
 }
 
 type State = 'idle' | 'loading' | { error: string }
@@ -21,7 +21,7 @@ export function LocationButton({ onLocate }: Props) {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setState('idle')
-        onLocate(pos.coords.latitude, pos.coords.longitude)
+        onLocate(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy)
       },
       (err) => {
         const msg =

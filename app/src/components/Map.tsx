@@ -5,6 +5,7 @@ import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
 import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
+import { zoomForAccuracy } from '../lib/utils'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
@@ -159,12 +160,12 @@ export function Map({ city, cities }: Props) {
       />
       <FavouritesButton citiesCount={cities.length} />
       <IssuesButton citiesCount={cities.length} />
-      <LocationButton onLocate={(lat, lon) => {
+      <LocationButton onLocate={(lat, lon, accuracy) => {
         const pickedCityId = pickCity(lat, lon, cities)
         if (pickedCityId !== city.id) {
           navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
         } else {
-          controllerRef.current?.flyToLocation(lat, lon)
+          controllerRef.current?.flyToLocation(lat, lon, zoomForAccuracy(accuracy))
           controllerRef.current?.setLocationMarker(lat, lon)
         }
       }} />

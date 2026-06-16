@@ -12,6 +12,9 @@ export const SHARE_ZOOM = 19            // zoom level used when opening a shared
 export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap
 export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual
 
+export const LOCATION_MIN_ZOOM = 15     // zoom floor when flying to the user's GPS location, however inaccurate
+export const LOCATION_MAX_ZOOM = MAP_MAX_ZOOM  // zoom ceiling for a highly accurate GPS fix
+
 export const API_LIMIT = 20000
 export const CITY_OVERVIEW_ZOOM = 12
 

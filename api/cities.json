@@ -53,5 +53,10 @@
     "id": "breda",
     "name": "Breda",
     "center": [51.5719, 4.7683]
+  },
+  {
+    "id": "assen",
+    "name": "Assen",
+    "center": [52.9925, 6.5642]
   }
 ]

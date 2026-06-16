@@ -9,5 +9,6 @@ import zwolle     from './cities/zwolle.js';
 import eindhoven  from './cities/eindhoven.js';
 import amersfoort from './cities/amersfoort.js';
 import breda      from './cities/breda.js';
+import assen      from './cities/assen.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen };

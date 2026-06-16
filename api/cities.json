@@ -58,5 +58,10 @@
     "id": "assen",
     "name": "Assen",
     "center": [52.9925, 6.5642]
+  },
+  {
+    "id": "delft",
+    "name": "Delft",
+    "center": [52.0116, 4.3571]
   }
 ]

@@ -40,9 +40,26 @@ The CKAN/data.overheid.nl ZIP downloads were found to be offline. Investigation 
 
 ## Barendrecht
 
-**Status:** Available via BAR-organisatie — CSV and Shapefile only
+**Status:** Live, ready-to-use JSON — 23,391 trees, via `openbomenkaart.org` (supersedes the BAR-organisatie path below)
 
-No WFS or GeoJSON endpoint. Static file downloads only. Same infrastructure as Albrandswaard.
+The originally-documented BAR-organisatie URLs (`maps.bar-organisatie.nl`) are unreachable from this dev sandbox — DNS resolves but every TCP connection to port 443 times out (distinct from the TLS-revocation issue logged elsewhere for other hosts), and the user flagged the domain itself as suspect. Re-investigating turned up a much better source already in use for `cities/voorschoten.js`: **openbomenkaart.org**, a community OSM-style tree-data mirror, hosts a ready-made per-municipality JSON export and **already has Barendrecht** (confirmed live, `200 OK`, WGS84 coordinates, no reprojection needed).
+
+| Resource | URL |
+|----------|-----|
+| JSON export | https://openbomenkaart.org/data/trees_barendrecht.json |
+
+**Verified structure** (same OSM-`elements`-with-`tags` shape as `voorschoten.js`):
+```json
+{ "type": "node", "id": 0, "lat": 51.850687, "lon": 4.5436834,
+  "tags": { "natural": "tree", "reference": "??", "species": "Alnus glutinosa",
+            "diameter": "0.10", "height": "15", "plantjaar": "1975", "ownership": "gemeente" } }
+```
+- `diameter` is already in **metres** (matches the schema directly, no unit conversion).
+- **`id` is always `0` and `reference` is always `"??"`** — neither is usable as a unique tree id, unlike Voorschoten's `admin_ref`. A Barendrecht fetcher needs a synthetic id (e.g. array index) instead of reusing `voorschoten.js`'s `element.id || t.admin_ref` fallback verbatim.
+- No `place`/street tag present on any element — `street` would be `null` for all Barendrecht trees.
+- `plantjaar` → `year_planted` (note: different tag key than Voorschoten's `planted`).
+
+**Old (superseded) BAR-organisatie research**, kept for reference in case `openbomenkaart.org` ever drops coverage:
 
 | Format | URL |
 |--------|-----|
@@ -50,17 +67,23 @@ No WFS or GeoJSON endpoint. Static file downloads only. Same infrastructure as A
 | CSV | https://maps.bar-organisatie.nl/Online/Open%20Data%20Portaal/Barendrecht/Bomen/Bomen.CSV |
 | WMS (view only) | https://maps.bar-organisatie.nl/arcgis/services/OpenDataPortaal/Bomen_BD/MapServer/WMSServer |
 
-- **License:** CC-0
-- **Data portal:** https://data.overheid.nl/en/dataset/5539-bomen-barendrecht
-- **Contact:** open-data@bar-organisatie.nl
+- **License:** CC-0 · **Data portal:** https://data.overheid.nl/en/dataset/5539-bomen-barendrecht · **Contact:** open-data@bar-organisatie.nl
 
 ---
 
 ## Albrandswaard / Rhoon
 
-**Status:** Available via BAR-organisatie — CSV and Shapefile only
+**Status:** Live, ready-to-use JSON — 13,591 trees, via `openbomenkaart.org` (supersedes the BAR-organisatie path below)
 
-Same infrastructure and same limitations as Barendrecht. Both are managed by the shared BAR regional organisation.
+Same discovery as Barendrecht above — `openbomenkaart.org` already has Albrandswaard, and its data is actually **cleaner** than Barendrecht's: every element has a populated `admin_ref` (usable as a real unique id) and a `place` tag (usable as `street`).
+
+| Resource | URL |
+|----------|-----|
+| JSON export | https://openbomenkaart.org/data/trees_albrandswaard.json |
+
+**Verified tag schema:** `natural, context, admin_ref, species, diameter, height, place, planted, ownership` — all 13,591 elements have both `admin_ref` and `place` populated (checked via a full scan, not a sample). `diameter` is metres, `planted` is the year tag (matches Voorschoten's tag name, unlike Barendrecht's `plantjaar`).
+
+**Old (superseded) BAR-organisatie research:**
 
 | Format | URL |
 |--------|-----|
@@ -68,9 +91,71 @@ Same infrastructure and same limitations as Barendrecht. Both are managed by the
 | CSV | https://maps.bar-organisatie.nl/Online/Open%20Data%20Portaal/Albrandswaard/Bomen/BOMEN.csv |
 | WMS (view only) | https://maps.bar-organisatie.nl/arcgis/services/OpenDataPortaal/Bomen_AW/MapServer/WMSServer |
 
-- **License:** CC-0
-- **Data portal:** https://data.overheid.nl/dataset/5903-bomen-albrandswaard
-- **Contact:** open-data@bar-organisatie.nl
+- **License:** CC-0 · **Data portal:** https://data.overheid.nl/dataset/5903-bomen-albrandswaard · **Contact:** open-data@bar-organisatie.nl
+
+---
+
+## Apeldoorn
+
+**Status:** Full open dataset (76,230 trees) — Shapefile + CSV, no live query API for the complete set
+
+The municipal open-data portal ("Bomen in de openbare ruimte", placed 2021-06-05, updated weekly) offers two downloads. The CSV has **no coordinates at all** — it's attributes only. The Shapefile has the geometry and is the only way to get the full, complete dataset with coordinates.
+
+| Resource | URL |
+|----------|-----|
+| Portal page | https://www.apeldoorn.nl/dataportaal/dataportaal-product?pid=75 |
+| Shapefile (ZIP, ~5.6 MB) | https://dataportaal.apeldoorn.nl/Data/Openbare_ruimte_en_Verkeer/BOR/shape/bomen_openbare_ruimte.zip |
+| CSV — no geometry (~16 MB) | https://dataportaal.apeldoorn.nl/Data/Openbare_ruimte_en_Verkeer/BOR/csv/bomen_openbare_ruimte.csv |
+| Contact | opendata@apeldoorn.nl |
+
+**Verified by downloading and parsing both files directly:**
+- Shapefile contains 76,230 point records (`.shp`/`.dbf`/`.shx`/`.prj`/`.cpg`); CSV has 76,230 data rows — same dataset, attributes match 1:1 by row order.
+- `.prj` confirms **RD New / EPSG:28992** — needs reprojection. `proj4` (already present as a transitive `node_modules` dependency, directly `import`-able) reprojects correctly — spot-checked 3 sample points, all land inside Apeldoorn's bounds.
+- A separate ArcGIS MapServer layer exists at `gis.apeldoorn.nl/arcgis/rest/services/GROENOBJECTEN_BOOM_bestek/MapServer/0` that supports live query with `outSR=4326` (no reprojection needed) — but it only has **21,951** features, a maintenance-contract subset, not the full municipal inventory. **Not a substitute** for the Shapefile.
+- No ZIP-handling library is present in `node_modules` and the npm registry is unreachable from this sandbox (same TLS chain issue as other external hosts here), so adding a dependency couldn't be verified live. The ZIP is small, single-disk, and unencrypted — a ~30-line hand-rolled local-file-header parser using Node's built-in `zlib.inflateRawSync` is feasible and matches this project's existing no-dependency-shopping style (`lib/http.js` already hand-rolls HTTP rather than pulling in a client library).
+
+**Field mapping (DBF column → schema):**
+
+| DBF field (10-char truncated) | Schema field | Notes |
+|---|---|---|
+| `object_gui` | `id` | Full GUID string, e.g. `F639E486091473C6E0400A0A57324359` |
+| `boomsoort` | `species` | Latin name incl. cultivar, e.g. `Prunus serrulata 'Kanzan'` — run through `processSpecies()` like `oss.js` |
+| `diameter` | `trunk_diameter` | String range, e.g. `"60 - 70 cm"` → midpoint, same parser pattern as Den Haag's `STAMDIAMETERKLASSE` |
+| `aanlegjaar` | `year_planted` | Numeric, sparse (blank for many rows in the sample) |
+| `buurt` / `wijk` | `neighbourhood` | Fall back `wijk` when `buurt` empty, same pattern as `oss.js` |
+| `straat` | `street` | Street name |
+| geometry (SHP) | `lat`/`lon` | RD New → WGS84 via `proj4` |
+| `boomtype`, `standplaat`, `boomhoogte`, `vergunning`, `bijzondere`, `eigenaar`, `groeiplaat`, `beheerder`, `status`, `woonplaats` | — | No matching schema field; not currently captured by any city fetcher |
+| — | `crown_spread`, `last_updated` | Not available |
+
+---
+
+## Enschede
+
+**Status:** Live ArcGIS MapServer — 83,375 trees ("bomenbeheersysteem met NL naam")
+
+Found via ArcGIS map viewer at `enschede.maps.arcgis.com`. The layer is on the city's own geo-portal. A separate "Beschermwaardige bomen" layer (protected trees only, small subset) also exists but is blocked.
+
+| Resource | URL |
+|----------|-----|
+| MapServer layer 0 | https://geoportaal.enschede.nl/arcgis/rest/services/OpenbareRuimte_Bomen/MapServer/0 |
+| Query endpoint | …/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `OBJECTID` | `id` | Auto-generated OID |
+| `LATBOOMSOORT` | `species` | Full Latin name incl. cultivar |
+| `NEDERLANDS` | `name_vernacular` | Dutch common name |
+| geometry `x`/`y` | `lon`/`lat` | RD New (EPSG:28992) source; `outSR=4326` reprojects server-side |
+| — | `year_planted`, `street`, `neighbourhood`, `trunk_diameter`, `crown_spread` | Not available in this layer |
+
+- **`maxRecordCount`: 100,000** — all 83,375 trees fit in a single page
+- **SSL:** City server; `rejectUnauthorized: false` as precaution
+- **License:** Public layer (`allowOthersToQuery: true`)
+- **WAF risk:** An earlier query attempt to `geoportaal.enschede.nl` returned an ArcGIS "The request is blocked" WAF page (see `enschede_opendata.html`). The layer metadata fetches fine, so the block may be request-type or user-agent specific. If the fetcher gets a non-JSON response or an ArcGIS error, try adding a browser `User-Agent` to `fetchOptions` in `enschede.js`.
+- **Fetcher:** `cities/enschede.js` ✅ implemented
 
 ---
 
@@ -117,9 +202,11 @@ The viewer is ArcGIS-based but the underlying FeatureServer does not appear to b
 | City | Full dataset | Format | Live API/WFS | License |
 |------|-------------|--------|--------------|---------|
 | Den Haag | Yes | GeoJSON ZIP, CSV ZIP, Shapefile | No (nightly static) | CC-0 |
-| Barendrecht | Yes | CSV, Shapefile | No | CC-0 |
-| Albrandswaard | Yes | CSV, Shapefile | No | CC-0 |
+| Barendrecht | Yes (23,391 trees) | JSON (openbomenkaart.org) | No (static) | — |
+| Albrandswaard | Yes (13,591 trees) | JSON (openbomenkaart.org) | No (static) | — |
+| Apeldoorn | Yes (76,230 trees) | Shapefile (geometry), CSV (no geometry) | No (weekly static) | — |
 | Amsterdam | Yes | REST API / WFS | Yes | Open (API key needed) |
+| Dordrecht | Yes | JSON (openbomenkaart.org) | No (static) | — |
 | Leeuwarden | Partial (monumental only) | GeoJSON, CSV | No | — |
 
 ---
@@ -159,17 +246,19 @@ The CKAN ZIP was offline. Investigation revealed a public ArcGIS MapServer on `g
 
 ## Barendrecht
 
-**Effort: Medium** — CSV or Shapefile download, same new fetcher pattern as Den Haag, field mapping unknown.
+**Effort: Low** — `openbomenkaart.org` already has it; same `singleFetch` shape as `cities/voorschoten.js`, no ZIP/reprojection needed.
+
+The BAR-organisatie path turned out to be a dead end (host unreachable from this sandbox, and the user flagged the domain as likely wrong). Re-investigation found Barendrecht is already published on `openbomenkaart.org` — the same source `cities/voorschoten.js` already pulls from — in the identical OSM-`elements` JSON shape, already in WGS84, already in metres for diameter.
 
 ### Fetcher
 
-Source is a **CSV** (preferred over Shapefile — no extra library needed) or a Shapefile ZIP. The CSV URL is a direct flat file download, no pagination.
-
-- [ ] Decide: CSV vs Shapefile. CSV is simpler; Shapefile needs a library (e.g. `shapefile`) and coordinate reprojection if not WGS84 (likely RD New / EPSG:28992).
-- [ ] If CSV: add a `downloadCSV(url)` helper (or reuse the ZIP downloader if the CSV is also served zipped — check the actual URL response headers)
-- [ ] `cities/barendrecht.js` with `parse()` mapping CSV columns → standard schema
-- [ ] Field names unknown — must inspect a sample CSV row before writing the mapping
-- [ ] Coordinate system in the CSV unknown — likely RD New (EPSG:28992), which requires reprojection to WGS84. Add `proj4` (already in `node_modules` as a transitive dep — check if it's directly importable) or use a lightweight RD→WGS84 formula
+- [ ] `cities/barendrecht.js`, modeled on `cities/voorschoten.js`:
+  - `wfsUrl: 'https://openbomenkaart.org/data/trees_barendrecht.json'`, `singleFetch: true`, `fetchOptions: { rejectUnauthorized: false }`
+  - **Do not** reuse `element.id || t.admin_ref` for `id` — every element's `id` is `0` and `reference` is always `"??"` in this dataset (confirmed via a full scan of all 23,391 elements, not just a sample). Use the array index instead, e.g. `id: String(index)`.
+  - `t.plantjaar` → `year_planted` (not `t.planted` — different tag key than Voorschoten)
+  - `street: null` always — no `place` tag exists anywhere in this dataset
+  - `diameter` parsing: same as Voorschoten (`parseFloat`, strip `~`/`,`), already in metres
+- [ ] Register in `config.js`
 
 ### API
 - [ ] Add to `api/cities.json`: `{ "id": "barendrecht", "name": "Barendrecht", "center": [51.855, 4.535], "bbox": { "s": 51.82, "n": 51.90, "w": 4.47, "e": 4.61 } }`
@@ -179,19 +268,49 @@ Source is a **CSV** (preferred over Shapefile — no extra library needed) or a 
 
 ## Albrandswaard / Rhoon
 
-**Effort: Low** (once Barendrecht is done) — identical infrastructure to Barendrecht via BAR-organisatie.
+**Effort: Low** — same `openbomenkaart.org` source, and the data is cleaner than Barendrecht's (real ids, real street names).
 
 ### Fetcher
 
-Same platform, same format, different URLs and field values. After Barendrecht is working:
-
-- [ ] `cities/albrandswaard.js` — copy Barendrecht module, swap URL constants
-- [ ] Verify field names match (likely identical schema across BAR-organisatie municipalities, but confirm by inspecting a sample)
+- [ ] `cities/albrandswaard.js`, modeled on `cities/voorschoten.js`:
+  - `wfsUrl: 'https://openbomenkaart.org/data/trees_albrandswaard.json'`, `singleFetch: true`
+  - `t.admin_ref` is populated for all 13,591 elements (confirmed via full scan) — safe to use as `id`, same pattern as Voorschoten
+  - `t.place` is populated for all elements — maps to `street`
+  - `t.planted` is the year tag here (matches Voorschoten's tag name, unlike Barendrecht's `plantjaar`)
 - [ ] Register in `config.js`
 
 ### API
 - [ ] Add to `api/cities.json`: `{ "id": "albrandswaard", "name": "Albrandswaard", "center": [51.858, 4.427], "bbox": { "s": 51.82, "n": 51.91, "w": 4.37, "e": 4.50 } }`
 - [ ] Place generated `bomen-albrandswaard.db` in `api/`
+
+---
+
+## Apeldoorn
+
+**Effort: Medium** — `index.js` already has a `singleFetch: true` mode (used by `cities/voorschoten.js`) that downloads once, caches in memory, and slices per page — so the pagination/caching half of this problem is already solved. The genuinely novel pieces are a ZIP/Shapefile reader and an RD New → WGS84 reprojection step, since unlike Voorschoten/Barendrecht/Albrandswaard, Apeldoorn's data isn't on `openbomenkaart.org` (checked — `404`) and the only full-dataset source is a Shapefile, not ready-made JSON.
+
+### Fetcher
+
+- [ ] `lib/shapefile.js` (or inline in `cities/apeldoorn.js`) — minimal `.shp`/`.dbf` reader:
+  - `.dbf`: standard dBase III header (record count at offset 4, header size at offset 8, field descriptors from offset 32 until `0x0D` terminator) — straightforward fixed-format binary parse, verified against the live file (76,230 records, 17 fields).
+  - `.shp`: standard ESRI shapefile, point type only needed here (shape type `1`) — header skip 100 bytes, then per-record `[recNum(4 BE), contentLen(4 BE), shapeType(4 LE), x(8 LE double), y(8 LE double)]`. Verified record-for-record alignment with the `.dbf` (same count, same order).
+  - No `shapefile` npm package needed — confirmed no zip/shapefile library already in `node_modules`, and npm registry is unreachable from this sandbox to add one live.
+- [ ] ZIP extraction — hand-rolled local-file-header parser (signature `0x04034b50`) + `zlib.inflateRawSync` for the `deflate`-compressed entries (Node built-in, no new dependency). The ZIP is small and single-disk so this is tractable.
+- [ ] RD New → WGS84 reprojection via `proj4` — already resolves from `open-data-fetcher` (transitive dependency), confirmed working:
+  ```js
+  proj4.defs('EPSG:28992', '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 ' +
+    '+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel ' +
+    '+towgs84=565.4171,50.3319,465.5524,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs');
+  const [lon, lat] = proj4('EPSG:28992', 'EPSG:4326', [x, y]);
+  ```
+  Consider promoting `proj4` from transitive to a direct `package.json` dependency since the fetcher would now import it explicitly.
+- [ ] `cities/apeldoorn.js` — `wfsUrl` is the ZIP URL, `singleFetch: true` (same as `voorschoten.js`); `parse(raw)` does ZIP-extract → SHP/DBF-parse → reproject → map to schema, returning `{ trees: all }` in one call. No `pageParams`/`countParams`/`parseCount` needed — `index.js`'s `singleFetch` branch calls `parse()` exactly once and slices the result itself. One wrinkle Voorschoten's plain-JSON case doesn't have: `fetchRaw` decodes the response with `encoding: 'utf8'` by default, which would corrupt the binary ZIP — pass `fetchOptions: { encoding: 'binary' }` (or read the bytes as `latin1` and convert back with `Buffer.from(raw, 'latin1')`) so the ZIP bytes survive the round trip through `fetchRaw`'s string-based interface.
+- [ ] Field mapping per the table above — `diameter` midpoint parsing reuses the Den Haag pattern; `species` goes through `processSpecies()` like `oss.js`.
+- [ ] Register in `config.js`
+
+### API
+- [ ] Add to `api/cities.json`: `{ "id": "apeldoorn", "name": "Apeldoorn", "center": [52.2112, 5.9699], "bbox": { "s": 52.10, "n": 52.30, "w": 5.80, "e": 6.20 } }`
+- [ ] Place generated `bomen-apeldoorn.db` in `api/`
 
 ---
 
@@ -327,6 +446,65 @@ export const CITIES = { rotterdam, groningen, amsterdam };
 2. `node index.js --city amsterdam --count 500` — smoke test pagination and SQLite write
 3. `node index.js --city amsterdam --all` — full fetch (~322 pages × 1,000 = 321,914 trees; expect several minutes)
 4. Drop `bomen-amsterdam.db` in `api/`, hit `/api/health` to confirm tree count
+
+---
+
+## Leiden
+
+**Status:** Live, via `openbomenkaart.org` — `trees_leiden.json` confirmed present and large (>10 MB, 2026-06-17).
+
+Previously documented as blocked (park-level only). Re-checked 2026-06-17: `openbomenkaart.org/data/trees_leiden.json` now returns a full city-wide dataset. Tag structure follows OBK conventions; `planted`/`plantjaar` fallback and `admin_ref`/index id fallback applied in the fetcher since the file is too large to inspect via WebFetch.
+
+| Resource | URL |
+|----------|-----|
+| OBK viewer | https://openbomenkaart.org/obk.htm?data=leiden |
+| JSON export | https://openbomenkaart.org/data/trees_leiden.json |
+
+**Field mapping:**
+
+| OBK tag | Schema field | Notes |
+|---|---|---|
+| `element.id` (or `admin_ref`) | `id` | OSM node id if >0, else `admin_ref`, else array index |
+| `element.lat` / `element.lon` | `lat` / `lon` | WGS84, no reprojection needed |
+| `species` | `species` | Latin name, run through `processSpecies()` |
+| `planted` or `plantjaar` | `year_planted` | Both tag variants handled |
+| `diameter` | `trunk_diameter` | Already in metres |
+| `place` | `street` | May be absent |
+| — | `neighbourhood`, `crown_spread`, `name_vernacular` | Not available |
+
+- **Fetcher:** `cities/leiden.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅
+
+---
+
+## Dordrecht
+
+**Status:** Live, via `openbomenkaart.org`.
+
+An ArcGIS web map exists (`arcgis.com` item `1e0dab584ff64466a085ed58403c64ce`) and CKAN lists a "Straatbomen van Dordrecht" dataset, but the underlying data is a static 2016 CSV export — not a live queryable endpoint. `openbomenkaart.org` has a current full-city export that follows the same OBK OSM-element structure as Voorschoten and Leiden.
+
+| Resource | URL |
+|----------|-----|
+| OBK viewer | https://openbomenkaart.org/obk.htm?data=dordrecht |
+| JSON export | https://openbomenkaart.org/data/trees_dordrecht.json |
+| CKAN (static CSV, 2016) | https://ckan.dataplatform.nl/dataset/bomen-dordrecht |
+
+**Field mapping:**
+
+| OBK tag | Schema field | Notes |
+|---|---|---|
+| `element.id` (or `t.admin_ref`) | `id` | OSM node id if present, else `admin_ref` |
+| `element.lat` / `element.lon` | `lat` / `lon` | WGS84, no reprojection needed |
+| `species` | `species` | Latin name, run through `processSpecies()` |
+| `planted` | `year_planted` | Year tag |
+| `diameter` | `trunk_diameter` | Already in metres |
+| `place` | `street` | May be absent |
+| — | `neighbourhood`, `crown_spread`, `name_vernacular` | Not available |
+
+- **Fetcher:** `cities/dordrecht.js` ✅ implemented (modeled on `cities/voorschoten.js`)
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [51.8133, 4.6899]`)
 
 ---
 

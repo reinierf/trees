@@ -15,6 +15,10 @@ import haarlem    from './cities/haarlem.js';
 import zandvoort  from './cities/zandvoort.js';
 import oss        from './cities/oss.js';
 import voorschoten from './cities/voorschoten.js';
+import apeldoorn   from './cities/apeldoorn.js';
 import deventer    from './cities/deventer.js';
+import enschede   from './cities/enschede.js';
+import leiden     from './cities/leiden.js';
+import dordrecht  from './cities/dordrecht.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, deventer };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht };

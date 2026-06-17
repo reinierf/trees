@@ -98,5 +98,15 @@
     "id": "enschede",
     "name": "Enschede",
     "center": [52.2215, 6.8937]
+  },
+  {
+    "id": "leiden",
+    "name": "Leiden",
+    "center": [52.1601, 4.4970]
+  },
+  {
+    "id": "dordrecht",
+    "name": "Dordrecht",
+    "center": [51.8133, 4.6899]
   }
 ]

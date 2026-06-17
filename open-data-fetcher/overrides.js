@@ -286,6 +286,11 @@ export const binomialCorrections = {
   'FRAXINUS ANGUST.': 'FRAXINUS ANGUSTIFOLIA',
   'ULMUS CARP.': 'ULMUS CARPINIFOLIA',
   'FRAXINUS PENNS.': 'FRAXINUS PENNSYLVANICA',
+  'ELEAGNUS': 'ELAEAGNUS', // fuzzy-genus
+  'ULMUS LEAVIS': 'ULMUS LAEVIS',
+  'SASSEFRAS': 'SASSAFRAS', // fuzzy-genus
+  'SALIX BAYLONICA': 'SALIX BABYLONICA',
+  'MISPILUS': 'MESPILUS', // fuzzy-genus
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are

@@ -2,10 +2,11 @@
 
 Nice-to-have improvements to pick up later.
 
+- [ ] Add: Wageningen, Woerden.
+- [ ] Add Ridderkerk: https://openbomenkaart.org/obk.htm?data=ridderkerk
 - [ ] Add info about dataset in frontend? To indicate moumental only?
 - [ ] Sort overrides, remove duplicates
 - [ ] When showing overviewmap, dont show buttons except zoom, location and close
-- [ ] Add: Emmen, Wageningen
 - [ ] Lelystad — blocked: no accessible dataset with species data. PDOK BGT works (location-only, ~40k trees) but has zero tree attributes beyond coordinates. `ckan.dataplatform.nl` (municipal dataset) was unreachable. Revisit if municipality publishes a richer open dataset.
 - [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht), or 'NOG INVULLEN' (Barendrecht/ALbrandswaard). Is it desirable to keep the trees on the map but mark them unknown somehow? Currently some are filtered out during import by filterSpecies
 - [ ] Sort species list by name or count

@@ -148,5 +148,20 @@
     "id": "almere",
     "name": "Almere",
     "center": [52.3508, 5.2647]
+  },
+  {
+    "id": "maastricht",
+    "name": "Maastricht",
+    "center": [50.8514, 5.6910]
+  },
+  {
+    "id": "ridderkerk",
+    "name": "Ridderkerk",
+    "center": [51.8647, 4.6049]
+  },
+  {
+    "id": "gouda",
+    "name": "Gouda",
+    "center": [52.0116, 4.7106]
   }
 ]

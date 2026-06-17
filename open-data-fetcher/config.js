@@ -28,5 +28,8 @@ import barendrecht  from './cities/barendrecht.js';
 import leeuwarden   from './cities/leeuwarden.js';
 import roosendaal   from './cities/roosendaal.js';
 import almere       from './cities/almere.js';
+import maastricht   from './cities/maastricht.js';
+import ridderkerk   from './cities/ridderkerk.js';
+import gouda        from './cities/gouda.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht, alkmaar, 'den-bosch': denBosch, ede, albrandswaard, barendrecht, leeuwarden, roosendaal, almere };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht, alkmaar, 'den-bosch': denBosch, ede, albrandswaard, barendrecht, leeuwarden, roosendaal, almere, maastricht, ridderkerk, gouda };

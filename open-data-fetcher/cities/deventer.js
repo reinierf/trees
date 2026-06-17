@@ -34,60 +34,69 @@ const INVALID_SPECIES = new Set([
     'N.V.T. (BOOM NIET AANWEZIG)',
 ]);
 
-// Latin binomials have a lowercase species epithet ("Betula pendula").
-// Dutch cultivar names are title-cased throughout ("Zoete Campagner").
-function looksLikeLatin(s) {
-    const words = s.trim().split(/\s+/);
-    const second = (words[1] === '×' || words[1]?.toLowerCase() === 'x') ? words[2] : words[1];
-    return second != null && /^[a-z]/.test(second);
+// Pre-scan all features in a page to build a lookup of raw species values that are
+// definitively resolved as cultivars (known fruit type, colon format, or identical fields).
+// This allows a second pass to resolve ambiguous entries like "Zoete Campagner" | "-"
+// by matching them against the twin "Zoete Campagner" | "Zoete Campagner" seen elsewhere
+// in the same page — without relying on string capitalisation heuristics.
+function buildCultivarMap(features) {
+    const map = new Map();
+    for (const f of features) {
+        const a = f.attributes;
+        const raw = (a.i_boomsoort_latijn ?? '').trim();
+        if (!raw) continue;
+        const dutch = a.i_boomsoort_nederlands;
+        const rawUpper = raw.toUpperCase().replace(/\s+/g, ' ');
+        if (INVALID_SPECIES.has(rawUpper)) continue;
+        const dutchUpper = (dutch ?? '').trim().toUpperCase();
+
+        const fruitBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper];
+        if (fruitBinomial) {
+            map.set(raw, { species_binomial: fruitBinomial, species_cultivar: raw });
+            continue;
+        }
+
+        const colon = dutchUpper.indexOf(':');
+        if (colon > 0) {
+            const prefixBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper.slice(0, colon).trim()];
+            if (prefixBinomial) {
+                const cultivar = raw.slice(raw.indexOf(':') + 1).trim() || raw;
+                map.set(raw, { species_binomial: prefixBinomial, species_cultivar: cultivar });
+                continue;
+            }
+        }
+
+        if (raw === dutch?.trim()) {
+            map.set(raw, { species_binomial: 'FRUITBOOM', species_cultivar: raw });
+        }
+    }
+    return map;
 }
 
-function resolveSpecies(raw, dutch) {
+function resolveSpecies(raw, cultivarMap) {
     if (!raw) return null;
     const rawUpper = raw.trim().toUpperCase().replace(/\s+/g, ' ');
     if (INVALID_SPECIES.has(rawUpper)) return null;
 
-    // Check Dutch type field first — doing this before processSpecies avoids treating
-    // cultivar names like "Schone van Boskoop" as fake Latin binomials.
-    const dutchUpper = (dutch ?? '').trim().toUpperCase();
-    const fruitBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper];
-    if (fruitBinomial) {
-        // species=null so validate-species skips it (cultivar name is not a Latin species).
-        return { rawSpecies: null, species_binomial: fruitBinomial, species_cultivar: raw.trim() };
-    }
+    // Second pass: raw value recognised as a cultivar elsewhere in this page.
+    // species=null so validate-species skips it (cultivar name is not a Latin species).
+    const cultivar = cultivarMap.get(raw.trim());
+    if (cultivar) return { rawSpecies: null, ...cultivar };
 
-    // "TYPE: CULTIVAR" format (e.g. "Kweepeer: Champion", "Mispel: Westerveld").
-    const colon = dutchUpper.indexOf(':');
-    if (colon > 0) {
-        const prefixBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper.slice(0, colon).trim()];
-        if (prefixBinomial) {
-            const cultivar = raw.trim().slice(raw.indexOf(':') + 1).trim() || raw.trim();
-            return { rawSpecies: null, species_binomial: prefixBinomial, species_cultivar: cultivar };
-        }
-    }
-
-    // Both fields identical → cultivar name with no type info (e.g. "Benderzoet" | "Benderzoet").
-    // Use a generic fallback so the tree is still shown on the map.
-    if (raw.trim() === dutch?.trim()) {
-        return { rawSpecies: null, species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
-    }
-
-    // Normal Latin species path — but verify the raw string actually looks Latin first.
-    // Catches Dutch cultivar names like "Zoete Campagner" (dutch="-") that processSpecies
-    // would otherwise echo back as a fake binomial "ZOETE CAMPAGNER".
+    // Normal Latin species path.
     const result = processSpecies(raw);
-    if (result && looksLikeLatin(raw)) return { rawSpecies: raw.trim(), ...result };
+    if (result) return { rawSpecies: raw.trim(), ...result };
 
-    // processSpecies failed on a non-empty, non-filtered value — keep the tree with a generic.
+    // processSpecies failed — keep the tree with a generic binomial.
     return { rawSpecies: null, species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
 }
 
-function toTree(feature) {
+function toTree(feature, cultivarMap) {
     const a = feature.attributes;
     const g = feature.geometry;
     if (!g?.x || !g?.y) return null;
 
-    const resolution = resolveSpecies(a.i_boomsoort_latijn ?? '', a.i_boomsoort_nederlands);
+    const resolution = resolveSpecies(a.i_boomsoort_latijn ?? '', cultivarMap);
     if (!resolution) return null;
     const { rawSpecies, species_binomial, species_cultivar } = resolution;
 
@@ -133,7 +142,8 @@ export default {
         const json = JSON.parse(raw);
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
-        const trees = features.map(f => toTree(f)).filter(Boolean);
+        const cultivarMap = buildCultivarMap(features);
+        const trees = features.map(f => toTree(f, cultivarMap)).filter(Boolean);
         return { trees, rawCount: features.length };
     },
 
@@ -141,5 +151,25 @@ export default {
         const json = JSON.parse(raw);
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         return json.count ?? 0;
+    },
+
+    // Cross-page second pass: fix trees that fell through to processSpecies on one page
+    // but whose raw species value is recognised as a cultivar from another page.
+    // (The per-page buildCultivarMap already handles within-page twins; this catches the rest.)
+    postProcess(trees) {
+        const cultivarMap = new Map();
+        for (const t of trees) {
+            if (t.species === null && t.species_cultivar)
+                cultivarMap.set(t.species_cultivar, {
+                    species_binomial: t.species_binomial,
+                    species_cultivar: t.species_cultivar,
+                });
+        }
+        if (cultivarMap.size === 0) return trees;
+        return trees.map(t => {
+            if (t.species === null) return t;
+            const cultivar = cultivarMap.get(t.species);
+            return cultivar ? { ...t, species: null, ...cultivar } : t;
+        });
     },
 };

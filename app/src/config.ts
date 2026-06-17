@@ -7,6 +7,9 @@ export const MIN_CITY_SWITCH_ZOOM = 11  // zoom level below which auto city-swit
 
 export const RESTORE_CITY_POSITION = false  // restore last saved position when switching city; false always opens at city center
 
+export const NL_CENTER: [number, number] = [52.22, 5.29]
+export const NL_ZOOM = 7               // zoom level for the Netherlands overview
+
 export const MAP_ZOOM = 14              // initial map zoom level
 export const SHARE_ZOOM = 19            // zoom level used when opening a shared tree link
 export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap

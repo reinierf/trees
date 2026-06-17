@@ -162,6 +162,7 @@ export class MapController {
     }
 
     flyToLocation(lat: number, lon: number, zoom = 16): void {
+        this.cityMarkersLayer.remove()
         this.map?.flyTo([lat, lon], zoom)
     }
 

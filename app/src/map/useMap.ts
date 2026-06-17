@@ -4,7 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { useStore, PopupKind } from '../store'
-import { DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM } from '../config'
+import {
+  DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM,
+  NL_CENTER, NL_ZOOM, MIN_CITY_SWITCH_ZOOM,
+} from '../config'
 import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
@@ -12,7 +15,9 @@ import { useCitySwitcher } from './useCitySwitcher'
 import { LAYERS } from './layers'
 import type { City } from '../types'
 
-export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City, cities: City[]) {
+type LocationState = { fromPicker?: boolean; fromCityMarker?: boolean; autoSwitch?: boolean } | null
+
+export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: City | null, cities: City[]) {
   const location = useLocation()
   const navigate = useNavigate()
   const controllerRef = useRef<MapController | null>(null)
@@ -43,7 +48,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const favourites = useStore((s) => s.favourites)
   const speciesFilter = useStore((s) => s.speciesFilter)
 
-  const { load: loadTrees, abort: abortLoad } = useTreeLoader(city.id, tileCacheRef.current)
+  // Tree loader updates when city.id changes; refs let the stable onMoveEnd closure always use the latest
+  const { load: loadTrees, abort: abortLoad } = useTreeLoader(city?.id ?? '', tileCacheRef.current)
+  const loadTreesRef = useRef(loadTrees)
+  loadTreesRef.current = loadTrees
+  const abortLoadRef = useRef(abortLoad)
+  abortLoadRef.current = abortLoad
+
   const prevSpeciesFilterRef = useRef<string | null>(speciesFilter)
   useEffect(() => {
     if (prevSpeciesFilterRef.current !== null && speciesFilter === null) {
@@ -53,8 +64,26 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   }, [speciesFilter])
 
   const { onMapClick, onMarkerClick } = useMapClickHandlers()
-  const checkCitySwitch = useCitySwitcher(city, cities)
+  const onMapClickRef = useRef(onMapClick)
+  onMapClickRef.current = onMapClick
+  const onMarkerClickRef = useRef(onMarkerClick)
+  onMarkerClickRef.current = onMarkerClick
 
+  const checkCitySwitch = useCitySwitcher(city, cities)
+  const checkCitySwitchRef = useRef(checkCitySwitch)
+  checkCitySwitchRef.current = checkCitySwitch
+
+  // Refs for values read inside the stable onMoveEnd closure
+  const cityRef = useRef(city)
+  cityRef.current = city
+  const citiesRef = useRef(cities)
+  citiesRef.current = cities
+  const navigateRef = useRef(navigate)
+  navigateRef.current = navigate
+  const locationStateRef = useRef<LocationState>(location.state as LocationState)
+  locationStateRef.current = location.state as LocationState
+
+  // ── EFFECT 1: create Leaflet map once on mount ────────────────────────────
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -62,7 +91,6 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     const hash = window.location.hash
     const qIdx = hash.indexOf('?')
 
-    // Parse URL params: tree deep link takes precedence over plain lat/lon fly
     let treeDeepLink: { lat: number; lon: number } | null = null
     let locationFly: { lat: number; lon: number } | null = null
     if (qIdx !== -1) {
@@ -80,51 +108,79 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       }
     }
 
-    // fromPicker is true only when CityButton triggered this navigation.
-    // Clear it from history immediately so a page reload gets normal (saved) behavior.
-    const fromPicker = (location.state as { fromPicker?: boolean } | null)?.fromPicker === true
+    const initialCity = cityRef.current
+    const state = locationStateRef.current
+    const fromPicker = state?.fromPicker === true
     if (fromPicker) window.history.replaceState({ ...window.history.state, usr: null }, '')
 
-    const useSaved = fromPicker ? RESTORE_CITY_POSITION : true
-    const rawSaved = useSaved ? loadSavedPosition(city.id) : null
-    const saved =
-      rawSaved &&
-      rawSaved.center[0] >= city.bbox.s && rawSaved.center[0] <= city.bbox.n &&
-      rawSaved.center[1] >= city.bbox.w && rawSaved.center[1] <= city.bbox.e
-        ? rawSaved
-        : null
-
-    // For tree deep links initialise directly at the target so whenReady's
-    // invalidateSize() cannot interrupt a flyTo and leave the tree off-centre.
-    const initCenter = treeDeepLink
-      ? ([treeDeepLink.lat, treeDeepLink.lon] as [number, number])
-      : (saved?.center ?? city.center)
-    const initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? MAP_ZOOM)
+    let initCenter: [number, number]
+    let initZoom: number
+    if (initialCity) {
+      const useSaved = fromPicker ? RESTORE_CITY_POSITION : true
+      const rawSaved = useSaved ? loadSavedPosition(initialCity.id) : null
+      const saved =
+        rawSaved &&
+        rawSaved.center[0] >= initialCity.bbox.s && rawSaved.center[0] <= initialCity.bbox.n &&
+        rawSaved.center[1] >= initialCity.bbox.w && rawSaved.center[1] <= initialCity.bbox.e
+          ? rawSaved
+          : null
+      initCenter = treeDeepLink
+        ? [treeDeepLink.lat, treeDeepLink.lon]
+        : (saved?.center ?? initialCity.center)
+      initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? MAP_ZOOM)
+    } else {
+      initCenter = NL_CENTER
+      initZoom = NL_ZOOM
+    }
 
     const controller = new MapController({
       onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
         setCurrentCenter(center)
 
-        if (checkCitySwitch(center, zoom)) return
+        const currentCity = cityRef.current
+        const isOverviewZoom = zoom <= MIN_CITY_SWITCH_ZOOM
+
+        // Zoom-based URL transitions
+        if (isOverviewZoom && currentCity) {
+          navigateRef.current('/overview', { replace: true, state: { autoSwitch: true } })
+          return
+        }
+        if (!isOverviewZoom && !currentCity) {
+          const [lat, lon] = center
+          const target = citiesRef.current.find(
+            (c) => c.has_data &&
+              lat >= c.bbox.s && lat <= c.bbox.n &&
+              lon >= c.bbox.w && lon <= c.bbox.e,
+          )
+          if (target) navigateRef.current(`/${target.id}`, { replace: true, state: { autoSwitch: true } })
+          return
+        }
+
+        if (!currentCity) return
+
+        if (checkCitySwitchRef.current(center, zoom)) return
 
         const [lat, lon] = center
         if (
-          lat >= city.bbox.s && lat <= city.bbox.n &&
-          lon >= city.bbox.w && lon <= city.bbox.e
-        ) savePosition(city.id, center, zoom)
+          lat >= currentCity.bbox.s && lat <= currentCity.bbox.n &&
+          lon >= currentCity.bbox.w && lon <= currentCity.bbox.e
+        ) savePosition(currentCity.id, center, zoom)
 
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
-        moveTimerRef.current = setTimeout(() => loadTrees(bounds, zoom), DEBOUNCE_MS)
+        moveTimerRef.current = setTimeout(() => loadTreesRef.current(bounds, zoom), DEBOUNCE_MS)
       },
-      onMapClick,
-      onMarkerClick,
+      onMapClick: (...args) => onMapClickRef.current(...args),
+      onMarkerClick: (...args) => onMarkerClickRef.current(...args),
     })
 
     controller.init(el, initCenter, initZoom)
     controllerRef.current = controller
 
-    controller.setCityMarkers(cities, (id) => navigate(`/${id}`))
+    controller.setCityMarkers(
+      citiesRef.current,
+      (id) => navigateRef.current(`/${id}`, { state: { fromCityMarker: true } }),
+    )
 
     const storedLayerId = useStore.getState().tileLayerId
     if (storedLayerId !== 'streets') {
@@ -140,19 +196,84 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     if (treeDeepLink || locationFly) {
       window.history.replaceState(
         window.history.state, '',
-        window.location.pathname + hash.slice(0, qIdx)
+        window.location.pathname + hash.slice(0, qIdx),
       )
     }
 
     return () => {
       if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
-      abortLoad()
+      abortLoadRef.current()
       controller.destroy()
       controllerRef.current = null
       if (useStore.getState().popupView?.kind !== PopupKind.Favourites) closePopup()
       setVisibleTrees([])
     }
-  }, [city, cities, navigate, checkCitySwitch, loadTrees, abortLoad, onMapClick, onMarkerClick, closePopup, setVisibleTrees, setCurrentZoom, setCurrentCenter, setPendingTreeId]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── EFFECT 2: react to city changes after initial mount ───────────────────
+  const isFirstCityRef = useRef(true)
+  useEffect(() => {
+    if (isFirstCityRef.current) {
+      isFirstCityRef.current = false
+      return
+    }
+
+    abortLoadRef.current()
+    setVisibleTrees([])
+    if (useStore.getState().popupView?.kind !== PopupKind.Favourites) closePopup()
+
+    const ctrl = controllerRef.current
+    if (!ctrl) return
+
+    const state = locationStateRef.current
+    // Clear consumed navigation state so page reload doesn't re-apply it
+    if (state?.fromPicker || state?.fromCityMarker) {
+      window.history.replaceState({ ...window.history.state, usr: null }, '')
+    }
+
+    if (state?.autoSwitch) {
+      // User panned/zoomed there — already in place, don't fly
+      return
+    }
+
+    if (!city) {
+      ctrl.flyToLocation(NL_CENTER[0], NL_CENTER[1], NL_ZOOM)
+      return
+    }
+
+    if (state?.fromPicker || state?.fromCityMarker) {
+      // Explicit city selection: fly to center (saved position only if RESTORE_CITY_POSITION)
+      if (RESTORE_CITY_POSITION) {
+        const saved = loadSavedPosition(city.id)
+        const validSaved =
+          saved &&
+          saved.center[0] >= city.bbox.s && saved.center[0] <= city.bbox.n &&
+          saved.center[1] >= city.bbox.w && saved.center[1] <= city.bbox.e
+            ? saved
+            : null
+        if (validSaved) {
+          ctrl.flyToLocation(validSaved.center[0], validSaved.center[1], validSaved.zoom)
+          return
+        }
+      }
+      ctrl.flyToLocation(city.center[0], city.center[1], MAP_ZOOM)
+      return
+    }
+
+    // No navigation state (e.g. forward/back in browser history): restore saved or center
+    const saved = loadSavedPosition(city.id)
+    const validSaved =
+      saved &&
+      saved.center[0] >= city.bbox.s && saved.center[0] <= city.bbox.n &&
+      saved.center[1] >= city.bbox.w && saved.center[1] <= city.bbox.e
+        ? saved
+        : null
+    if (validSaved) {
+      ctrl.flyToLocation(validSaved.center[0], validSaved.center[1], validSaved.zoom)
+    } else {
+      ctrl.flyToLocation(city.center[0], city.center[1], MAP_ZOOM)
+    }
+  }, [city?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle deep-link navigation when already on the page (e.g. pasting a share URL
   // in an existing tab). The init effect above won't re-run because city didn't change,
@@ -178,7 +299,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
 
     window.history.replaceState(
       window.history.state, '',
-      window.location.pathname + hash.slice(0, qIdx)
+      window.location.pathname + hash.slice(0, qIdx),
     )
   }, [location.search, setPendingTreeId])
 
@@ -209,10 +330,10 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   useEffect(() => {
     const inFavMode = popupView?.kind === PopupKind.Favourites ||
       (popupView?.kind === PopupKind.TreeDetail && popupView.returnTo === PopupKind.Favourites)
-    const trees = inFavMode ? (favourites[city.id] ?? []) : []
+    const trees = inFavMode && city ? (favourites[city.id] ?? []) : []
     controllerRef.current?.setFavouriteMarkers(trees)
     controllerRef.current?.setFavouritesMode(inFavMode)
-  }, [popupView, favourites, city.id])
+  }, [popupView, favourites, city?.id])
 
   useEffect(() => {
     if (!pendingTreeId) return

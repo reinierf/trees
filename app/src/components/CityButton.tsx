@@ -8,10 +8,9 @@ interface Props {
   city: City
   cities: City[]
   onCurrentCity: () => void
-  onShowOverview: () => void
 }
 
-export function CityButton({ city, cities, onCurrentCity, onShowOverview }: Props) {
+export function CityButton({ city, cities, onCurrentCity }: Props) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const ref = useRef<HTMLDivElement>(null)
@@ -67,7 +66,7 @@ export function CityButton({ city, cities, onCurrentCity, onShowOverview }: Prop
             </button>
           ))}
           <button
-            onClick={() => { onShowOverview(); setOpen(false) }}
+            onClick={() => { navigate('/overview'); setOpen(false) }}
             className="block w-full text-left px-4 py-2 text-sm whitespace-nowrap text-gray-700 hover:bg-gray-50 border-t transition-colors"
           >
             Alle steden

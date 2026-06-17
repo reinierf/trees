@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM } from '../config'
+import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
@@ -18,11 +18,10 @@ import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
 import { IssuesButton } from './IssuesButton'
-import { OverviewMap } from './OverviewMap'
 import type { City } from '../types'
 
 interface Props {
-  city: City
+  city: City | null
   cities: City[]
 }
 
@@ -69,10 +68,15 @@ export function Map({ city, cities }: Props) {
   const pendingSpeciesSelect    = useStore((s) => s.pendingSpeciesSelect)
   const setPendingSpeciesSelect = useStore((s) => s.setPendingSpeciesSelect)
 
-  const [overviewOpen, setOverviewOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState<string | undefined>(undefined)
   const speciesAbortRef = useRef<AbortController | null>(null)
+
+  // Reset search state when city changes
+  useEffect(() => {
+    setSearchOpen(false)
+    setSearchInitialQuery(undefined)
+  }, [city?.id])
 
   useEffect(() => {
     if (pendingSearch !== null) {
@@ -82,13 +86,15 @@ export function Map({ city, cities }: Props) {
     }
   }, [pendingSearch, setPendingSearch])
 
-  // Fetch species roster for the city once on mount; also clears any filter from a previous city
+  // Fetch species roster for the city once it changes; also clears any filter from the previous city
   useEffect(() => {
     clearSpeciesFilter()
+    if (!city) return
     fetchCitySpecies(city.id).then((species) => setCitySpecies(applyVernacularNames(species))).catch(console.error)
-  }, [city.id, setCitySpecies, clearSpeciesFilter])
+  }, [city?.id, setCitySpecies, clearSpeciesFilter])
 
   const handleSpeciesSelect = useCallback(async (speciesBinomial: string) => {
+    if (!city) return
     setSearchOpen(false)
     setIsLoadingSpeciesFilter(true)
 
@@ -133,7 +139,7 @@ export function Map({ city, cities }: Props) {
 
   function handleLocate(lat: number, lon: number, accuracy: number) {
     const pickedCityId = pickCity(lat, lon, cities)
-    if (pickedCityId !== city.id) {
+    if (!city || pickedCityId !== city.id) {
       navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
     } else {
       controllerRef.current?.flyToLocation(lat, lon, zoomForAccuracy(accuracy))
@@ -141,10 +147,20 @@ export function Map({ city, cities }: Props) {
     }
   }
 
+  // City markers are visible at zoom <= MIN_CITY_SWITCH_ZOOM; treat zoom=0 (pre-init) as city mode
+  const showingCityMarkers = !city || (currentZoom > 0 && currentZoom <= MIN_CITY_SWITCH_ZOOM)
+
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
-      {tooZoomedOut && !speciesFilter && (
+      {showingCityMarkers && (
+        <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none z-[1000]">
+          <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
+            Kies een stad om bomen te verkennen
+          </div>
+        </div>
+      )}
+      {!showingCityMarkers && tooZoomedOut && !speciesFilter && (
         <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
             Zoom in {Math.ceil(MIN_FETCH_ZOOM - currentZoom)}x to see trees
@@ -161,20 +177,26 @@ export function Map({ city, cities }: Props) {
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
         </div>
       )}
-      {!overviewOpen && <SpeciesFilterBadge onClear={handleClearFilter} />}
-      {!overviewOpen && <FullscreenButton />}
-      {!overviewOpen && <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />}
-      <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} onShowOverview={() => setOverviewOpen(true)} />
-      {!overviewOpen && <SpeciesButton citiesCount={cities.length} />}
-      {!overviewOpen && (
+      {!showingCityMarkers && <SpeciesFilterBadge onClear={handleClearFilter} />}
+      <FullscreenButton />
+      <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
+      {city && !showingCityMarkers && (
+        <CityButton
+          city={city}
+          cities={cities}
+          onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])}
+        />
+      )}
+      {!showingCityMarkers && <SpeciesButton citiesCount={cities.length} />}
+      {!showingCityMarkers && (
         <SearchButton
           citiesCount={cities.length}
           onClick={() => setSearchOpen((o) => !o)}
           active={searchOpen || speciesFilter !== null}
         />
       )}
-      {!overviewOpen && <FavouritesButton citiesCount={cities.length} />}
-      {!overviewOpen && <IssuesButton citiesCount={cities.length} />}
+      {!showingCityMarkers && <FavouritesButton citiesCount={cities.length} />}
+      {!showingCityMarkers && <IssuesButton citiesCount={cities.length} />}
       {searchOpen && (
         <SearchOverlay
           onSelect={handleSpeciesSelect}
@@ -182,13 +204,7 @@ export function Map({ city, cities }: Props) {
           onClose={() => { setSearchOpen(false); setSearchInitialQuery(undefined) }}
         />
       )}
-      {!overviewOpen && <LocationButton onLocate={handleLocate} />}
-      {overviewOpen && (
-        <div className="fixed inset-0 z-[9999]">
-          <OverviewMap cities={cities} onClose={() => setOverviewOpen(false)} />
-          <LocationButton onLocate={handleLocate} />
-        </div>
-      )}
+      <LocationButton onLocate={handleLocate} />
     </div>
   )
 }

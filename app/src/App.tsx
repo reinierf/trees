@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
-import { OverviewMap } from './components/OverviewMap'
 import { useStore } from './store'
 import type { City } from './types'
 
@@ -25,32 +24,28 @@ export default function App() {
   useEffect(() => {
     if (!cities) return
     if (!cityParam) {
-      // Root path: only redirect if the user has visited a city before
+      // Root path: redirect returning visitors to their last city
       if (hasVisitedAnyCity(cities)) {
         navigate(`/${cities[0].id}`, { replace: true })
       }
+      // First-time visitors: stay on overview (no redirect)
+    } else if (cityParam === 'overview') {
+      // Overview is always a valid destination — no redirect
     } else if (!cities.find((c) => c.id === cityParam)) {
-      // Unknown city param: redirect to first city
+      // unknown city param: redirect to first city
       navigate(`/${cities[0].id}`, { replace: true })
     }
   }, [cities, cityParam, navigate])
 
   if (!cities) return null
 
-  const currentCity = cities.find((c) => c.id === cityParam)
+  const isOverview = !cityParam || cityParam === 'overview'
+  const currentCity = isOverview ? null : (cities.find((c) => c.id === cityParam) ?? null)
 
-  if (!currentCity) {
-    // Suppress flash while redirect is in flight (invalid param or returning visitor)
-    if (cityParam || hasVisitedAnyCity(cities)) return null
-    // First visit: show Netherlands overview
-    return (
-      <div className="w-screen h-dvh">
-        <OverviewMap cities={cities} />
-      </div>
-    )
-  }
+  // Suppress flash while redirect is in flight
+  if (!isOverview && !currentCity) return null
 
-  if (!currentCity.has_data) {
+  if (!isOverview && currentCity && !currentCity.has_data) {
     return (
       <div className="w-screen h-dvh flex flex-col items-center justify-center gap-4 text-center px-6">
         <h1 className="text-2xl font-bold text-gray-800">{currentCity.name}</h1>
@@ -67,8 +62,8 @@ export default function App() {
 
   return (
     <div className="w-screen h-dvh">
-      <Map key={currentCity.id} city={currentCity} cities={cities} />
-      <InfoPopup cities={cities} currentCityId={currentCity.id} />
+      <Map city={currentCity} cities={cities} />
+      {currentCity && <InfoPopup cities={cities} currentCityId={currentCity.id} />}
     </div>
   )
 }

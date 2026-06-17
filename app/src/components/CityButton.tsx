@@ -2,18 +2,17 @@ import { Signpost } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FEATURED_CITY_IDS } from '../config'
-import { OverviewMap } from './OverviewMap'
 import type { City } from '../types'
 
 interface Props {
   city: City
   cities: City[]
   onCurrentCity: () => void
+  onShowOverview: () => void
 }
 
-export function CityButton({ city, cities, onCurrentCity }: Props) {
+export function CityButton({ city, cities, onCurrentCity, onShowOverview }: Props) {
   const [open, setOpen] = useState(false)
-  const [showAll, setShowAll] = useState(false)
   const navigate = useNavigate()
   const ref = useRef<HTMLDivElement>(null)
 
@@ -68,16 +67,11 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
             </button>
           ))}
           <button
-            onClick={() => { setShowAll(true); setOpen(false) }}
+            onClick={() => { onShowOverview(); setOpen(false) }}
             className="block w-full text-left px-4 py-2 text-sm whitespace-nowrap text-gray-700 hover:bg-gray-50 border-t transition-colors"
           >
             Alle steden
           </button>
-        </div>
-      )}
-      {showAll && (
-        <div className="fixed inset-0 z-[2000]">
-          <OverviewMap cities={cities} onClose={() => setShowAll(false)} />
         </div>
       )}
     </div>

@@ -18,6 +18,7 @@ import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
 import { IssuesButton } from './IssuesButton'
+import { OverviewMap } from './OverviewMap'
 import type { City } from '../types'
 
 interface Props {
@@ -68,6 +69,7 @@ export function Map({ city, cities }: Props) {
   const pendingSpeciesSelect    = useStore((s) => s.pendingSpeciesSelect)
   const setPendingSpeciesSelect = useStore((s) => s.setPendingSpeciesSelect)
 
+  const [overviewOpen, setOverviewOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState<string | undefined>(undefined)
   const speciesAbortRef = useRef<AbortController | null>(null)
@@ -129,6 +131,16 @@ export function Map({ city, cities }: Props) {
     ? `[${currentCenter[0].toFixed(4)}, ${currentCenter[1].toFixed(4)}]`
     : ''
 
+  function handleLocate(lat: number, lon: number, accuracy: number) {
+    const pickedCityId = pickCity(lat, lon, cities)
+    if (pickedCityId !== city.id) {
+      navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
+    } else {
+      controllerRef.current?.flyToLocation(lat, lon, zoomForAccuracy(accuracy))
+      controllerRef.current?.setLocationMarker(lat, lon)
+    }
+  }
+
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
@@ -149,33 +161,33 @@ export function Map({ city, cities }: Props) {
           z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
         </div>
       )}
-      <SpeciesFilterBadge onClear={handleClearFilter} />
-      <FullscreenButton />
-      <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
-      <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} />
-      <SpeciesButton citiesCount={cities.length} />
-      <SearchButton
-        citiesCount={cities.length}
-        onClick={() => setSearchOpen((o) => !o)}
-        active={searchOpen || speciesFilter !== null}
-      />
-      <FavouritesButton citiesCount={cities.length} />
-      <IssuesButton citiesCount={cities.length} />
-      <LocationButton onLocate={(lat, lon, accuracy) => {
-        const pickedCityId = pickCity(lat, lon, cities)
-        if (pickedCityId !== city.id) {
-          navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
-        } else {
-          controllerRef.current?.flyToLocation(lat, lon, zoomForAccuracy(accuracy))
-          controllerRef.current?.setLocationMarker(lat, lon)
-        }
-      }} />
+      {!overviewOpen && <SpeciesFilterBadge onClear={handleClearFilter} />}
+      {!overviewOpen && <FullscreenButton />}
+      {!overviewOpen && <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />}
+      <CityButton city={city} cities={cities} onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])} onShowOverview={() => setOverviewOpen(true)} />
+      {!overviewOpen && <SpeciesButton citiesCount={cities.length} />}
+      {!overviewOpen && (
+        <SearchButton
+          citiesCount={cities.length}
+          onClick={() => setSearchOpen((o) => !o)}
+          active={searchOpen || speciesFilter !== null}
+        />
+      )}
+      {!overviewOpen && <FavouritesButton citiesCount={cities.length} />}
+      {!overviewOpen && <IssuesButton citiesCount={cities.length} />}
       {searchOpen && (
         <SearchOverlay
           onSelect={handleSpeciesSelect}
           initialQuery={searchInitialQuery}
           onClose={() => { setSearchOpen(false); setSearchInitialQuery(undefined) }}
         />
+      )}
+      {!overviewOpen && <LocationButton onLocate={handleLocate} />}
+      {overviewOpen && (
+        <div className="fixed inset-0 z-[9999]">
+          <OverviewMap cities={cities} onClose={() => setOverviewOpen(false)} />
+          <LocationButton onLocate={handleLocate} />
+        </div>
       )}
     </div>
   )

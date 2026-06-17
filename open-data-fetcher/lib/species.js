@@ -31,6 +31,21 @@ export function processSpecies(raw) {
     return { species_binomial, species_cultivar: extractSpeciesCultivar(corrected) };
 }
 
+// Like processSpecies but returns a failure reason instead of null.
+// On success: { species_binomial, species_cultivar }
+// On failure: { dropped: 'empty_species' | 'filtered' | 'no_binomial' }
+export function processSpeciesTagged(raw) {
+    if (!raw) return { dropped: 'empty_species' };
+    raw = raw.replace(/-([A-Za-z][A-Za-z0-9 ]*)-/g, (_, n) => `'${n.trim()}'`);
+    raw = raw.replace(/ -[A-Za-z].*/g, '');
+    const upper = raw.trim().replace(/\s+/g, ' ').toUpperCase();
+    if (_filterSet.has(upper) || _filterPatterns.some(p => p.test(upper))) return { dropped: 'filtered' };
+    const corrected = applyBinomialCorrections(upper);
+    const species_binomial = extractSpeciesBinomial(corrected);
+    if (!species_binomial) return { dropped: 'no_binomial' };
+    return { species_binomial, species_cultivar: extractSpeciesCultivar(corrected) };
+}
+
 
 // Rank markers that indicate a subspecies / variety / forma — not a cultivar.
 export const RANK_MARKERS = new Set([

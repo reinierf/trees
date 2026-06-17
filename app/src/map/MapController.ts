@@ -161,9 +161,13 @@ export class MapController {
         this.map?.panTo([lat, lon])
     }
 
-    flyToLocation(lat: number, lon: number, zoom = 16): void {
+    flyToLocation(lat: number, lon: number, zoom = 16, { fly = true }: { fly?: boolean } = {}): void {
         this.cityMarkersLayer.remove()
-        this.map?.flyTo([lat, lon], zoom)
+        if (fly) {
+            this.map?.flyTo([lat, lon], zoom)
+        } else {
+            this.map?.setView([lat, lon], zoom, { animate: true })
+        }
     }
 
     fitTrees(trees: { lat: number; lon: number }[]): void {

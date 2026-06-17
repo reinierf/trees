@@ -237,7 +237,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     }
 
     if (!city) {
-      ctrl.flyToLocation(NL_CENTER[0], NL_CENTER[1], NL_ZOOM)
+      ctrl.flyToLocation(NL_CENTER[0], NL_CENTER[1], NL_ZOOM, { fly: false })
       return
     }
 

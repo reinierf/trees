@@ -3,7 +3,6 @@
 Nice-to-have improvements to pick up later.
 
 - [ ] Add: Wageningen, Woerden.
-- [ ] Add Ridderkerk: https://openbomenkaart.org/obk.htm?data=ridderkerk
 - [ ] Add info about dataset in frontend? To indicate moumental only?
 - [ ] Sort overrides, remove duplicates
 - [ ] When showing overviewmap, dont show buttons except zoom, location and close

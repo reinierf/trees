@@ -181,6 +181,45 @@ Additional tables (all support `?_format=geojson`):
 
 ---
 
+## Maastricht
+
+**Status:** Live GeoServer WFS — 114,562 trees
+
+The public-facing kaartviewer at `kaartviewer.maastricht.nl` is a JavaScript SPA; the WFS endpoint was found by probing the standard GeoServer path on the same host (`/geoserver/maastricht/ows`). The WMS URL visible in the kaartviewer's map requests (`…/bookmark/25/bookmarkpresentation/725/map`) uses layer name `maastricht:Bomen` — the same name works on the bare GeoServer WFS.
+
+Two tree layers exist in the capabilities document:
+- `maastricht:Bomen` — **114,562 trees**, full attribute set; the one to use
+- `maastricht:BomenObsurvJan2024` — 58,732 trees, only `ID` + `BOOMSORTIM` + geometry (limited observation snapshot)
+
+| Resource | URL |
+|----------|-----|
+| WFS (GeoServer) | https://kaartviewer.maastricht.nl/geoserver/maastricht/ows |
+| WFS capabilities | …/ows?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetCapabilities |
+| KaartViewer | https://kaartviewer.maastricht.nl/?@Cultuurwaardekaart |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `ID` | `id` | Integer tree id |
+| `AANLEGJAAR` | `year_planted` | Integer year; filter values ≤ 1800 (bogus placeholders, e.g. `1`) |
+| `BOOMSORTIM` | `species` | Full Latin name incl. cultivar, e.g. `Prunus serrulata 'Kanzan'` |
+| `DIAMETER` | `trunk_diameter` | Integer cm → divide by 100 for metres; nullable |
+| `STRAAT` | `street` | Source uses `"dummy_groen1"` … `"dummy_groen6"` as placeholders → null |
+| geometry | `lat` / `lon` | Request `srsName=EPSG:4326`; GeoServer reprojects from native EPSG:28992 server-side |
+| — | `neighbourhood`, `crown_spread`, `name_vernacular` | Not available |
+
+**Notable data quality issues:**
+- Source contains duplicate rows — some trees appear twice with identical ID and coordinates.
+- `STRAAT` is populated with `dummy_groenN` placeholders for a large fraction of trees.
+- `AANLEGJAAR = 1` is a common bogus value for unknown planting year.
+
+- **Pagination:** WFS 1.0.0, `sortBy=ID` required for GeoServer to honour `startIndex`
+- **SSL:** `rejectUnauthorized: false` (municipal GeoServer)
+- **Fetcher:** `cities/maastricht.js` ✅ implemented
+
+---
+
 ## Leeuwarden
 
 **Status:** No full public dataset found
@@ -207,6 +246,8 @@ The viewer is ArcGIS-based but the underlying FeatureServer does not appear to b
 | Apeldoorn | Yes (76,230 trees) | Shapefile (geometry), CSV (no geometry) | No (weekly static) | — |
 | Amsterdam | Yes | REST API / WFS | Yes | Open (API key needed) |
 | Dordrecht | Yes | JSON (openbomenkaart.org) | No (static) | — |
+| Maastricht | Yes (114,562 trees) | WFS GeoJSON (GeoServer) | Yes | — |
+| Gouda | Yes (24,736 trees, all municipal) | WFS 2.0.0 GeoJSON (GeoServer) | Yes | Open |
 | Leeuwarden | Partial (monumental only) | GeoJSON, CSV | No | — |
 
 ---
@@ -626,3 +667,65 @@ The municipality's bomenviewer shows all trees but the underlying service is not
 
 - **SSL:** Public services3.arcgis.com — no certificate override needed
 - **Fetcher:** `cities/leeuwarden.js` ✅ implemented (ArcGIS REST, same pattern as `cities/den-bosch.js`)
+
+---
+
+## Maastricht ✅
+
+**Effort: Low** — GeoServer WFS, same pattern as Groningen; CRS handled server-side; no reprojection needed.
+
+The WFS endpoint is not documented publicly but is accessible at the standard GeoServer path on the kaartviewer host. It was discovered by inspecting the WMS layer name (`maastricht:Bomen`) from the kaartviewer's map requests and probing `/geoserver/maastricht/ows`.
+
+### Fetcher
+
+- [x] `cities/maastricht.js` — WFS 1.0.0, `typeName=maastricht:Bomen`, `sortBy=ID`, GeoJSON output, `srsName=EPSG:4326`
+- [x] `rejectUnauthorized: false` (municipal GeoServer)
+- [x] `AANLEGJAAR` → `year_planted`, filtered: values ≤ 1800 become `null`
+- [x] `BOOMSORTIM` → `species` → through `processSpecies()`
+- [x] `DIAMETER` (integer cm) → `trunk_diameter` (metres, divide by 100); null when absent
+- [x] `STRAAT` → `street`; values starting with `"dummy_groen"` → `null`
+- [x] Registered in `config.js`
+
+### API
+
+- [x] Entry added to `api/cities.json`: center [50.8514, 5.6910]
+- [ ] Place generated `maastricht.db` in `api/data/`
+
+---
+
+## Gouda
+
+**Status:** Full municipal dataset — 24,736 trees via GeoServer WFS 2.0.0
+
+The WMS URL initially found (`gis.gouda.nl/api/app/Basisviewer_open/…/proxy/wms`) is a viewer proxy that only exposes the monumental trees layer (`V_BOMEN_GRIB_MON`, 430 trees). The actual backend is a public GeoServer at `gis.gouda.nl/geoserver/Open/wfs` with 200+ layers. The full municipal tree layer `V_BOMEN_GRIB_GEM` ("Gemeentelijke bomen") has 24,736 trees and is openly queryable with no authentication.
+
+The WMS proxy URL does not accept WFS requests (returns HTTP 400) — go directly to the GeoServer URL.
+
+| Resource | URL |
+|----------|-----|
+| GeoServer WFS | https://gis.gouda.nl/geoserver/Open/wfs |
+| GetCapabilities | …/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities |
+| Full dataset layer | `Open:V_BOMEN_GRIB_GEM` (Gemeentelijke bomen, 24,736 trees) |
+| Monumental only | `Open:V_BOMEN_GRIB_MON` (Monumentale bomen, 430 trees) — **not used** |
+| WMS viewer proxy (WFS-only, do not use for data) | https://gis.gouda.nl/api/app/Basisviewer_open/layer/lyr%3A0GD4A664J2X89%3AV_BOMEN_GRIB_MON/proxy/wms |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `GRIB_ID` | `id` | Municipality tree ID |
+| `SOORT` | `species` | Full scientific name incl. cultivar, e.g. `Fraxinus excelsior 'Diversifolia'` |
+| `SOORT_NL` | `name_vernacular` | Dutch common name, e.g. `Gewone es CV.` |
+| `STRAAT` | `street` | Street name |
+| `BUURT` | `neighbourhood` | Neighbourhood (fallback: `WIJK`) |
+| `DIAMETERKL` | `trunk_diameter` | Class string → midpoint in metres (e.g. `"30 tot 50 cm"` → 0.40 m, `"< 20 cm"` → 0.10 m) |
+| geometry `coordinates` | `lon`/`lat` | WGS84 GeoJSON Point [lon, lat], returned directly via `SRSNAME=EPSG:4326` |
+| — | `year_planted`, `crown_spread` | Not available in this dataset |
+
+Other fields present but not mapped: `WIJK`, `EIGENAAR`, `BEHEERDER`, `AANWEZIGHEID`, `BELEIDSSTATUS`, `HOOGTEKLAS`, `BVC_WIJK`.
+
+- **Pagination:** WFS 2.0.0 `COUNT`/`startIndex`/`sortBy=GRIB_ID`; count via `COUNT=1` + `totalFeatures` in response
+- **SSL:** No certificate issues observed (public GeoServer)
+- **Fetcher:** `cities/gouda.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [52.0116, 4.7106]`)

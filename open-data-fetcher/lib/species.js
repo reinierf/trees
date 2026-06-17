@@ -36,6 +36,7 @@ export const RANK_MARKERS = new Set([
 
 export function extractSpeciesBinomial(s) {
     if (!s) return null;
+    s = s.replace(/["`]/g, "'");           // normalize non-standard cultivar quote chars before stripping
     s = s.replace(/'.*$/, '').replace(/\(.*$/, '').trim();
     s = s.replace(/\s+(SUBSP\.|SUBSP|VAR\.|VAR|F\.|CV\.|CV\*|CV|SPEC\.|SPEC|SPECIES)(\s|$).*/i, '').trim();
     const words = s.split(/\s+/).filter(Boolean);
@@ -48,6 +49,7 @@ export function extractSpeciesBinomial(s) {
 
 export function extractSpeciesCultivar(s) {
     if (!s) return null;
+    s = s.replace(/["`]/g, "'");           // normalize non-standard cultivar quote chars before matching
     // Case 1: ICNCP code in parentheses ('CODE')
     const icncp = s.match(/\('([^')]+)'\)?/);
     if (icncp) return icncp[1].trim() || null;

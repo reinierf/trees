@@ -163,5 +163,10 @@
     "id": "gouda",
     "name": "Gouda",
     "center": [52.0116, 4.7106]
+  },
+  {
+    "id": "wageningen",
+    "name": "Wageningen",
+    "center": [51.9693, 5.6657]
   }
 ]

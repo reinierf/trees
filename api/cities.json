@@ -123,5 +123,20 @@
     "id": "ede",
     "name": "Ede",
     "center": [52.0407, 5.6616]
+  },
+  {
+    "id": "albrandswaard",
+    "name": "Albrandswaard",
+    "center": [51.858, 4.427]
+  },
+  {
+    "id": "barendrecht",
+    "name": "Barendrecht",
+    "center": [51.855, 4.535]
+  },
+  {
+    "id": "leeuwarden",
+    "name": "Leeuwarden",
+    "center": [53.2010, 5.7987]
   }
 ]

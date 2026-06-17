@@ -275,6 +275,11 @@ export const binomialCorrections = {
   'GYMNOCLADUS DIOCA': 'GYMNOCLADUS DIOICA',
   'CATALPA BIGNONIODIS': 'CATALPA BIGNONIOIDES',
   'TETRADIUM DANIËLLI': 'TETRADIUM DANIELLII',
+  'AESCULES': 'AESCULUS', // fuzzy-genus
+  'ACER MONSPESSUALANUM': 'ACER MONSPESSULANUM',
+  'PRUNUS SERTOTINA': 'PRUNUS SEROTINA',
+  'CARYA ILLINOINESIS': 'CARYA ILLINOINENSIS',
+  'CAYA': 'CARYA', // fuzzy-genus
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are
@@ -294,6 +299,7 @@ export const filterSpecies = [
   'CONIFEER',
   'OVERIG',
   'NVT',
+  'NOG INVULLEN',
   'ZODOETIEDANIE',
   'FRUITBOMEN',
   'KNOTBOOM',

@@ -244,7 +244,7 @@ The CKAN ZIP was offline. Investigation revealed a public ArcGIS MapServer on `g
 
 ---
 
-## Barendrecht
+## Barendrecht ✅
 
 **Effort: Low** — `openbomenkaart.org` already has it; same `singleFetch` shape as `cities/voorschoten.js`, no ZIP/reprojection needed.
 
@@ -252,36 +252,36 @@ The BAR-organisatie path turned out to be a dead end (host unreachable from this
 
 ### Fetcher
 
-- [ ] `cities/barendrecht.js`, modeled on `cities/voorschoten.js`:
+- [x] `cities/barendrecht.js`, modeled on `cities/voorschoten.js`:
   - `wfsUrl: 'https://openbomenkaart.org/data/trees_barendrecht.json'`, `singleFetch: true`, `fetchOptions: { rejectUnauthorized: false }`
   - **Do not** reuse `element.id || t.admin_ref` for `id` — every element's `id` is `0` and `reference` is always `"??"` in this dataset (confirmed via a full scan of all 23,391 elements, not just a sample). Use the array index instead, e.g. `id: String(index)`.
   - `t.plantjaar` → `year_planted` (not `t.planted` — different tag key than Voorschoten)
   - `street: null` always — no `place` tag exists anywhere in this dataset
   - `diameter` parsing: same as Voorschoten (`parseFloat`, strip `~`/`,`), already in metres
-- [ ] Register in `config.js`
+- [x] Registered in `config.js`
 
 ### API
-- [ ] Add to `api/cities.json`: `{ "id": "barendrecht", "name": "Barendrecht", "center": [51.855, 4.535], "bbox": { "s": 51.82, "n": 51.90, "w": 4.47, "e": 4.61 } }`
-- [ ] Place generated `bomen-barendrecht.db` in `api/`
+- [x] Entry added to `api/cities.json`: center [51.855, 4.535]
+- [ ] Place generated `barendrecht.db` in `api/data/`
 
 ---
 
-## Albrandswaard / Rhoon
+## Albrandswaard / Rhoon ✅
 
 **Effort: Low** — same `openbomenkaart.org` source, and the data is cleaner than Barendrecht's (real ids, real street names).
 
 ### Fetcher
 
-- [ ] `cities/albrandswaard.js`, modeled on `cities/voorschoten.js`:
+- [x] `cities/albrandswaard.js`, modeled on `cities/voorschoten.js`:
   - `wfsUrl: 'https://openbomenkaart.org/data/trees_albrandswaard.json'`, `singleFetch: true`
   - `t.admin_ref` is populated for all 13,591 elements (confirmed via full scan) — safe to use as `id`, same pattern as Voorschoten
   - `t.place` is populated for all elements — maps to `street`
   - `t.planted` is the year tag here (matches Voorschoten's tag name, unlike Barendrecht's `plantjaar`)
-- [ ] Register in `config.js`
+- [x] Registered in `config.js`
 
 ### API
-- [ ] Add to `api/cities.json`: `{ "id": "albrandswaard", "name": "Albrandswaard", "center": [51.858, 4.427], "bbox": { "s": 51.82, "n": 51.91, "w": 4.37, "e": 4.50 } }`
-- [ ] Place generated `bomen-albrandswaard.db` in `api/`
+- [x] Entry added to `api/cities.json`: center [51.858, 4.427]
+- [ ] Place generated `albrandswaard.db` in `api/data/`
 
 ---
 
@@ -601,13 +601,28 @@ Checked `geo.ede.nl` (KaartViewer) and `gis.ede.nl/arcgis` — neither exposes a
 
 ## Leeuwarden
 
-**Effort: Blocked** — no usable public full-dataset found.
+**Status:** Partial — 878 monumental and valuable trees via ArcGIS FeatureServer. Full municipal inventory not publicly accessible.
 
-The municipality has a bomenviewer showing all trees, backed by an ArcGIS service at `gem-lwd.maps.arcgis.com`, but the underlying FeatureServer does not appear to be publicly exposed. The only downloadable data is monumental/valuable trees only (~754 trees), which is too sparse to be useful in the app.
+The municipality's bomenviewer shows all trees but the underlying service is not publicly exposed. A separate FeatureServer (`lelan_monumentale_waardevolle_bomen_punt`) on services3.arcgis.com covers the trees registered under the tree ordinance (boomverordening). This supersedes the earlier CKAN dataplatform link which became unreachable.
 
-**Options:**
-- Contact the municipality (bomendienst@leeuwarden.nl) to request the full dataset or a public FeatureServer URL
-- Check the ArcGIS Hub at [portaal-gem-lwd.opendata.arcgis.com](https://portaal-gem-lwd.opendata.arcgis.com/) periodically — they may publish it
-- Reverse-engineer the network requests made by the bomenviewer to find the tile/query endpoint (not recommended without explicit permission)
+| Resource | URL |
+|----------|-----|
+| FeatureServer layer 0 | https://services3.arcgis.com/fHFI5v2gmYsUxbYF/arcgis/rest/services/lelan_monumentale_waardevolle_bomen_punt/FeatureServer/0 |
+| Query endpoint | …/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json |
 
-**Skip for now.**
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `OBJECT_GUI` (fallback `FID`) | `id` | GUID string from municipality system |
+| `LATBOOMSOO` | `species` | Latin name (field name truncated by ArcGIS, values are full) |
+| `NEDBOOMSOO` | `name_vernacular` | Dutch common name |
+| `DIAMETER` | `trunk_diameter` | Numeric cm → metres (divide by 100) |
+| `AANLEGJAAR` | `year_planted` | Actual planting year (SmallInteger, not age) |
+| `BUURT` | `neighbourhood` | Neighbourhood; sparse |
+| `OPENBARE_R` | `street` | Public road name; sparse |
+| geometry `x`/`y` | `lon`/`lat` | WGS84 via `outSR=4326` |
+| — | `crown_spread` | Not available |
+
+- **SSL:** Public services3.arcgis.com — no certificate override needed
+- **Fetcher:** `cities/leeuwarden.js` ✅ implemented (ArcGIS REST, same pattern as `cities/den-bosch.js`)

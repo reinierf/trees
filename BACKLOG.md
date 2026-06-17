@@ -5,13 +5,12 @@ Nice-to-have improvements to pick up later.
 - [ ] Sort overrides, remove duplicates
 - [ ] When showing overviewmap, dont show buttons except zoom, location and close
 - [ ] Add: Emmen, Ede, Wageningen
-- [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht)
+- [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht), or 'NOG INVULLEN' (Barendrecht/ALbrandswaard). It is desirable to keep the trees on the map but mark them unknown somehow.
 - [ ] Sort species list by name or count
 - [ ] Notable trees - filter, different marker icon
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.
 - [ ] Filters + zoeken
 - [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
-- [ ] Prune unused fields in fetcher and dbs
 - [ ] Localisation of UI: implement i18next. 
 
 ## UI / Components

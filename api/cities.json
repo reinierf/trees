@@ -83,5 +83,10 @@
     "id": "voorschoten",
     "name": "Voorschoten",
     "center": [52.1291, 4.4482]
+  },
+  {
+    "id": "deventer",
+    "name": "Deventer",
+    "center": [52.2553, 6.1638]
   }
 ]

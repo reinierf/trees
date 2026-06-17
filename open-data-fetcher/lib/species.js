@@ -5,8 +5,13 @@ const _filterPatterns = filterSpecies.filter(e => e instanceof RegExp);
 
 function applyBinomialCorrections(s) {
     for (const [wrong, right] of Object.entries(binomialCorrections)) {
+        // Escape regex metacharacters in the key, then wrap in \b…(?!\w):
+        // \b      — only match at a word boundary (won't fire mid-word)
+        // (?!\w)  — don't match if immediately followed by a word character,
+        //           so a truncated key like "FRAXINIFO" won't corrupt the full
+        //           binomial "FRAXINIFOLIA" by replacing its prefix.
         const escaped = wrong.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        s = s.replace(new RegExp(`\\b${escaped}`, 'gi'), right);
+        s = s.replace(new RegExp(`\\b${escaped}(?!\\w)`, 'gi'), right);
     }
     return s;
 }

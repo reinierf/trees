@@ -61,4 +61,5 @@ export interface City {
   center: [number, number]
   bbox: { s: number; n: number; w: number; e: number }
   tree_count: number
+  has_data: boolean
 }

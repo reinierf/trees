@@ -74,6 +74,17 @@ function load_cities(): array
             $city['tree_count'] = (int) db($city['id'])
                 ->query('SELECT COUNT(*) FROM trees')
                 ->fetchColumn();
+            $city['has_data'] = true;
+        } else {
+            // No database yet — provide a synthetic bbox so clients don't crash
+            $city['bbox'] = [
+                's' => $city['center'][0] - 0.15,
+                'n' => $city['center'][0] + 0.15,
+                'w' => $city['center'][1] - 0.20,
+                'e' => $city['center'][1] + 0.20,
+            ];
+            $city['tree_count'] = 0;
+            $city['has_data']   = false;
         }
         $cities[] = $city;
     }
@@ -85,6 +96,16 @@ function validate_city(string $city): void
     $ids = array_column(load_cities(), 'id');
     if (!in_array($city, $ids, true)) {
         respond(400, ['error' => "Unknown city: \"{$city}\". Available: " . implode(', ', $ids)]);
+    }
+}
+
+function validate_city_data(string $city): void
+{
+    validate_city($city);
+    foreach (load_cities() as $c) {
+        if ($c['id'] === $city && !($c['has_data'] ?? true)) {
+            respond(404, ['error' => "No tree data available yet for \"{$city}\". Run the fetcher first."]);
+        }
     }
 }
 
@@ -172,7 +193,7 @@ function handle_trees_get(): void
 {
     $city = trim($_GET['city'] ?? '');
     if ($city === '') respond(400, ['error' => 'Required query param: city']);
-    validate_city($city);
+    validate_city_data($city);
 
     $s = filter_input(INPUT_GET, 's', FILTER_VALIDATE_FLOAT);
     $n = filter_input(INPUT_GET, 'n', FILTER_VALIDATE_FLOAT);
@@ -201,7 +222,7 @@ function handle_trees_post(): void
 
     $city = trim($body['city'] ?? '');
     if ($city === '') respond(400, ['error' => 'Request body must include "city"']);
-    validate_city($city);
+    validate_city_data($city);
 
     if (!is_array($body) || !isset($body['bboxes']) || !is_array($body['bboxes']) || count($body['bboxes']) === 0) {
         respond(400, ['error' => 'Request body must include a non-empty "bboxes" array']);
@@ -265,7 +286,7 @@ function handle_species(): void
 {
     $city = trim($_GET['city'] ?? '');
     if ($city === '') respond(400, ['error' => 'Required query param: city']);
-    validate_city($city);
+    validate_city_data($city);
 
     $q      = trim($_GET['q'] ?? '');
     $strict = !empty($_GET['strict']) && $_GET['strict'] !== '0';

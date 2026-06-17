@@ -68,16 +68,15 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
 export function createCityCircleMarker(city: City): L.CircleMarker {
   const m = L.circleMarker(city.center, {
     radius: 10,
-    fillColor: '#2d6a4f',
-    fillOpacity: 1,
+    fillColor: city.has_data ? '#2d6a4f' : '#9ca3af',
+    fillOpacity: city.has_data ? 1 : 0.7,
     color: 'white',
     weight: 2,
   })
-  const count = city.tree_count.toLocaleString('nl-NL')
-  m.bindTooltip(`<strong>${city.name}</strong><br>${count} bomen`, {
-    direction: 'top',
-    offset: [0, -12],
-  })
+  const tooltip = city.has_data
+    ? `<strong>${city.name}</strong><br>${city.tree_count.toLocaleString('nl-NL')} bomen`
+    : `<strong>${city.name}</strong><br><em>Boomdata binnenkort beschikbaar</em>`
+  m.bindTooltip(tooltip, { direction: 'top', offset: [0, -12] })
   return m
 }
 

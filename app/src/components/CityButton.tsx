@@ -51,15 +51,20 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
           {featured.map((c) => (
             <button
               key={c.id}
-              onClick={() => selectCity(c)}
+              onClick={() => c.has_data && selectCity(c)}
+              disabled={!c.has_data}
+              title={c.has_data ? undefined : 'Boomdata binnenkort beschikbaar'}
               className={[
                 'block w-full text-left px-4 py-2 text-sm whitespace-nowrap transition-colors',
-                c.id === city.id
-                  ? 'font-semibold text-gray-900 bg-gray-50'
-                  : 'text-gray-700 hover:bg-gray-50',
+                !c.has_data
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : c.id === city.id
+                    ? 'font-semibold text-gray-900 bg-gray-50'
+                    : 'text-gray-700 hover:bg-gray-50',
               ].join(' ')}
             >
               {c.name}
+              {!c.has_data && <span className="ml-1 text-xs">(binnenkort)</span>}
             </button>
           ))}
           <button

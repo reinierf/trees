@@ -17,6 +17,7 @@ export function useCitySwitcher(city: City, cities: City[]) {
 
     const target = cities.find(
       (c) => c.id !== city.id &&
+        c.has_data &&
         lat >= c.bbox.s && lat <= c.bbox.n &&
         lon >= c.bbox.w && lon <= c.bbox.e,
     )

@@ -50,6 +50,21 @@ export default function App() {
     )
   }
 
+  if (!currentCity.has_data) {
+    return (
+      <div className="w-screen h-dvh flex flex-col items-center justify-center gap-4 text-center px-6">
+        <h1 className="text-2xl font-bold text-gray-800">{currentCity.name}</h1>
+        <p className="text-gray-500">Boomdata voor {currentCity.name} is nog niet beschikbaar.</p>
+        <button
+          onClick={() => navigate(`/${cities.find((c) => c.has_data)?.id ?? ''}`)}
+          className="mt-2 px-4 py-2 rounded-lg bg-[#2d6a4f] text-white text-sm hover:bg-[#1e4d38] transition-colors"
+        >
+          Terug naar kaart
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="w-screen h-dvh">
       <Map key={currentCity.id} city={currentCity} cities={cities} />

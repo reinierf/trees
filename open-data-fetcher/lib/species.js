@@ -19,6 +19,10 @@ function applyBinomialCorrections(s) {
 // Returns { species_binomial, species_cultivar } or null if filtered/unresolvable.
 export function processSpecies(raw) {
     if (!raw) return null;
+    // Dash-wrapped cultivar notation used by some OBK exports: "-Name-" → "'Name'".
+    // Truncated forms with no closing dash (e.g. "Magnolia -Heaven") get the hint stripped.
+    raw = raw.replace(/-([A-Za-z][A-Za-z0-9 ]*)-/g, (_, n) => `'${n.trim()}'`);
+    raw = raw.replace(/ -[A-Za-z].*/g, '');
     const upper = raw.trim().replace(/\s+/g, ' ').toUpperCase();
     if (_filterSet.has(upper) || _filterPatterns.some(p => p.test(upper))) return null;
     const corrected = applyBinomialCorrections(upper);

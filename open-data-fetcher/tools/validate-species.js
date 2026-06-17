@@ -269,9 +269,10 @@ async function main() {
 
     process.stderr.write(`\n${suggestions.length} suggestions — paste into binomialCorrections in overrides.js,\nthen run: node patch-binomials.js\n\n`);
     for (const { from, to, fuzzyGenus, fuzzy } of suggestions) {
-        const tag = fuzzyGenus ? ' // fuzzy-genus' : fuzzy ? ' // fuzzy' : '';
-        const key = `'${from}':`;
-        process.stdout.write(`  ${key.padEnd(38)}'${to}',${tag}\n`);
+        const tag   = fuzzyGenus ? ' // fuzzy-genus' : fuzzy ? ' // fuzzy' : '';
+        const value = fuzzyGenus ? to.split(' ')[0] : to;
+        const key   = fuzzyGenus ? `'${from.split(' ')[0]}':` : `'${from}':`;
+        process.stdout.write(`  ${key.padEnd(38)}'${value}',${tag}\n`);
     }
 }
 

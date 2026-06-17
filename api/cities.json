@@ -138,5 +138,10 @@
     "id": "leeuwarden",
     "name": "Leeuwarden",
     "center": [53.2010, 5.7987]
+  },
+  {
+    "id": "roosendaal",
+    "name": "Roosendaal",
+    "center": [51.5321, 4.4630]
   }
 ]

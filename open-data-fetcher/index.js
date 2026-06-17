@@ -20,7 +20,7 @@ import { fileURLToPath } from 'url';
 import { CITIES } from './config.js';
 import { fetchRaw } from './lib/http.js';
 import { drawProgress } from './lib/progress.js';
-import { writeJSON, writeSQLite } from './lib/writers.js';
+import { writeJSON, writeSQLite, loadSQLiteCount, appendSQLite } from './lib/writers.js';
 
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
 
@@ -72,12 +72,21 @@ function reportDropped(cityName, dropped, totalRaw) {
     }
 }
 
-async function fetchCity(city, args, fetchedAt) {
+const CHECKPOINT_PAGES = 10;
+
+async function fetchCity(city, args, fetchedAt, resumeFrom = 0, onCheckpoint = null) {
     const layers     = args.layer ? [args.layer] : (city.layers ?? [city.layer]);
     const multiLayer = layers.length > 1;
     let trees        = [];
     const dropped    = {};
     let totalRaw     = 0;
+
+    // Resume is only safe for single-layer, stable-order WFS fetches
+    const canResume = !multiLayer && !city.singleFetch && !city.postProcess;
+    const effectiveResume = canResume ? resumeFrom : 0;
+    if (resumeFrom > 0 && !canResume) {
+        process.stderr.write(`[${city.name}] Cannot resume for this city config; fetching from scratch.\n`);
+    }
 
     for (const layer of layers) {
         const url = typeof city.wfsUrl === 'function' ? city.wfsUrl(layer) : city.wfsUrl;
@@ -94,14 +103,21 @@ async function fetchCity(city, args, fetchedAt) {
             drawProgress(page.length, args.all ? all.length : args.count);
         } else if (args.all) {
             const pageSize = 1000;
-            let startIndex = 0;
+            let startIndex = effectiveResume;
             let layerCount = 0;
 
             process.stderr.write(`[${city.name}] Counting trees${tag}...\n`);
             const countRaw = await fetchRaw(url, city.countParams(layer), city.fetchOptions);
             const total    = await city.parseCount(countRaw);
-            process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
-            drawProgress(0, total);
+            if (effectiveResume > 0) {
+                process.stderr.write(`[${city.name}] ${total} trees in dataset. Resuming from ${effectiveResume}.\n`);
+            } else {
+                process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
+            }
+            drawProgress(effectiveResume, total);
+
+            let pageBuffer    = [];
+            let pagesInBuffer = 0;
 
             while (true) {
                 const raw = await fetchRaw(url, city.pageParams(layer, pageSize, startIndex), city.fetchOptions);
@@ -110,9 +126,25 @@ async function fetchCity(city, args, fetchedAt) {
                 totalRaw += rawCount;
                 trees.push(...page);
                 layerCount += page.length;
-                drawProgress(layerCount, total);
+                drawProgress(effectiveResume + layerCount, total);
+
+                if (onCheckpoint && canResume) {
+                    for (const t of page) { t.city = city.name; t.last_fetched = fetchedAt; }
+                    pageBuffer.push(...page);
+                    pagesInBuffer++;
+                    if (pagesInBuffer >= CHECKPOINT_PAGES) {
+                        await onCheckpoint(pageBuffer);
+                        pageBuffer    = [];
+                        pagesInBuffer = 0;
+                    }
+                }
+
                 if (rawCount < pageSize) break;
                 startIndex += pageSize;
+            }
+
+            if (onCheckpoint && canResume && pageBuffer.length > 0) {
+                await onCheckpoint(pageBuffer);
             }
         } else {
             const startIndex = args.page * args.count;
@@ -134,7 +166,7 @@ async function fetchCity(city, args, fetchedAt) {
 
     process.stderr.write(`[${city.name}] Got ${trees.length} trees.\n`);
     reportDropped(city.name, dropped, totalRaw);
-    return trees;
+    return { trees, checkpointed: onCheckpoint !== null && canResume };
 }
 
 async function main() {
@@ -151,19 +183,31 @@ async function main() {
     }
 
     for (const city of cities) {
-        const trees = await fetchCity(city, args, fetchedAt);
-
         if (args.dry) {
+            const { trees } = await fetchCity(city, args, fetchedAt);
             process.stdout.write(JSON.stringify(trees, null, 2) + '\n');
             continue;
         }
 
         const outFile = args.output ?? path.join(DATA_DIR, city.outputFile[args.format]);
-        if (!outFile) {
-            throw new Error(`Unknown format "${args.format}". Use "json" or "sqlite".`);
+        if (!outFile) throw new Error(`Unknown format "${args.format}". Use "json" or "sqlite".`);
+
+        // For full SQLite fetches, checkpoint every CHECKPOINT_PAGES pages and auto-resume.
+        const useCheckpoint = args.all && args.format === 'sqlite';
+        let resumeFrom = 0;
+        if (useCheckpoint) {
+            resumeFrom = await loadSQLiteCount(outFile);
         }
 
-        if (args.format === 'sqlite') {
+        const onCheckpoint = useCheckpoint
+            ? (batch) => appendSQLite(batch, outFile)
+            : null;
+
+        const { trees, checkpointed } = await fetchCity(city, args, fetchedAt, resumeFrom, onCheckpoint);
+
+        if (checkpointed) {
+            // Trees were written incrementally; nothing left to write.
+        } else if (args.format === 'sqlite') {
             process.stderr.write(`[${city.name}] Writing SQLite database...\n`);
             await writeSQLite(trees, outFile);
         } else {

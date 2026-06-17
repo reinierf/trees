@@ -11,18 +11,21 @@ export function useCitySwitcher(city: City | null, cities: City[]) {
     if (!city) return false
     if (zoom < MIN_CITY_SWITCH_ZOOM) return false
     const [lat, lon] = center
-    const inCurrentCity =
-      lat >= city.bbox.s && lat <= city.bbox.n &&
-      lon >= city.bbox.w && lon <= city.bbox.e
-    if (inCurrentCity) return false
 
-    const target = cities.find(
-      (c) => c.id !== city.id &&
-        c.has_data &&
+    const matching = cities.filter(
+      (c) => c.has_data &&
         lat >= c.bbox.s && lat <= c.bbox.n &&
         lon >= c.bbox.w && lon <= c.bbox.e,
     )
-    if (!target) return false
+    if (matching.length === 0) return false
+
+    // Smallest bbox = most specific coverage. Avoids misdetection when a large city's bbox
+    // (e.g. Rotterdam) overlaps a smaller neighbour (e.g. Ridderkerk): the smaller city wins
+    // because its tree data most tightly surrounds the current position. Closest-center would
+    // also work for these cities, but could misfire if a city center sits near a border.
+    const bboxArea = (c: City) => (c.bbox.n - c.bbox.s) * (c.bbox.e - c.bbox.w)
+    const target = matching.reduce((best, c) => bboxArea(c) < bboxArea(best) ? c : best)
+    if (target.id === city.id) return false
 
     savePosition(target.id, center, zoom)
     // autoSwitch: true tells the city-change effect not to fly — user is already there

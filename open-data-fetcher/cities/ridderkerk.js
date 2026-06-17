@@ -12,10 +12,13 @@ function toTree(element) {
 
     const diameter = t.diameter != null ? parseFloat(String(t.diameter).replace('~', '').replace(',', '.')) : null;
 
+    const lat = +parseFloat(element.lat).toFixed(7);
+    const lon = +parseFloat(element.lon).toFixed(7);
+
     return {
-        id:              String(t.reference || element.id),
-        lat:             +parseFloat(element.lat).toFixed(7),
-        lon:             +parseFloat(element.lon).toFixed(7),
+        id:              `${lat}_${lon}`,
+        lat,
+        lon,
         species:         rawSpecies,
         ...speciesResult,
         name_vernacular: null,

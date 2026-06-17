@@ -143,5 +143,10 @@
     "id": "roosendaal",
     "name": "Roosendaal",
     "center": [51.5321, 4.4630]
+  },
+  {
+    "id": "almere",
+    "name": "Almere",
+    "center": [52.3508, 5.2647]
   }
 ]

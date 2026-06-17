@@ -280,6 +280,12 @@ export const binomialCorrections = {
   'PRUNUS SERTOTINA': 'PRUNUS SEROTINA',
   'CARYA ILLINOINESIS': 'CARYA ILLINOINENSIS',
   'CAYA': 'CARYA', // fuzzy-genus
+  'ZELKOVIA': 'ZELKOVA', // fuzzy-genus
+  'HEPTACODIUM MICNOIOIDES': 'HEPTACODIUM MICONIOIDES',
+  'CORYLUS CORLUNA': 'CORYLUS COLURNA',
+  'FRAXINUS ANGUST.': 'FRAXINUS ANGUSTIFOLIA',
+  'ULMUS CARP.': 'ULMUS CARPINIFOLIA',
+  'FRAXINUS PENNS.': 'FRAXINUS PENNSYLVANICA',
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are
@@ -295,6 +301,7 @@ export const filterSpecies = [
   /\bNADER/i,
   /\bDIVERS/i,
   /\bWEET\b/i,
+  'NULL',
   'CONIFEREN',
   'CONIFEER',
   'OVERIG',
@@ -304,4 +311,7 @@ export const filterSpecies = [
   'FRUITBOMEN',
   'KNOTBOOM',
   'MALUS CULTIVARS',
+  /\bAAA\b/i,
+  /\bAA: BOOM\b/i,
+  /\bORGANISATI/i
 ];

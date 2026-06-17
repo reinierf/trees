@@ -34,6 +34,14 @@ const INVALID_SPECIES = new Set([
     'N.V.T. (BOOM NIET AANWEZIG)',
 ]);
 
+// Latin binomials have a lowercase species epithet ("Betula pendula").
+// Dutch cultivar names are title-cased throughout ("Zoete Campagner").
+function looksLikeLatin(s) {
+    const words = s.trim().split(/\s+/);
+    const second = (words[1] === '×' || words[1]?.toLowerCase() === 'x') ? words[2] : words[1];
+    return second != null && /^[a-z]/.test(second);
+}
+
 function resolveSpecies(raw, dutch) {
     if (!raw) return null;
     const rawUpper = raw.trim().toUpperCase().replace(/\s+/g, ' ');
@@ -44,21 +52,34 @@ function resolveSpecies(raw, dutch) {
     const dutchUpper = (dutch ?? '').trim().toUpperCase();
     const fruitBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper];
     if (fruitBinomial) {
-        return { rawSpecies: raw.trim(), species_binomial: fruitBinomial, species_cultivar: raw.trim() };
+        // species=null so validate-species skips it (cultivar name is not a Latin species).
+        return { rawSpecies: null, species_binomial: fruitBinomial, species_cultivar: raw.trim() };
+    }
+
+    // "TYPE: CULTIVAR" format (e.g. "Kweepeer: Champion", "Mispel: Westerveld").
+    const colon = dutchUpper.indexOf(':');
+    if (colon > 0) {
+        const prefixBinomial = FRUIT_TYPE_BINOMIAL[dutchUpper.slice(0, colon).trim()];
+        if (prefixBinomial) {
+            const cultivar = raw.trim().slice(raw.indexOf(':') + 1).trim() || raw.trim();
+            return { rawSpecies: null, species_binomial: prefixBinomial, species_cultivar: cultivar };
+        }
     }
 
     // Both fields identical → cultivar name with no type info (e.g. "Benderzoet" | "Benderzoet").
     // Use a generic fallback so the tree is still shown on the map.
     if (raw.trim() === dutch?.trim()) {
-        return { rawSpecies: raw.trim(), species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
+        return { rawSpecies: null, species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
     }
 
-    // Normal Latin species path.
+    // Normal Latin species path — but verify the raw string actually looks Latin first.
+    // Catches Dutch cultivar names like "Zoete Campagner" (dutch="-") that processSpecies
+    // would otherwise echo back as a fake binomial "ZOETE CAMPAGNER".
     const result = processSpecies(raw);
-    if (result) return { rawSpecies: raw.trim(), ...result };
+    if (result && looksLikeLatin(raw)) return { rawSpecies: raw.trim(), ...result };
 
     // processSpecies failed on a non-empty, non-filtered value — keep the tree with a generic.
-    return { rawSpecies: raw.trim(), species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
+    return { rawSpecies: null, species_binomial: 'FRUITBOOM', species_cultivar: raw.trim() };
 }
 
 function toTree(feature) {

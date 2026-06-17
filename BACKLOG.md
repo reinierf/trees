@@ -4,7 +4,7 @@ Nice-to-have improvements to pick up later.
 
 - [ ] Sort overrides, remove duplicates
 - [ ] When showing overviewmap, dont show buttons except zoom, location and close
-- [ ] Add: Emmen, Ede, Wageningen, Den Bosch
+- [ ] Add: Emmen, Ede, Wageningen
 - [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht)
 - [ ] Sort species list by name or count
 - [ ] Notable trees - filter, different marker icon

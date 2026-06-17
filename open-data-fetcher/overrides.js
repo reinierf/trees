@@ -271,6 +271,10 @@ export const binomialCorrections = {
   'PHOTINIA × FASERI': 'PHOTINIA × FRASERI',
   'TILIA × EUROPEA': 'TILIA × EUROPAEA',
   'TILIA EUROPEAE': 'TILIA × EUROPAEA',
+  'ULMUS HOLL.': 'ULMUS × HOLLANDICA',
+  'GYMNOCLADUS DIOCA': 'GYMNOCLADUS DIOICA',
+  'CATALPA BIGNONIODIS': 'CATALPA BIGNONIOIDES',
+  'TETRADIUM DANIËLLI': 'TETRADIUM DANIELLII',
 };
 
 // Raw species values (after uppercasing + whitespace normalisation) that are

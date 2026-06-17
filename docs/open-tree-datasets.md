@@ -508,6 +508,36 @@ An ArcGIS web map exists (`arcgis.com` item `1e0dab584ff64466a085ed58403c64ce`) 
 
 ---
 
+## Den Bosch ('s-Hertogenbosch)
+
+**Status:** Partial — ~1,907 monumental and valuable trees via ArcGIS MapServer. Full municipal inventory not publicly available.
+
+The municipality manages its trees via a commercial BomenMonitor system (COBRA Groeninzicht) but has not published the full dataset. The data.overheid.nl open-data request for Den Bosch trees was marked "Afgehandeld" with the conclusion that no full dataset exists in the public domain. OpenBomenKaart has no Den Bosch coverage.
+
+What IS accessible: the "Beschermde bomen" MapServer on geoproxy.s-hertogenbosch.nl, layer 10, which serves the protected and valuable trees registered under the tree ordinance (boomverordening).
+
+| Resource | URL |
+|----------|-----|
+| MapServer layer 10 (Monumentale/Waardevolle bomen) | https://geoproxy.s-hertogenbosch.nl/ags_extern/rest/services/Externvrij/Beschermde_bomen/MapServer/10 |
+| Query endpoint | …/MapServer/10/query?where=1%3D1&outFields=*&outSR=4326&f=json |
+| GeoPortaal | https://geoportaal2-s-hertogenbosch.opendata.arcgis.com/datasets/boomstructuur |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `NIEUWNR` (fallback `OBJECTID`) | `id` | Tree registration number; nullable, falls back to OBJECTID |
+| `BOOMSOORT_WETENSCHAPPELIJK` | `species` | Full scientific name |
+| `LEEFTIJD` | `year_planted` | Age string → `fetchYear − parseInt(age)` |
+| `STAMDIAMETER` | `trunk_diameter` | Numeric cm → metres (divide by 100); sparse |
+| geometry `x`/`y` | `lon`/`lat` | WGS84 via `outSR=4326` |
+| — | `neighbourhood`, `street`, `crown_spread`, `name_vernacular` | Not available |
+
+- **SSL:** `rejectUnauthorized: false` (municipal server)
+- **Fetcher:** `cities/den-bosch.js` ✅ implemented (ArcGIS REST, same pattern as `cities/den-haag.js`)
+
+---
+
 ## Alkmaar
 
 **Status:** Live WFS 2.0.0 GeoJSON via Alkmaar GeoServer — 56,065 trees
@@ -537,6 +567,35 @@ Found via `datalab.alkmaar.nl`. The GeoServer exposes multiple layers; `Alkmaar:
 - **Fetcher:** `cities/alkmaar.js` ✅ implemented
 - **Registered:** `config.js` ✅
 - **API entry:** `api/cities.json` ✅ (`center: [52.6324, 4.7534]`)
+
+---
+
+## Ede
+
+**Status:** Live, via `openbomenkaart.org` — large dataset (>10 MB JSON); no public ArcGIS/WFS source found.
+
+Checked `geo.ede.nl` (KaartViewer) and `gis.ede.nl/arcgis` — neither exposes a public tree service. `openbomenkaart.org/data/trees_ede.json` is confirmed live. Uses the standard OBK OSM-elements JSON shape. Both `planted`/`plantjaar` year-tag variants and `element.id`/`admin_ref`/index id fallbacks handled in the fetcher (file too large to inspect directly).
+
+| Resource | URL |
+|----------|-----|
+| OBK viewer | https://openbomenkaart.org/obk.htm?data=ede |
+| JSON export | https://openbomenkaart.org/data/trees_ede.json |
+
+**Field mapping:**
+
+| OBK tag | Schema field | Notes |
+|---|---|---|
+| `element.id` (or `admin_ref`, or array index) | `id` | OSM node id if >0, else `admin_ref`, else index |
+| `element.lat` / `element.lon` | `lat` / `lon` | WGS84, no reprojection needed |
+| `species` | `species` | Latin name, run through `processSpecies()` |
+| `planted` or `plantjaar` | `year_planted` | Both tag variants handled |
+| `diameter` | `trunk_diameter` | Already in metres |
+| `place` | `street` | May be absent |
+| — | `neighbourhood`, `crown_spread`, `name_vernacular` | Not available |
+
+- **Fetcher:** `cities/ede.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [52.0407, 5.6616]`)
 
 ---
 

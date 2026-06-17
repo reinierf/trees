@@ -20,5 +20,6 @@ import deventer    from './cities/deventer.js';
 import enschede   from './cities/enschede.js';
 import leiden     from './cities/leiden.js';
 import dordrecht  from './cities/dordrecht.js';
+import alkmaar    from './cities/alkmaar.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht, alkmaar };

@@ -4,10 +4,8 @@ Nice-to-have improvements to pick up later.
 
 - [ ] Sort overrides, remove duplicates
 - [ ] When showing overviewmap, dont show buttons except zoom, location and close
-- [ ] Enschede species name are very messy. A lot of abbreviations. Not all abbreviations end with a '.', making overrides tricky. How to handle? In Enschede importer drop 2nd part if only 2 chars? Improve implementation of overrides so we can use safe regexes?
-- [ ] Add: Alkmaar, Dordrecht, Emmen, Ede, Wageningen, Den Bosch
-- [ ] Leiden: blocked — no public full-dataset found (see docs/open-tree-datasets.md)
-- [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056)
+- [ ] Add: Emmen, Ede, Wageningen, Den Bosch
+- [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht)
 - [ ] Sort species list by name or count
 - [ ] Notable trees - filter, different marker icon
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.

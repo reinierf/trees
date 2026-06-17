@@ -108,5 +108,10 @@
     "id": "dordrecht",
     "name": "Dordrecht",
     "center": [51.8133, 4.6899]
+  },
+  {
+    "id": "alkmaar",
+    "name": "Alkmaar",
+    "center": [52.6324, 4.7534]
   }
 ]

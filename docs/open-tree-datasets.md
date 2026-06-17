@@ -508,6 +508,38 @@ An ArcGIS web map exists (`arcgis.com` item `1e0dab584ff64466a085ed58403c64ce`) 
 
 ---
 
+## Alkmaar
+
+**Status:** Live WFS 2.0.0 GeoJSON via Alkmaar GeoServer — 56,065 trees
+
+Found via `datalab.alkmaar.nl`. The GeoServer exposes multiple layers; `Alkmaar:Bomen` is the full municipal tree inventory, queryable with standard WFS 2.0.0 pagination. Returns WGS84 directly via `srsName=EPSG:4326`, no reprojection needed.
+
+| Resource | URL |
+|----------|-----|
+| Open data portal | https://datalab.alkmaar.nl/opendata.html |
+| WFS capabilities | https://datalab.alkmaar.nl/geoserver/Alkmaar/wfs?service=WFS&version=2.0.0&request=GetCapabilities |
+| Layer | `Alkmaar:Bomen` |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `boomnr` | `id` | Tree registration number |
+| `latnaam` | `species` | Full Latin name incl. cultivar, e.g. `Fraxinus excelsior 'Diversifolia'` |
+| `nednaam` | `name_vernacular` | Dutch common name, e.g. `Gewone es CV.` |
+| `plantjaar` | `year_planted` | Numeric year → string |
+| `buurt` | `neighbourhood` | Neighbourhood name |
+| geometry `coordinates` | `lon`/`lat` | WGS84 GeoJSON Point [lon, lat] |
+| — | `street`, `trunk_diameter`, `crown_spread` | Not available in this layer |
+
+- **SSL:** `rejectUnauthorized: false` as precaution
+- **Pagination:** WFS 2.0.0 `COUNT`/`STARTINDEX`/`sortBy=boomnr`; count via `resultType=hits`
+- **Fetcher:** `cities/alkmaar.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [52.6324, 4.7534]`)
+
+---
+
 ## Leeuwarden
 
 **Effort: Blocked** — no usable public full-dataset found.

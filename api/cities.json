@@ -88,5 +88,15 @@
     "id": "deventer",
     "name": "Deventer",
     "center": [52.2553, 6.1638]
+  },
+  {
+    "id": "apeldoorn",
+    "name": "Apeldoorn",
+    "center": [52.2112, 5.9699]
+  },
+  {
+    "id": "enschede",
+    "name": "Enschede",
+    "center": [52.2215, 6.8937]
   }
 ]

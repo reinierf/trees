@@ -3,7 +3,7 @@ export const MAX_VIEWPORT_DEG2 = 0.04
 export const MAX_CACHE_CELLS = 666
 export const DEBOUNCE_MS = 300
 export const MIN_FETCH_ZOOM = 16        // zoom level below which fetch is skipped and "zoom in" banner shows
-export const MIN_CITY_SWITCH_ZOOM = 11  // zoom level below which auto city-switching is suppressed
+export const MIN_CITY_SWITCH_ZOOM = 12  // zoom level below which auto city-switching is suppressed
 
 export const RESTORE_CITY_POSITION = false  // restore last saved position when switching city; false always opens at city center
 

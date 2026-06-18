@@ -44,7 +44,7 @@ export function LocationButton({ onLocate }: Props) {
       disabled={isLoading}
       title="Go to my location"
       className={[
-        'absolute top-[84px] left-[12px] z-[1000] flex items-center gap-1.5',
+        'absolute top-[84px] right-2 z-[1000] flex items-center gap-1.5',
         'bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors',
         isError ? 'rounded-md px-2.5 py-2 text-xs' : 'rounded-full p-2',
         isLoading ? 'cursor-default opacity-70' : '',

@@ -1,11 +1,7 @@
 import { Trees } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
 
-interface Props {
-  citiesCount: number
-}
-
-export function SpeciesButton({ citiesCount }: Props) {
+export function SpeciesButton() {
   const popupView = useStore((s) => s.popupView)
   const openSpeciesList = useStore((s) => s.openSpeciesList)
   const closePopup = useStore((s) => s.closePopup)
@@ -28,8 +24,7 @@ export function SpeciesButton({ citiesCount }: Props) {
       title="Species in view"
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
-        citiesCount > 1 ? 'top-[156px]' : 'top-[120px]',
-        'left-[12px]',
+        'top-[84px] left-[12px]',
         tooZoomedOut
           ? 'bg-white text-gray-300 cursor-default'
           : isActive

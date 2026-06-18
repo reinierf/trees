@@ -1,11 +1,7 @@
 import { Heart } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
 
-interface Props {
-  citiesCount: number
-}
-
-export function FavouritesButton({ citiesCount }: Props) {
+export function FavouritesButton() {
   const popupView = useStore((s) => s.popupView)
   const openFavourites = useStore((s) => s.openFavourites)
   const closePopup = useStore((s) => s.closePopup)
@@ -29,8 +25,7 @@ export function FavouritesButton({ citiesCount }: Props) {
       title={title}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
-        citiesCount > 1 ? 'top-[228px]' : 'top-[192px]',
-        'left-[12px]',
+        'top-[156px] left-[12px]',
         isActive ? 'bg-gray-100 text-red-500' : 'bg-white text-gray-700 hover:bg-gray-50',
       ].join(' ')}
     >

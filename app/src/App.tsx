@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
+import { recordCityVisit } from './lib/recentCitiesStorage'
 import { useStore } from './store'
 import type { City } from './types'
 
@@ -37,10 +38,15 @@ export default function App() {
     }
   }, [cities, cityParam, navigate])
 
-  if (!cities) return null
-
   const isOverview = !cityParam || cityParam === 'overview'
-  const currentCity = isOverview ? null : (cities.find((c) => c.id === cityParam) ?? null)
+  const currentCity = cities
+    ? (isOverview ? null : (cities.find((c) => c.id === cityParam) ?? null))
+    : null
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (currentCity?.has_data) recordCityVisit(currentCity.id) }, [currentCity?.id])
+
+  if (!cities) return null
 
   // Suppress flash while redirect is in flight
   if (!isOverview && !currentCity) return null

@@ -1,11 +1,7 @@
 import { Flag } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
 
-interface Props {
-  citiesCount: number
-}
-
-export function IssuesButton({ citiesCount }: Props) {
+export function IssuesButton() {
   const debugMode     = useStore((s) => s.debugMode)
   const popupView     = useStore((s) => s.popupView)
   const openIssues    = useStore((s) => s.openIssues)
@@ -24,8 +20,7 @@ export function IssuesButton({ citiesCount }: Props) {
       title={total > 0 ? `Data issues (${total})` : 'Data issues'}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
-        citiesCount > 1 ? 'top-[264px]' : 'top-[228px]',
-        'left-[12px]',
+        'bottom-[12px] left-[12px]',
         isActive ? 'bg-gray-100 text-amber-500' : 'bg-white text-gray-700 hover:bg-gray-50',
       ].join(' ')}
     >

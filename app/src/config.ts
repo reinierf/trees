@@ -21,8 +21,8 @@ export const LOCATION_MAX_ZOOM = MAP_MAX_ZOOM  // zoom ceiling for a highly accu
 export const API_LIMIT = 20000
 export const CITY_OVERVIEW_ZOOM = 12
 
-// Curated cities shown in the city picker dropdown, in this order; rest are reachable via "Alle steden".
-export const FEATURED_CITY_IDS = ['rotterdam', 'groningen', 'den-haag', 'utrecht', 'amsterdam']
+// Number of recently visited cities shown in the city picker dropdown.
+export const CITY_MENU_RECENT_COUNT = 5
 
 // Override with VITE_API_BASE (e.g. './api' in production) when needed.
 const envApiBase = import.meta.env.VITE_API_BASE?.trim()

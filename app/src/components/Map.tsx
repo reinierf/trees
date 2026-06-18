@@ -186,17 +186,16 @@ export function Map({ city, cities }: Props) {
         cities={cities}
         onCurrentCity={city ? () => controllerRef.current?.panTo(city.center[0], city.center[1]) : undefined}
       />
-      {!showingCityMarkers && <SpeciesButton citiesCount={cities.length} />}
+      {!showingCityMarkers && <SpeciesButton />}
       {!showingCityMarkers && (
         <SearchButton
-          citiesCount={cities.length}
           onClick={() => setSearchOpen((o) => !o)}
           active={searchOpen || speciesFilter !== null}
         />
       )}
-      {!showingCityMarkers && <FavouritesButton citiesCount={cities.length} />}
-      {!showingCityMarkers && <IssuesButton citiesCount={cities.length} />}
-      {!showingCityMarkers && <CityInfoButton citiesCount={cities.length} />}
+      {!showingCityMarkers && <FavouritesButton />}
+      {!showingCityMarkers && <IssuesButton />}
+      {!showingCityMarkers && <CityInfoButton />}
       {searchOpen && (
         <SearchOverlay
           onSelect={handleSpeciesSelect}

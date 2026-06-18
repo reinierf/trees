@@ -611,6 +611,12 @@ Found via `datalab.alkmaar.nl`. The GeoServer exposes multiple layers; `Alkmaar:
 
 ---
 
+## Lelystad
+
+Lelystad — blocked: no accessible dataset with species data. PDOK BGT works (location-only, ~40k trees) but has zero tree attributes beyond coordinates. `ckan.dataplatform.nl` (municipal dataset) was unreachable. Revisit if municipality publishes a richer open dataset.
+
+---
+
 ## Ede
 
 **Status:** Live, via `openbomenkaart.org` — large dataset (>10 MB JSON); no public ArcGIS/WFS source found.

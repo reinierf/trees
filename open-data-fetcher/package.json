@@ -9,6 +9,7 @@
     "fetch": "node index.js --all",
     "add-city": "node add-city.js",
     "patch-binomials": "node patch-binomials.js",
+    "rewrite-binomial-corrections": "node tools/rewrite-binomial-corrections.js",
     "validate-species": "node tools/validate-species.js",
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
     "build-vernacular-nl": "node tools/vernacular/nl/build.js",

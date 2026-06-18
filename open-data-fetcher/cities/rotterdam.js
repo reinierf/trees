@@ -1,6 +1,41 @@
 import { parseStringPromise, processors } from 'xml2js';
 import { processSpecies } from '../lib/species.js';
 
+const OBK_SOURCES = [
+    { label: 'blijdorp (OBK)', url: 'https://openbomenkaart.org/data/trees_blijdorp.json' },
+];
+
+function toObkTree(element) {
+    const t = element?.tags;
+    if (!t || element.lat == null || element.lon == null) return null;
+
+    const rawSpecies = (t.species ?? '').trim();
+    const speciesResult = processSpecies(rawSpecies);
+    if (!speciesResult) return null;
+
+    const diameter = t.diameter != null ? parseFloat(String(t.diameter).replace('~', '').replace(',', '.')) : null;
+
+    return {
+        id:              String(t.admin_ref || element.id || ''),
+        lat:             +parseFloat(element.lat).toFixed(7),
+        lon:             +parseFloat(element.lon).toFixed(7),
+        species:         rawSpecies,
+        ...speciesResult,
+        name_vernacular: null,
+        year_planted:    t.planted && t.planted !== '?' ? String(t.planted) : null,
+        neighbourhood:   null,
+        street:          null,
+        trunk_diameter:  diameter != null && !Number.isNaN(diameter) ? diameter : null,
+        crown_spread:    null,
+    };
+}
+
+function parseObkSource(raw) {
+    const elements = JSON.parse(raw).elements ?? [];
+    const trees = elements.map(toObkTree).filter(Boolean);
+    return { trees };
+}
+
 const WFS_URL = 'https://ows.gis.rotterdam.nl/cgi-bin/mapserv.exe';
 const MAP      = 'd:\\gwr\\webdata\\mapserver\\map\\bbdwh_pub.map';
 
@@ -80,6 +115,11 @@ export default {
     outputFile: { json: 'rotterdam.json', sqlite: 'rotterdam.db' },
     // Rotterdam's WFS server has a certificate chain issue; encoding bug: declares UTF-8 but sends latin1.
     fetchOptions: { rejectUnauthorized: false, encoding: 'latin1' },
+    supplemental: OBK_SOURCES.map(src => ({
+        ...src,
+        fetchOptions: { rejectUnauthorized: false },
+        parse: parseObkSource,
+    })),
 
     pageParams(layer, count, startIndex) {
         return new URLSearchParams({

@@ -30,6 +30,8 @@ import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import https from 'https';
+import { execSync } from 'child_process';
+import readline from 'readline';
 import initSqlJs from 'sql.js';
 import { CITIES } from '../config.js';
 import { processSpecies } from '../lib/species.js';
@@ -129,7 +131,7 @@ async function readCityBinomials(cities, SQL) {
     return { stale, current };
 }
 
-function matchFromCache(nulls, found) {
+function matchFromCache(nulls, found, cache) {
     const matched   = [];
     const remaining = [];
 
@@ -158,7 +160,8 @@ function matchFromCache(nulls, found) {
         }
 
         if (best && best.key !== raw) {
-            matched.push({ from: raw, to: best.key, fuzzyGenus: best.gDist > 0 });
+            const canonical = cache[best.key]?.name?.toUpperCase() ?? best.key;
+            matched.push({ from: raw, to: canonical, fuzzyGenus: best.gDist > 0 });
             process.stderr.write(`  [cache] ${raw} → ${best.key}${best.gDist > 0 ? ' (fuzzy genus)' : ''}\n`);
         } else {
             remaining.push(raw);
@@ -213,7 +216,7 @@ async function main() {
     const unresolved = [...nulls, ...notCached];
 
     process.stderr.write(`Phase 1: cache-internal matching (${unresolved.length} unresolved vs ${found.length} found)...\n`);
-    const { matched: cacheMatches, remaining } = matchFromCache(unresolved, found);
+    const { matched: cacheMatches, remaining } = matchFromCache(unresolved, found, cache);
     process.stderr.write(`  ${cacheMatches.length} matched, ${remaining.length} need iNat lookup\n\n`);
 
     const inatMatches = [];
@@ -268,12 +271,32 @@ async function main() {
     }
 
     process.stderr.write(`\n${suggestions.length} suggestions — paste into binomialCorrections in overrides.js,\nthen run: node patch-binomials.js\n\n`);
+    const lines = [];
     for (const { from, to, fuzzyGenus, fuzzy } of suggestions) {
         const tag   = fuzzyGenus ? ' // fuzzy-genus' : fuzzy ? ' // fuzzy' : '';
         const value = fuzzyGenus ? to.split(' ')[0] : to;
         const key   = fuzzyGenus ? `'${from.split(' ')[0]}':` : `'${from}':`;
-        process.stdout.write(`  ${key.padEnd(38)}'${value}',${tag}\n`);
+        lines.push(`  ${key.padEnd(38)}'${value}',${tag}`);
     }
+    const output = lines.join('\n') + '\n';
+    process.stdout.write(output);
+
+    const rl = readline.createInterface({ input: process.stdin, output: process.stderr });
+    await new Promise(resolve => rl.question('Copy to clipboard? [Y/n] ', answer => {
+        rl.close();
+        if (answer.trim().toLowerCase() !== 'n') {
+            try {
+                const cmd = process.platform === 'darwin' ? 'pbcopy'
+                          : process.platform === 'win32'  ? 'clip'
+                          : 'xclip -selection clipboard';
+                execSync(cmd, { input: output });
+                process.stderr.write('Copied.\n');
+            } catch {
+                process.stderr.write('Clipboard unavailable.\n');
+            }
+        }
+        resolve();
+    }));
 }
 
 main().catch(err => { process.stderr.write(`Error: ${err.stack}\n`); process.exit(1); });

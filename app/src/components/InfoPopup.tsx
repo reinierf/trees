@@ -4,6 +4,7 @@ import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
 import { IssuesPanel } from './panels/IssuesPanel'
+import { CityInfoPanel } from './panels/CityInfoPanel'
 import type { City } from '../types'
 
 export const BASE =
@@ -50,6 +51,10 @@ export function InfoPopup({ cities, currentCityId }: Props) {
     return <FavouritesPanel cities={cities} currentCityId={currentCityId} />
   if (popupView.kind === PopupKind.Issues)
     return <IssuesPanel cities={cities} currentCityId={currentCityId} />
+  if (popupView.kind === PopupKind.CityInfo) {
+    const city = cities.find((c) => c.id === currentCityId) ?? null
+    return <CityInfoPanel city={city} />
+  }
   if (popupView.kind === PopupKind.SpeciesList)
     return (
       <SpeciesListPanel

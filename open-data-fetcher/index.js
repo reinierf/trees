@@ -174,6 +174,25 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
         }
     }
 
+    if (city.supplemental && args.all) {
+        for (const source of city.supplemental) {
+            process.stderr.write(`[${city.name}] Fetching supplemental: ${source.label ?? source.url}...\n`);
+            const raw = await fetchRaw(source.url, new URLSearchParams(), source.fetchOptions ?? city.fetchOptions);
+            const { trees: extra, dropped: d } = await source.parse(raw);
+            mergeDropped(dropped, d);
+            totalRaw += extra.length + Object.values(d ?? {}).reduce((a, b) => a + b, 0);
+            for (const t of extra) { t.city = city.name; t.last_fetched = fetchedAt; }
+            if (onCheckpoint) {
+                // Main fetch used checkpointing (writeSQLite is skipped in main); write
+                // supplemental trees through the same mechanism so they reach the file.
+                await onCheckpoint(extra);
+            } else {
+                trees.push(...extra);
+            }
+            process.stderr.write(`[${city.name}] Got ${extra.length} supplemental trees.\n`);
+        }
+    }
+
     if (city.postProcess) trees = city.postProcess(trees);
 
     for (const t of trees) {

@@ -18,6 +18,7 @@ import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
 import { IssuesButton } from './IssuesButton'
+import { CityInfoButton } from './CityInfoButton'
 import type { City } from '../types'
 
 interface Props {
@@ -180,13 +181,11 @@ export function Map({ city, cities }: Props) {
       {!showingCityMarkers && <SpeciesFilterBadge onClear={handleClearFilter} />}
       <FullscreenButton />
       <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
-      {city && (
-        <CityButton
-          city={city}
-          cities={cities}
-          onCurrentCity={() => controllerRef.current?.panTo(city.center[0], city.center[1])}
-        />
-      )}
+      <CityButton
+        city={city}
+        cities={cities}
+        onCurrentCity={city ? () => controllerRef.current?.panTo(city.center[0], city.center[1]) : undefined}
+      />
       {!showingCityMarkers && <SpeciesButton citiesCount={cities.length} />}
       {!showingCityMarkers && (
         <SearchButton
@@ -197,6 +196,7 @@ export function Map({ city, cities }: Props) {
       )}
       {!showingCityMarkers && <FavouritesButton citiesCount={cities.length} />}
       {!showingCityMarkers && <IssuesButton citiesCount={cities.length} />}
+      {!showingCityMarkers && <CityInfoButton citiesCount={cities.length} />}
       {searchOpen && (
         <SearchOverlay
           onSelect={handleSpeciesSelect}

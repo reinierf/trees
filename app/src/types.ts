@@ -55,6 +55,12 @@ export interface SpeciesIssue {
 
 export type VernacularNames = Record<string, { nl?: string; en?: string; de?: string; fr?: string }>
 
+export interface CityMeta {
+  source?: string
+  lastFetched?: string
+  description?: string
+}
+
 export interface City {
   id: string
   name: string
@@ -62,4 +68,5 @@ export interface City {
   bbox: { s: number; n: number; w: number; e: number }
   tree_count: number
   has_data: boolean
+  meta?: CityMeta
 }

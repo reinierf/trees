@@ -23,7 +23,24 @@ import initSqlJs from 'sql.js';
 import { CITIES } from './config.js';
 import { processSpecies } from './lib/species.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
+const DIR      = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(DIR, 'data');
+const CACHE    = path.join(DIR, 'tools', 'vernacular', 'base', 'cache.json');
+
+// If a binomial has a ≤2-char epithet (an unresolved abbreviation), either
+// resolve it to the iNat canonical name stored in cache, or fall back to
+// genus-only. Called after processSpecies has already applied corrections.
+function resolveAbbreviated(binomial, cache) {
+    if (!binomial) return binomial;
+    const parts = binomial.split(' ');
+    const isHybrid  = parts[1] === '×';
+    const epithetIdx = isHybrid ? 2 : 1;
+    if (parts.length <= epithetIdx) return binomial;
+    if (parts[epithetIdx].length > 2) return binomial;
+    const entry = cache[binomial];
+    if (entry?.name) return entry.name.toUpperCase();
+    return parts[0]; // genus-only fallback
+}
 
 function parseArgs(argv) {
     const args = { city: null, dry: false };
@@ -34,7 +51,7 @@ function parseArgs(argv) {
     return args;
 }
 
-async function patchCity(city, dry, SQL) {
+async function patchCity(city, dry, SQL, cache) {
     const dbPath = path.join(DATA_DIR, city.outputFile.sqlite);
     if (!existsSync(dbPath)) {
         process.stderr.write(`[${city.name}] skipped (no DB found)\n`);
@@ -52,7 +69,7 @@ async function patchCity(city, dry, SQL) {
     let changed = 0;
     for (const [rowid, species, oldBinomial, oldCultivar] of rows) {
         const result      = processSpecies(species);
-        const newBinomial = result?.species_binomial ?? null;
+        const newBinomial = resolveAbbreviated(result?.species_binomial ?? null, cache);
         const newCultivar = result?.species_cultivar ?? null;
         if (newBinomial === oldBinomial && newCultivar === oldCultivar) continue;
 
@@ -82,8 +99,9 @@ async function main() {
         : Object.values(CITIES);
 
     const SQL   = await initSqlJs();
+    const cache = existsSync(CACHE) ? JSON.parse(await fs.readFile(CACHE, 'utf8')) : {};
     let   total = 0;
-    for (const city of cities) total += await patchCity(city, args.dry, SQL);
+    for (const city of cities) total += await patchCity(city, args.dry, SQL, cache);
     process.stderr.write(`Total: ${total} rows ${args.dry ? 'would be ' : ''}updated\n`);
 }
 

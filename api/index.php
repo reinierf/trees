@@ -61,7 +61,8 @@ function load_cities(): array
     $margin = 0.01;
     $cities = [];
     foreach ($raw as $city) {
-        if (file_exists(__DIR__ . '/data/' . $city['id'] . '.db')) {
+        $dbPath = __DIR__ . '/data/' . $city['id'] . '.db';
+        if (file_exists($dbPath)) {
             $row = db($city['id'])
                 ->query('SELECT MIN(lat) AS s, MAX(lat) AS n, MIN(lon) AS w, MAX(lon) AS e FROM trees')
                 ->fetch();
@@ -75,6 +76,7 @@ function load_cities(): array
                 ->query('SELECT COUNT(*) FROM trees')
                 ->fetchColumn();
             $city['has_data'] = true;
+            $city['meta']['lastFetched'] = date('Y-m-d', filemtime($dbPath));
         } else {
             // No database yet — provide a synthetic bbox so clients don't crash
             $city['bbox'] = [

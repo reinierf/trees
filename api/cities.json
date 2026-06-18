@@ -2,171 +2,205 @@
   {
     "id": "rotterdam",
     "name": "Rotterdam",
-    "center": [51.9225, 4.4792]
+    "center": [51.9225, 4.4792],
+    "meta": { "source": "Gemeente Rotterdam" }
   },
   {
     "id": "groningen",
     "name": "Groningen",
-    "center": [53.2194, 6.5665]
+    "center": [53.2194, 6.5665],
+    "meta": { "source": "Gemeente Groningen" }
   },
   {
     "id": "den-haag",
     "name": "Den Haag",
-    "center": [52.0705, 4.3007]
+    "center": [52.0705, 4.3007],
+    "meta": { "source": "Gemeente Den Haag" }
   },
   {
     "id": "amsterdam",
     "name": "Amsterdam",
-    "center": [52.3676, 4.9041]
+    "center": [52.3676, 4.9041],
+    "meta": { "source": "Gemeente Amsterdam" }
   },
   {
     "id": "utrecht",
     "name": "Utrecht",
-    "center": [52.0907, 5.1214]
+    "center": [52.0907, 5.1214],
+    "meta": { "source": "Gemeente Utrecht" }
   },
   {
     "id": "arnhem",
     "name": "Arnhem",
-    "center": [51.9851, 5.8987]
+    "center": [51.9851, 5.8987],
+    "meta": { "source": "Gemeente Arnhem" }
   },
   {
     "id": "nijmegen",
     "name": "Nijmegen",
-    "center": [51.8426, 5.8546]
+    "center": [51.8426, 5.8546],
+    "meta": { "source": "Gemeente Nijmegen" }
   },
   {
     "id": "zwolle",
     "name": "Zwolle",
-    "center": [52.5168, 6.0830]
+    "center": [52.5168, 6.0830],
+    "meta": { "source": "Gemeente Zwolle" }
   },
   {
     "id": "eindhoven",
     "name": "Eindhoven",
-    "center": [51.4416, 5.4697]
+    "center": [51.4416, 5.4697],
+    "meta": { "source": "Gemeente Eindhoven" }
   },
   {
     "id": "amersfoort",
     "name": "Amersfoort",
-    "center": [52.1561, 5.3878]
+    "center": [52.1561, 5.3878],
+    "meta": { "source": "Gemeente Amersfoort" }
   },
   {
     "id": "breda",
     "name": "Breda",
-    "center": [51.5719, 4.7683]
+    "center": [51.5719, 4.7683],
+    "meta": { "source": "Gemeente Breda" }
   },
   {
     "id": "assen",
     "name": "Assen",
-    "center": [52.9925, 6.5642]
+    "center": [52.9925, 6.5642],
+    "meta": { "source": "Gemeente Assen" }
   },
   {
     "id": "delft",
     "name": "Delft",
-    "center": [52.0116, 4.3571]
+    "center": [52.0116, 4.3571],
+    "meta": { "source": "Gemeente Delft" }
   },
   {
     "id": "haarlem",
     "name": "Haarlem",
-    "center": [52.3874, 4.6462]
+    "center": [52.3874, 4.6462],
+    "meta": { "source": "Gemeente Haarlem" }
   },
   {
     "id": "zandvoort",
     "name": "Zandvoort",
-    "center": [52.3725, 4.5325]
+    "center": [52.3725, 4.5325],
+    "meta": { "source": "Gemeente Zandvoort" }
   },
   {
     "id": "oss",
     "name": "Oss",
-    "center": [51.7649, 5.5181]
+    "center": [51.7649, 5.5181],
+    "meta": { "source": "Gemeente Oss" }
   },
   {
     "id": "voorschoten",
     "name": "Voorschoten",
-    "center": [52.1291, 4.4482]
+    "center": [52.1291, 4.4482],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "deventer",
     "name": "Deventer",
-    "center": [52.2553, 6.1638]
+    "center": [52.2553, 6.1638],
+    "meta": { "source": "Gemeente Deventer" }
   },
   {
     "id": "apeldoorn",
     "name": "Apeldoorn",
-    "center": [52.2112, 5.9699]
+    "center": [52.2112, 5.9699],
+    "meta": { "source": "Gemeente Apeldoorn" }
   },
   {
     "id": "enschede",
     "name": "Enschede",
-    "center": [52.2215, 6.8937]
+    "center": [52.2215, 6.8937],
+    "meta": { "source": "Gemeente Enschede" }
   },
   {
     "id": "leiden",
     "name": "Leiden",
-    "center": [52.1601, 4.4970]
+    "center": [52.1601, 4.4970],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "dordrecht",
     "name": "Dordrecht",
-    "center": [51.8133, 4.6899]
+    "center": [51.8133, 4.6899],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "alkmaar",
     "name": "Alkmaar",
-    "center": [52.6324, 4.7534]
+    "center": [52.6324, 4.7534],
+    "meta": { "source": "Gemeente Alkmaar" }
   },
   {
     "id": "den-bosch",
     "name": "Den Bosch",
-    "center": [51.6978, 5.3037]
+    "center": [51.6978, 5.3037],
+    "meta": { "source": "Gemeente Den Bosch" }
   },
   {
     "id": "ede",
     "name": "Ede",
-    "center": [52.0407, 5.6616]
+    "center": [52.0407, 5.6616],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "albrandswaard",
     "name": "Albrandswaard",
-    "center": [51.858, 4.427]
+    "center": [51.858, 4.427],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "barendrecht",
     "name": "Barendrecht",
-    "center": [51.855, 4.535]
+    "center": [51.855, 4.535],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "leeuwarden",
     "name": "Leeuwarden",
-    "center": [53.2010, 5.7987]
+    "center": [53.2010, 5.7987],
+    "meta": { "source": "Gemeente Leeuwarden" }
   },
   {
     "id": "roosendaal",
     "name": "Roosendaal",
-    "center": [51.5321, 4.4630]
+    "center": [51.5321, 4.4630],
+    "meta": { "source": "Gemeente Roosendaal" }
   },
   {
     "id": "almere",
     "name": "Almere",
-    "center": [52.3508, 5.2647]
+    "center": [52.3508, 5.2647],
+    "meta": { "source": "Gemeente Almere" }
   },
   {
     "id": "maastricht",
     "name": "Maastricht",
-    "center": [50.8514, 5.6910]
+    "center": [50.8514, 5.6910],
+    "meta": { "source": "Gemeente Maastricht" }
   },
   {
     "id": "ridderkerk",
     "name": "Ridderkerk",
-    "center": [51.8647, 4.6049]
+    "center": [51.8647, 4.6049],
+    "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "gouda",
     "name": "Gouda",
-    "center": [52.0116, 4.7106]
+    "center": [52.0116, 4.7106],
+    "meta": { "source": "Gemeente Gouda" }
   },
   {
     "id": "wageningen",
     "name": "Wageningen",
-    "center": [51.9693, 5.6657]
+    "center": [51.9693, 5.6657],
+    "meta": { "source": "Gemeente Wageningen" }
   }
 ]

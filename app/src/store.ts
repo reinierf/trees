@@ -14,6 +14,7 @@ export const PopupKind = {
   TreeDetail: 'tree-detail',
   Favourites: 'favourites',
   Issues: 'issues',
+  CityInfo: 'city-info',
 } as const
 export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
 
@@ -24,6 +25,7 @@ export type PopupView =
   | { kind: typeof PopupKind.TreeDetail; tree: Tree; returnTo: PopupReturnTo }
   | { kind: typeof PopupKind.Favourites }
   | { kind: typeof PopupKind.Issues }
+  | { kind: typeof PopupKind.CityInfo }
 
 interface AppStore {
   popupView: PopupView | null
@@ -78,6 +80,7 @@ interface AppStore {
   setPendingFlyTo: (v: { lat: number; lon: number; minZoom: number } | null) => void
   setPendingHighlightId: (id: string | null) => void
   openIssues: () => void
+  openCityInfo: () => void
   setIssues: (trees: TreeIssue[], species: SpeciesIssue[]) => void
   upsertTreeIssue: (issue: TreeIssue) => void
   upsertSpeciesIssue: (issue: SpeciesIssue) => void
@@ -152,6 +155,7 @@ export const useStore = create<AppStore>((set) => ({
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
   setPendingHighlightId: (id) => set({ pendingHighlightId: id }),
   openIssues: () => set({ popupView: { kind: PopupKind.Issues } }),
+  openCityInfo: () => set({ popupView: { kind: PopupKind.CityInfo } }),
   setIssues: (trees, species) => set({ treeIssues: trees, speciesIssues: species }),
   upsertTreeIssue: (issue) => set((state) => {
     const rest = state.treeIssues.filter((i) => !(i.city === issue.city && i.tree_id === issue.tree_id))

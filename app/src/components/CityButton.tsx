@@ -5,9 +5,9 @@ import { FEATURED_CITY_IDS } from '../config'
 import type { City } from '../types'
 
 interface Props {
-  city: City
+  city: City | null
   cities: City[]
-  onCurrentCity: () => void
+  onCurrentCity?: () => void
 }
 
 export function CityButton({ city, cities, onCurrentCity }: Props) {
@@ -31,7 +31,7 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
     .filter((c): c is City => c != null)
 
   function selectCity(c: City) {
-    if (c.id === city.id) { onCurrentCity() } else { navigate(`/${c.id}`, { state: { fromPicker: true } }) }
+    if (city && c.id === city.id) { onCurrentCity?.() } else { navigate(`/${c.id}`, { state: { fromPicker: true } }) }
     setOpen(false)
   }
 
@@ -40,7 +40,7 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"
-        title={city.name}
+        title={city?.name ?? 'Stad kiezen'}
       >
         <Signpost className="w-4 h-4" />
       </button>
@@ -56,7 +56,7 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
                 'block w-full text-left px-4 py-2 text-sm whitespace-nowrap transition-colors',
                 !c.has_data
                   ? 'text-gray-400 cursor-not-allowed'
-                  : c.id === city.id
+                  : c.id === city?.id
                     ? 'font-semibold text-gray-900 bg-gray-50'
                     : 'text-gray-700 hover:bg-gray-50',
               ].join(' ')}

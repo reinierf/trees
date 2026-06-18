@@ -2,9 +2,9 @@
 
 Nice-to-have improvements to pick up later.
 
+- [ ] Improve the city button menu: show 5 last visited cities, or have a fav button in the info panel and show favs in city menu + supplement with last visited until 5 (configurable) entries. Always show 'Alle steden' on top.
 - [ ] Add more places
 - [ ] Add info about dataset in frontend? To indicate moumental only?
-- [ ] Sort overrides, remove duplicates
 - [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht), or 'NOG INVULLEN' (Barendrecht/ALbrandswaard). Is it desirable to keep the trees on the map but mark them unknown somehow? Currently some are filtered out during import by filterSpecies
 - [ ] Sort species list by name or count
 - [ ] Add a settings menu (togglable with a gear icon button) in which user can choose language, choose naming mode. Move the naming mode UI out of the SpeciesList and Favourites list.

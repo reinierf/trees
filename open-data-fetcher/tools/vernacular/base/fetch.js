@@ -128,7 +128,7 @@ async function main() {
 
         await sleep(RATE_MS);
         const names = await fetchVernacularNames(taxon.id);
-        cache[raw] = { id: taxon.id, ...names };
+        cache[raw] = { id: taxon.id, name: taxon.name, ...names };
         fetched++;
 
         if (fetched % 50 === 0) {

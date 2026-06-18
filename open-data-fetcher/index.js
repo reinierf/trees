@@ -20,7 +20,7 @@ import { fileURLToPath } from 'url';
 import { CITIES } from './config.js';
 import { fetchRaw } from './lib/http.js';
 import { drawProgress } from './lib/progress.js';
-import { writeJSON, writeSQLite, loadSQLiteCount, appendSQLite } from './lib/writers.js';
+import { writeJSON, writeSQLite, loadSQLiteCount, loadSQLiteMaxId, appendSQLite } from './lib/writers.js';
 
 const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
 
@@ -74,7 +74,7 @@ function reportDropped(cityName, dropped, totalRaw) {
 
 const CHECKPOINT_PAGES = 10;
 
-async function fetchCity(city, args, fetchedAt, resumeFrom = 0, onCheckpoint = null) {
+async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null, onCheckpoint = null) {
     const layers     = args.layer ? [args.layer] : (city.layers ?? [city.layer]);
     const multiLayer = layers.length > 1;
     let trees        = [];
@@ -103,7 +103,9 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, onCheckpoint = n
             drawProgress(page.length, args.all ? all.length : args.count);
         } else if (args.all) {
             const pageSize = 1000;
-            let startIndex = effectiveResume;
+            const keyset   = canResume && city.keysetPaging;
+            let startIndex = keyset ? 0 : effectiveResume;
+            let lastId     = keyset ? (resumeId ?? null) : null;
             let layerCount = 0;
 
             process.stderr.write(`[${city.name}] Counting trees${tag}...\n`);
@@ -120,7 +122,10 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, onCheckpoint = n
             let pagesInBuffer = 0;
 
             while (true) {
-                const raw = await fetchRaw(url, city.pageParams(layer, pageSize, startIndex), city.fetchOptions);
+                const params = keyset
+                    ? city.pageParams(layer, pageSize, lastId)
+                    : city.pageParams(layer, pageSize, startIndex);
+                const raw = await fetchRaw(url, params, city.fetchOptions);
                 const { trees: page, rawCount, dropped: d } = await city.parse(raw, layer);
                 mergeDropped(dropped, d);
                 totalRaw += rawCount;
@@ -140,7 +145,12 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, onCheckpoint = n
                 }
 
                 if (rawCount < pageSize) break;
-                startIndex += pageSize;
+
+                if (keyset) {
+                    lastId = Math.max(...page.map(t => Number(t.id)));
+                } else {
+                    startIndex += pageSize;
+                }
             }
 
             if (onCheckpoint && canResume && pageBuffer.length > 0) {
@@ -184,7 +194,7 @@ async function main() {
 
     for (const city of cities) {
         if (args.dry) {
-            const { trees } = await fetchCity(city, args, fetchedAt);
+            const { trees } = await fetchCity(city, args, fetchedAt, 0, null, null);
             process.stdout.write(JSON.stringify(trees, null, 2) + '\n');
             continue;
         }
@@ -195,15 +205,19 @@ async function main() {
         // For full SQLite fetches, checkpoint every CHECKPOINT_PAGES pages and auto-resume.
         const useCheckpoint = args.all && args.format === 'sqlite';
         let resumeFrom = 0;
+        let resumeId   = null;
         if (useCheckpoint) {
             resumeFrom = await loadSQLiteCount(outFile);
+            if (city.keysetPaging && resumeFrom > 0) {
+                resumeId = await loadSQLiteMaxId(outFile);
+            }
         }
 
         const onCheckpoint = useCheckpoint
             ? (batch) => appendSQLite(batch, outFile)
             : null;
 
-        const { trees, checkpointed } = await fetchCity(city, args, fetchedAt, resumeFrom, onCheckpoint);
+        const { trees, checkpointed } = await fetchCity(city, args, fetchedAt, resumeFrom, resumeId, onCheckpoint);
 
         if (checkpointed) {
             // Trees were written incrementally; nothing left to write.

@@ -51,6 +51,20 @@ export async function loadSQLiteCount(file) {
     }
 }
 
+export async function loadSQLiteMaxId(file) {
+    try {
+        const buf = await fs.readFile(file);
+        const SQL = await initSqlJs();
+        const db  = new SQL.Database(buf);
+        const res = db.exec('SELECT MAX(CAST(id AS INTEGER)) FROM trees');
+        db.close();
+        const val = res[0]?.values[0][0];
+        return val != null ? Number(val) : null;
+    } catch {
+        return null;
+    }
+}
+
 export async function appendSQLite(trees, file) {
     if (trees.length === 0) return;
     const SQL = await initSqlJs();

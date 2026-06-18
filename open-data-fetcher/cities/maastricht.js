@@ -51,14 +51,20 @@ export default {
     outputFile: { json: 'maastricht.json', sqlite: 'maastricht.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    // Keyset pagination: filter by ID > lastId instead of using startIndex.
+    // GeoServer's offset pagination times out at ~99500 because it must sort all rows
+    // before skipping; keyset lets it use the ID index and runs in constant time.
+    pageParams(layer, count, lastId) {
+        const p = {
             service: 'WFS', version: '1.0.0', request: 'GetFeature',
-            typeName: layer, maxFeatures: String(count), startIndex: String(startIndex),
-            // sortBy required for GeoServer to honour startIndex (needs stable ordering)
+            typeName: layer, maxFeatures: String(count),
             sortBy: 'ID',
             outputFormat: 'application/json', srsName: 'EPSG:4326',
-        });
+        };
+        if (lastId != null) p.CQL_FILTER = `ID>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(layer) {

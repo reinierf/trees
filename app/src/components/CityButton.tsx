@@ -37,7 +37,7 @@ export function CityButton({ city, cities, onCurrentCity }: Props) {
   }
 
   return (
-    <div ref={ref} className="absolute top-[120px] right-2 z-[1000]">
+    <div ref={ref} className="absolute top-[116px] right-2 z-[1000]">
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"

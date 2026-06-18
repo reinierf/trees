@@ -1,5 +1,6 @@
 // Literal-match corrections applied to the raw species field (after uppercasing).
 // Matched case-insensitively and replaced everywhere in the string.
+// Keys are wrapped in \b…(?!\w) to avoid firing mid-word, so "FRAXINIFO" won't corrupt the full binomial "FRAXINIFOLIA" by replacing its prefix.
 export const binomialCorrections = {
   'ABIES?': 'ABIES',
   'AECULUS': 'AESCULUS',
@@ -85,7 +86,7 @@ export const binomialCorrections = {
   'ARONIA MALANOCARPA': 'ARONIA MELANOCARPA',
   'ARONIA PRUNIFOLIA': 'ARONIA × PRUNIFOLIA',
   'BETULA ERMAN.': 'BETULA ERMANII',
-  'BETULA ERMANI': 'BETULA ERMAN',
+  'BETULA ERMANI': 'BETULA ERMANII',
   'BETULA PARPYRIFERA': 'BETULA PAPYRIFERA',
   'BETULA PEDULA': 'BETULA PENDULA',
   'BETULA UTILUS': 'BETULA UTILIS',

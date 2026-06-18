@@ -180,7 +180,7 @@ export function Map({ city, cities }: Props) {
       {!showingCityMarkers && <SpeciesFilterBadge onClear={handleClearFilter} />}
       <FullscreenButton />
       <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
-      {city && !showingCityMarkers && (
+      {city && (
         <CityButton
           city={city}
           cities={cities}

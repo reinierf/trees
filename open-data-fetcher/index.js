@@ -27,7 +27,7 @@ const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data')
 function parseArgs(argv) {
     const args = {
         city: null, count: 100, page: 0, all: false,
-        dry: false, format: 'sqlite', layer: null, output: null,
+        dry: false, format: 'sqlite', layer: null, output: null, fresh: false,
     };
     for (let i = 0; i < argv.length; i++) {
         switch (argv[i]) {
@@ -38,6 +38,7 @@ function parseArgs(argv) {
             case '--format': args.format = argv[++i]; break;
             case '--output': args.output = argv[++i]; break;
             case '--all':    args.all    = true;       break;
+            case '--fresh':  args.fresh  = true;       break;
             case '-d':       args.dry    = true;       break;
         }
     }
@@ -206,7 +207,7 @@ async function main() {
         const useCheckpoint = args.all && args.format === 'sqlite';
         let resumeFrom = 0;
         let resumeId   = null;
-        if (useCheckpoint) {
+        if (useCheckpoint && !args.fresh) {
             resumeFrom = await loadSQLiteCount(outFile);
             if (city.keysetPaging && resumeFrom > 0) {
                 resumeId = await loadSQLiteMaxId(outFile);

@@ -3,14 +3,19 @@
  * Fetch municipal tree datasets for one or more Dutch cities.
  *
  * Usage:
- *   node index.js                              # fetch all cities, first 100 trees each → SQLite
- *   node index.js --city rotterdam             # Rotterdam only
- *   node index.js --city rotterdam,groningen   # both cities
- *   node index.js --city groningen --all       # full Groningen dataset → SQLite
+ *   node index.js --city rotterdam --all       # full Rotterdam dataset → SQLite (writes data/rotterdam.db)
+ *   node index.js --city rotterdam,groningen --all
  *   node index.js --city rotterdam --all --format json
- *   node index.js --city rotterdam --count 500 --page 1
- *   node index.js --city groningen --count 5 -d   # dry run: print to console
+ *   node index.js --city rotterdam --all --fresh     # ignore existing checkpoint, start over
+ *   node index.js --city rotterdam             # sample 100 trees → dry-run (prints JSON, no file written)
+ *   node index.js --city groningen --count 5   # sample 5 trees → dry-run
+ *   node index.js --city groningen --count 5 --output /tmp/test.db  # sample to explicit file
  *   node index.js --city rotterdam --layer ms:obs_bmn_bijz
+ *
+ * Write behaviour:
+ *   Without --all, output defaults to dry-run (JSON to stdout, no file written) unless --output is
+ *   given explicitly. This prevents accidentally overwriting a complete database with a small sample.
+ *   Use -d to force dry-run even when --all or --output is set.
  *
  * Available cities: rotterdam, groningen, amsterdam, den-haag, utrecht, arnhem, nijmegen, zwolle, apeldoorn
  */
@@ -42,6 +47,7 @@ function parseArgs(argv) {
             case '-d':       args.dry    = true;       break;
         }
     }
+    if (!args.all && !args.output) args.dry = true;
     return args;
 }
 

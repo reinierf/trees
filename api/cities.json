@@ -214,5 +214,11 @@
     "name": "Hilversum",
     "center": [52.2292, 5.1669],
     "meta": { "source": "Gemeente Hilversum" }
+  },
+  {
+    "id": "gorinchem",
+    "name": "Gorinchem",
+    "center": [51.8350, 4.9756],
+    "meta": { "source": "Gemeente Gorinchem" }
   }
 ]

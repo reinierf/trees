@@ -322,6 +322,7 @@ The layer includes trees owned by adjacent municipality Wijdemeren as well as Hi
 | Dordrecht | Yes | JSON (openbomenkaart.org) | No (static) | — |
 | Maastricht | Yes (114,562 trees) | WFS GeoJSON (GeoServer) | Yes | — |
 | Gouda | Yes (24,736 trees, all municipal) | WFS 2.0.0 GeoJSON (GeoServer) | Yes | Open |
+| Gorinchem | Yes (18,180 trees) | WFS 2.0.0 GeoJSON (GeoServer) | Yes | Open |
 | Leeuwarden | Partial (monumental only) | GeoJSON, CSV | No | — |
 
 ---
@@ -809,3 +810,40 @@ Other fields present but not mapped: `WIJK`, `EIGENAAR`, `BEHEERDER`, `AANWEZIGH
 - **Fetcher:** `cities/gouda.js` ✅ implemented
 - **Registered:** `config.js` ✅
 - **API entry:** `api/cities.json` ✅ (`center: [52.0116, 4.7106]`)
+
+---
+
+## Gorinchem
+
+**Status:** Live GeoServer WFS 2.0.0 — 18,180 trees with full attribute set
+
+Discovered via the geoportal bomenviewer at `geoportaal.gorinchem.nl/geoapps/bomen.html`. The viewer uses a GeoServer WMS for rendering; the same GeoServer exposes a WFS endpoint. Several tree layers exist in the capabilities document; `data:monumentale_beeldbepalende_bomen` is the one with the full inventory and rich attributes (scientific name, Dutch name, year, street, neighbourhood, diameter). The other layers (`monumentaleboomstructuren2`, `obsurv_bgt_bomen`) are either far sparser or contain no species data.
+
+| Resource | URL |
+|----------|-----|
+| WFS endpoint | https://geoportaal.gorinchem.nl/geoserver/data/wfs |
+| GetCapabilities | …/wfs?service=WFS&version=2.0.0&request=GetCapabilities |
+| Layer | `data:monumentale_beeldbepalende_bomen` |
+| Viewer | https://geoportaal.gorinchem.nl/geoapps/bomen.html |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `elementnummer` | `id` | Municipality tree ID |
+| `wetensch_naam` | `species` | Full scientific name incl. cultivar, e.g. `Fraxinus excelsior 'Diversifolia'`, hybrids use lowercase `x` (`Platanus x hispanica`) |
+| `boomsoort` | `name_vernacular` | Dutch common name, e.g. `zwarte els` |
+| `aanlegjaar` | `year_planted` | Integer year → string |
+| `straat` | `street` | Street name |
+| `wijk` | `neighbourhood` | Neighbourhood/district |
+| `diameter` | `trunk_diameter` | String integer in **cm** → divide by 100 for metres; often null |
+| geometry `coordinates` | `lon`/`lat` | WGS84 GeoJSON Point [lon, lat] via `srsName=urn:ogc:def:crs:EPSG::4326`; default response is EPSG:28992 |
+| — | `crown_spread` | Not available |
+
+Other fields present but not mapped: `beheergroep`, `beheerobjectomschrijving`, `beheerder`, `ambitieniveau`, `eigenaar`, `filenaam`, `groengebiedcode`, `groengebiednaam`, `hoogte`, `type` (Beeldbepalend/Monumentaal), `snoeidatum`, `snoeijaar`.
+
+- **SSL:** `rejectUnauthorized: false` (municipal GeoServer)
+- **Pagination:** WFS 2.0.0 `COUNT`/`STARTINDEX`/`sortBy=elementnummer`; count via `resultType=hits` → XML `numberMatched`
+- **Fetcher:** `cities/gorinchem.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [51.8350, 4.9756]`)

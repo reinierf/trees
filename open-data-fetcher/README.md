@@ -169,9 +169,15 @@ all city databases, using the [iNaturalist V1 API](https://api.inaturalist.org/v
 1. `GET /taxa?q={binomial}&rank=species` — resolve to a taxon ID
 2. `GET /taxa/{id}?all_names=true` — fetch all vernacular names
 
+A genus-level fallback applies if step 1 fails: iNat lists all species in the
+genus and the closest epithet (edit distance ≤ 2) is accepted. Only runs when
+the genus already appears in the registry, avoiding wasted calls for made-up names.
+
 Rate-limited to ~85 requests/minute (under iNaturalist's 100/min cap). Results
-are cached to `tools/vernacular/base/cache.json` between runs; interrupted runs
-resume from cache. Full run over ~1 000 species takes ~23 minutes.
+are written directly into `registry.json` under a `vernacular: { nl, en, de, fr }`
+field. Species not found on iNat are marked `inat_id: null` and skipped on
+subsequent runs. Use `--no-cache` to retry them. Full run over ~1 000 species
+takes ~23 minutes.
 
 **Output:** `data/vernacular-base.db`
 
@@ -234,63 +240,61 @@ testing the vote-resolution logic without hitting the web.
 
 ## Data quality: fixing misspelled species names
 
-Some source databases contain misspelled binomials (e.g. `ACER FREMANII` instead
-of `ACER FREEMANII`). These end up as `null` entries in `cache.json` because
-iNaturalist cannot match them.
+Source databases contain misspelled binomials (e.g. `ACER FREMANII` instead of
+`ACER FREEMANII`). The resolution pipeline in `lib/species.js` catches most of
+these automatically via `registry.json`, but occasionally a new misspelling
+surfaces that falls outside fuzzy-match range.
 
-### 1. Identify misspellings and stale entries
+### `registry.json` — single source of truth
 
-```sh
-npm run validate-species 2>/dev/null > corrections.txt
+`registry.json` in the fetcher root is the authoritative list of known species.
+Each entry is keyed by the **canonical binomial** (uppercase, `GENUS EPITHET`)
+with the following fields:
+
+```json
+"AESCULUS HIPPOCASTANUM": {
+  "inat_id": 84298,
+  "vernacular": { "nl": "Witte Paardenkastanje", "en": "horse-chestnut", "de": "...", "fr": "..." },
+  "aliases": ["AESCULUS HI", "AESCULUS HIPP.", "AESCULUS HIPPOCASTANNUM"]
+}
 ```
 
-`validate-species` does two things:
+- **`inat_id`** — iNaturalist taxon ID; `null` means "looked up, not found on iNat"
+- **`vernacular`** — multilingual names fetched via iNat (written by `fetch.js`)
+- **`aliases`** — raw source forms that should resolve to this canonical
+- **`_genusCorrections`** — map of misspelled genus → correct genus (applied before lookup)
 
-- **Stale check** — finds rows where `species_binomial` in the DB no longer
-  matches what the current `overrides.js` would produce (i.e. a correction was
-  added after the last import). Reports to stderr; fix with `patch-binomials`.
-- **Unresolvable check** — finds `species_binomial` values that iNaturalist
-  cannot match, and suggests `binomialCorrections` entries using edit-distance
-  matching (≤ 2 characters) with an iNaturalist fallback. Suggested entries go
-  to stdout. Entries flagged `// fuzzy` should be reviewed before accepting.
+### Fixing a misspelling
 
-Run `--no-inat` to skip the iNaturalist pass (cache-internal matching only):
+1. **Add an alias** to the correct canonical entry in `registry.json`:
+   ```json
+   "ACER FREEMANII": { "aliases": ["ACER FREMANII"] }
+   ```
+   For genus-level misspellings, add to `_genusCorrections` instead:
+   ```json
+   "_genusCorrections": { "METASQUOIA": "METASEQUOIA" }
+   ```
 
-```sh
-npm run validate-species -- --no-inat
-```
+2. **Patch city databases** to propagate the correction:
+   ```sh
+   npm run patch-binomials
+   npm run patch-binomials -- --dry    # preview first
+   ```
+   Re-applies `processSpecies()` to the stored raw `species` field in every city
+   DB and updates `species_binomial` / `species_cultivar` in-place. No re-fetch
+   needed. Fuzzy resolutions are printed at the end — consider promoting them to
+   explicit aliases.
 
-### 2. Add corrections to overrides.js
+3. **Fetch vernacular for newly-resolved species** (if any were previously unresolved):
+   ```sh
+   npm run fetch-vernacular-base
+   ```
 
-Paste the suggested entries into `binomialCorrections` in `overrides.js`.
-Remove any `// fuzzy` lines you are not confident about.
-
-### 3. Patch city databases
-
-```sh
-npm run patch-binomials
-```
-
-Re-applies `processSpecies()` to the stored raw `species` field in every city
-DB and updates `species_binomial` / `species_cultivar` in-place. No re-fetch
-from source APIs needed. Run `--dry` to preview changes first.
-
-### 4. Re-fetch vernacular names
-
-```sh
-npm run fetch-vernacular-base
-```
-
-Newly-corrected binomials not yet in `cache.json` are fetched from iNaturalist.
-Previously-confirmed nulls (old misspellings) are no longer present in the city
-DBs and are skipped automatically.
-
-### 5. Rebuild and deploy
-
-```sh
-npm run merge-vernacular-nl
-npm run copy-data
-```
+4. **Rebuild and deploy:**
+   ```sh
+   npm run merge-vernacular-nl
+   npm run copy-data
+   ```
 
 ---
 
@@ -330,17 +334,24 @@ various formats (`'NAME'`, `(CODE)`, bare suffix words), some entries are
 administrative placeholders (`ASSORTIMENT ONBEKEND`, `OVERIG`), and there are
 known typos (`METASQUOIA`, `PTEROCAYRA`).
 
-The pipeline applied to every tree at import time:
+The pipeline applied to every tree at import time (`lib/species.js`):
 
-1. **NON_BOTANICAL filter** — records whose `species` is a known
-   administrative placeholder are dropped entirely (not written to the DB).
-2. **Typo correction** — a small explicit map fixes known source errors.
-3. **`species_binomial` extraction** — strips cultivar suffixes, rank markers
+1. **Filter** — `dropTerms` in `overrides.js` matches administrative
+   placeholders; the record is dropped entirely. `unknownTerms` matches
+   genuinely unknown species; the tree is kept with `species_binomial = null`.
+2. **`species_binomial` extraction** — strips cultivar suffixes, rank markers
    (`subsp.`, `var.`, `f.`), and parentheticals, leaving the clean two-word
-   (or hybrid `×`) name.
-4. **`species_cultivar` extraction** — prefers ICNCP codes in parentheses
+   (or hybrid `×`) candidate.
+3. **Genus correction** — `registry._genusCorrections` replaces misspelled
+   genus names (e.g. `METASQUOIA → METASEQUOIA`) before lookup.
+4. **Registry lookup** — exact match or alias match in `registry.json`.
+5. **Fuzzy match** — Levenshtein on genus (≤ 1) and epithet (≤ 2) against all
+   registry keys. Catches remaining one- or two-character typos.
+6. **Store as-is** — species not in registry and not fuzzily matched are stored
+   verbatim (valid but unverified — no iNat metadata yet).
+7. **`species_cultivar` extraction** — prefers ICNCP codes in parentheses
    `('CODE')`, falls back to quoted names `'NAME'`, then bare suffix words.
-5. **`name_vernacular` sanitisation** — strips leading-dash admin entries,
+8. **`name_vernacular` sanitisation** — strips leading-dash admin entries,
    ` -` admin suffixes, and trailing `(CV)` / `(V)` markers.
 
 All cleaning logic for species identification lives here in the fetcher. Dutch

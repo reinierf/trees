@@ -1,0 +1,9224 @@
+{
+  "_genusCorrections": {
+    "AECULUS": "AESCULUS",
+    "AESCULES": "AESCULUS",
+    "ALMELANCHIER": "AMELANCHIER",
+    "AMALANCHIER": "AMELANCHIER",
+    "ANTHOXYLUM": "ZANTHOXYLUM",
+    "BUDDLEYA": "BUDDLEJA",
+    "CAYA": "CARYA",
+    "CERSIS": "CERCIS",
+    "CHAECYPARIS": "CHAMAECYPARIS",
+    "CHAMACYPARIS": "CALLITROPSIS",
+    "CLADASTRIS": "CLADRASTIS",
+    "CUPRSESSUS": "CUPRESSUS",
+    "CYPRES": "CUPRESSUS",
+    "DIOSPYRUS": "DIOSPYROS",
+    "ELEAGNUS": "ELAEAGNUS",
+    "ELKOVA": "ZELKOVA",
+    "GINGO": "GINKGO",
+    "GINKGHO": "GINKGO",
+    "GINKO": "GINKGO",
+    "GLEDITIA": "GLEDITSIA",
+    "GLEDITSEA": "GLEDITSIA",
+    "GLESITSIA": "GLEDITSIA",
+    "HEPTCODIUM": "HEPTACODIUM",
+    "IZIPHUS": "ZIZIPHUS",
+    "JULANS": "JUGLANS",
+    "KRENTENBOOM": "AMELANCHIER",
+    "LAGESTROEMIA": "LAGERSTROEMIA",
+    "LEVENSBOOM": "THUJA",
+    "LIRIODENDON": "LIRIODENDRON",
+    "LYQUIDAMBAR": "LIQUIDAMBAR",
+    "METASQUOIA": "METASEQUOIA",
+    "MISPILUS": "MESPILUS",
+    "NOTHAFAGUS": "NOTHOFAGUS",
+    "OSTRIA": "OSTRYA",
+    "PRUNIS": "PRUNUS",
+    "PRUUS": "PRUNUS",
+    "PTEROCAYRA": "PTEROCARYA",
+    "QERCUS": "QUERCUS",
+    "QSTRYA": "OSTRYA",
+    "QUERICUS": "QUERCUS",
+    "SASSEFRAS": "SASSAFRAS",
+    "SEQUIADENDRON": "SEQUOIADENDRON",
+    "STYPHOLOBIUM": "STYPHNOLOBIUM",
+    "TILIIA": "TILIA",
+    "TILLIA": "TILIA",
+    "TLIA": "TILIA",
+    "ZELKO": "ZELKOVA",
+    "ZELKOVE": "ZELKOVA",
+    "ZELKOVIA": "ZELKOVA",
+    "ZZANTHOXYLUM": "ZANTHOXYLUM",
+    "ZZELKOVA": "ZELKOVA",
+    "ZZIZIPHUS": "ZIZIPHUS"
+  },
+  "ABELIA": {
+    "inat_id": 155567,
+    "vernacular": {
+      "en": "Abelias",
+      "nl": "Abelia",
+      "fr": "Abélia"
+    }
+  },
+  "ABELIA CHINENSIS": {
+    "inat_id": 553157,
+    "vernacular": {
+      "nl": "Chinese abelia",
+      "en": "Chinese Abelia",
+      "de": "Chinesische Abelie",
+      "fr": "Abélie de Chine"
+    }
+  },
+  "ABELIA FLORIBUNDA": {
+    "inat_id": null
+  },
+  "ABELIA LONGITUBA": {
+    "inat_id": null
+  },
+  "ABELIA SCHUMANNII": {
+    "inat_id": 1269377,
+    "vernacular": {}
+  },
+  "ABELIA × GRANDIFLORA": {
+    "inat_id": 170458,
+    "vernacular": {
+      "nl": "Grootbloemige abelia",
+      "en": "Glossy Abelia",
+      "de": "Großblütige Abelie",
+      "fr": "Abélie à grandes fleurs"
+    },
+    "aliases": [
+      "ABELIA GRANDIFLORA"
+    ]
+  },
+  "ABIES": {
+    "inat_id": 54262,
+    "vernacular": {
+      "en": "firs",
+      "fr": "Sapins",
+      "de": "Tannen",
+      "nl": "Zilversparren"
+    }
+  },
+  "ABIES ALBA": {
+    "inat_id": 136319,
+    "vernacular": {
+      "nl": "Gewone zilverspar",
+      "en": "silver fir",
+      "de": "Weiß-Tanne",
+      "fr": "sapin blanc"
+    }
+  },
+  "ABIES AMABILIS": {
+    "inat_id": 75240,
+    "vernacular": {
+      "nl": "Pacifische zilverspar",
+      "en": "Pacific silver fir",
+      "de": "Purpurtanne",
+      "fr": "sapin gracieux"
+    }
+  },
+  "ABIES ARNOLDIANA": {
+    "inat_id": null
+  },
+  "ABIES BALSAMEA": {
+    "inat_id": 54261,
+    "vernacular": {
+      "nl": "Balsemzilverspar",
+      "en": "balsam fir",
+      "de": "Balsam-Tanne",
+      "fr": "sapin baumier"
+    },
+    "aliases": [
+      "ABIES BALSEMEA"
+    ]
+  },
+  "ABIES CEPHALONICA": {
+    "inat_id": 136886,
+    "vernacular": {
+      "nl": "Griekse zilverspar",
+      "en": "Greek fir",
+      "de": "Griechische Tanne",
+      "fr": "Sapin de Grèce"
+    }
+  },
+  "ABIES CILICICA": {
+    "inat_id": 136887,
+    "vernacular": {
+      "nl": "Syrische zilverspar",
+      "en": "Cilician fir",
+      "de": "Kilikische Tanne",
+      "fr": "Sapin de Cilicie"
+    }
+  },
+  "ABIES CONCOLOR": {
+    "inat_id": 68087,
+    "vernacular": {
+      "nl": "Coloradozilverspar",
+      "en": "white fir",
+      "de": "Grautanne",
+      "fr": "Sapin du Colorado"
+    }
+  },
+  "ABIES FIRMA": {
+    "inat_id": 136304,
+    "vernacular": {
+      "nl": "Momi-zilverspar",
+      "en": "Momi fir",
+      "fr": "Sapin momi"
+    }
+  },
+  "ABIES FORESTII": {
+    "inat_id": null
+  },
+  "ABIES GRANDIS": {
+    "inat_id": 63690,
+    "vernacular": {
+      "nl": "Reuzenzilverspar",
+      "en": "grand fir",
+      "de": "Küstentanne",
+      "fr": "sapin grandissime"
+    }
+  },
+  "ABIES HOMOLEPIS": {
+    "inat_id": 136321,
+    "vernacular": {
+      "nl": "Nikko zilverspar",
+      "en": "Nikko fir",
+      "fr": "Sapin de Nikko"
+    }
+  },
+  "ABIES KOREANA": {
+    "inat_id": 136891,
+    "vernacular": {
+      "nl": "Koreaanse zilverspar",
+      "en": "Korean fir",
+      "de": "Koreatanne",
+      "fr": "Sapin de Corée"
+    }
+  },
+  "ABIES LASIOCARPA": {
+    "inat_id": 75241,
+    "vernacular": {
+      "nl": "Alpen zilverspar",
+      "en": "subalpine fir",
+      "de": "Felsengebirgstanne",
+      "fr": "sapin subalpin"
+    }
+  },
+  "ABIES NORDMANNIANA": {
+    "inat_id": 136894,
+    "vernacular": {
+      "nl": "Kaukasische zilverspar",
+      "en": "Caucasian fir",
+      "de": "Nordmanntanne",
+      "fr": "sapin de Nordmann"
+    },
+    "aliases": [
+      "ABIES NORDMANIANA"
+    ]
+  },
+  "ABIES NUMIDICA": {
+    "inat_id": 136895,
+    "vernacular": {
+      "nl": "Algerijnse zilverspar",
+      "en": "Algerian fir",
+      "de": "Numidische Tanne",
+      "fr": "Sapin de Numidie"
+    }
+  },
+  "ABIES PINSAPO": {
+    "inat_id": 136896,
+    "vernacular": {
+      "nl": "Spaanse zilverspar",
+      "en": "Spanish fir",
+      "de": "Igeltanne",
+      "fr": "sapin d'Andalousie"
+    }
+  },
+  "ABIES PROCERA": {
+    "inat_id": 75242,
+    "vernacular": {
+      "nl": "Edelspar",
+      "en": "noble fir",
+      "de": "Edeltanne",
+      "fr": "Sapin noble"
+    }
+  },
+  "ABIES SACHALINENSIS": {
+    "inat_id": 136898,
+    "vernacular": {
+      "nl": "Sachalinse zilverspar",
+      "en": "Sakhalin fir"
+    }
+  },
+  "ABIES SQUAMATA": {
+    "inat_id": 136312,
+    "vernacular": {
+      "nl": "Schilferige zilverspar",
+      "en": "flaky fir",
+      "fr": "Sapin écailleux"
+    }
+  },
+  "ABIES THUNBERGII": {
+    "inat_id": null
+  },
+  "ABIES VEITCHII": {
+    "inat_id": 136322,
+    "vernacular": {
+      "nl": "Japanse zilverspar",
+      "en": "Veitch's fir",
+      "de": "Veitchs Tanne",
+      "fr": "Sapin de Veitch"
+    }
+  },
+  "ABIES ZILVERSPAR": {
+    "inat_id": null
+  },
+  "ABIES × INSIGNIS": {
+    "inat_id": null
+  },
+  "ACACIA BAILEYANA": {
+    "inat_id": 55345,
+    "vernacular": {
+      "en": "Cootamundra wattle",
+      "fr": "Mimosa de Bailey",
+      "de": "Cootamundra-Akazie",
+      "nl": "Baileys acacia"
+    }
+  },
+  "ACER": {
+    "inat_id": 47727,
+    "vernacular": {
+      "en": "maples",
+      "fr": "Érables",
+      "de": "Ahorne",
+      "nl": "Esdoorn"
+    },
+    "aliases": [
+      "ACER CP"
+    ]
+  },
+  "ACER ACUMINATUM": {
+    "inat_id": 1062325,
+    "vernacular": {
+      "nl": "Himalaya-esdoorn",
+      "en": "Tapering Leaf Maple"
+    }
+  },
+  "ACER BUERGERIANUM": {
+    "inat_id": 337792,
+    "vernacular": {
+      "nl": "Drietandesdoorn",
+      "en": "Trident maple",
+      "de": "Dreispitzahorn",
+      "fr": "Érable trident"
+    }
+  },
+  "ACER CAMPESTRE": {
+    "inat_id": 56193,
+    "vernacular": {
+      "nl": "Veldesdoorn",
+      "en": "field maple",
+      "de": "Feldahorn",
+      "fr": "Érable champêtre"
+    },
+    "aliases": [
+      "ACER CA",
+      "ACER CAMPE",
+      "VELDESDOORN"
+    ]
+  },
+  "ACER CAPILLIPES": {
+    "inat_id": 774116,
+    "vernacular": {
+      "nl": "Streepjesbast-esdoorn",
+      "en": "Red Snakebark Maple",
+      "de": "Roter Schlangenhautahorn"
+    }
+  },
+  "ACER CAPPADOCICUM": {
+    "inat_id": 399309,
+    "vernacular": {
+      "nl": "Colchische esdoorn",
+      "en": "Cappadocian Maple",
+      "fr": "Érable de Cappadoce"
+    },
+    "aliases": [
+      "ACER CAPPADOCI",
+      "ACER CAPPADOCIUM"
+    ]
+  },
+  "ACER CARPINIFOLIUM": {
+    "inat_id": 550292,
+    "vernacular": {
+      "nl": "Haagbeukbladige esdoorn",
+      "en": "Hornbeam Maple",
+      "de": "Hainbuchenblättriger Ahorn"
+    }
+  },
+  "ACER CIRCINATUM": {
+    "inat_id": 48258,
+    "vernacular": {
+      "nl": "Wijnstokesdoorn",
+      "en": "Vine Maple",
+      "de": "Weinblattahorn",
+      "fr": "érable circiné"
+    }
+  },
+  "ACER CISSIFOLIUM": {
+    "inat_id": 901911,
+    "vernacular": {
+      "nl": "Geveerdbladige esdoorn",
+      "en": "vine-leafed maple",
+      "de": "Cissusblättriger Ahorn",
+      "fr": "Érable à feuilles de vigne"
+    }
+  },
+  "ACER DAVIDII": {
+    "inat_id": 496248,
+    "vernacular": {
+      "nl": "Davids esdoorn",
+      "en": "Père David's Maple",
+      "de": "Davidsahorn",
+      "fr": "Érable du Père David"
+    }
+  },
+  "ACER GINNALA": {
+    "inat_id": 123638,
+    "vernacular": {
+      "nl": "amoeresdoorn",
+      "en": "Amur Maple",
+      "de": "Feuer-Ahorn",
+      "fr": "érable ginnala"
+    }
+  },
+  "ACER GLABRUM": {
+    "inat_id": 63078,
+    "vernacular": {
+      "nl": "Dwergesdoorn",
+      "en": "Rocky Mountain maple",
+      "de": "Kahler Ahorn",
+      "fr": "érable nain"
+    }
+  },
+  "ACER GRISEUM": {
+    "inat_id": 120525,
+    "vernacular": {
+      "nl": "Papieresdoorn",
+      "en": "Paperbark Maple",
+      "de": "Zimt-Ahorn",
+      "fr": "érable à écorce de papier"
+    }
+  },
+  "ACER HELDREICHII": {
+    "inat_id": 469023,
+    "vernacular": {
+      "nl": "Heldreichs esdoorn",
+      "en": "Heldreich's Maple",
+      "de": "Griechischer Ahorn",
+      "fr": "Érable des Balkans"
+    }
+  },
+  "ACER HENRYI": {
+    "inat_id": 707456,
+    "vernacular": {
+      "en": "Henry's Maple"
+    },
+    "aliases": [
+      "ACER HEYNRII"
+    ]
+  },
+  "ACER JAPONICUM": {
+    "inat_id": 63510,
+    "vernacular": {
+      "nl": "Japanse esdoorn",
+      "en": "Downy Japanese Maple",
+      "de": "Japanischer Ahorn",
+      "fr": "Érable du Japon"
+    }
+  },
+  "ACER LOBELII": {
+    "inat_id": 569407,
+    "vernacular": {
+      "en": "Lobel's Maple"
+    }
+  },
+  "ACER MACROPHYLLUM": {
+    "inat_id": 48227,
+    "vernacular": {
+      "nl": "Grootbladige esdoorn",
+      "en": "bigleaf maple",
+      "de": "Oregon-Ahorn",
+      "fr": "Érable à grandes feuilles"
+    }
+  },
+  "ACER MAXIMOWICZIANUM": {
+    "inat_id": 519884,
+    "vernacular": {
+      "nl": "Nikko-esdoorn",
+      "en": "Nikko Maple"
+    }
+  },
+  "ACER MICRANTHUM": {
+    "inat_id": 516041,
+    "vernacular": {
+      "nl": "Japanse streepjesbast-esdoorn",
+      "en": "Komine Maple",
+      "de": "Kleinblütiger Ahorn"
+    }
+  },
+  "ACER MIYABEI": {
+    "inat_id": 48074,
+    "vernacular": {
+      "en": "Miyabe's Maple"
+    }
+  },
+  "ACER MONSPESSULANUM": {
+    "inat_id": 82598,
+    "vernacular": {
+      "nl": "Montpellieresdoorn",
+      "en": "Montpellier Maple",
+      "de": "Französischer Ahorn",
+      "fr": "Érable de Montpellier"
+    },
+    "aliases": [
+      "ACER MONSPESSUALANUM"
+    ]
+  },
+  "ACER NEGUNDO": {
+    "inat_id": 47726,
+    "vernacular": {
+      "nl": "Vederesdoorn",
+      "en": "box elder",
+      "de": "Eschen-Ahorn",
+      "fr": "Érable negundo"
+    },
+    "aliases": [
+      "ACER NE"
+    ]
+  },
+  "ACER NIGRUM": {
+    "inat_id": 48078,
+    "vernacular": {
+      "nl": "Zwarte esdoorn",
+      "en": "black maple",
+      "fr": "érable noir"
+    }
+  },
+  "ACER OPALUS": {
+    "inat_id": 198881,
+    "vernacular": {
+      "nl": "Italiaanse esdoorn",
+      "en": "Italian maple",
+      "de": "Schneeballblättriger Ahorn",
+      "fr": "Erable à feuilles d'obier"
+    }
+  },
+  "ACER PACIFIC": {
+    "inat_id": null
+  },
+  "ACER PALMATUM": {
+    "inat_id": 63512,
+    "vernacular": {
+      "nl": "Japanse esdoorn",
+      "en": "Japanese maple",
+      "de": "Fächer-Ahorn",
+      "fr": "Érable palmé"
+    }
+  },
+  "ACER PECTINATUM": {
+    "inat_id": 1062328,
+    "vernacular": {}
+  },
+  "ACER PENSYLVANICUM": {
+    "inat_id": 48095,
+    "vernacular": {
+      "nl": "Pennsylvanische esdoorn",
+      "en": "striped maple",
+      "de": "Streifenahorn",
+      "fr": "Érable de Pennsylvanie"
+    }
+  },
+  "ACER PICTUM": {
+    "inat_id": 358342,
+    "vernacular": {
+      "en": "Painted Maple",
+      "fr": "Érable coloré"
+    }
+  },
+  "ACER PLATANOIDES": {
+    "inat_id": 54763,
+    "vernacular": {
+      "nl": "Noorse esdoorn",
+      "en": "Norway maple",
+      "de": "Spitzahorn",
+      "fr": "Érable plane"
+    },
+    "aliases": [
+      "ACER NORWEGIAN",
+      "ACER NORWEIGIAN",
+      "ACER NR",
+      "ACER PL",
+      "ACER PL.",
+      "ACER PLAT.",
+      "ACER PLATONOIDES"
+    ]
+  },
+  "ACER PSEUDOPLATANUS": {
+    "inat_id": 119791,
+    "vernacular": {
+      "nl": "Gewone esdoorn",
+      "en": "sycamore maple",
+      "de": "Bergahorn",
+      "fr": "Érable sycomore"
+    },
+    "aliases": [
+      "ACER PS",
+      "ACER PS.",
+      "ACER PSE.",
+      "ACER PSEUDOPL.",
+      "ACER PSEUDOPLATATNUS"
+    ]
+  },
+  "ACER RUBRUM": {
+    "inat_id": 48098,
+    "vernacular": {
+      "nl": "Rode esdoorn",
+      "en": "red maple",
+      "de": "Rot-Ahorn",
+      "fr": "Érable rouge"
+    },
+    "aliases": [
+      "ACER RU",
+      "ACER RU.",
+      "ACER RUMBRUM"
+    ]
+  },
+  "ACER RUFINERVE": {
+    "inat_id": 447110,
+    "vernacular": {
+      "nl": "Grijzebastesdoorn",
+      "en": "Honshū Maple",
+      "fr": "Érable rufinerve"
+    }
+  },
+  "ACER SACCHARINUM": {
+    "inat_id": 54762,
+    "vernacular": {
+      "nl": "Witte esdoorn",
+      "en": "silver maple",
+      "de": "Silberahorn",
+      "fr": "Érable argenté"
+    },
+    "aliases": [
+      "ACER SACCARINUM"
+    ]
+  },
+  "ACER SACCHARUM": {
+    "inat_id": 52543,
+    "vernacular": {
+      "nl": "Suikeresdoorn",
+      "en": "sugar maple",
+      "de": "Zucker-Ahorn",
+      "fr": "Érable à sucre"
+    },
+    "aliases": [
+      "ACER SA",
+      "ACER SACCHARUM,"
+    ]
+  },
+  "ACER SHIRASAWANUM": {
+    "inat_id": 553005,
+    "vernacular": {
+      "nl": "Japanse goudesdoorn",
+      "en": "full moon maple"
+    }
+  },
+  "ACER SIEBOLDIANUM": {
+    "inat_id": 474518,
+    "vernacular": {
+      "nl": "Kleinbladige esdoorn",
+      "en": "Siebold's Maple"
+    }
+  },
+  "ACER TATARICUM": {
+    "inat_id": 143780,
+    "vernacular": {
+      "nl": "Tataarse esdoorn",
+      "en": "Tatarian Maple",
+      "de": "Tatarischer Steppen-Ahorn",
+      "fr": "Érable de Tartarie"
+    }
+  },
+  "ACER TRIFLORUM": {
+    "inat_id": 333997,
+    "vernacular": {
+      "nl": "Driebloemige esdoorn",
+      "en": "Three-flowered Maple",
+      "fr": "érable aux trois fleurs"
+    }
+  },
+  "ACER TRUNCATUM": {
+    "inat_id": 461754,
+    "vernacular": {
+      "en": "Shandong Maple"
+    }
+  },
+  "ACER VELUTINUM": {
+    "inat_id": 552309,
+    "vernacular": {
+      "nl": "Zachte esdoorn",
+      "en": "Velvet Maple",
+      "de": "Samtahorn"
+    }
+  },
+  "ACER WARRENRED": {
+    "inat_id": null
+  },
+  "ACER × FREEMANII": {
+    "inat_id": 170461,
+    "vernacular": {
+      "nl": "Freemans esdoorn",
+      "en": "Freeman's Maple",
+      "fr": "érable de Freeman"
+    },
+    "aliases": [
+      "ACER FREEM",
+      "ACER FREEMAN",
+      "ACER FREEMANII",
+      "ACER FREEMANNI",
+      "ACER FREEMANNII",
+      "ACER FREMANII",
+      "ACER XFREEMANII",
+      "ACER × FREEMANIII",
+      "ACER ×FREEMANII"
+    ]
+  },
+  "ACER × ZOESCHENSE": {
+    "inat_id": 1559972,
+    "vernacular": {
+      "en": "Zöschen maple"
+    },
+    "aliases": [
+      "ACER ZOECHENSE",
+      "ACER ZOESCHENES",
+      "ACER ZOESCHENSE"
+    ]
+  },
+  "AESCULUS": {
+    "inat_id": 53350,
+    "vernacular": {
+      "en": "buckeyes and horse-chestnuts",
+      "de": "Rosskastanien",
+      "nl": "Paardenkastanje"
+    }
+  },
+  "AESCULUS AUTUMN": {
+    "inat_id": null
+  },
+  "AESCULUS CALIFORNICA": {
+    "inat_id": 53348,
+    "vernacular": {
+      "en": "California buckeye",
+      "fr": "Marronnier de Californie"
+    },
+    "aliases": [
+      "AESCULUS CA"
+    ]
+  },
+  "AESCULUS CAR": {
+    "inat_id": null
+  },
+  "AESCULUS CHINENSIS": {
+    "inat_id": 706743,
+    "vernacular": {
+      "en": "Chinese Horse-chestnut"
+    },
+    "aliases": [
+      "AESCULUS WILSONII"
+    ]
+  },
+  "AESCULUS DIGITATA": {
+    "inat_id": null
+  },
+  "AESCULUS FLAVA": {
+    "inat_id": 116362,
+    "vernacular": {
+      "nl": "Gele pavia",
+      "en": "yellow buckeye",
+      "de": "Gelbe Rosskastanie"
+    },
+    "aliases": [
+      "AESCULUS FL",
+      "AESCULUS OCTANDRA"
+    ]
+  },
+  "AESCULUS GLABRA": {
+    "inat_id": 67790,
+    "vernacular": {
+      "en": "Ohio buckeye",
+      "de": "Ohio-Rosskastanie",
+      "fr": "Marronnier glabre"
+    },
+    "aliases": [
+      "AESCULUS GLADRA"
+    ]
+  },
+  "AESCULUS HIPPOCASTANUM": {
+    "inat_id": 84298,
+    "vernacular": {
+      "nl": "Witte Paardenkastanje",
+      "en": "horse-chestnut",
+      "de": "Gewöhnliche Rosskastanie",
+      "fr": "Marronnier d'Inde"
+    },
+    "aliases": [
+      "AESCUL.HIPPOCASTANUM",
+      "AESCULUS HI",
+      "AESCULUS HIPP.",
+      "AESCULUS HIPPOCAST.",
+      "AESCULUS HIPPOCASTANNUM"
+    ]
+  },
+  "AESCULUS INDICA": {
+    "inat_id": 367294,
+    "vernacular": {
+      "en": "Indian Horse-chestnut",
+      "de": "Indische Rosskastanie"
+    }
+  },
+  "AESCULUS OCTANTRA": {
+    "inat_id": null
+  },
+  "AESCULUS PARVIFLORA": {
+    "inat_id": 158042,
+    "vernacular": {
+      "nl": "Kleinbloemige kastanje",
+      "en": "bottlebrush buckeye",
+      "de": "Strauch-Rosskastanie",
+      "fr": "Pavier blanc"
+    }
+  },
+  "AESCULUS PAVIA": {
+    "inat_id": 81708,
+    "vernacular": {
+      "nl": "Rode pavia",
+      "en": "Red Buckeye",
+      "de": "Rote Rosskastanie"
+    }
+  },
+  "AESCULUS TURBINATA": {
+    "inat_id": 410413,
+    "vernacular": {
+      "nl": "Japanse paardenkastanje",
+      "en": "Japanese Horse-chestnut"
+    }
+  },
+  "AESCULUS × CARNEA": {
+    "inat_id": 478638,
+    "vernacular": {
+      "nl": "Rode Paardenkastanje",
+      "en": "Red horse-chestnut",
+      "de": "Fleischrote Rosskastanie",
+      "fr": "Marronnier à fleurs rouges"
+    },
+    "aliases": [
+      "AESCULUS CARNEA"
+    ]
+  },
+  "AESCULUS × HYBRIDA": {
+    "inat_id": 170468,
+    "vernacular": {},
+    "aliases": [
+      "AESCULUS HYBRIDA"
+    ]
+  },
+  "AESCULUS × MUTABILIS": {
+    "inat_id": 170470,
+    "vernacular": {},
+    "aliases": [
+      "AESCULUS MUTABILIS"
+    ]
+  },
+  "AESCULUS × NEGLECTA": {
+    "inat_id": 170471,
+    "vernacular": {},
+    "aliases": [
+      "AESCULUS NEGLECTA"
+    ]
+  },
+  "AFROCARPUS GRACILIOR": {
+    "inat_id": 135424,
+    "vernacular": {
+      "en": "East African yellowwood"
+    }
+  },
+  "AGLAIA ODORATA": {
+    "inat_id": 189056,
+    "vernacular": {
+      "en": "Chinese Perfume Plant"
+    }
+  },
+  "AILANTHUS": {
+    "inat_id": 57280,
+    "vernacular": {
+      "en": "ailanthuses"
+    }
+  },
+  "AILANTHUS ALTISSIMA": {
+    "inat_id": 57278,
+    "vernacular": {
+      "nl": "Hemelboom",
+      "en": "tree-of-heaven",
+      "de": "Götterbaum",
+      "fr": "Ailante glanduleux"
+    },
+    "aliases": [
+      "AILANTHUS ALTISSSIMA"
+    ]
+  },
+  "AILANTHUS GIRALDII": {
+    "inat_id": null
+  },
+  "AILANTHUS VILMORINIANA": {
+    "inat_id": 737941,
+    "vernacular": {
+      "en": "downy tree of heaven"
+    }
+  },
+  "ALANGIUM PLATANIFOLIUM": {
+    "inat_id": 528202,
+    "vernacular": {
+      "en": "Planeleaf Alangium"
+    }
+  },
+  "ALBIZIA JULIBRISSIN": {
+    "inat_id": 47443,
+    "vernacular": {
+      "nl": "Perzische slaapboom",
+      "en": "Persian silk tree",
+      "de": "Seidenbaum",
+      "fr": "Acacia de Constantinople"
+    },
+    "aliases": [
+      "ALBIZIA JULIBRIZIN"
+    ]
+  },
+  "ALNIARIA ALNIFOLIA": {
+    "inat_id": 1277852
+  },
+  "ALNIARIA FOLGNERI": {
+    "inat_id": 1277871
+  },
+  "ALNUS": {
+    "inat_id": 53352,
+    "vernacular": {
+      "en": "alders",
+      "fr": "aulnes",
+      "de": "Erlen"
+    }
+  },
+  "ALNUS ALNOBETULA": {
+    "inat_id": 868167,
+    "vernacular": {
+      "en": "green alder",
+      "de": "Grün-Erle",
+      "fr": "aulne vert"
+    },
+    "aliases": [
+      "ALNUS VIRIDIS"
+    ]
+  },
+  "ALNUS CORDATA": {
+    "inat_id": 75376,
+    "vernacular": {
+      "nl": "Hartbladige els",
+      "en": "Italian alder",
+      "de": "Herzblättrige Erle",
+      "fr": "Aulne cordé"
+    }
+  },
+  "ALNUS FIRMA": {
+    "inat_id": 437253,
+    "vernacular": {
+      "en": "Japanese Green Alder"
+    }
+  },
+  "ALNUS GLUTINOSA": {
+    "inat_id": 966205,
+    "vernacular": {
+      "nl": "Zwarte els",
+      "en": "common alder",
+      "de": "Schwarz-Erle",
+      "fr": "Aulne glutineux"
+    },
+    "aliases": [
+      "ALNUS GL",
+      "ALNUS GL.",
+      "ALNUS GLUT.",
+      "ALNUS GLUTINOSE"
+    ]
+  },
+  "ALNUS INCANA": {
+    "inat_id": 75377,
+    "vernacular": {
+      "nl": "Grauwe els",
+      "en": "grey alder",
+      "de": "Grau-Erle",
+      "fr": "aulne blanc"
+    },
+    "aliases": [
+      "ALNUS IN"
+    ]
+  },
+  "ALNUS JAPONICA": {
+    "inat_id": 367784,
+    "vernacular": {
+      "en": "Japanese Alder"
+    }
+  },
+  "ALNUS RUBRA": {
+    "inat_id": 56034,
+    "vernacular": {
+      "en": "Red Alder",
+      "de": "Roterle",
+      "fr": "Aulne rouge"
+    }
+  },
+  "ALNUS SERRULATA": {
+    "inat_id": 56033,
+    "vernacular": {
+      "en": "smooth alder",
+      "fr": "aulne tendre"
+    }
+  },
+  "ALNUS SIPKES": {
+    "inat_id": null
+  },
+  "ALNUS SUBCORDATA": {
+    "inat_id": 791913,
+    "vernacular": {}
+  },
+  "ALNUS × ELLIPTICA": {
+    "inat_id": 791914,
+    "vernacular": {},
+    "aliases": [
+      "ALNUS ELLIPTICA"
+    ]
+  },
+  "ALNUS × PUBESCENS": {
+    "inat_id": 982866,
+    "vernacular": {
+      "en": "hybrid alder"
+    }
+  },
+  "ALNUS × SPAETHII": {
+    "inat_id": 1094824,
+    "vernacular": {},
+    "aliases": [
+      "ALNUS SPAETHII",
+      "ALNUS × SPHAETHII"
+    ]
+  },
+  "AMBLYCERUS ROBINIAE": {
+    "inat_id": 268019
+  },
+  "AMELAN LEAV": {
+    "inat_id": null
+  },
+  "AMELANCHIER": {
+    "inat_id": 49230,
+    "vernacular": {
+      "en": "serviceberries",
+      "de": "Felsenbirnen",
+      "nl": "Krentenboompje",
+      "fr": "amélanchiers"
+    }
+  },
+  "AMELANCHIER ALNIFOLIA": {
+    "inat_id": 75415,
+    "vernacular": {
+      "en": "Saskatoon",
+      "de": "Erlenblättrige Felsenbirne",
+      "fr": "amélanchier à feuilles d'aulne"
+    },
+    "aliases": [
+      "AMELANCHIER AINIFOLIA"
+    ]
+  },
+  "AMELANCHIER AMERICANA": {
+    "inat_id": null
+  },
+  "AMELANCHIER ARBOREA": {
+    "inat_id": 49226,
+    "vernacular": {
+      "en": "common serviceberry",
+      "de": "Baum-Felsenbirne",
+      "fr": "amélanchier arborescent"
+    },
+    "aliases": [
+      "AMEL. ARBOR.",
+      "AMELANCHIER ARBOR."
+    ]
+  },
+  "AMELANCHIER CANADENSIS": {
+    "inat_id": 133382,
+    "vernacular": {
+      "en": "Canadian serviceberry",
+      "fr": "Amélanchier du Canada"
+    }
+  },
+  "AMELANCHIER LAEVIGATA": {
+    "aliases": [
+      "AMELANCHIER LEAV"
+    ]
+  },
+  "AMELANCHIER LAEVIS": {
+    "inat_id": 54814,
+    "vernacular": {
+      "en": "smooth shadbush",
+      "fr": "amélanchier glabre"
+    },
+    "aliases": [
+      "AMELANCHIER LAEVISS",
+      "AMELANCHIER LEAVIS"
+    ]
+  },
+  "AMELANCHIER LOM": {
+    "inat_id": null
+  },
+  "AMELANCHIER OVALIS": {
+    "inat_id": 198885
+  },
+  "AMELANCHIER ROTUNDIFOLIA": {
+    "inat_id": 1025367,
+    "vernacular": {}
+  },
+  "AMELANCHIER STOLONIFERA": {
+    "inat_id": 49222,
+    "vernacular": {
+      "en": "Running Serviceberry",
+      "fr": "amélanchier en épis"
+    },
+    "aliases": [
+      "AMELANCHIER SPICATA"
+    ]
+  },
+  "AMELANCHIER × LAMARCKII": {
+    "inat_id": 1091496,
+    "vernacular": {
+      "nl": "Amerikaans krentenboompje",
+      "en": "Juneberry",
+      "de": "Amerikanische Felsenbirne",
+      "fr": "Amélanchier de Lamark"
+    },
+    "aliases": [
+      "AMELANCHIER LAMARCKII",
+      "AMELANCHIER LAMARKII"
+    ]
+  },
+  "AMORPHA FRUTICOSA": {
+    "inat_id": 57356,
+    "vernacular": {
+      "nl": "Valse indigo",
+      "en": "false indigo bush",
+      "de": "Bastardindigo",
+      "fr": "faux-indigo commun"
+    }
+  },
+  "ARALIA CHINENSIS": {
+    "inat_id": 189384,
+    "vernacular": {
+      "en": "Chinese Angelica-tree"
+    }
+  },
+  "ARALIA ELATA": {
+    "inat_id": 158549,
+    "vernacular": {
+      "nl": "Duivelswandelstok",
+      "en": "Japanese angelica tree",
+      "fr": "Aralie élevée"
+    }
+  },
+  "ARAUCARIA ARAUCANA": {
+    "inat_id": 126404,
+    "vernacular": {
+      "nl": "Slangenden",
+      "en": "monkey-puzzle",
+      "de": "Chilenische Araukarie",
+      "fr": "Désespoir-des-singes"
+    }
+  },
+  "ARBUTUS": {
+    "inat_id": 51047,
+    "vernacular": {
+      "en": "madrones",
+      "de": "Erdbeerbäume"
+    }
+  },
+  "ARBUTUS UNEDO": {
+    "inat_id": 82689,
+    "vernacular": {
+      "nl": "Aardbeiboom",
+      "en": "strawberry tree",
+      "de": "Westlicher Erdbeerbaum",
+      "fr": "Arbousier"
+    }
+  },
+  "ARCTOSTAPHYLOS UVA-URSI": {
+    "inat_id": 68049
+  },
+  "ARGYROCYTISUS BATTANDIERI": {
+    "inat_id": 430682,
+    "vernacular": {
+      "en": "Pineapple Broom"
+    }
+  },
+  "ARIA DANUBIALIS": {
+    "inat_id": 1125681
+  },
+  "ARIA EDULIS": {
+    "inat_id": 900799
+  },
+  "ARIA GRAECA": {
+    "inat_id": 1277873
+  },
+  "ARIA VEXANS": {
+    "inat_id": 866712,
+    "vernacular": {
+      "en": "Somerset Whitebeam"
+    }
+  },
+  "ARONIA MELANOCARPA": {
+    "inat_id": 128798,
+    "vernacular": {
+      "nl": "Zwarte appelbes",
+      "en": "black chokeberry",
+      "de": "Schwarze Apfelbeere",
+      "fr": "Aronie noire"
+    },
+    "aliases": [
+      "ARONIA MALANOCARPA"
+    ]
+  },
+  "ARONIA × PRUNIFOLIA": {
+    "inat_id": 1366946,
+    "vernacular": {
+      "nl": "Appelbes",
+      "en": "purple chokeberry",
+      "de": "Pflaumenblättrige Apfelbeere"
+    },
+    "aliases": [
+      "ARONIA PRUNIFOLIA"
+    ]
+  },
+  "ASIMINA TRILOBA": {
+    "inat_id": 50897,
+    "vernacular": {
+      "nl": "Pawpaw",
+      "en": "common pawpaw",
+      "de": "Dreilappige Papau",
+      "fr": "asiminier trilobé"
+    }
+  },
+  "ASTEROCAMPA CELTIS": {
+    "inat_id": 68264
+  },
+  "AUCUBA JAPONICA": {
+    "inat_id": 56206,
+    "vernacular": {
+      "nl": "Broodboom",
+      "en": "Japanese aucuba",
+      "de": "Japanische Aukube",
+      "fr": "Aucuba du Japon"
+    }
+  },
+  "AURACARIA HETROPHYLLA": {
+    "inat_id": null
+  },
+  "AVERRHOA CARAMBOLA": {
+    "inat_id": 146977,
+    "vernacular": {
+      "nl": "Carambola",
+      "en": "Starfruit",
+      "de": "Sternfrucht",
+      "fr": "Carambolier"
+    }
+  },
+  "BERBERIS AQUIFOLIUM": {
+    "inat_id": 126887
+  },
+  "BERBERIS BEALEI": {
+    "inat_id": 277657
+  },
+  "BERBERIS JULIANAE": {
+    "inat_id": 437555,
+    "vernacular": {
+      "nl": "Chinese zuurbes",
+      "en": "wintergreen barberry",
+      "de": "Julianes Berberitze",
+      "fr": "Épine-vinette de Juliana"
+    }
+  },
+  "BETULA": {
+    "inat_id": 49156,
+    "vernacular": {
+      "en": "birches",
+      "de": "Birken",
+      "fr": "bouleaux"
+    }
+  },
+  "BETULA ALBONISINENS": {
+    "inat_id": null
+  },
+  "BETULA ALBOSINENSIS": {
+    "inat_id": null
+  },
+  "BETULA ALLEGHANIENSIS": {
+    "inat_id": 49882,
+    "vernacular": {
+      "en": "yellow birch",
+      "fr": "bouleau jaune"
+    },
+    "aliases": [
+      "BETULA ALEGHANIENSIS",
+      "BETULA ALLEGHANIENS"
+    ]
+  },
+  "BETULA ARBORESCENS": {
+    "inat_id": null
+  },
+  "BETULA CHICHIBUENSIS": {
+    "inat_id": 437366,
+    "vernacular": {}
+  },
+  "BETULA COSTATA": {
+    "inat_id": 437368,
+    "vernacular": {
+      "en": "ribbed birch"
+    }
+  },
+  "BETULA EDINBURGH": {
+    "inat_id": null
+  },
+  "BETULA ERMANII": {
+    "inat_id": 437371,
+    "vernacular": {
+      "en": "Erman's Birch"
+    },
+    "aliases": [
+      "BETULA ERMAN",
+      "BETULA ERMAN.",
+      "BETULA ERMANI"
+    ]
+  },
+  "BETULA JACQUEMONTII": {
+    "inat_id": null
+  },
+  "BETULA LENTA": {
+    "inat_id": 49157,
+    "vernacular": {
+      "en": "sweet birch",
+      "fr": "Bouleau flexible"
+    }
+  },
+  "BETULA MAXIMOWICZIANA": {
+    "inat_id": 362504,
+    "vernacular": {
+      "en": "Maximowicz's Birch"
+    },
+    "aliases": [
+      "BET.MAXIMOWICZIANA"
+    ]
+  },
+  "BETULA MEDWEDIEWII": {
+    "inat_id": 484153,
+    "vernacular": {
+      "en": "Transcaucasian Birch"
+    }
+  },
+  "BETULA NIGRA": {
+    "inat_id": 117429,
+    "vernacular": {
+      "nl": "Rode berk",
+      "en": "river birch",
+      "de": "Schwarz-Birke",
+      "fr": "Bouleau noir"
+    }
+  },
+  "BETULA PAPYRIFERA": {
+    "inat_id": 49883,
+    "vernacular": {
+      "nl": "Papierberk",
+      "en": "paper birch",
+      "de": "Papier-Birke",
+      "fr": "bouleau à papier"
+    },
+    "aliases": [
+      "BETULA PARPYRIFERA"
+    ]
+  },
+  "BETULA PENDULA": {
+    "inat_id": 83992,
+    "vernacular": {
+      "nl": "Ruwe berk",
+      "en": "silver birch",
+      "de": "Hänge-Birke",
+      "fr": "bouleau verruqueux"
+    },
+    "aliases": [
+      "BETULA PE",
+      "BETULA PEDULA",
+      "BETULA VERRUCOSA"
+    ]
+  },
+  "BETULA PLATYPHYLLA": {
+    "inat_id": 159230,
+    "vernacular": {
+      "en": "Siberian Birch"
+    }
+  },
+  "BETULA POPULIFOLIA": {
+    "inat_id": 49884,
+    "vernacular": {
+      "nl": "Grijze berk",
+      "en": "gray birch",
+      "fr": "bouleau gris"
+    }
+  },
+  "BETULA PUBESCENS": {
+    "inat_id": 119061,
+    "vernacular": {
+      "nl": "Zachte berk",
+      "en": "Downy Birch",
+      "de": "Moor-Birke",
+      "fr": "Bouleau pubescent"
+    },
+    "aliases": [
+      "BETULA ALBA"
+    ]
+  },
+  "BETULA PUMILA": {
+    "inat_id": 159231,
+    "vernacular": {
+      "en": "swamp birch",
+      "fr": "bouleau nain"
+    }
+  },
+  "BETULA UTILIS": {
+    "inat_id": 83928,
+    "vernacular": {
+      "en": "Himalayan Birch",
+      "fr": "Bouleau de l'Himalaya"
+    },
+    "aliases": [
+      "BETULA UTILUS",
+      "BETULA UTULIS"
+    ]
+  },
+  "BETULA × AURATA": {
+    "inat_id": 856956,
+    "vernacular": {
+      "en": "Downy × Silver Birch"
+    }
+  },
+  "BROUSSONETIA PAPYRIFERA": {
+    "inat_id": 128032,
+    "vernacular": {
+      "nl": "Papiermoerbei",
+      "en": "Paper mulberry",
+      "de": "Papiermaulbeerbaum",
+      "fr": "Mûrier à papier"
+    }
+  },
+  "BUDDLEJA DAVIDII": {
+    "inat_id": 75916,
+    "vernacular": {
+      "nl": "vlinderstruik",
+      "en": "Butterfly bush",
+      "de": "Sommerflieder",
+      "fr": "Buddleia de David"
+    }
+  },
+  "BUDDLEJA × WEYERIANA": {
+    "inat_id": 1524331,
+    "vernacular": {
+      "nl": "Gele vlinderstruik",
+      "en": "Weyer's Butterfly-bush",
+      "fr": "Buddléia de Weyer"
+    }
+  },
+  "BUXUS SEMPERVIRENS": {
+    "inat_id": 133397,
+    "vernacular": {
+      "nl": "Buxus",
+      "en": "common box",
+      "de": "Buchsbaum",
+      "fr": "Buis commun"
+    }
+  },
+  "CALLICARPA JAPONICA": {
+    "inat_id": 371978,
+    "vernacular": {
+      "en": "Japanese Beautyberry",
+      "fr": "Callicarpa du Japon"
+    }
+  },
+  "CALLITROPSIS": {
+    "inat_id": 820900,
+    "vernacular": {}
+  },
+  "CALLITROPSIS NOOTKATENSIS": {
+    "inat_id": 820904,
+    "vernacular": {
+      "nl": "Nootkacipres",
+      "en": "Alaska yellow cedar",
+      "de": "Nootka-Scheinzypresse",
+      "fr": "cyprès jaune"
+    }
+  },
+  "CALOCEDRUS DECURRENS": {
+    "inat_id": 53723,
+    "vernacular": {
+      "nl": "Zuilcipres",
+      "en": "California incense-cedar",
+      "de": "Weihrauchzeder",
+      "fr": "Calocèdre à encens"
+    },
+    "aliases": [
+      "CALOCEDRUS DECURENS"
+    ]
+  },
+  "CAMELLIA JAPONICA": {
+    "inat_id": 83056,
+    "vernacular": {
+      "en": "Japanese camellia",
+      "fr": "Camélia du Japon"
+    }
+  },
+  "CAMPTOTHECA ACUMINATA": {
+    "inat_id": 135426,
+    "vernacular": {
+      "en": "Happy tree"
+    }
+  },
+  "CARAGANA ARBORESCENS": {
+    "inat_id": 159827,
+    "vernacular": {
+      "nl": "Erwtenboompje",
+      "en": "Siberian peashrub",
+      "de": "Gewöhnlicher Erbsenstrauch",
+      "fr": "caragana arborescent"
+    }
+  },
+  "CARPINUS": {
+    "inat_id": 54769,
+    "vernacular": {
+      "en": "hornbeams",
+      "de": "Hainbuchen"
+    }
+  },
+  "CARPINUS BETULUS": {
+    "inat_id": 55801,
+    "vernacular": {
+      "nl": "Haagbeuk",
+      "en": "European Hornbeam",
+      "de": "Hainbuche",
+      "fr": "Charme commun"
+    },
+    "aliases": [
+      "CARPINUS BE",
+      "CARPINUS BET."
+    ]
+  },
+  "CARPINUS CAROLINIANA": {
+    "inat_id": 54768,
+    "vernacular": {
+      "nl": "Amerikaanse beuk",
+      "en": "American hornbeam",
+      "fr": "charme de Caroline"
+    }
+  },
+  "CARPINUS CORDATA": {
+    "inat_id": 438152,
+    "vernacular": {
+      "en": "Sawa hornbeam"
+    },
+    "aliases": [
+      "CARPINUS COREANA"
+    ]
+  },
+  "CARPINUS HENRYANA": {
+    "inat_id": 982879,
+    "vernacular": {}
+  },
+  "CARPINUS JAPONICA": {
+    "inat_id": 337804,
+    "vernacular": {
+      "en": "Japanese hornbeam",
+      "de": "Japanische Hainbuche"
+    }
+  },
+  "CARPINUS ORIENTALIS": {
+    "inat_id": 438165,
+    "vernacular": {
+      "en": "Eastern Hornbeam",
+      "de": "Orientalische Hainbuche"
+    }
+  },
+  "CARPINUS TSCHONOSKII": {
+    "inat_id": 438177,
+    "vernacular": {}
+  },
+  "CARPINUS TURCZANINOVII": {
+    "inat_id": 782209,
+    "vernacular": {
+      "en": "Turczaninow's Hornbeam"
+    },
+    "aliases": [
+      "CARPINUS TURCZANINOWII"
+    ]
+  },
+  "CARYA": {
+    "inat_id": 54788,
+    "vernacular": {
+      "en": "hickories",
+      "de": "Hickory",
+      "fr": "caryers et pacaniers"
+    }
+  },
+  "CARYA CORDIFORMIS": {
+    "inat_id": 54787,
+    "vernacular": {
+      "en": "bitternut hickory",
+      "de": "Bitternuss",
+      "fr": "caryer cordiforme"
+    }
+  },
+  "CARYA GLABRA": {
+    "inat_id": 54789,
+    "vernacular": {
+      "en": "pignut hickory",
+      "de": "Ferkelnuss",
+      "fr": "Caryer glabre"
+    }
+  },
+  "CARYA ILLINOINENSIS": {
+    "inat_id": 67593,
+    "vernacular": {
+      "en": "pecan",
+      "de": "Pekannussbaum",
+      "fr": "pacanier"
+    },
+    "aliases": [
+      "CARYA ILLINIONENSIS",
+      "CARYA ILLINOINESIS"
+    ]
+  },
+  "CARYA LACINIOSA": {
+    "inat_id": 54790,
+    "vernacular": {
+      "en": "Shellbark Hickory",
+      "de": "Königsnuss",
+      "fr": "Caryer lacinié"
+    },
+    "aliases": [
+      "CARYA LACININIOSA"
+    ]
+  },
+  "CARYA OVATA": {
+    "inat_id": 54791,
+    "vernacular": {
+      "en": "shagbark hickory",
+      "de": "Schuppenrinden-Hickory",
+      "fr": "caryer ovale"
+    }
+  },
+  "CARYA TOMENTOSA": {
+    "inat_id": 84305,
+    "vernacular": {
+      "en": "mockernut",
+      "de": "Spottnuss-Hickory",
+      "fr": "caryer tomenteux"
+    },
+    "aliases": [
+      "CARYA ALBA"
+    ]
+  },
+  "CARYOTA MITIS": {
+    "inat_id": 160169,
+    "vernacular": {
+      "nl": "Zachte Vinnetjespalm",
+      "en": "Burmese Fishtail-palm",
+      "de": "Burmesische Fischschwanzpalme"
+    }
+  },
+  "CASTANEA DENTATA": {
+    "inat_id": 49186,
+    "vernacular": {
+      "en": "American chestnut",
+      "de": "Amerikanische Kastanie"
+    }
+  },
+  "CASTANEA MOLLISSIMA": {
+    "inat_id": 49192,
+    "vernacular": {
+      "en": "Chinese chestnut",
+      "de": "Chinesische Kastanie"
+    }
+  },
+  "CASTANEA SATIVA": {
+    "inat_id": 121763,
+    "vernacular": {
+      "nl": "Tamme kastanje",
+      "en": "Sweet Chestnut",
+      "de": "Edelkastanie",
+      "fr": "Châtaignier commun"
+    }
+  },
+  "CATALPA": {
+    "inat_id": 50861,
+    "vernacular": {
+      "en": "Catalpas",
+      "de": "Trompetenbäume"
+    }
+  },
+  "CATALPA BIGNONIOIDES": {
+    "inat_id": 50859,
+    "vernacular": {
+      "nl": "Trompetboom",
+      "en": "southern catalpa",
+      "de": "Gewöhnlicher Trompetenbaum",
+      "fr": "Arbre aux haricots"
+    },
+    "aliases": [
+      "CATALPA BIGN.",
+      "CATALPA BIGNONIODIS",
+      "CATALPA BIGNONIONIDES",
+      "CATALPA BIGNONIOÏDES"
+    ]
+  },
+  "CATALPA BUNGEI": {
+    "inat_id": 910658,
+    "vernacular": {
+      "en": "Manchurian Catalpa"
+    },
+    "aliases": [
+      "CATALPA FARGESII"
+    ]
+  },
+  "CATALPA OVATA": {
+    "inat_id": 160235,
+    "vernacular": {
+      "en": "Chinese catalpa",
+      "de": "Kleinblütiger Trompetenbaum",
+      "fr": "Catalpa de Chine"
+    }
+  },
+  "CATALPA SPECIOSA": {
+    "inat_id": 76158,
+    "vernacular": {
+      "en": "northern catalpa",
+      "de": "Prächtiger Trompetenbaum",
+      "fr": "catalpa à feuilles cordées"
+    },
+    "aliases": [
+      "CATALPA SP"
+    ]
+  },
+  "CATALPA SZECHUANICA": {
+    "inat_id": null
+  },
+  "CATALPA × ERUBESCENS": {
+    "inat_id": 910660,
+    "vernacular": {
+      "en": "hybrid catalpa"
+    },
+    "aliases": [
+      "CATALPA ERUBESCENS"
+    ]
+  },
+  "CEANOTHUS": {
+    "inat_id": 49674,
+    "vernacular": {
+      "en": "Ceanothus",
+      "fr": "Céanothes"
+    }
+  },
+  "CEANOTHUS GRISEUS": {
+    "inat_id": 160250,
+    "vernacular": {
+      "en": "Carmel Ceanothus"
+    }
+  },
+  "CEANOTHUS THYRSIFLORUS": {
+    "inat_id": 56617
+  },
+  "CEDRELA SINENSIS": {
+    "inat_id": null
+  },
+  "CEDRUS ATLANTICA": {
+    "inat_id": 136234,
+    "vernacular": {
+      "nl": "Atlasceder",
+      "en": "Atlas cedar",
+      "de": "Atlaszeder",
+      "fr": "Cèdre de l'Atlas"
+    },
+    "aliases": [
+      "CEDRUS AT",
+      "CEDRUS ATALANTICA"
+    ]
+  },
+  "CEDRUS DEODARA": {
+    "inat_id": 69820,
+    "vernacular": {
+      "nl": "Himalayaceder",
+      "en": "Deodar cedar",
+      "de": "Himalayazeder",
+      "fr": "Cèdre de l'Himalaya"
+    },
+    "aliases": [
+      "CEDRUS DEODORA"
+    ]
+  },
+  "CEDRUS LIBANI": {
+    "inat_id": 136150,
+    "vernacular": {
+      "nl": "Libanonceder",
+      "en": "Lebanon cedar",
+      "de": "Libanonzeder",
+      "fr": "cèdre du Liban"
+    },
+    "aliases": [
+      "CEDRUS LIBANII"
+    ]
+  },
+  "CELTIS": {
+    "inat_id": 54858,
+    "vernacular": {
+      "de": "Zürgelbäume",
+      "en": "hackberries",
+      "fr": "micocouliers"
+    }
+  },
+  "CELTIS AUSTRALIS": {
+    "inat_id": 76202,
+    "vernacular": {
+      "en": "Nettle tree",
+      "de": "Südlicher Zürgelbaum",
+      "fr": "micocoulier de Provence"
+    }
+  },
+  "CELTIS BIONDII": {
+    "inat_id": 525125,
+    "vernacular": {
+      "en": "Chinese hackberry"
+    }
+  },
+  "CELTIS JULIANAE": {
+    "inat_id": 783229,
+    "vernacular": {
+      "en": "Julian hackberry"
+    },
+    "aliases": [
+      "CELTIS JULIANEA"
+    ]
+  },
+  "CELTIS KORAIENSIS": {
+    "inat_id": 986434,
+    "vernacular": {}
+  },
+  "CELTIS MAGNIFICA": {
+    "inat_id": null
+  },
+  "CELTIS OCCIDENTALIS": {
+    "inat_id": 54857,
+    "vernacular": {
+      "nl": "Zwepenboom",
+      "en": "common hackberry",
+      "de": "Amerikanischer Zürgelbaum",
+      "fr": "micocoulier occidental"
+    }
+  },
+  "CELTIS ORIENTALIS": {
+    "inat_id": null
+  },
+  "CELTIS SINENSIS": {
+    "inat_id": 76204,
+    "vernacular": {
+      "en": "Chinese Hackberry",
+      "fr": "Micocoulier de Chine"
+    }
+  },
+  "CEPHALOTAXUS FORTUNEI": {
+    "inat_id": 136135,
+    "vernacular": {
+      "nl": "Zachte knoptaxus",
+      "en": "Chinese Plum-yew",
+      "de": "Fortunes Kopfeibe"
+    }
+  },
+  "CEPHALOTAXUS GRIFFITHII": {
+    "inat_id": 136156,
+    "vernacular": {
+      "en": "Assam plum yew"
+    },
+    "aliases": [
+      "CEPHALOTAXUS LANCEOLATA"
+    ]
+  },
+  "CEPHALOTAXUS HARRINGTONIA": {
+    "inat_id": 142793,
+    "vernacular": {
+      "nl": "Knoptaxus",
+      "en": "Japanese Plum-yew",
+      "de": "Japanische Kopfeibe",
+      "fr": "Céphalotaxus d'Harrington"
+    },
+    "aliases": [
+      "CEPHALOTAXUS HARRINGTONII"
+    ]
+  },
+  "CEPHALOTAXUS NANA": {
+    "inat_id": 867609,
+    "vernacular": {
+      "en": "Dwarf Japanese Plum Yew"
+    }
+  },
+  "CERCIDIPHYLLUM CANADENSIS": {
+    "inat_id": null
+  },
+  "CERCIDIPHYLLUM JAPONICUM": {
+    "inat_id": 133356,
+    "vernacular": {
+      "en": "katsura tree",
+      "de": "Japanischer Kuchenbaum"
+    },
+    "aliases": [
+      "CERCIDIPHYLLUM JAP."
+    ]
+  },
+  "CERCIS": {
+    "inat_id": 48801,
+    "vernacular": {
+      "en": "redbuds",
+      "de": "Judasbäume"
+    }
+  },
+  "CERCIS CANADENSIS": {
+    "inat_id": 48502,
+    "vernacular": {
+      "en": "eastern redbud",
+      "de": "Kanadischer Judasbaum",
+      "fr": "gainier rouge"
+    }
+  },
+  "CERCIS CHINENSIS": {
+    "inat_id": 139471,
+    "vernacular": {
+      "en": "Chinese redbud",
+      "fr": "Gainier de Chine"
+    }
+  },
+  "CERCIS RACEMOSA": {
+    "inat_id": 1466518,
+    "vernacular": {}
+  },
+  "CERCIS SILIQUASTRUM": {
+    "inat_id": 153440,
+    "vernacular": {
+      "nl": "Europese judasboom",
+      "en": "Judas-tree",
+      "de": "Gewöhnlicher Judasbaum",
+      "fr": "Arbre de Judée"
+    },
+    "aliases": [
+      "CERCIS SILLIQUASTRUM"
+    ]
+  },
+  "CHAENOMELES CATHAYENSIS": {
+    "inat_id": 876254,
+    "vernacular": {
+      "en": "Cathay Quince"
+    }
+  },
+  "CHAENOMELES JAPONICA": {
+    "inat_id": 61236,
+    "vernacular": {
+      "nl": "Japanse sierkwee",
+      "en": "Japanese Quince",
+      "de": "Japanische Quitte",
+      "fr": "Cognassier du Japon"
+    }
+  },
+  "CHAENOMELES × SUPERBA": {
+    "inat_id": 993674,
+    "vernacular": {
+      "en": "hybrid quince",
+      "de": "Prächtige Scheinquitte",
+      "fr": "Cognassier du Japon Nicoline"
+    },
+    "aliases": [
+      "CHAENOMELES SUPERBA"
+    ]
+  },
+  "CHAMAECYPARIS": {
+    "inat_id": 69757,
+    "vernacular": {
+      "de": "Scheinzypressen",
+      "en": "False Cypress",
+      "nl": "Schijncipressen"
+    }
+  },
+  "CHAMAECYPARIS FORMOSENSIS": {
+    "inat_id": 120833,
+    "vernacular": {
+      "en": "Formosan cypress",
+      "nl": "Taiwanese cipres",
+      "de": "Formosa-Scheinzypresse"
+    }
+  },
+  "CHAMAECYPARIS LAWSONIANA": {
+    "inat_id": 76237,
+    "vernacular": {
+      "nl": "Californische cipres",
+      "en": "Lawson's cypress",
+      "de": "Lawsons Scheinzypresse",
+      "fr": "Petit-Cyprès de Lawson"
+    },
+    "aliases": [
+      "CHAMAECYPARIS LAWS"
+    ]
+  },
+  "CHAMAECYPARIS NOOTKATENSIS": {
+    "inat_id": null
+  },
+  "CHAMAECYPARIS OBTUSA": {
+    "inat_id": 133369,
+    "vernacular": {
+      "nl": "Hinokicipres",
+      "en": "Hinoki cypress",
+      "de": "Hinoki-Scheinzypresse"
+    }
+  },
+  "CHAMAECYPARIS PISIFERA": {
+    "inat_id": 123925,
+    "vernacular": {
+      "nl": "Japanse cipres",
+      "en": "Sawara cypress",
+      "de": "Sawara-Scheinzypresse"
+    }
+  },
+  "CHAMAECYPARIS SQUAROSA": {
+    "inat_id": null
+  },
+  "CHAMAECYPARIS THYOIDES": {
+    "inat_id": 69756,
+    "vernacular": {
+      "nl": "Atlantische witte ceder",
+      "en": "Atlantic white cedar"
+    }
+  },
+  "CHAMEACYPARIS LAWSONIANA": {
+    "inat_id": null
+  },
+  "CHIMONANTHUS PRAECOX": {
+    "inat_id": 49080,
+    "vernacular": {
+      "nl": "Meloenboompje",
+      "en": "Wintersweet",
+      "de": "Chinesische Winterblüte",
+      "fr": "Chimonanthe précoce"
+    }
+  },
+  "CHIONANTHUS RETUSUS": {
+    "inat_id": 452213,
+    "vernacular": {
+      "nl": "Chinese sneeuwvlokkenboom",
+      "en": "Tassel Tree"
+    }
+  },
+  "CHIONANTHUS VIRGINICUS": {
+    "inat_id": 54654,
+    "vernacular": {
+      "nl": "Amerikaanse sneeuwvlokkenboom",
+      "en": "white fringetree"
+    }
+  },
+  "CHITALPA TASKETENSIS": {
+    "inat_id": null
+  },
+  "CHM LAWS": {
+    "inat_id": null
+  },
+  "CHOISYA": {
+    "inat_id": 157161,
+    "vernacular": {}
+  },
+  "CHOISYA TERNATA": {
+    "inat_id": 287309,
+    "vernacular": {
+      "en": "Mexican orange",
+      "de": "Mexikanische Orangenblume",
+      "fr": "Oranger du Mexique"
+    }
+  },
+  "CITRUS TRIFOLIATA": {
+    "inat_id": 200071
+  },
+  "CLADRASTIS": {
+    "inat_id": 117431,
+    "vernacular": {
+      "en": "yellowwoods"
+    }
+  },
+  "CLADRASTIS KENTUKEA": {
+    "inat_id": 117430,
+    "vernacular": {
+      "en": "Kentucky yellowwood",
+      "fr": "Virgilier à bois jaune"
+    },
+    "aliases": [
+      "CLADRASTIS LUTEA"
+    ]
+  },
+  "CLERODENDRUM": {
+    "inat_id": 67538,
+    "vernacular": {
+      "de": "Losbäume",
+      "en": "Glorybowers"
+    }
+  },
+  "CLERODENDRUM BUNGEI": {
+    "inat_id": 160739,
+    "vernacular": {
+      "en": "rose glorybower",
+      "fr": "Clérodendron de Bunge"
+    }
+  },
+  "CLERODENDRUM TRICHOTOMUM": {
+    "inat_id": 67539,
+    "vernacular": {
+      "en": "Harlequin glorybower",
+      "de": "Japanischer Losbaum",
+      "fr": "Arbre du clergé"
+    }
+  },
+  "CLETHRA ALNIFOLIA": {
+    "inat_id": 52867,
+    "vernacular": {
+      "nl": "Witte Schijnels",
+      "en": "Sweet Pepperbush",
+      "de": "Erlenblättrige Zimterle",
+      "fr": "clèthre à feuilles d'aulne"
+    }
+  },
+  "CLETHRA BARBINERVIS": {
+    "inat_id": 430824,
+    "vernacular": {
+      "nl": "Pluimschijnels"
+    }
+  },
+  "CORMUS DOMESTICA": {
+    "inat_id": 1277867
+  },
+  "CORNUS": {
+    "inat_id": 47193,
+    "vernacular": {
+      "en": "dogwoods",
+      "de": "Hartriegel",
+      "nl": "kornoelje",
+      "fr": "Cornouillers"
+    }
+  },
+  "CORNUS ALBA": {
+    "inat_id": 124879,
+    "vernacular": {
+      "nl": "witte kornoelje",
+      "en": "Tatarian dogwood",
+      "de": "Weißer Hartriegel",
+      "fr": "cornouiller blanc"
+    }
+  },
+  "CORNUS ALTERNIFOLIA": {
+    "inat_id": 54775,
+    "vernacular": {
+      "nl": "Pagodekornoelje",
+      "en": "alternate-leaved dogwood",
+      "fr": "cornouiller à feuilles alternes"
+    }
+  },
+  "CORNUS AMOMUM": {
+    "inat_id": 58749,
+    "vernacular": {
+      "en": "silky dogwood",
+      "fr": "Cornouiller odorant"
+    }
+  },
+  "CORNUS ASPERIFOLIA": {
+    "inat_id": 160918,
+    "vernacular": {
+      "en": "toughleaf dogwood"
+    }
+  },
+  "CORNUS CANADENSIS": {
+    "inat_id": 47192,
+    "vernacular": {
+      "nl": "Kruipende kornoelje",
+      "en": "Canadian bunchberry",
+      "de": "Kanadischer Hartriegel",
+      "fr": "quatre-temps"
+    }
+  },
+  "CORNUS CONTROVERSA": {
+    "inat_id": 452130,
+    "vernacular": {
+      "nl": "Reuzenkornoelje",
+      "en": "Giant Dogwood"
+    }
+  },
+  "CORNUS ELLIPTICA": {
+    "inat_id": 957190,
+    "vernacular": {}
+  },
+  "CORNUS FLORIDA": {
+    "inat_id": 54777,
+    "vernacular": {
+      "nl": "Oost-Amerikaanse kornoelje",
+      "en": "flowering dogwood",
+      "de": "Blüten-Hartriegel",
+      "fr": "Cornouiller à fleurs"
+    }
+  },
+  "CORNUS KOUSA": {
+    "inat_id": 128614,
+    "vernacular": {
+      "nl": "japanse kornoelje",
+      "en": "kousa dogwood",
+      "de": "Japanischer Blüten-Hartriegel"
+    },
+    "aliases": [
+      "CORNUS KAUSA"
+    ]
+  },
+  "CORNUS MACROPHYLLA": {
+    "inat_id": 452340,
+    "vernacular": {
+      "nl": "Grootbladige kornoelje",
+      "en": "Large-Leaf Dogwood"
+    }
+  },
+  "CORNUS MAS": {
+    "inat_id": 55858,
+    "vernacular": {
+      "nl": "gele kornoelje",
+      "en": "Cornelian cherry",
+      "de": "Kornelkirsche",
+      "fr": "Cornouiller sauvage"
+    }
+  },
+  "CORNUS NUTTALLII": {
+    "inat_id": 76447,
+    "vernacular": {
+      "nl": "Grootbloemige kornoelje",
+      "en": "Pacific Dogwood"
+    },
+    "aliases": [
+      "CORNUS NUTALLI",
+      "CORNUS NUTTALLI",
+      "CORNUS NUTTALLIII"
+    ]
+  },
+  "CORNUS OFFICINALIS": {
+    "inat_id": 450254,
+    "vernacular": {
+      "nl": "Japanse kornoelje",
+      "en": "Korean cornel dogwood"
+    }
+  },
+  "CORNUS SANGUINEA": {
+    "inat_id": 155124,
+    "vernacular": {
+      "nl": "Rode Kornoelje",
+      "en": "common dogwood",
+      "de": "Roter Hartriegel",
+      "fr": "Cornouiller sanguin"
+    }
+  },
+  "CORNUS SERICEA": {
+    "inat_id": 53387,
+    "vernacular": {
+      "nl": "Canadese kornoelje",
+      "en": "red osier dogwood",
+      "de": "Seidiger Hartriegel",
+      "fr": "cornouiller stolonifère"
+    }
+  },
+  "CORNUS WALTERI": {
+    "inat_id": 959952,
+    "vernacular": {
+      "en": "Walter's dogwood"
+    }
+  },
+  "CORYLOPSIS PAUCIFLORA": {
+    "inat_id": 190912,
+    "vernacular": {
+      "en": "Buttercup Winterhazel"
+    }
+  },
+  "CORYLOPSIS SPICATA": {
+    "inat_id": 447663,
+    "vernacular": {
+      "en": "spike winter hazel"
+    }
+  },
+  "CORYLUS": {
+    "inat_id": 53373,
+    "vernacular": {
+      "en": "hazels",
+      "de": "Haseln"
+    }
+  },
+  "CORYLUS AVELLANA": {
+    "inat_id": 54491,
+    "vernacular": {
+      "nl": "Hazelaar",
+      "en": "common hazel",
+      "de": "Gemeine Hasel",
+      "fr": "Noisetier"
+    },
+    "aliases": [
+      "CORYLUS AVELANA"
+    ]
+  },
+  "CORYLUS COLURNA": {
+    "inat_id": 367960,
+    "vernacular": {
+      "nl": "Turkse hazelaar",
+      "en": "Turkish Hazel",
+      "de": "Baum-Hasel",
+      "fr": "Coudrier de Byzance"
+    },
+    "aliases": [
+      "CORYLUS COLURNUA",
+      "CORYLUS CORLUNA"
+    ]
+  },
+  "CORYLUS CORNUTA": {
+    "inat_id": 53374,
+    "vernacular": {
+      "en": "beaked hazelnut",
+      "fr": "Noisetier à long bec"
+    }
+  },
+  "CORYLUS MAXIMA": {
+    "inat_id": 122974,
+    "vernacular": {
+      "nl": "Lambertsnoot",
+      "en": "Filbert",
+      "de": "Riesen-Hasel",
+      "fr": "Noisetier de Lambert"
+    }
+  },
+  "COTINUS COGGYGRIA": {
+    "inat_id": 133366,
+    "vernacular": {
+      "nl": "Pruikenboom",
+      "en": "Smokebush",
+      "de": "Perückenstrauch",
+      "fr": "Arbre à perruque"
+    }
+  },
+  "COTONEASTER": {
+    "inat_id": 53376,
+    "vernacular": {
+      "en": "Cotoneasters",
+      "fr": "Cotonéasters",
+      "de": "Zwergmispel",
+      "nl": "Dwergmispel"
+    }
+  },
+  "COTONEASTER COCHLEATUS": {
+    "inat_id": 461616,
+    "vernacular": {
+      "en": "Yunnan Cotoneaster"
+    }
+  },
+  "COTONEASTER RUGOSUS": {
+    "inat_id": null
+  },
+  "COTONEASTER SALICIFOLIUS": {
+    "inat_id": 337820,
+    "vernacular": {
+      "nl": "Wilgbladige cotoneaster",
+      "en": "Willow-leaved Cotoneaster",
+      "de": "Weidenblättrige Zwergmispel",
+      "fr": "Cotonéaster à feuilles de saule"
+    }
+  },
+  "COTONEASTER × WATERERI": {
+    "inat_id": 786554,
+    "vernacular": {
+      "nl": "Schijn-boomcotoneaster",
+      "en": "Waterer's Cotoneaster",
+      "de": "Waterer-Steinmispel",
+      "fr": "Cotonéaster de Waterer"
+    },
+    "aliases": [
+      "COTONEASTER WATERERI",
+      "COTONEASTER WATERERII",
+      "COTONEASTER × WATERERII"
+    ]
+  },
+  "CRAETEGUS SCHRADERIANA": {
+    "inat_id": null
+  },
+  "CRATAEGOMESPILUS DARDARII": {
+    "inat_id": null,
+    "aliases": [
+      "CRATAEGOMESPILUS DAR."
+    ]
+  },
+  "CRATAEGUS": {
+    "inat_id": 51148,
+    "vernacular": {
+      "en": "hawthorns",
+      "fr": "aubépines",
+      "de": "Weißdorn",
+      "nl": "Meidoorn"
+    }
+  },
+  "CRATAEGUS AZAROLUS": {
+    "inat_id": 191019,
+    "vernacular": {
+      "en": "Azarole",
+      "fr": "Épine d'Espagne"
+    }
+  },
+  "CRATAEGUS CELSIANA": {
+    "inat_id": null
+  },
+  "CRATAEGUS CHLOROCARPA": {
+    "inat_id": 882100,
+    "vernacular": {
+      "en": "Altai Mountain Thorn"
+    },
+    "aliases": [
+      "CRATAEGUS ALTAICA"
+    ]
+  },
+  "CRATAEGUS CHLOROSARCA": {
+    "inat_id": 851192,
+    "vernacular": {}
+  },
+  "CRATAEGUS CHRYSOCARPA": {
+    "inat_id": 54817,
+    "vernacular": {
+      "en": "fireberry hawthorn",
+      "fr": "aubépine dorée"
+    },
+    "aliases": [
+      "CRATAEGUS PR"
+    ]
+  },
+  "CRATAEGUS COCCINEA": {
+    "inat_id": 143915,
+    "vernacular": {
+      "en": "Scarlet Hawthorn",
+      "de": "Scharlach-Weißdorn"
+    }
+  },
+  "CRATAEGUS COCCINIOIDES": {
+    "inat_id": 160985,
+    "vernacular": {
+      "en": "Large-flowered Cockspurthorn",
+      "fr": "aubépine dilatée"
+    }
+  },
+  "CRATAEGUS CRUS-GALLI": {
+    "inat_id": 54824,
+    "vernacular": {
+      "nl": "Hanendoorn",
+      "en": "cockspur hawthorn",
+      "fr": "Aubépine ergot-de-coq"
+    },
+    "aliases": [
+      "CRATAEGUS CRUS",
+      "CRATAEGUS CRUS-GALLII"
+    ]
+  },
+  "CRATAEGUS DSUNGARICA": {
+    "inat_id": 950569,
+    "vernacular": {}
+  },
+  "CRATAEGUS GERMANICA": {
+    "inat_id": 1367002
+  },
+  "CRATAEGUS GRACILIOR": {
+    "inat_id": 201521,
+    "vernacular": {
+      "en": "Mexican hawthorn"
+    },
+    "aliases": [
+      "CRATAEGUS PUBESCENS"
+    ]
+  },
+  "CRATAEGUS JONESIAE": {
+    "inat_id": 161029,
+    "vernacular": {
+      "en": "Miss Jones' hawthorn"
+    }
+  },
+  "CRATAEGUS LACINIATA": {
+    "inat_id": 856734,
+    "vernacular": {}
+  },
+  "CRATAEGUS LAEVIGATA": {
+    "inat_id": 54428,
+    "vernacular": {
+      "nl": "Tweestijlige meidoorn",
+      "en": "midland hawthorn",
+      "de": "Zweigriffeliger Weißdorn",
+      "fr": "aubépine lisse"
+    },
+    "aliases": [
+      "CRATAEGUS OXYACANTHA"
+    ]
+  },
+  "CRATAEGUS MEXICANA": {
+    "inat_id": 123694,
+    "vernacular": {
+      "en": "tejocote",
+      "fr": "Aubépine du Mexique"
+    }
+  },
+  "CRATAEGUS MOLLIS": {
+    "inat_id": 54825,
+    "vernacular": {
+      "en": "downy hawthorn"
+    }
+  },
+  "CRATAEGUS MONOGYNA": {
+    "inat_id": 51147,
+    "vernacular": {
+      "nl": "eenstijlige meidoorn",
+      "en": "common hawthorn",
+      "de": "Eingriffeliger Weißdorn",
+      "fr": "Aubépine monogyne"
+    },
+    "aliases": [
+      "CRATAEGUS LA",
+      "CRATAEGUS MO",
+      "CRATAEGUS MON.",
+      "CRATAEGUS MONGYNA"
+    ]
+  },
+  "CRATAEGUS PEDICELLATA": {
+    "inat_id": null
+  },
+  "CRATAEGUS PERSIMILIS": {
+    "inat_id": 161066,
+    "vernacular": {
+      "nl": "Pruimbladige Meidoorn",
+      "en": "Broad-leaved Cockspurthorn",
+      "de": "Pflaumenblättriger Weißdorn",
+      "fr": "aubépine à feuilles de prunier"
+    },
+    "aliases": [
+      "CRATAEGUS PERSIMILLIS",
+      "CRATAEGUS PRUNIFOLIA",
+      "CRATAEGUS XPERSIMILIS",
+      "CRATAEGUS × PERSIMILIS"
+    ]
+  },
+  "CRATAEGUS PINNATIFIDA": {
+    "inat_id": 475319,
+    "vernacular": {
+      "en": "Chinese hawthorn"
+    },
+    "aliases": [
+      "CRATAEGUS PI",
+      "CRATAEGUS PINNATIFADA"
+    ]
+  },
+  "CRATAEGUS PRINGLY": {
+    "inat_id": null
+  },
+  "CRATAEGUS PRUINOSA": {
+    "inat_id": 161074,
+    "vernacular": {
+      "en": "waxy-fruited hawthorn",
+      "fr": "aubépine à fruits cireux"
+    },
+    "aliases": [
+      "CRATAEGUS LE"
+    ]
+  },
+  "CRATAEGUS PUNCTATA": {
+    "inat_id": 54830,
+    "vernacular": {
+      "en": "dotted hawthorn"
+    }
+  },
+  "CRATAEGUS RIVULARIS": {
+    "inat_id": 161082,
+    "vernacular": {
+      "en": "River hawthorn"
+    }
+  },
+  "CRATAEGUS SANGUINEA": {
+    "inat_id": 791258,
+    "vernacular": {
+      "en": "Red Hawthorn",
+      "fr": "Épine rouge"
+    }
+  },
+  "CRATAEGUS SUCCULENTA": {
+    "inat_id": 54822,
+    "vernacular": {
+      "en": "fleshy hawthorn"
+    }
+  },
+  "CRATAEGUS TANACETIFOLIA": {
+    "inat_id": 1437512,
+    "vernacular": {}
+  },
+  "CRATAEGUS VIRIDIS": {
+    "inat_id": 127068,
+    "vernacular": {
+      "en": "green hawthorn"
+    }
+  },
+  "CRATAEGUS WATTIANA": {
+    "inat_id": 897475,
+    "vernacular": {
+      "en": "Altai hawthorn"
+    }
+  },
+  "CRATAEGUS XANTHOCARP": {
+    "inat_id": null
+  },
+  "CRATAEGUS × GRIGNONENSIS": {
+    "inat_id": 1587980,
+    "vernacular": {
+      "en": "Grignon Hawthorn"
+    },
+    "aliases": [
+      "CRATAEGUS GRIGNONEN.",
+      "CRATAEGUS GRIGNONENSIS"
+    ]
+  },
+  "CRATAEGUS × LAVALLEEI": {
+    "inat_id": 1524773,
+    "vernacular": {
+      "en": "Hybrid Cockspurthorn",
+      "de": "Lederblättriger Weißdorn"
+    },
+    "aliases": [
+      "CRATAEGUS LAVALLEEI",
+      "CRATAEGUS LAVALLEI",
+      "CRATAEGUS × LAVALLEI"
+    ]
+  },
+  "CRATAEGUS × MEDIA": {
+    "inat_id": 1350225,
+    "vernacular": {
+      "nl": "Basterdmeidoorn",
+      "en": "Common × Midland Hawthorn",
+      "fr": "Aubébine intermédiaire"
+    },
+    "aliases": [
+      "CRATAEGUS MEDIA",
+      "CRATAEGUS XMEDIA"
+    ]
+  },
+  "CRATAEGUS × MORDENENSIS": {
+    "inat_id": 1350227,
+    "vernacular": {
+      "en": "Morden Hawthorn"
+    },
+    "aliases": [
+      "CRATAEGUS MORDENENSIS"
+    ]
+  },
+  "CRATAEMESPILUS GRANDIFLORA": {
+    "inat_id": null
+  },
+  "CRESCENTIA CUJETE": {
+    "inat_id": 161121,
+    "vernacular": {
+      "en": "Calabash Tree",
+      "de": "Kalebassenbaum",
+      "fr": "calebasse"
+    }
+  },
+  "CRYPTOMERIA": {
+    "inat_id": 71148,
+    "vernacular": {
+      "nl": "Sikkelcipressen",
+      "en": "Sugis"
+    }
+  },
+  "CRYPTOMERIA JAPONICA": {
+    "inat_id": 71147,
+    "vernacular": {
+      "nl": "Japanse cipres",
+      "en": "sugi",
+      "de": "Japanische Sicheltanne",
+      "fr": "cryptoméria du Japon"
+    }
+  },
+  "CUDRANIA TRICUSPIDATA": {
+    "inat_id": null
+  },
+  "CUNNINGHAMIA LANCEOLATA": {
+    "inat_id": 127861,
+    "vernacular": {
+      "en": "China-fir"
+    }
+  },
+  "CUPRESSOCYPARIS": {
+    "inat_id": null,
+    "genus_checked": true
+  },
+  "CUPRESSOCYPARIS LEYLANDII": {
+    "inat_id": null
+  },
+  "CUPRESSOCYPARIS × LEYLANDII": {
+    "inat_id": null
+  },
+  "CUPRESSUS ARIZONICA": {
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Amerikaanse cipres",
+      "en": "Arizona cypress",
+      "fr": "Cyprès de l'Arizona"
+    },
+    "aliases": [
+      "CUPRESSUS ARIZONA",
+      "CUPRSESSUS ARIZONICA"
+    ]
+  },
+  "CUPRESSUS BAKERI": {
+    "inat_id": null
+  },
+  "CUPRESSUS GLABRA": {
+    "inat_id": null
+  },
+  "CUPRESSUS MACROCARPA": {
+    "inat_id": null
+  },
+  "CUPRESSUS NOOTKATENSIS": {
+    "inat_id": null
+  },
+  "CUPRESSUS SEMPERVIRENS": {
+    "inat_id": 64261,
+    "vernacular": {
+      "nl": "Italiaanse cipres",
+      "en": "Mediterranean cypress",
+      "de": "Mittelmeer-Zypresse",
+      "fr": "cyprès commun"
+    }
+  },
+  "CUPRESSUS × LEYLANDII": {
+    "inat_id": null
+  },
+  "CYCLOCARYA PALIURUS": {
+    "inat_id": 556132,
+    "vernacular": {
+      "en": "Wheel Wingnut"
+    }
+  },
+  "CYDONIA OBLONGA": {
+    "inat_id": 82853,
+    "vernacular": {
+      "nl": "Kwee",
+      "en": "Quince",
+      "de": "Quitte",
+      "fr": "Cognassier commun"
+    }
+  },
+  "CYTISUS SCOPARIUS": {
+    "inat_id": 48538,
+    "vernacular": {
+      "nl": "Gewone brem",
+      "en": "Scotch Broom",
+      "de": "Gemeiner Besenginster",
+      "fr": "Genêt à balai"
+    }
+  },
+  "DAVIDIA INVOLUCRATA": {
+    "inat_id": 128506,
+    "vernacular": {
+      "nl": "Vaantjesboom",
+      "en": "Dove tree",
+      "de": "Taschentuchbaum",
+      "fr": "Arbre à colombes"
+    }
+  },
+  "DECAISNEA FARGESII": {
+    "inat_id": 920179,
+    "vernacular": {}
+  },
+  "DEUTZIA PURPURASCENS": {
+    "inat_id": 499552,
+    "vernacular": {
+      "nl": "Paarse Deutzia"
+    }
+  },
+  "DIERVILLA SPLENDENS": {
+    "inat_id": null
+  },
+  "DIERVILLA × SPLENDENS": {
+    "inat_id": null
+  },
+  "DIOSPYROS": {
+    "inat_id": 83434,
+    "vernacular": {
+      "en": "persimmons"
+    }
+  },
+  "DIOSPYROS KAKI": {
+    "inat_id": 83468,
+    "vernacular": {
+      "nl": "Kaki",
+      "en": "Japanese Persimmon",
+      "de": "Kaki",
+      "fr": "Plaqueminier du Japon"
+    },
+    "aliases": [
+      "DIOSPYRUS KAKI"
+    ]
+  },
+  "DIOSPYROS LOTUS": {
+    "inat_id": 83445,
+    "vernacular": {
+      "nl": "Dadelpruim",
+      "en": "Date plum",
+      "de": "Lotuspflaume",
+      "fr": "Plaqueminier lotier"
+    }
+  },
+  "DIOSPYROS VIRGINIANA": {
+    "inat_id": 83435,
+    "vernacular": {
+      "nl": "Amerikaanse persimoen",
+      "en": "American persimmon",
+      "fr": "Plaqueminier américain"
+    }
+  },
+  "DIPELTA VENTRICOSA": {
+    "inat_id": null
+  },
+  "DISANTHUS CERCIDIFOLIUS": {
+    "inat_id": 891508,
+    "vernacular": {}
+  },
+  "EDGEWORTHIA CHRYSANTHA": {
+    "inat_id": 133126,
+    "vernacular": {
+      "en": "oriental paperbush",
+      "de": "Japanischer Papierbusch",
+      "fr": "Buisson à papier"
+    }
+  },
+  "EHRETIA DICKSONII": {
+    "inat_id": 706648,
+    "vernacular": {}
+  },
+  "ELAEAGNUS": {
+    "inat_id": 64696,
+    "vernacular": {
+      "de": "Ölweiden",
+      "en": "oleasters",
+      "nl": "Olijfwilgen"
+    }
+  },
+  "ELAEAGNUS ANGUSTIFOLIA": {
+    "inat_id": 64694,
+    "vernacular": {
+      "nl": "Smalle olijfwilg",
+      "en": "Russian olive",
+      "de": "Schmalblättrige Ölweide",
+      "fr": "Olivier de Bohême"
+    }
+  },
+  "ELAEAGNUS EUROPAEA": {
+    "inat_id": null
+  },
+  "ELAEAGNUS MULTIFLORA": {
+    "inat_id": 162213,
+    "vernacular": {
+      "nl": "Langstelige olijfwilg",
+      "en": "Cherry Oleaster",
+      "de": "Reichblütige Ölweide",
+      "fr": "Goumi du Japon"
+    }
+  },
+  "ELAEAGNUS UMBELLATA": {
+    "inat_id": 64697,
+    "vernacular": {
+      "nl": "Schermolijfwilg",
+      "en": "autumn olive",
+      "de": "Schirm- Ölweide",
+      "fr": "oléastre à ombelles"
+    }
+  },
+  "ELAEAGNUS × EBBINGEI": {
+    "inat_id": null,
+    "aliases": [
+      "ELAEAGNUS EBBIGEI",
+      "ELAEAGNUS EBBINGEI",
+      "ELAEAGNUS × EBBINGEII"
+    ]
+  },
+  "ELAEAGNUS × SUBMACROPHYLLA": {
+    "inat_id": 1454183,
+    "vernacular": {
+      "nl": "Groenblijvende olijfwilg",
+      "en": "Ebbinge's Silverberry"
+    },
+    "aliases": [
+      "ELAEAGNUS × EBBINGEI"
+    ]
+  },
+  "EMMENOPTERYS HENRYI": {
+    "inat_id": 792273,
+    "vernacular": {}
+  },
+  "ENKIANTHUS CAMPANULATUS": {
+    "inat_id": 133385,
+    "vernacular": {
+      "en": "campanulate enkianthus"
+    }
+  },
+  "ERIOBOTRYA JAPONICA": {
+    "inat_id": 76949,
+    "vernacular": {
+      "nl": "Japanse mispel",
+      "en": "Loquat",
+      "de": "Japanische Wollmispel",
+      "fr": "Néflier du Japon"
+    }
+  },
+  "ERIOLARYNX AUSTRALIS": {
+    "inat_id": 1188655,
+    "vernacular": {
+      "en": "Argentine Pear"
+    }
+  },
+  "ERIOLOBUS TRILOBATUS": {
+    "inat_id": 492842,
+    "vernacular": {
+      "en": "Lebanese Wild Apple"
+    }
+  },
+  "ESCALLONIA": {
+    "inat_id": 157269,
+    "vernacular": {}
+  },
+  "ESCALLONIA RUBRA": {
+    "inat_id": 162726
+  },
+  "EUCALYPTUS CINEREA": {
+    "inat_id": 162748,
+    "vernacular": {
+      "en": "Argyle apple",
+      "fr": "Gommier cendré"
+    }
+  },
+  "EUCALYPTUS GUNNII": {
+    "inat_id": 323288,
+    "vernacular": {
+      "en": "Cider Gum",
+      "fr": "Eucalyptus à feuilles rondes"
+    }
+  },
+  "EUCALYPTUS NEGLECTA": {
+    "inat_id": 916647,
+    "vernacular": {
+      "en": "Omeo gum"
+    }
+  },
+  "EUCALYPTUS PARVULA": {
+    "inat_id": 774109,
+    "vernacular": {
+      "en": "Small-leaved Gum"
+    },
+    "aliases": [
+      "EUCALYPTUS PARVIFOLIA"
+    ]
+  },
+  "EUCOMMIA ULMOIDES": {
+    "inat_id": 127868,
+    "vernacular": {
+      "en": "Gutta-percha Tree",
+      "de": "Chinesischer Guttaperchabaum",
+      "fr": "Arbre à gutta-percha"
+    }
+  },
+  "EUODIA DANIELLII": {
+    "inat_id": null
+  },
+  "EUODIA HUPEHENSIS": {
+    "inat_id": null
+  },
+  "EUONYMUS": {
+    "inat_id": 47538,
+    "vernacular": {
+      "en": "spindles",
+      "de": "Spindelsträucher",
+      "nl": "Kardinaalsmutsen",
+      "fr": "Fusains"
+    }
+  },
+  "EUONYMUS ALATUS": {
+    "inat_id": 117433,
+    "vernacular": {
+      "nl": "Gevleugelde kardinaalsmuts",
+      "en": "winged euonymus",
+      "de": "Flügel-Spindelstrauch",
+      "fr": "fusain ailé"
+    }
+  },
+  "EUONYMUS EUROPAEUS": {
+    "inat_id": 55847,
+    "vernacular": {
+      "nl": "Kardinaalsmuts",
+      "en": "Spindle",
+      "de": "Pfaffenhütchen",
+      "fr": "Fusain d'Europe"
+    },
+    "aliases": [
+      "EUONYMUS EUROPAEA"
+    ]
+  },
+  "EUONYMUS GRANDIFLORUS": {
+    "inat_id": 192159,
+    "vernacular": {}
+  },
+  "EUONYMUS HAMILTONIANUS": {
+    "inat_id": 359219,
+    "vernacular": {
+      "nl": "Aziatische kardinaalsmuts",
+      "en": "Hamilton's spindle"
+    }
+  },
+  "EUONYMUS SACHALINENSIS": {
+    "inat_id": 787662,
+    "vernacular": {}
+  },
+  "EUPITHECIA INSIGNIATA": {
+    "inat_id": 355007
+  },
+  "EUPTELEA POLYANDRA": {
+    "inat_id": 183473,
+    "vernacular": {
+      "en": "Japanese Euptelea"
+    }
+  },
+  "EVODIA HUPEHENSIS": {
+    "inat_id": null
+  },
+  "EVOLVULUS ALSINOIDES": {
+    "inat_id": 162913
+  },
+  "EXOCHORDA SERRATIFOLIA": {
+    "inat_id": null
+  },
+  "FAGUS": {
+    "inat_id": 49203,
+    "vernacular": {
+      "en": "beeches",
+      "de": "Buchen",
+      "fr": "hêtres"
+    }
+  },
+  "FAGUS ENGLERIANA": {
+    "inat_id": 484155,
+    "vernacular": {
+      "en": "Chinese Beech",
+      "de": "Englers Buche"
+    }
+  },
+  "FAGUS GRANDIFOLIA": {
+    "inat_id": 49202,
+    "vernacular": {
+      "nl": "Amerikaanse beuk",
+      "en": "American beech",
+      "de": "Amerikanische Buche",
+      "fr": "Hêtre à grandes feuilles"
+    }
+  },
+  "FAGUS LUCIDA": {
+    "inat_id": 1230446,
+    "vernacular": {
+      "de": "Glänzende Buche"
+    }
+  },
+  "FAGUS ORIENTALIS": {
+    "inat_id": 484154,
+    "vernacular": {
+      "nl": "Oosterse beuk",
+      "en": "Oriental Beech",
+      "de": "Orient-Buche",
+      "fr": "Hêtre d'Orient"
+    }
+  },
+  "FAGUS SYLVATICA": {
+    "inat_id": 54227,
+    "vernacular": {
+      "nl": "Beuk",
+      "en": "European beech",
+      "de": "Rotbuche",
+      "fr": "Hêtre commun"
+    },
+    "aliases": [
+      "FAGUS SY",
+      "FAGUS SYL",
+      "FAGUS SYL.",
+      "FAGUS SYLV.",
+      "FAGUS SYLVATICA.",
+      "FAGUS SYLVATICIA",
+      "FAGUS SYLVATICUS"
+    ]
+  },
+  "FATSIA JAPONICA": {
+    "inat_id": 126735,
+    "vernacular": {
+      "nl": "Vingerplant",
+      "en": "Japanese aralia",
+      "fr": "Fatsia du Japon"
+    }
+  },
+  "FICUS CARICA": {
+    "inat_id": 60218,
+    "vernacular": {
+      "nl": "Vijg",
+      "en": "common fig",
+      "de": "Echte Feige",
+      "fr": "Figuier"
+    },
+    "aliases": [
+      "FICUS CARCIA"
+    ]
+  },
+  "FICUS LYRATA": {
+    "inat_id": 201458,
+    "vernacular": {
+      "nl": "Vioolbladplant",
+      "en": "Fiddle-leaf Fig"
+    }
+  },
+  "FILIPENDULA ULMARIA": {
+    "inat_id": 63134
+  },
+  "FIRMIANA SIMPLEX": {
+    "inat_id": 162991,
+    "vernacular": {
+      "en": "Chinese parasol tree"
+    }
+  },
+  "FOTHERGILLA MAJOR": {
+    "inat_id": 163068,
+    "vernacular": {
+      "en": "mountain witch-alder"
+    }
+  },
+  "FRANGULA ALNUS": {
+    "inat_id": 55972,
+    "vernacular": {
+      "nl": "sporkehout",
+      "en": "alder buckthorn",
+      "de": "Faulbaum",
+      "fr": "Bourdaine commune"
+    }
+  },
+  "FRAXINUS": {
+    "inat_id": 54806,
+    "vernacular": {
+      "en": "ashes",
+      "fr": "frênes",
+      "de": "Eschen"
+    }
+  },
+  "FRAXINUS AMERICANA": {
+    "inat_id": 54805,
+    "vernacular": {
+      "nl": "Amerikaanse es",
+      "en": "white ash",
+      "de": "Weiße Esche",
+      "fr": "frêne blanc"
+    },
+    "aliases": [
+      "FRAXIN AM",
+      "FRAXINUS AM",
+      "FRAXINUS AME"
+    ]
+  },
+  "FRAXINUS ANGUSTIFOLIA": {
+    "inat_id": 82881,
+    "vernacular": {
+      "nl": "Smalbladige es",
+      "en": "Narrow-leaved Ash",
+      "de": "Schmalblättrige Esche",
+      "fr": "Frêne à feuilles étroites"
+    },
+    "aliases": [
+      "FRAXINUS AN",
+      "FRAXINUS ANG.",
+      "FRAXINUS ANGUST.",
+      "FRAXINUS ANGUSTIFOL.",
+      "FRAXINUS OXYCARPA"
+    ]
+  },
+  "FRAXINUS ANOMALA": {
+    "inat_id": 77167,
+    "vernacular": {
+      "en": "single-leaf ash",
+      "de": "Einblättrige Esche"
+    }
+  },
+  "FRAXINUS BILTMOREANA": {
+    "inat_id": 319691,
+    "vernacular": {
+      "en": "Biltmore Ash"
+    }
+  },
+  "FRAXINUS BUNGEANA": {
+    "inat_id": 782359,
+    "vernacular": {
+      "de": "Bunges Blumenesche"
+    }
+  },
+  "FRAXINUS EXCELSIOR": {
+    "inat_id": 125440,
+    "vernacular": {
+      "nl": "Es",
+      "en": "European ash",
+      "de": "Gemeine Esche",
+      "fr": "Frêne commun"
+    },
+    "aliases": [
+      "FRAXINUS EX",
+      "FRAXINUS EX.",
+      "FRAXINUS EXC",
+      "FRAXINUS EXELSIOR"
+    ]
+  },
+  "FRAXINUS LATIFOLIA": {
+    "inat_id": 63878,
+    "vernacular": {
+      "en": "Oregon Ash",
+      "de": "Oregon-Esche",
+      "fr": "frêne d'Orégon"
+    }
+  },
+  "FRAXINUS LONGICUSPIS": {
+    "inat_id": 1550982,
+    "vernacular": {}
+  },
+  "FRAXINUS ORNUS": {
+    "inat_id": 319281,
+    "vernacular": {
+      "nl": "Pluimes",
+      "en": "Manna ash",
+      "de": "Blumenesche",
+      "fr": "Frêne à fleurs"
+    },
+    "aliases": [
+      "FRAXINUS OR",
+      "FRAXINUS OR."
+    ]
+  },
+  "FRAXINUS PALLISIAE": {
+    "inat_id": 912574,
+    "vernacular": {
+      "en": "German ash",
+      "de": "Behaarte Esche"
+    },
+    "aliases": [
+      "FRAXINUS HOLOTRICHA"
+    ]
+  },
+  "FRAXINUS PENDULA": {
+    "inat_id": null
+  },
+  "FRAXINUS PENNSYLVANICA": {
+    "inat_id": 54808,
+    "vernacular": {
+      "nl": "Pennsylvaanse es",
+      "en": "green ash",
+      "de": "Rotesche",
+      "fr": "frêne rouge"
+    },
+    "aliases": [
+      "FRAX. PENS.",
+      "FRAXINUS PE",
+      "FRAXINUS PENNS.",
+      "FRAXINUS PENS.",
+      "FRAXINUS PENSYLVANICA"
+    ]
+  },
+  "FRAXINUS PLATYPODA": {
+    "inat_id": 789731,
+    "vernacular": {
+      "de": "Breitstielige Esche"
+    },
+    "aliases": [
+      "FRAXINUS SPAETHIANA"
+    ]
+  },
+  "FRAXINUS QUADRANGULATA": {
+    "inat_id": 54810,
+    "vernacular": {
+      "en": "blue ash",
+      "de": "Blauesche",
+      "fr": "frêne anguleux"
+    }
+  },
+  "FRAXINUS VELUTINA": {
+    "inat_id": 64132,
+    "vernacular": {
+      "en": "velvet ash",
+      "de": "Arizona-Esche"
+    }
+  },
+  "FRAXINUS XANTHOXYLOIDES": {
+    "inat_id": 868624,
+    "vernacular": {
+      "de": "Afghanische Esche"
+    },
+    "aliases": [
+      "FRAXINUS ANTHOXYLOIDES",
+      "FRAXINUS XANTHOXYLOI"
+    ]
+  },
+  "GARCINIA LIVINGSTONEI": {
+    "inat_id": 340173,
+    "vernacular": {
+      "en": "African mangosteen"
+    }
+  },
+  "GENISTA LYDIA": {
+    "inat_id": 948249,
+    "vernacular": {}
+  },
+  "GINGKO BILOBA": {
+    "inat_id": 64350,
+    "vernacular": {
+      "en": "ginkgo",
+      "fr": "Ginkgo",
+      "nl": "Ginkgo",
+      "de": "Ginkgo"
+    }
+  },
+  "GINKGO": {
+    "inat_id": 64355,
+    "vernacular": {
+      "de": "Ginkgo",
+      "nl": "Ginkgo",
+      "en": "Ginkgo"
+    }
+  },
+  "GINKGO BILOBA": {
+    "inat_id": 64350,
+    "vernacular": {
+      "nl": "Ginkgo",
+      "en": "ginkgo",
+      "de": "Ginkgo",
+      "fr": "Ginkgo"
+    },
+    "aliases": [
+      "GINGO BILOBA",
+      "GINKGO BI",
+      "GINKO BILOBA"
+    ]
+  },
+  "GLEDITSIA": {
+    "inat_id": 48498,
+    "vernacular": {
+      "en": "honey locusts"
+    }
+  },
+  "GLEDITSIA CASPICA": {
+    "inat_id": 794570,
+    "vernacular": {
+      "en": "Caspian locust"
+    }
+  },
+  "GLEDITSIA JAPONICA": {
+    "inat_id": 340545,
+    "vernacular": {
+      "en": "Japanese honey locust",
+      "de": "Japanische Gleditschie"
+    }
+  },
+  "GLEDITSIA TRIACANTHOS": {
+    "inat_id": 54797,
+    "vernacular": {
+      "nl": "valse christusdoorn",
+      "en": "honey locust",
+      "de": "Lederhülsenbaum",
+      "fr": "févier épineux"
+    },
+    "aliases": [
+      "GLEDISTIA TRIACANTHOS",
+      "GLEDIT. TR",
+      "GLEDITSIA TR",
+      "GLEDITSIA TRIACANTH.",
+      "GLEDITSIA TRIACANTHUS",
+      "GLEDITSIA TRICANTHOS",
+      "GLESITSIA TRIACANTHOS"
+    ]
+  },
+  "GLYPTOSTROBUS PENSILIS": {
+    "inat_id": 135911,
+    "vernacular": {
+      "en": "Chinese swamp cypress"
+    }
+  },
+  "GRIFFITHARIA THIBETICA": {
+    "inat_id": 1277909
+  },
+  "GYMNOCLADUS DIOICA": {
+    "aliases": [
+      "GYMNOCLADUS DIOCA"
+    ]
+  },
+  "GYMNOCLADUS DIOICUS": {
+    "inat_id": 163451,
+    "vernacular": {
+      "nl": "doodsbeenderenboom",
+      "en": "Kentucky coffeetree",
+      "de": "Geweihbaum",
+      "fr": "Chicot du Canada"
+    },
+    "aliases": [
+      "GYMNOCLADUS DIOICA"
+    ]
+  },
+  "HALESIA": {
+    "inat_id": 157425,
+    "vernacular": {
+      "en": "silverbells"
+    }
+  },
+  "HALESIA CAROLINA": {
+    "inat_id": 157424,
+    "vernacular": {
+      "nl": "Sneeuwklokjesboom",
+      "en": "Carolina Silverbell"
+    },
+    "aliases": [
+      "HALESIA CA",
+      "HALESIA MONTICOLA"
+    ]
+  },
+  "HAMAMELIS": {
+    "inat_id": 51971,
+    "vernacular": {
+      "en": "witch-hazels",
+      "nl": "Toverhazelaars"
+    }
+  },
+  "HAMAMELIS JAPONICA": {
+    "inat_id": 428421,
+    "vernacular": {
+      "en": "Japanese Witch-Hazel"
+    }
+  },
+  "HAMAMELIS MOLLIS": {
+    "inat_id": 410828,
+    "vernacular": {
+      "en": "Chinese witch-hazel",
+      "fr": "Hamamélis de Chine"
+    }
+  },
+  "HAMAMELIS VIRGINIANA": {
+    "inat_id": 51970,
+    "vernacular": {
+      "en": "american witch-hazel",
+      "de": "Virginische Zaubernuss",
+      "fr": "hamamélis de Virginie"
+    },
+    "aliases": [
+      "HAMAMELIS VIRGINIA"
+    ]
+  },
+  "HAMAMELIS × INTERMEDIA": {
+    "inat_id": 1231667,
+    "vernacular": {
+      "en": "hybrid witch-hazel"
+    },
+    "aliases": [
+      "HAMAMELIS INTERMEDIA"
+    ]
+  },
+  "HARMONIA AXYRIDIS": {
+    "inat_id": 48484
+  },
+  "HEDERA HELIX": {
+    "inat_id": 55882,
+    "vernacular": {
+      "nl": "klimop",
+      "en": "common ivy",
+      "de": "Efeu",
+      "fr": "lierre d'Europe"
+    }
+  },
+  "HEDLUNDIA AUSTRIACA": {
+    "inat_id": 1277857
+  },
+  "HEDLUNDIA HYBRIDA": {
+    "inat_id": 1277875
+  },
+  "HEDLUNDIA MINIMA": {
+    "inat_id": 1277880
+  },
+  "HELIANTHUS TUBEROSUS": {
+    "inat_id": 122970,
+    "vernacular": {
+      "nl": "Aardpeer",
+      "en": "Jerusalem artichoke",
+      "de": "Topinambur",
+      "fr": "Hélianthe tubéreux"
+    }
+  },
+  "HEMIPTELEA DAVIDII": {
+    "inat_id": 1074654,
+    "vernacular": {}
+  },
+  "HEPTACODIUM MICONIOIDES": {
+    "inat_id": 186498,
+    "vernacular": {
+      "en": "Seven Sons Tree"
+    },
+    "aliases": [
+      "HEPTACODIUM MICNOIOIDES",
+      "HEPTACODIUM MICOINOIDES",
+      "HEPTACODIUM MICONOIDES"
+    ]
+  },
+  "HESPEROCYPARIS ARIZONICA": {
+    "inat_id": 1515459
+  },
+  "HESPEROCYPARIS BAKERI": {
+    "inat_id": 77374
+  },
+  "HESPEROCYPARIS GLABRA": {
+    "inat_id": 1515467
+  },
+  "HESPEROCYPARIS MACROCARPA": {
+    "inat_id": 77378
+  },
+  "HIBISCUS": {
+    "inat_id": 48891,
+    "vernacular": {
+      "en": "hibiscuses",
+      "de": "Eibisch",
+      "fr": "Hibiscus"
+    }
+  },
+  "HIBISCUS SYRIACUS": {
+    "inat_id": 126585,
+    "vernacular": {
+      "nl": "Altheastruik",
+      "en": "common hibiscus",
+      "de": "Straucheibisch",
+      "fr": "Althéa"
+    },
+    "aliases": [
+      "HIBISCUS SYR."
+    ]
+  },
+  "HIPPOPHAE RHAMNOIDES": {
+    "inat_id": 163812,
+    "vernacular": {
+      "nl": "duindoorn",
+      "en": "Sea-buckthorn",
+      "de": "Sanddorn",
+      "fr": "Argousier faux-nerprun"
+    }
+  },
+  "HIPPOPHAE SALICIFOLIA": {
+    "inat_id": 968757,
+    "vernacular": {
+      "nl": "Wilgbladige duindoorn"
+    }
+  },
+  "HOVENIA DULCIS": {
+    "inat_id": 163847,
+    "vernacular": {
+      "en": "Japanese Raisin Tree"
+    }
+  },
+  "HYDRANGEA MACROPHYLLA": {
+    "inat_id": 122034,
+    "vernacular": {
+      "nl": "hortensia",
+      "en": "mophead hydrangea",
+      "de": "Gartenhortensie",
+      "fr": "Hortensia"
+    }
+  },
+  "HYDRANGEA PANICULATA": {
+    "inat_id": 133390,
+    "vernacular": {
+      "nl": "Pluimhortensia",
+      "en": "Panicle Hydrangea",
+      "de": "Rispen-Hortensie"
+    }
+  },
+  "HYDRANGEA QUERCIFOLIA": {
+    "inat_id": 83156,
+    "vernacular": {
+      "nl": "Eikenbladhortensia",
+      "en": "oakleaf hydrangea",
+      "fr": "Hortensia à feuilles de chêne"
+    }
+  },
+  "IDESIA POLYCARPA": {
+    "inat_id": 402779,
+    "vernacular": {
+      "en": "Wonder tree"
+    }
+  },
+  "ILEX": {
+    "inat_id": 53854,
+    "vernacular": {
+      "en": "hollies",
+      "de": "Stechpalmen"
+    }
+  },
+  "ILEX AQUIFOLIUM": {
+    "inat_id": 53856,
+    "vernacular": {
+      "nl": "Hulst",
+      "en": "European holly",
+      "de": "Europäische Stechpalme",
+      "fr": "Houx commun"
+    }
+  },
+  "ILEX BIORITSENSIS": {
+    "inat_id": 708962,
+    "vernacular": {},
+    "aliases": [
+      "ILEX CILIOSPINOSA"
+    ]
+  },
+  "ILEX BUERGERI": {
+    "inat_id": 1113319,
+    "vernacular": {}
+  },
+  "ILEX PERNYI": {
+    "inat_id": 431139,
+    "vernacular": {
+      "en": "Perny Holly"
+    }
+  },
+  "ILEX VERTICILLATA": {
+    "inat_id": 61119,
+    "vernacular": {
+      "en": "winterberry holly",
+      "fr": "houx verticillé"
+    }
+  },
+  "ILEX × ALTACLERENSIS": {
+    "inat_id": 336265,
+    "vernacular": {
+      "nl": "Grootbladige hulst",
+      "en": "Highclere Holly"
+    },
+    "aliases": [
+      "ILEX ALTACLERENSIS"
+    ]
+  },
+  "ILEX × AQUIPERNYI": {
+    "inat_id": null,
+    "aliases": [
+      "ILEX AQUIPERNYI"
+    ]
+  },
+  "ILEX × KOEHNEANA": {
+    "inat_id": 1598847,
+    "vernacular": {
+      "fr": "Houx à feuilles de châtaignier"
+    },
+    "aliases": [
+      "ILEX KOEHNEANA"
+    ]
+  },
+  "ILEX × MESERVEAE": {
+    "inat_id": 1394044,
+    "vernacular": {
+      "en": "Blue Holly"
+    }
+  },
+  "ITEA VIRGINICA": {
+    "inat_id": 83152,
+    "vernacular": {
+      "en": "Virginia sweetspire"
+    }
+  },
+  "JUGLANS": {
+    "inat_id": 54495,
+    "vernacular": {
+      "en": "Walnuts",
+      "de": "Walnüsse",
+      "nl": "Walnoten"
+    }
+  },
+  "JUGLANS AILANTIFOLIA": {
+    "inat_id": 122793,
+    "vernacular": {
+      "en": "Japanese walnut",
+      "de": "Japanische Walnuss",
+      "fr": "Noyer du Japon"
+    },
+    "aliases": [
+      "JUGLANS AILANTHIFOLIA"
+    ]
+  },
+  "JUGLANS CATHAYENSIS": {
+    "inat_id": null
+  },
+  "JUGLANS CINEREA": {
+    "inat_id": 54792,
+    "vernacular": {
+      "nl": "witte walnoot",
+      "en": "Butternut",
+      "de": "Butternuss",
+      "fr": "noyer cendré"
+    }
+  },
+  "JUGLANS MANDSHURICA": {
+    "inat_id": 366815,
+    "vernacular": {
+      "en": "Manchurian walnut",
+      "de": "Mandschurische Walnuss"
+    }
+  },
+  "JUGLANS NIGRA": {
+    "inat_id": 54504,
+    "vernacular": {
+      "nl": "Zwarte walnoot",
+      "en": "eastern black walnut",
+      "de": "Schwarznussbaum",
+      "fr": "Noyer noir"
+    }
+  },
+  "JUGLANS REGIA": {
+    "inat_id": 63935,
+    "vernacular": {
+      "nl": "Okkernoot",
+      "en": "Persian walnut",
+      "de": "Echte Walnuss",
+      "fr": "Noyer commun"
+    },
+    "aliases": [
+      "OKKERNOOT"
+    ]
+  },
+  "JUNIPERUS": {
+    "inat_id": 47574,
+    "vernacular": {
+      "en": "junipers",
+      "fr": "genévriers",
+      "de": "Wacholder",
+      "nl": "Jeneverbessen"
+    }
+  },
+  "JUNIPERUS CHINENSIS": {
+    "inat_id": 135925,
+    "vernacular": {
+      "nl": "Chinese jeneverbes",
+      "en": "Chinese juniper",
+      "fr": "Genévrier de Chine"
+    }
+  },
+  "JUNIPERUS COMMUNIS": {
+    "inat_id": 58725,
+    "vernacular": {
+      "nl": "Jeneverbes",
+      "en": "common juniper",
+      "de": "Gemeiner Wacholder",
+      "fr": "genévrier commun"
+    }
+  },
+  "JUNIPERUS HORIZONTALIS": {
+    "inat_id": 47573,
+    "vernacular": {
+      "nl": "Kruipende jeneverbes",
+      "en": "creeping juniper",
+      "fr": "genévrier horizontal"
+    }
+  },
+  "JUNIPERUS RIGIDA": {
+    "inat_id": 135879,
+    "vernacular": {
+      "nl": "Tempeljeneverbes",
+      "en": "temple juniper"
+    }
+  },
+  "JUNIPERUS SABINA": {
+    "inat_id": 47572,
+    "vernacular": {
+      "nl": "Zevenboom",
+      "en": "savin juniper",
+      "de": "Sefistrauch",
+      "fr": "Genévrier sabine"
+    }
+  },
+  "JUNIPERUS SCOPULORUM": {
+    "inat_id": 135883,
+    "vernacular": {
+      "nl": "Bergjeneverbes",
+      "en": "Rocky Mountain Juniper",
+      "fr": "genévrier des Rocheuses"
+    }
+  },
+  "JUNIPERUS SEMIGLOBOSA": {
+    "inat_id": 135884,
+    "vernacular": {
+      "nl": "Potloodjeneverbes",
+      "en": "Himalayan pencil juniper"
+    },
+    "aliases": [
+      "JUNIPERUS MEDIA"
+    ]
+  },
+  "JUNIPERUS SQUAMATA": {
+    "inat_id": 135885,
+    "vernacular": {
+      "nl": "Schubbige jeneverbes",
+      "en": "flaky juniper",
+      "de": "Beschuppter Wacholder"
+    }
+  },
+  "JUNIPERUS TIBETICA": {
+    "inat_id": 135889,
+    "vernacular": {
+      "en": "Tibetan juniper"
+    }
+  },
+  "JUNIPERUS VIRGINIANA": {
+    "inat_id": 49399,
+    "vernacular": {
+      "nl": "Cederhoutboom",
+      "en": "eastern redcedar",
+      "de": "Virginischer Wacholder",
+      "fr": "genévrier de Virginie"
+    }
+  },
+  "JUNIPERUS × PFITZERIANA": {
+    "inat_id": 551907,
+    "vernacular": {
+      "nl": "Pfitzers jeneverbes",
+      "en": "Pfitzer's juniper"
+    },
+    "aliases": [
+      "JUNIPERUS PFITZERIANA"
+    ]
+  },
+  "KALOPANAX SEPTEMLOBUS": {
+    "inat_id": 164342,
+    "vernacular": {
+      "en": "Castor-Aralia"
+    }
+  },
+  "KARPATIOSORBUS DEVONIENSIS": {
+    "inat_id": 1137880
+  },
+  "KARPATIOSORBUS LATIFOLIA": {
+    "inat_id": 1277876
+  },
+  "KARPATIOSORBUS PSEUDOLATIFOLIA": {
+    "inat_id": 1291458
+  },
+  "KERS HOEVE": {
+    "inat_id": null
+  },
+  "KERS KONINGSKERS": {
+    "inat_id": null
+  },
+  "KERS PATER": {
+    "inat_id": null
+  },
+  "KERS PUTTERS": {
+    "inat_id": null
+  },
+  "KOELERIA GLAUCA": {
+    "inat_id": 507473,
+    "vernacular": {
+      "de": "Blaugrünes Schillergras",
+      "fr": "Koélérie glauque"
+    }
+  },
+  "KOELREUTERIA": {
+    "inat_id": 58322,
+    "vernacular": {}
+  },
+  "KOELREUTERIA BIPINNATA": {
+    "inat_id": 133608,
+    "vernacular": {
+      "en": "Chinese flame tree"
+    }
+  },
+  "KOELREUTERIA INTEGRIFOLIA": {
+    "inat_id": null
+  },
+  "KOELREUTERIA PANICULATA": {
+    "inat_id": 58320,
+    "vernacular": {
+      "nl": "Gele zeepboom",
+      "en": "golden rain tree",
+      "de": "Blasenesche",
+      "fr": "Savonnier"
+    },
+    "aliases": [
+      "KOELREUTERIA PANICU"
+    ]
+  },
+  "KOLKWITZIA AMABILIS": {
+    "inat_id": 52501,
+    "vernacular": {
+      "nl": "Koninginnenstruik",
+      "en": "Beauty Bush",
+      "de": "Kolkwitzie",
+      "fr": "Buisson de beauté"
+    }
+  },
+  "LABURNOCYTISUS ADAMII": {
+    "inat_id": null
+  },
+  "LABURNUM": {
+    "inat_id": 51811,
+    "vernacular": {
+      "en": "Laburnums",
+      "fr": "Cytise",
+      "de": "Goldregen",
+      "nl": "Goudenregen"
+    },
+    "aliases": [
+      "LABURNUM X"
+    ]
+  },
+  "LABURNUM ALPINUM": {
+    "inat_id": 371837,
+    "vernacular": {
+      "nl": "Alpengoudenregen",
+      "en": "Alpine Laburnum",
+      "de": "Alpen-Goldregen",
+      "fr": "Cytise des Alpes"
+    }
+  },
+  "LABURNUM ANAGYROIDES": {
+    "inat_id": 51810,
+    "vernacular": {
+      "nl": "Gouden regen",
+      "en": "Common Laburnum",
+      "de": "Gemeiner Goldregen",
+      "fr": "Cytise faux ébénier"
+    },
+    "aliases": [
+      "LABURNUM ANAGYROIDIS"
+    ]
+  },
+  "LABURNUM × WATERERI": {
+    "inat_id": 128549,
+    "vernacular": {
+      "nl": "Basterdgoudenregen",
+      "en": "Hybrid Laburnum"
+    },
+    "aliases": [
+      "LABURNUM WA",
+      "LABURNUM WATERERI",
+      "LABURNUM WATERERII",
+      "LABURNUM × WATERERII"
+    ]
+  },
+  "LAGERSTROEMIA": {
+    "inat_id": 68717,
+    "vernacular": {
+      "en": "crape-myrtles",
+      "de": "Kräuselmyrten"
+    }
+  },
+  "LAGERSTROEMIA INDICA": {
+    "inat_id": 135394,
+    "vernacular": {
+      "en": "Crape-myrtle",
+      "fr": "Lilas des Indes"
+    }
+  },
+  "LAGERSTROEMIA NATCHEZ": {
+    "inat_id": null
+  },
+  "LARIX": {
+    "inat_id": 55571,
+    "vernacular": {
+      "en": "larches",
+      "fr": "Mélèzes",
+      "de": "Lärchen",
+      "nl": "Lorken"
+    }
+  },
+  "LARIX DECIDUA": {
+    "inat_id": 59747,
+    "vernacular": {
+      "nl": "Europese lork",
+      "en": "European larch",
+      "de": "Europäische Lärche",
+      "fr": "Mélèze d'Europe"
+    },
+    "aliases": [
+      "LARIX EUROPAEA"
+    ]
+  },
+  "LARIX GMELINII": {
+    "inat_id": 135892,
+    "vernacular": {
+      "nl": "Aziatische lork",
+      "en": "Dahurian larch",
+      "de": "Daurische Lärche",
+      "fr": "Mélèze de Dahurie"
+    }
+  },
+  "LARIX KAEMPFERI": {
+    "inat_id": 143786,
+    "vernacular": {
+      "nl": "Goudlork",
+      "en": "Japanese larch",
+      "de": "Japanische Lärche",
+      "fr": "Mélèze du Japon"
+    },
+    "aliases": [
+      "LARIX LEPTOLEPIS",
+      "LARIX × KAEMPFERI"
+    ]
+  },
+  "LARIX KONGBOENSIS": {
+    "inat_id": null
+  },
+  "LARIX LARICINA": {
+    "inat_id": 58721,
+    "vernacular": {
+      "nl": "Amerikaanse lork",
+      "en": "tamarack",
+      "de": "Ostamerikanische Lärche",
+      "fr": "Mélèze laricin"
+    }
+  },
+  "LARIX OCCIDENTALIS": {
+    "inat_id": 69849,
+    "vernacular": {
+      "nl": "West-Amerikaanse lork",
+      "en": "western larch",
+      "de": "Westamerikanische Lärche",
+      "fr": "mélèze de l'Ouest"
+    }
+  },
+  "LARIX × EUROLEPIS": {
+    "inat_id": 1630127,
+    "vernacular": {},
+    "aliases": [
+      "LARIX EUROLEPIS"
+    ]
+  },
+  "LARIX × MARSCHLINSII": {
+    "inat_id": 359768,
+    "vernacular": {
+      "nl": "Europese lork x Japanse lork",
+      "en": "hybrid larch",
+      "fr": "Mélèze de Marschlins"
+    },
+    "aliases": [
+      "LARIX MARSCHLINSI"
+    ]
+  },
+  "LAURUS NOBILIS": {
+    "inat_id": 54759,
+    "vernacular": {
+      "nl": "Laurierboom",
+      "en": "Bay laurel",
+      "de": "Echter Lorbeer",
+      "fr": "Laurier-sauce"
+    }
+  },
+  "LESPEDEZA THUNBERGII": {
+    "inat_id": 138984,
+    "vernacular": {
+      "en": "Thunberg's lespedeza"
+    }
+  },
+  "LEUCOTHOE": {
+    "inat_id": 72216,
+    "vernacular": {
+      "en": "doghobble"
+    }
+  },
+  "LEUCOTHOE AXILLARIS": {
+    "inat_id": 127488,
+    "vernacular": {
+      "en": "Swamp Dog-laurel"
+    }
+  },
+  "LEUCOTHOE FONTANESIANA": {
+    "inat_id": 164664,
+    "vernacular": {
+      "en": "mountain doghobble",
+      "de": "Gebogene Traubenheide",
+      "fr": "Leucothoë de Desfontaines"
+    }
+  },
+  "LEYCESTERIA FORMOSA": {
+    "inat_id": 127412,
+    "vernacular": {
+      "nl": "Fazantenbes",
+      "en": "Himalayan honeysuckle",
+      "de": "Schöne Leycesterie",
+      "fr": "Arbre aux faisans"
+    }
+  },
+  "LIBOCEDRUS CALOCEDRU": {
+    "inat_id": null
+  },
+  "LIGUSTRUM": {
+    "inat_id": 69819,
+    "vernacular": {
+      "en": "privets",
+      "de": "Liguster",
+      "fr": "Troènes"
+    }
+  },
+  "LIGUSTRUM JAPONICUM": {
+    "inat_id": 77739,
+    "vernacular": {
+      "en": "wax-leaf ligustrum",
+      "fr": "troène du Japon"
+    },
+    "aliases": [
+      "LIGUSTRUM JAPONICA"
+    ]
+  },
+  "LIGUSTRUM LUCIDUM": {
+    "inat_id": 77740,
+    "vernacular": {
+      "en": "tree privet",
+      "de": "Glänzender Liguster",
+      "fr": "Troène luisant"
+    }
+  },
+  "LIGUSTRUM SINENSE": {
+    "inat_id": 128769
+  },
+  "LIGUSTRUM VULGARE": {
+    "inat_id": 119805,
+    "vernacular": {
+      "nl": "Wilde liguster",
+      "en": "Common Privet",
+      "de": "Gewöhnlicher Liguster",
+      "fr": "Troène commun"
+    },
+    "aliases": [
+      "LIGUSTRUM VULGARIS"
+    ]
+  },
+  "LINDE": {
+    "inat_id": null
+  },
+  "LIQIUDAMBAR ORIENTALIS": {
+    "inat_id": null
+  },
+  "LIQUIDAMBAR": {
+    "inat_id": 49661,
+    "vernacular": {
+      "en": "sweetgums",
+      "fr": "Liquidambars",
+      "de": "Amberbäume"
+    }
+  },
+  "LIQUIDAMBAR ACALYCINA": {
+    "inat_id": 553596,
+    "vernacular": {
+      "en": "Chang’s sweet gum",
+      "fr": "Liquidambar sans calice"
+    }
+  },
+  "LIQUIDAMBAR FORMOSANA": {
+    "inat_id": 135413,
+    "vernacular": {
+      "en": "Chinese Sweetgum"
+    }
+  },
+  "LIQUIDAMBAR ORIENTALIS": {
+    "inat_id": 356068,
+    "vernacular": {
+      "en": "Oriental Sweetgum",
+      "fr": "Liquidambar oriental"
+    },
+    "aliases": [
+      "LIQUIDAMBAR ORIENTAL"
+    ]
+  },
+  "LIQUIDAMBAR STYRACIFLUA": {
+    "inat_id": 49658,
+    "vernacular": {
+      "nl": "Amberboom",
+      "en": "American sweetgum",
+      "de": "Amerikanischer Amberbaum",
+      "fr": "Copalme d'Amérique"
+    },
+    "aliases": [
+      "LIQ. STYRA.",
+      "LIQUID.ST.",
+      "LIQUIDAMBAR S.",
+      "LIQUIDAMBAR ST.",
+      "LIQUIDAMBAR STYRA.",
+      "LIQUIDAMBAR STYRAC.",
+      "LIQUIDAMBAR STYRAFLUA",
+      "LIQUIDAMBAR STYRECIFLUA"
+    ]
+  },
+  "LIRIODENDRON": {
+    "inat_id": 53580,
+    "vernacular": {
+      "en": "Tulip trees",
+      "de": "Tulpenbäume"
+    }
+  },
+  "LIRIODENDRON CHINENSE": {
+    "inat_id": 125421,
+    "vernacular": {
+      "en": "Chinese tulip tree",
+      "de": "Chinesischer Tulpenbaum",
+      "fr": "Tulipier de Chine"
+    }
+  },
+  "LIRIODENDRON TULIPIFERA": {
+    "inat_id": 53582,
+    "vernacular": {
+      "nl": "tulpenboom",
+      "en": "American tuliptree",
+      "de": "Tulpenbaum",
+      "fr": "tulipier de virginie"
+    },
+    "aliases": [
+      "LIRIODENDRON TULIP.",
+      "LIRIODENDRON TULIPFERA",
+      "LIRIODENDRON TULIPIFERUM"
+    ]
+  },
+  "LONICERA CAERULEA": {
+    "inat_id": 164761,
+    "vernacular": {
+      "nl": "Honingbes",
+      "en": "Sweetberry Honeysuckle",
+      "de": "Blaue Heckenkirsche",
+      "fr": "Camérisier bleu"
+    }
+  },
+  "LONICERA FRAGRANTISSIMA": {
+    "inat_id": 164763,
+    "vernacular": {
+      "en": "Winter honeysuckle",
+      "de": "Wohlriechende Heckenkirsche",
+      "fr": "Chèvrefeuille d'hiver"
+    }
+  },
+  "LONICERA NITIDA": {
+    "inat_id": null
+  },
+  "LONICERA TATARICA": {
+    "inat_id": 77836,
+    "vernacular": {
+      "nl": "Tartaarse kamperfoelie",
+      "en": "Tatarian honeysuckle",
+      "de": "Tataren-Heckenkirsche",
+      "fr": "Chèvrefeuille de Tartarie"
+    }
+  },
+  "LOPHOCAMPA CARYAE": {
+    "inat_id": 82225
+  },
+  "LYSSOMANES VIRIDIS": {
+    "inat_id": 68315
+  },
+  "MAACKIA AMURENSIS": {
+    "inat_id": 133358,
+    "vernacular": {
+      "en": "amur maackia"
+    },
+    "aliases": [
+      "MAACKIA AMURENSE"
+    ]
+  },
+  "MAACKIA HUPEHENSIS": {
+    "inat_id": 525693,
+    "vernacular": {},
+    "aliases": [
+      "MAACKIA CHINENSIS"
+    ]
+  },
+  "MACLURA POMIFERA": {
+    "inat_id": 58205,
+    "vernacular": {
+      "nl": "Osagedoorn",
+      "en": "Osage-orange",
+      "de": "Milchorangenbaum",
+      "fr": "Oranger des Osages"
+    }
+  },
+  "MACLURA TRICUSPIDATA": {
+    "inat_id": 743229
+  },
+  "MACROMELES TSCHONOSKII": {
+    "inat_id": 984352
+  },
+  "MADDENIA HYPOLEUCA": {
+    "inat_id": null
+  },
+  "MAGNOLIA": {
+    "inat_id": 82096,
+    "vernacular": {
+      "en": "magnolias",
+      "de": "Magnolien"
+    }
+  },
+  "MAGNOLIA ACUMINATA": {
+    "inat_id": 117426,
+    "vernacular": {
+      "en": "Cucumber-tree",
+      "de": "Gurken-Magnolie",
+      "fr": "magnolia acuminé"
+    }
+  },
+  "MAGNOLIA CAMPBELLII": {
+    "inat_id": 439967,
+    "vernacular": {
+      "en": "Campbell's Magnolia"
+    }
+  },
+  "MAGNOLIA DAWSONIANA": {
+    "inat_id": 498815,
+    "vernacular": {
+      "en": "Dawson's magnolia"
+    }
+  },
+  "MAGNOLIA DENUDATA": {
+    "inat_id": 125423,
+    "vernacular": {
+      "nl": "Oosterse magnolia",
+      "en": "Yulan magnolia"
+    }
+  },
+  "MAGNOLIA ELISABETH": {
+    "inat_id": null
+  },
+  "MAGNOLIA FAIRY": {
+    "inat_id": null
+  },
+  "MAGNOLIA FRASERI": {
+    "inat_id": 165074,
+    "vernacular": {
+      "en": "Fraser Magnolia"
+    }
+  },
+  "MAGNOLIA GALAXY": {
+    "inat_id": null
+  },
+  "MAGNOLIA GRANDIDENTATA": {
+    "inat_id": null
+  },
+  "MAGNOLIA GRANDIFLORA": {
+    "inat_id": 83074,
+    "vernacular": {
+      "en": "southern magnolia",
+      "de": "Immergrüne Magnolie",
+      "fr": "Magnolia à grandes fleurs"
+    }
+  },
+  "MAGNOLIA HEAVEN": {
+    "inat_id": null
+  },
+  "MAGNOLIA HYBRIDA": {
+    "inat_id": null
+  },
+  "MAGNOLIA KOBUS": {
+    "inat_id": 143787,
+    "vernacular": {
+      "nl": "Beverboom",
+      "en": "Kobus magnolia",
+      "fr": "Magnolia de Kobé"
+    },
+    "aliases": [
+      "MAGN. KO.",
+      "MAGNOLIA KO."
+    ]
+  },
+  "MAGNOLIA LAEVIFOLIA": {
+    "inat_id": 431250,
+    "vernacular": {}
+  },
+  "MAGNOLIA LILIIFLORA": {
+    "inat_id": 125761,
+    "vernacular": {
+      "en": "Lily Magnolia",
+      "fr": "Magnolia à fleurs de lis"
+    },
+    "aliases": [
+      "MAGNOLIA LILIFLORA"
+    ]
+  },
+  "MAGNOLIA MACROPHYLLA": {
+    "inat_id": 165075,
+    "vernacular": {
+      "en": "bigleaf magnolia",
+      "de": "Großblättrige Magnolie",
+      "fr": "Magnolia à grandes feuilles"
+    }
+  },
+  "MAGNOLIA OBOVATA": {
+    "inat_id": 437561,
+    "vernacular": {
+      "en": "Japanese bigleaf magnolia"
+    },
+    "aliases": [
+      "MAGNOLIA HYPOLEUCA"
+    ]
+  },
+  "MAGNOLIA SALICIFOLIA": {
+    "inat_id": 440087,
+    "vernacular": {
+      "en": "Willow-leafed Magnolia"
+    }
+  },
+  "MAGNOLIA SARGENTIANA": {
+    "inat_id": 440091,
+    "vernacular": {}
+  },
+  "MAGNOLIA SHIRAZZ": {
+    "inat_id": null
+  },
+  "MAGNOLIA SIEBOLDII": {
+    "inat_id": 128741,
+    "vernacular": {
+      "en": "Oyama Magnolia"
+    },
+    "aliases": [
+      "MAGNOLIA SIBOLDII"
+    ]
+  },
+  "MAGNOLIA SPECTRUM": {
+    "inat_id": null
+  },
+  "MAGNOLIA STELLATA": {
+    "inat_id": 126710,
+    "vernacular": {
+      "nl": "Sterbloem-magnolia",
+      "en": "star magnolia",
+      "de": "Stern-Magnolie",
+      "fr": "Magnolia étoilé"
+    }
+  },
+  "MAGNOLIA SUZAN": {
+    "inat_id": null
+  },
+  "MAGNOLIA TRIPETALA": {
+    "inat_id": 84790,
+    "vernacular": {
+      "nl": "Westerse magnolia",
+      "en": "umbrella magnolia",
+      "de": "Schirm-Magnolie"
+    },
+    "aliases": [
+      "MAGNOLIA TRIPETALE",
+      "MAGNOLIA TRIPETATA"
+    ]
+  },
+  "MAGNOLIA WADA": {
+    "inat_id": null
+  },
+  "MAGNOLIA YELLOW": {
+    "inat_id": null
+  },
+  "MAGNOLIA × BROOKLYNENSIS": {
+    "inat_id": 1529515,
+    "vernacular": {},
+    "aliases": [
+      "MAGNOLIA BROOKLYNENSIS"
+    ]
+  },
+  "MAGNOLIA × LOEBNERI": {
+    "inat_id": 1529435,
+    "vernacular": {
+      "en": "Loebner Magnolia"
+    },
+    "aliases": [
+      "MAGNOLIA LOEBNERI",
+      "MAGNOLIA LOEBNERII",
+      "MAGNOLIA ×LOEBNERI"
+    ]
+  },
+  "MAGNOLIA × SOULANGEANA": {
+    "inat_id": 204586,
+    "vernacular": {
+      "nl": "Gewone magnolia",
+      "en": "Saucer Magnolia",
+      "de": "Tulpen-Magnolie",
+      "fr": "Magnolia de Soulange"
+    },
+    "aliases": [
+      "MAGNOLIA SOULANGEANA",
+      "MAGNOLIA SOULANGIANA"
+    ]
+  },
+  "MAGNOLIA ‘GENIE’": {
+    "inat_id": null
+  },
+  "MAGNOLIA ‘SUNSATION’": {
+    "inat_id": null
+  },
+  "MAHONIA AQUIFOLIUM": {
+    "inat_id": null
+  },
+  "MAHONIA BEALEI": {
+    "inat_id": null
+  },
+  "MAHONIA JAPONICA": {
+    "inat_id": null
+  },
+  "MALLOTUS JAPONICUS": {
+    "inat_id": 452256,
+    "vernacular": {
+      "en": "Mallotus"
+    }
+  },
+  "MALURUS CYANEUS": {
+    "inat_id": 12065
+  },
+  "MALUS": {
+    "inat_id": 54500,
+    "vernacular": {
+      "en": "apples and crabapples",
+      "de": "Äpfel",
+      "fr": "Pommiers"
+    },
+    "aliases": [
+      "MALUS HYBRIDE",
+      "MALUS CULTIVARS"
+    ]
+  },
+  "MALUS 77303-8": {
+    "inat_id": null
+  },
+  "MALUS ADAMS": {
+    "inat_id": null
+  },
+  "MALUS ADIRONDACK": {
+    "inat_id": null
+  },
+  "MALUS ALKMENE": {
+    "inat_id": null
+  },
+  "MALUS ALMEY": {
+    "inat_id": null
+  },
+  "MALUS BACCATA": {
+    "inat_id": 165104,
+    "vernacular": {
+      "en": "Siberian crabapple",
+      "de": "Beeren-Apfel",
+      "fr": "Pommier de Sibérie"
+    },
+    "aliases": [
+      "MALUS BACC."
+    ]
+  },
+  "MALUS BUTTERBALL": {
+    "inat_id": null
+  },
+  "MALUS CHEAL": {
+    "inat_id": null
+  },
+  "MALUS CORONARIA": {
+    "inat_id": 54831,
+    "vernacular": {
+      "en": "sweet crabapple",
+      "fr": "pommier américain"
+    }
+  },
+  "MALUS DOMESTICA": {
+    "inat_id": 469472,
+    "vernacular": {
+      "nl": "Eetappel",
+      "en": "apple",
+      "de": "Apfel",
+      "fr": "pommier commun"
+    },
+    "aliases": [
+      "MALUS D",
+      "MALUS D.",
+      "MALUS DOM.",
+      "MALUS PUMILA"
+    ]
+  },
+  "MALUS EVERESTE": {
+    "inat_id": null
+  },
+  "MALUS FRUIT": {
+    "inat_id": null
+  },
+  "MALUS GLORIE": {
+    "inat_id": null
+  },
+  "MALUS GOLDEN": {
+    "inat_id": null
+  },
+  "MALUS HALLIANA": {
+    "inat_id": 452041,
+    "vernacular": {
+      "en": "Hall's Crab"
+    }
+  },
+  "MALUS HARTWIGII": {
+    "inat_id": null
+  },
+  "MALUS HILLIERI": {
+    "inat_id": null
+  },
+  "MALUS HUPEHENSIS": {
+    "inat_id": 133352,
+    "vernacular": {
+      "en": "Hupeh Crabapple",
+      "de": "Teeapfel",
+      "fr": "pommier du hou-pei"
+    }
+  },
+  "MALUS HYBRIDA": {
+    "inat_id": 1079416
+  },
+  "MALUS HYBRIDEN": {
+    "inat_id": 1079416,
+    "vernacular": {}
+  },
+  "MALUS JOHN": {
+    "inat_id": null
+  },
+  "MALUS JVT": {
+    "inat_id": null
+  },
+  "MALUS LISET": {
+    "inat_id": null
+  },
+  "MALUS MADONNA": {
+    "inat_id": null
+  },
+  "MALUS MAKAMIK": {
+    "inat_id": null
+  },
+  "MALUS MAZAM": {
+    "inat_id": null
+  },
+  "MALUS MICROMALUS": {
+    "inat_id": null
+  },
+  "MALUS MIYAMA": {
+    "inat_id": null
+  },
+  "MALUS MOKUM": {
+    "inat_id": null
+  },
+  "MALUS POM": {
+    "inat_id": null
+  },
+  "MALUS PROFESSOR": {
+    "inat_id": null
+  },
+  "MALUS PROFUSION": {
+    "inat_id": null
+  },
+  "MALUS PRUNIFOLIA": {
+    "inat_id": 58735,
+    "vernacular": {
+      "en": "Pear-leaf Crabapple"
+    }
+  },
+  "MALUS RED": {
+    "inat_id": null
+  },
+  "MALUS RODE": {
+    "inat_id": null
+  },
+  "MALUS ROYAL": {
+    "inat_id": null
+  },
+  "MALUS RUDOLPH": {
+    "inat_id": null
+  },
+  "MALUS SARGENTII": {
+    "inat_id": 127359,
+    "vernacular": {
+      "en": "Sargent Crabapple"
+    }
+  },
+  "MALUS SCHONE": {
+    "inat_id": null
+  },
+  "MALUS SIEVERSII": {
+    "inat_id": 425883,
+    "vernacular": {
+      "de": "Asiatischer Wildapfel"
+    }
+  },
+  "MALUS SIKKIMENSIS": {
+    "inat_id": 1355191,
+    "vernacular": {}
+  },
+  "MALUS SLOGAN": {
+    "inat_id": null
+  },
+  "MALUS SPECTABILIS": {
+    "inat_id": 546289,
+    "vernacular": {
+      "en": "Chinese flowering crabapple"
+    },
+    "aliases": [
+      "MALUS SP."
+    ]
+  },
+  "MALUS SUGAR": {
+    "inat_id": null
+  },
+  "MALUS SYLVESTRIS": {
+    "inat_id": 61223,
+    "vernacular": {
+      "nl": "Appel",
+      "en": "European Wild Apple",
+      "de": "Holz-Apfel",
+      "fr": "Pommier des bois"
+    },
+    "aliases": [
+      "MALUS SYLVESSTRIS",
+      "MALUS SYLVETRIS"
+    ]
+  },
+  "MALUS TORINGO": {
+    "inat_id": 133353,
+    "vernacular": {
+      "en": "Toringo Crabapple"
+    },
+    "aliases": [
+      "MALUS SI",
+      "MALUS SIEBOLDII",
+      "MALUS × SIEBOLDII"
+    ]
+  },
+  "MALUS TORINGOIDES": {
+    "inat_id": 791384,
+    "vernacular": {
+      "en": "Red-checked Crab Apple"
+    }
+  },
+  "MALUS TRILOBA": {
+    "inat_id": null
+  },
+  "MALUS TRILOBATA": {
+    "inat_id": null
+  },
+  "MALUS TSCHONOSKII": {
+    "inat_id": null
+  },
+  "MALUS VAN": {
+    "inat_id": null
+  },
+  "MALUS WINTERGOLD": {
+    "inat_id": null
+  },
+  "MALUS YUNNANENSIS": {
+    "inat_id": 1230168,
+    "vernacular": {}
+  },
+  "MALUS ZOETE": {
+    "inat_id": null
+  },
+  "MALUS × ATROSANGUINEA": {
+    "inat_id": 410512,
+    "vernacular": {},
+    "aliases": [
+      "MALUS ATROSANGUINEA"
+    ]
+  },
+  "MALUS × FLORIBUNDA": {
+    "inat_id": 165105,
+    "vernacular": {
+      "en": "Japanese Crabapple",
+      "de": "Japanischer Wildapfel",
+      "fr": "Pommier du Japon"
+    },
+    "aliases": [
+      "MALUS FLORIBUNDA"
+    ]
+  },
+  "MALUS × KAIDO": {
+    "inat_id": 1456986,
+    "vernacular": {
+      "en": "Kaido crabapple"
+    },
+    "aliases": [
+      "MALUS × MICROMALUS"
+    ]
+  },
+  "MALUS × MAGDEBURGENSIS": {
+    "inat_id": 1346489,
+    "vernacular": {},
+    "aliases": [
+      "MALUS MAGDEBURGENSIS"
+    ]
+  },
+  "MALUS × MOERLANDSII": {
+    "inat_id": 1598306,
+    "vernacular": {},
+    "aliases": [
+      "MALUS MOERLANDSII"
+    ]
+  },
+  "MALUS × PURPUREA": {
+    "inat_id": 133381,
+    "vernacular": {
+      "en": "Purple Crab"
+    },
+    "aliases": [
+      "MALUS PURPUREA"
+    ]
+  },
+  "MALUS × ROBUSTA": {
+    "inat_id": 707437,
+    "vernacular": {
+      "en": "Cherry Crab"
+    },
+    "aliases": [
+      "MALUS ROBUSTA"
+    ]
+  },
+  "MALUS × SOULARDII": {
+    "inat_id": 170872,
+    "vernacular": {
+      "en": "Soulard's crabapple"
+    },
+    "aliases": [
+      "MALUS SOULARDII"
+    ]
+  },
+  "MALUS × ZUMI": {
+    "inat_id": 1281516,
+    "vernacular": {},
+    "aliases": [
+      "MALUS XZUMI",
+      "MALUS ZUMI"
+    ]
+  },
+  "MALUS ‘RED": {
+    "inat_id": null
+  },
+  "MANILKARA ZAPOTA": {
+    "inat_id": 165144,
+    "vernacular": {
+      "en": "Sapodilla",
+      "de": "Breiapfelbaum",
+      "fr": "sapotillier"
+    }
+  },
+  "MELIOSMA BEANIANA": {
+    "inat_id": null
+  },
+  "MELIOSMA DILLENIIFOLIA": {
+    "inat_id": 867197,
+    "vernacular": {}
+  },
+  "MESPILUS GERMANICA": {
+    "inat_id": null
+  },
+  "METASEQUIOA GLYPTOSTROBOIDES": {
+    "inat_id": null
+  },
+  "METASEQUOIA GLYPTOSTROBOIDES": {
+    "inat_id": 69150,
+    "vernacular": {
+      "nl": "Watercipres",
+      "en": "dawn redwood",
+      "de": "Urweltmammutbaum",
+      "fr": "Métaséquoia du Sechuan"
+    },
+    "aliases": [
+      "METASEQUIOA GLYPT.",
+      "METASEQUOIA GLYPTOSTROBOÏDES"
+    ]
+  },
+  "MICROBIOTA DECUSSATA": {
+    "inat_id": 135859,
+    "vernacular": {
+      "en": "Siberian cypress"
+    }
+  },
+  "MORUS": {
+    "inat_id": 56091,
+    "vernacular": {
+      "en": "Mulberries",
+      "de": "Maulbeeren"
+    }
+  },
+  "MORUS ALBA": {
+    "inat_id": 56090,
+    "vernacular": {
+      "nl": "Witte moerbei",
+      "en": "white mulberry",
+      "de": "Weiße Maulbeere",
+      "fr": "Mûrier blanc"
+    },
+    "aliases": [
+      "MORUS AL"
+    ]
+  },
+  "MORUS ILLINOIS": {
+    "inat_id": null
+  },
+  "MORUS LATIFOLIA": {
+    "inat_id": null
+  },
+  "MORUS NIGRA": {
+    "inat_id": 126741,
+    "vernacular": {
+      "nl": "zwarte moerbei",
+      "en": "black mulberry",
+      "de": "Schwarze Maulbeere",
+      "fr": "mûrier noir"
+    }
+  },
+  "MORUS PAPYRIFERA": {
+    "inat_id": null
+  },
+  "MORUS RUBRA": {
+    "inat_id": 54801,
+    "vernacular": {
+      "nl": "rode moerbei",
+      "en": "red mulberry",
+      "de": "Rote Maulbeere",
+      "fr": "mûrier rouge"
+    }
+  },
+  "NAME": {
+    "inat_id": null
+  },
+  "NANDINA DOMESTICA": {
+    "inat_id": 127010,
+    "vernacular": {
+      "en": "Heavenly bamboo",
+      "de": "Heiliger Bambus",
+      "fr": "bambou sacré"
+    }
+  },
+  "NERIUM OLEANDER": {
+    "inat_id": 47563
+  },
+  "NISA SYLVATICA": {
+    "inat_id": null
+  },
+  "NOTHOFAGUS ALPINA": {
+    "inat_id": 441296,
+    "vernacular": {
+      "en": "Rauli"
+    },
+    "aliases": [
+      "NOTHOFAGUS NERVOSA"
+    ]
+  },
+  "NOTHOFAGUS ANTARCTICA": {
+    "inat_id": 407502,
+    "vernacular": {
+      "en": "Antarctic Beech",
+      "de": "Antarktische Scheinbuche"
+    },
+    "aliases": [
+      "NOTHOFAGUS ANTARCTIA",
+      "NOTHOFAGUS ANTARTICA"
+    ]
+  },
+  "NOTHOFAGUS DOMBEYI": {
+    "inat_id": 430276,
+    "vernacular": {
+      "en": "Dombey's Beech",
+      "de": "Coihue-Südbuche"
+    }
+  },
+  "NOTHOFAGUS OBLIQUA": {
+    "inat_id": 450336,
+    "vernacular": {
+      "en": "Patagonian oak"
+    }
+  },
+  "NYSSA": {
+    "inat_id": 54804,
+    "vernacular": {
+      "en": "Tupelos"
+    }
+  },
+  "NYSSA AQUATICA": {
+    "inat_id": 165760,
+    "vernacular": {
+      "en": "Water Tupelo"
+    },
+    "aliases": [
+      "NYSSA AQAUATICA"
+    ]
+  },
+  "NYSSA SINENSIS": {
+    "inat_id": 503994,
+    "vernacular": {
+      "en": "Chinese tupelo"
+    }
+  },
+  "NYSSA SYLVATICA": {
+    "inat_id": 54802,
+    "vernacular": {
+      "nl": "Zwarte tupeloboom",
+      "en": "Black Tupelo",
+      "fr": "nyssa sylvestre"
+    },
+    "aliases": [
+      "NYSSA SYLCATICA"
+    ]
+  },
+  "OEMLERIA CERASIFORMIS": {
+    "inat_id": 53419,
+    "vernacular": {
+      "en": "Osoberry",
+      "fr": "oemléria faux-prunier"
+    }
+  },
+  "OKKERNOOT": {
+    "inat_id": null,
+    "genus_checked": true
+  },
+  "OLEA": {
+    "inat_id": 57145,
+    "vernacular": {
+      "en": "Olives",
+      "de": "Ölbäume"
+    }
+  },
+  "OLEA EUROPAEA": {
+    "inat_id": 57140,
+    "vernacular": {
+      "nl": "Olijf",
+      "en": "Olive",
+      "de": "Olivenbaum",
+      "fr": "Oliviers"
+    }
+  },
+  "OSMANTHUS DECORUS": {
+    "inat_id": 537866
+  },
+  "OSMANTHUS HETEROPHYLLUS": {
+    "inat_id": 404400,
+    "vernacular": {
+      "en": "holly olive",
+      "fr": "Osmanthe à feuilles de houx"
+    }
+  },
+  "OSMANTHUS × BURKWOODII": {
+    "inat_id": 518532,
+    "vernacular": {
+      "en": "Burkwood osmanthus"
+    },
+    "aliases": [
+      "OSMANTHUS BURKWOODII"
+    ]
+  },
+  "OSTRYA": {
+    "inat_id": 54772,
+    "vernacular": {
+      "en": "hop-hornbeams"
+    }
+  },
+  "OSTRYA CARPINIFOLIA": {
+    "inat_id": 334194,
+    "vernacular": {
+      "nl": "Hopbeuk",
+      "en": "European Hop-hornbeam",
+      "de": "Europäische Hopfenbuche",
+      "fr": "Charme houblon"
+    },
+    "aliases": [
+      "QSTRYA CARPINIFOLIA"
+    ]
+  },
+  "OSTRYA JAPONICA": {
+    "inat_id": 441513,
+    "vernacular": {
+      "en": "Japanese Hop-hornbeam",
+      "nl": "Japanse Hopbeuk",
+      "de": "Japanische Hopfenbuche"
+    }
+  },
+  "OSTRYA VIRGINIANA": {
+    "inat_id": 54771,
+    "vernacular": {
+      "en": "American hophornbeam",
+      "de": "Virginische Hopfenbuche",
+      "fr": "Ostryer de Virginie"
+    },
+    "aliases": [
+      "OSTRIA VIRGINIANA"
+    ]
+  },
+  "OXYDENDRUM ARBOREUM": {
+    "inat_id": 133354,
+    "vernacular": {
+      "en": "sourwood"
+    }
+  },
+  "PARROTIA PERSICA": {
+    "inat_id": 464251,
+    "vernacular": {
+      "nl": "Perzisch ijzerhout",
+      "en": "Persian ironwood",
+      "de": "Persischer Eisenholzbaum",
+      "fr": "Arbre de fer"
+    }
+  },
+  "PARROTIOPSIS JACQUEMONTIANA": {
+    "inat_id": 979027,
+    "vernacular": {}
+  },
+  "PARTHENOCISSUS TRICUSPIDATA": {
+    "inat_id": 166162,
+    "vernacular": {
+      "nl": "Driebladige wingerd",
+      "en": "Japanese creeper",
+      "de": "Dreispitzige Jungfernrebe",
+      "fr": "Vigne-vierge à trois pointes"
+    }
+  },
+  "PAULOWNIA CATALPIFOLIA": {
+    "inat_id": 935947,
+    "vernacular": {}
+  },
+  "PAULOWNIA ELONGATA": {
+    "inat_id": 473047,
+    "vernacular": {}
+  },
+  "PAULOWNIA FORTUNEI": {
+    "inat_id": 450316,
+    "vernacular": {
+      "en": "Foxglove tree"
+    },
+    "aliases": [
+      "PAULOWNIA FORTUNIE"
+    ]
+  },
+  "PAULOWNIA TOMENTOSA": {
+    "inat_id": 119792,
+    "vernacular": {
+      "nl": "Anna Paulownaboom",
+      "en": "princess tree",
+      "de": "Blauglockenbaum",
+      "fr": "Paulownia impérial"
+    }
+  },
+  "PAVIA FLAVA": {
+    "inat_id": null
+  },
+  "PHELLODENDRON": {
+    "inat_id": 156609,
+    "vernacular": {
+      "en": "Corktrees"
+    }
+  },
+  "PHELLODENDRON AMURENSE": {
+    "inat_id": 166636,
+    "vernacular": {
+      "en": "Amur Corktree",
+      "de": "Amur-Korkbaum",
+      "fr": "phellodendron de l'Amour"
+    },
+    "aliases": [
+      "PHELL.AM.",
+      "PHELLODENDRON AM."
+    ]
+  },
+  "PHELLODENDRON JAPONICUM": {
+    "inat_id": 166637,
+    "vernacular": {
+      "en": "Japanese Corktree"
+    }
+  },
+  "PHILADELPHUS": {
+    "inat_id": 52470,
+    "vernacular": {
+      "en": "mock oranges",
+      "nl": "Boerenjasmijn",
+      "de": "Pfeifensträucher",
+      "fr": "Seringas"
+    }
+  },
+  "PHILADELPHUS CORONARIUS": {
+    "inat_id": 52468
+  },
+  "PHOENIX DACTYLIFERA": {
+    "inat_id": 78555,
+    "vernacular": {
+      "nl": "Dadel",
+      "en": "Date Palm",
+      "de": "Echte Dattelpalme",
+      "fr": "Dattier"
+    }
+  },
+  "PHOTINIA DAVIDIANA": {
+    "inat_id": 166736,
+    "vernacular": {
+      "en": "David's photinia"
+    }
+  },
+  "PHOTINIA VILLOSA": {
+    "inat_id": null
+  },
+  "PHOTINIA × FRASERI": {
+    "inat_id": 181681,
+    "vernacular": {
+      "en": "Red Tip Photinia",
+      "de": "Rotlaubige Glanzmispel",
+      "fr": "Photinia de Fraser"
+    },
+    "aliases": [
+      "PHOTINIA FRASERI",
+      "PHOTINIA × FASERI"
+    ]
+  },
+  "PHYSOCARPUS OPULIFOLIUS": {
+    "inat_id": 129048,
+    "vernacular": {
+      "nl": "Sneeuwbalspirea",
+      "en": "common ninebark",
+      "de": "Schneeballblättrige Blasenspiere",
+      "fr": "physocarpe à feuille d'obier"
+    }
+  },
+  "PICEA": {
+    "inat_id": 63573,
+    "vernacular": {
+      "en": "spruces",
+      "de": "Fichten",
+      "nl": "Spar",
+      "fr": "Épicéas"
+    }
+  },
+  "PICEA ABIES": {
+    "inat_id": 63567,
+    "vernacular": {
+      "nl": "Fijnspar",
+      "en": "Norway spruce",
+      "de": "Gemeine Fichte",
+      "fr": "Épicéa commun"
+    }
+  },
+  "PICEA ALCOQUIANA": {
+    "inat_id": 445062,
+    "vernacular": {
+      "nl": "Alcock's spar",
+      "en": "Alcock's spruce",
+      "fr": "Épicéa d'Alcock"
+    }
+  },
+  "PICEA AMABILIS": {
+    "inat_id": null
+  },
+  "PICEA ASPERATA": {
+    "inat_id": 135792,
+    "vernacular": {
+      "en": "dragon spruce",
+      "de": "Borstenfichte",
+      "fr": "Épicéa de Chine"
+    }
+  },
+  "PICEA BRACHYTYLA": {
+    "inat_id": 135793,
+    "vernacular": {
+      "en": "Sargent's spruce",
+      "fr": "Épicéa de Sargent"
+    }
+  },
+  "PICEA BREWERIANA": {
+    "inat_id": 78581,
+    "vernacular": {
+      "nl": "Sluierspar",
+      "en": "Brewer's spruce",
+      "fr": "Épicéa de Brewer"
+    }
+  },
+  "PICEA ENGELMANNII": {
+    "inat_id": 78582,
+    "vernacular": {
+      "nl": "Engelmannspar",
+      "en": "Engelmann spruce",
+      "de": "Engelmannfichte",
+      "fr": "Épicéa de l'Arizona"
+    }
+  },
+  "PICEA GLAUCA": {
+    "inat_id": 117326,
+    "vernacular": {
+      "nl": "Witte spar",
+      "en": "white spruce",
+      "de": "Weißfichte",
+      "fr": "Épicéa blanc"
+    }
+  },
+  "PICEA JEZOENSIS": {
+    "inat_id": 135795,
+    "vernacular": {
+      "en": "Jezo spruce",
+      "de": "Ajanfichte",
+      "fr": "Épicéa du Japon"
+    }
+  },
+  "PICEA KORAIENSIS": {
+    "inat_id": 135796,
+    "vernacular": {
+      "en": "Korean spruce",
+      "de": "Koreafichte",
+      "fr": "Épicéa de Corée"
+    }
+  },
+  "PICEA LIKIANGENSIS": {
+    "inat_id": 135797,
+    "vernacular": {
+      "en": "Likiang spruce",
+      "de": "Likiangfichte",
+      "fr": "Épicéa du Likiang"
+    }
+  },
+  "PICEA MORRISONICOLA": {
+    "inat_id": 135799,
+    "vernacular": {
+      "en": "Taiwan spruce",
+      "de": "Formosafichte",
+      "fr": "Épicéa du mont Morrison"
+    }
+  },
+  "PICEA OBOVATA": {
+    "inat_id": 135801,
+    "vernacular": {
+      "en": "Siberian spruce",
+      "de": "Sibirische Fichte",
+      "fr": "Épicéa de Sibérie"
+    }
+  },
+  "PICEA OMORIKA": {
+    "inat_id": 135773,
+    "vernacular": {
+      "nl": "Servische spar",
+      "en": "Serbian spruce",
+      "de": "Serbische Fichte",
+      "fr": "Épicéa de Serbie"
+    }
+  },
+  "PICEA ORIENTALIS": {
+    "inat_id": 135802,
+    "vernacular": {
+      "nl": "Kaukasische spar",
+      "en": "Oriental spruce",
+      "de": "Kaukasusfichte",
+      "fr": "Épicéa d'Orient"
+    }
+  },
+  "PICEA PEUCE": {
+    "inat_id": null
+  },
+  "PICEA PUNGENS": {
+    "inat_id": 119092,
+    "vernacular": {
+      "nl": "Blauwe spar",
+      "en": "blue spruce",
+      "de": "Stech-Fichte",
+      "fr": "Épicéa bleu"
+    }
+  },
+  "PICEA PURPUREA": {
+    "inat_id": 135803,
+    "vernacular": {
+      "en": "purple-coned spruce",
+      "de": "Purpurfichte",
+      "fr": "Épicéa pourpre"
+    }
+  },
+  "PICEA SITCHENSIS": {
+    "inat_id": 68131,
+    "vernacular": {
+      "nl": "Sitkaspar",
+      "en": "Sitka spruce",
+      "de": "Sitkafichte",
+      "fr": "Épicéa de Sitka"
+    }
+  },
+  "PICEA SMITHIANA": {
+    "inat_id": 135805,
+    "vernacular": {
+      "nl": "Himalaja spar",
+      "en": "Morinda spruce",
+      "de": "Himalayafichte",
+      "fr": "Épicéa de l'Himalaya"
+    }
+  },
+  "PICRASMA QUASSIOIDES": {
+    "inat_id": 707271,
+    "vernacular": {}
+  },
+  "PINUS": {
+    "inat_id": 47561,
+    "vernacular": {
+      "en": "pines",
+      "fr": "pins",
+      "nl": "Den",
+      "de": "Kiefern"
+    },
+    "aliases": [
+      "PINUS SUP.S"
+    ]
+  },
+  "PINUS BUNGEANA": {
+    "inat_id": 135808,
+    "vernacular": {
+      "en": "lacebark pine",
+      "de": "Bunges Kiefer",
+      "fr": "Pin Napoléon"
+    }
+  },
+  "PINUS CANADENSIS": {
+    "inat_id": null
+  },
+  "PINUS CEMBRA": {
+    "inat_id": 363921,
+    "vernacular": {
+      "nl": "Alpenden",
+      "en": "Swiss pine",
+      "de": "Zirbelkiefer",
+      "fr": "Pin cembro"
+    }
+  },
+  "PINUS CONTORTA": {
+    "inat_id": 48934,
+    "vernacular": {
+      "nl": "Draaiden",
+      "en": "lodgepole pine",
+      "de": "Drehkiefer",
+      "fr": "pin tordu"
+    }
+  },
+  "PINUS COULTERI": {
+    "inat_id": 67330,
+    "vernacular": {
+      "en": "Coulter pine",
+      "de": "Coulter-Kiefer",
+      "fr": "Pin à grands cônes"
+    }
+  },
+  "PINUS DENSIFLORA": {
+    "inat_id": 135811,
+    "vernacular": {
+      "nl": "Japanse rode den",
+      "en": "Japanese red pine",
+      "de": "Japanische Rotkiefer"
+    }
+  },
+  "PINUS GRIFFITII": {
+    "inat_id": null
+  },
+  "PINUS HELDREICHII": {
+    "inat_id": 135783,
+    "vernacular": {
+      "nl": "Bosnische den",
+      "en": "Bosnian pine",
+      "de": "Schlangenhautkiefer"
+    },
+    "aliases": [
+      "PINUS LEUCODERMIS"
+    ]
+  },
+  "PINUS JEFFREYI": {
+    "inat_id": 48463,
+    "vernacular": {
+      "en": "Jeffrey pine",
+      "de": "Jeffrey-Kiefer",
+      "fr": "pin de Jeffrey"
+    }
+  },
+  "PINUS KORAIENSIS": {
+    "inat_id": 52392,
+    "vernacular": {
+      "en": "Korean pine",
+      "de": "Korea-Kiefer",
+      "fr": "Pin blanc de Corée"
+    }
+  },
+  "PINUS MONOPHYLLA": {
+    "inat_id": 57892,
+    "vernacular": {
+      "en": "singleleaf pinyon",
+      "de": "einblättrige Kiefer",
+      "fr": "Pin à une feuille"
+    }
+  },
+  "PINUS MORRISONICOLA": {
+    "inat_id": 135789,
+    "vernacular": {
+      "en": "Taiwan white pine",
+      "fr": "Pin du mont Morrison"
+    }
+  },
+  "PINUS MUGO": {
+    "inat_id": 135727,
+    "vernacular": {
+      "nl": "Bergden",
+      "en": "mountain pine",
+      "de": "Bergkiefer",
+      "fr": "pin mugo"
+    }
+  },
+  "PINUS NIGRA": {
+    "inat_id": 135790,
+    "vernacular": {
+      "nl": "Zwarte den",
+      "en": "black pine",
+      "de": "Schwarzkiefer",
+      "fr": "Pin noir"
+    }
+  },
+  "PINUS PARVIFLORA": {
+    "inat_id": 135791,
+    "vernacular": {
+      "nl": "Japanse witte den",
+      "en": "Japanese white pine",
+      "de": "Mädchen-Kiefer",
+      "fr": "Pin blanc du Japon"
+    }
+  },
+  "PINUS PEUCE": {
+    "inat_id": 135730,
+    "vernacular": {
+      "nl": "Balkanden",
+      "en": "Macedonian pine",
+      "de": "Rumelische Kiefer",
+      "fr": "Pin de Macédoine"
+    }
+  },
+  "PINUS PINASTER": {
+    "inat_id": 82723,
+    "vernacular": {
+      "nl": "Zeeden",
+      "en": "maritime pine",
+      "de": "See-Kiefer",
+      "fr": "Pin maritime"
+    }
+  },
+  "PINUS PINEA": {
+    "inat_id": 63621,
+    "vernacular": {
+      "nl": "Parasolden",
+      "en": "Stone pine",
+      "de": "Pinie",
+      "fr": "pin parasol"
+    }
+  },
+  "PINUS PONDEROSA": {
+    "inat_id": 48461,
+    "vernacular": {
+      "nl": "Gele den",
+      "en": "Western Ponderosa Pine",
+      "de": "Gelb-Kiefer",
+      "fr": "Pin ponderosa"
+    }
+  },
+  "PINUS PUMILA": {
+    "inat_id": 135651,
+    "vernacular": {
+      "nl": "Dwergden",
+      "en": "dwarf Siberian pine",
+      "de": "Zwerg-Kiefer",
+      "fr": "Pin nain de Sibérie"
+    }
+  },
+  "PINUS RADIATA": {
+    "inat_id": 53421,
+    "vernacular": {
+      "nl": "Montereyden",
+      "en": "Monterey pine",
+      "de": "Monterey-Kiefer",
+      "fr": "Pin de Monterey"
+    }
+  },
+  "PINUS RIGIDA": {
+    "inat_id": 53464,
+    "vernacular": {
+      "nl": "Doornden",
+      "en": "pitch pine",
+      "de": "Pechkiefer",
+      "fr": "pin rigide"
+    }
+  },
+  "PINUS STROBUS": {
+    "inat_id": 52391,
+    "vernacular": {
+      "nl": "Weymouthden",
+      "en": "eastern white pine",
+      "de": "Weymouth-Kiefer",
+      "fr": "pin blanc"
+    }
+  },
+  "PINUS SUP.S": {
+    "inat_id": null
+  },
+  "PINUS SYLVESTRIS": {
+    "inat_id": 58722,
+    "vernacular": {
+      "nl": "Grove Den",
+      "en": "Scots pine",
+      "de": "Waldkiefer",
+      "fr": "pin sylvestre"
+    }
+  },
+  "PINUS TABULIFORMIS": {
+    "inat_id": 135667,
+    "vernacular": {
+      "nl": "Chinese rode den",
+      "en": "Chinese red pine",
+      "de": "Chinesische Kiefer"
+    }
+  },
+  "PINUS TAEDA": {
+    "inat_id": 59921,
+    "vernacular": {
+      "nl": "Wierookden",
+      "en": "loblolly pine",
+      "de": "Weihrauch-Kiefer",
+      "fr": "pin taeda"
+    }
+  },
+  "PINUS THUNBERGII": {
+    "inat_id": 135655,
+    "vernacular": {
+      "nl": "Japanse zwarte den",
+      "en": "Japanese black pine",
+      "de": "Japanische Schwarzkiefer"
+    }
+  },
+  "PINUS UNCINATA": {
+    "inat_id": 198880,
+    "vernacular": {
+      "nl": "Opgaande bergden",
+      "en": "Mountain Pine",
+      "de": "Spirke",
+      "fr": "Pin à crochets"
+    }
+  },
+  "PINUS WALLICHIANA": {
+    "inat_id": 135668,
+    "vernacular": {
+      "nl": "Tranenden",
+      "en": "blue pine",
+      "de": "Tränen-Kiefer",
+      "fr": "Pin pleureur de l'Himalaya"
+    }
+  },
+  "PINUS × SCHWERINII": {
+    "inat_id": 528680,
+    "vernacular": {},
+    "aliases": [
+      "PINUS XSCHWERINII"
+    ]
+  },
+  "PLANERA AQUATICA": {
+    "inat_id": 122113,
+    "vernacular": {
+      "en": "Water Elm",
+      "de": "Wasserulme"
+    }
+  },
+  "PLATANUS": {
+    "inat_id": 49664,
+    "vernacular": {
+      "en": "planes",
+      "fr": "Platanes",
+      "de": "Platanen"
+    },
+    "aliases": [
+      "PLATANUS AC"
+    ]
+  },
+  "PLATANUS OCCIDENTALIS": {
+    "inat_id": 49662,
+    "vernacular": {
+      "en": "American sycamore",
+      "de": "Amerikanische Platane",
+      "fr": "Platane d'Amérique"
+    }
+  },
+  "PLATANUS ORIENTALIS": {
+    "inat_id": 181682,
+    "vernacular": {
+      "nl": "Oosterse plataan",
+      "en": "Oriental Plane",
+      "de": "Morgenländische Platane",
+      "fr": "Platane d'Orient"
+    },
+    "aliases": [
+      "PLATANUS ORENTALIS",
+      "PLATANUS ORIENTATIS",
+      "PLATANUS ORRIENTALIS"
+    ]
+  },
+  "PLATANUS × ACERIFOLIA": {
+    "inat_id": null,
+    "aliases": [
+      "PLATANUS ACERIFOILA",
+      "PLATANUS ACERIFOLIA"
+    ]
+  },
+  "PLATANUS × HISPANICA": {
+    "inat_id": 552449,
+    "vernacular": {
+      "nl": "Esdoornbladige plataan",
+      "en": "London Plane",
+      "de": "Ahornblättrige Platane",
+      "fr": "Platane commun"
+    },
+    "aliases": [
+      "PLATANUS HISPANICA",
+      "PLATANUS HISPINA",
+      "PLATANUS XHISPANICA",
+      "PLATANUS × ACERIFOLIA"
+    ]
+  },
+  "PLATYCLADUS ORIENTALIS": {
+    "inat_id": 135659,
+    "vernacular": {
+      "nl": "oosterse levensboom",
+      "en": "Chinese arborvitae",
+      "de": "Morgenländischer Lebensbaum",
+      "fr": "Thuya de Chine"
+    }
+  },
+  "PODOCARPUS": {
+    "inat_id": 85284,
+    "vernacular": {
+      "en": "plum pines"
+    }
+  },
+  "PODOCARPUS ACUTIFOLIUS": {
+    "inat_id": 135678,
+    "vernacular": {
+      "en": "Needle Leaved Tōtara"
+    }
+  },
+  "PODOCARPUS LAWRENCII": {
+    "inat_id": 135687,
+    "vernacular": {
+      "en": "mountain plum-pine"
+    },
+    "aliases": [
+      "PODOCARPUS LAWRENCEI"
+    ]
+  },
+  "PODOCARPUS MACROPHYLLUS": {
+    "inat_id": 135329,
+    "vernacular": {
+      "en": "kusamaki"
+    }
+  },
+  "PODOCARPUS NIVALIS": {
+    "inat_id": 135702,
+    "vernacular": {
+      "en": "snow totara"
+    }
+  },
+  "PODOCARPUS NUBIGENUS": {
+    "inat_id": 135688,
+    "vernacular": {
+      "en": "Chilean totara",
+      "de": "Chilenische Steineibe"
+    }
+  },
+  "PODOCARPUS TOTARA": {
+    "inat_id": 85275,
+    "vernacular": {
+      "en": "Tōtara"
+    }
+  },
+  "PONCIRUS TRIFOLIATA": {
+    "inat_id": null
+  },
+  "POPULUS": {
+    "inat_id": 47566,
+    "vernacular": {
+      "en": "poplars, cottonwoods, and aspens",
+      "de": "Pappeln",
+      "nl": "Populier"
+    }
+  },
+  "POPULUS ALBA": {
+    "inat_id": 47570,
+    "vernacular": {
+      "nl": "Witte abeel",
+      "en": "white poplar",
+      "de": "Silber-Pappel",
+      "fr": "Peuplier blanc"
+    }
+  },
+  "POPULUS AMERICANA": {
+    "inat_id": null
+  },
+  "POPULUS ASTRIA": {
+    "inat_id": null
+  },
+  "POPULUS BALSAMIFERA": {
+    "inat_id": 54838,
+    "vernacular": {
+      "nl": "Ontariopopulier",
+      "en": "balsam poplar",
+      "de": "Balsam-Pappel",
+      "fr": "Peuplier Baumier"
+    },
+    "aliases": [
+      "POPULUS CANDICANS"
+    ]
+  },
+  "POPULUS DELTOIDES": {
+    "inat_id": 52119,
+    "vernacular": {
+      "nl": "Amerikaanse populier",
+      "en": "Eastern Cottonwood",
+      "de": "Kanadische Schwarz-Pappel",
+      "fr": "Peuplier deltoïde"
+    }
+  },
+  "POPULUS DONK": {
+    "inat_id": null
+  },
+  "POPULUS EUPHRATICA": {
+    "inat_id": 82162,
+    "vernacular": {
+      "en": "Euphrates poplar"
+    },
+    "aliases": [
+      "POPULUS EU"
+    ]
+  },
+  "POPULUS FREMONTII": {
+    "inat_id": 52120,
+    "vernacular": {
+      "en": "Frémont Cottonwood"
+    },
+    "aliases": [
+      "POPULUS CANADENSIS",
+      "POPULUS XCANADENSIS"
+    ]
+  },
+  "POPULUS GENEVA": {
+    "inat_id": null
+  },
+  "POPULUS GRANDIDENTATA": {
+    "inat_id": 54839,
+    "vernacular": {
+      "nl": "Grofgetande populier",
+      "en": "bigtooth aspen",
+      "de": "Großzähnige Pappel",
+      "fr": "peuplier à grandes dents"
+    }
+  },
+  "POPULUS INTERAMERICANA": {
+    "inat_id": null
+  },
+  "POPULUS LASIOCARPA": {
+    "inat_id": 484151,
+    "vernacular": {
+      "nl": "Ruwvruchtige populier",
+      "en": "Chinese Necklace Poplar",
+      "fr": "Peuplier baumier de Chine"
+    }
+  },
+  "POPULUS LAURIFOLIA": {
+    "inat_id": 784562,
+    "vernacular": {
+      "nl": "Laurierpopulier",
+      "en": "Laurel-leaved Poplar"
+    }
+  },
+  "POPULUS NIGRA": {
+    "inat_id": 47565,
+    "vernacular": {
+      "nl": "Zwarte populier",
+      "en": "Black Poplar",
+      "de": "Schwarz-Pappel",
+      "fr": "Peuplier noir"
+    },
+    "aliases": [
+      "POPULUS NGRA",
+      "POPULUS NI"
+    ]
+  },
+  "POPULUS OXFORD": {
+    "inat_id": null
+  },
+  "POPULUS ROCHESTER": {
+    "inat_id": null
+  },
+  "POPULUS SIMONII": {
+    "inat_id": 592436,
+    "vernacular": {
+      "nl": "Chinese balsempopulier",
+      "en": "Simon's Poplar",
+      "de": "Simon-Pappel",
+      "fr": "Peuplier de Simon"
+    },
+    "aliases": [
+      "POPULUS SI"
+    ]
+  },
+  "POPULUS SZECHUANICA": {
+    "inat_id": 790842,
+    "vernacular": {}
+  },
+  "POPULUS TREMULA": {
+    "inat_id": 47571,
+    "vernacular": {
+      "nl": "Ratelpopulier",
+      "en": "European aspen",
+      "de": "Zitterpappel",
+      "fr": "Tremble d'Europe"
+    }
+  },
+  "POPULUS TREMULOIDES": {
+    "inat_id": 54840,
+    "vernacular": {
+      "nl": "Amerikaanse ratelpopulier",
+      "en": "quaking aspen",
+      "de": "Amerikanische Zitterpappel",
+      "fr": "Peuplier faux-tremble"
+    },
+    "aliases": [
+      "POPULUS TR"
+    ]
+  },
+  "POPULUS TRICHOCARPA": {
+    "inat_id": 78699,
+    "vernacular": {
+      "nl": "Zwarte balsempopulier",
+      "en": "black cottonwood",
+      "fr": "Peuplier de l'Ouest"
+    },
+    "aliases": [
+      "POPULUS TRICOCARPA"
+    ]
+  },
+  "POPULUS WILSONII": {
+    "inat_id": 1431898,
+    "vernacular": {
+      "nl": "Wilsonpopulier",
+      "en": "Wilson's Poplar"
+    }
+  },
+  "POPULUS YUANA": {
+    "inat_id": null
+  },
+  "POPULUS × BEROLINENSIS": {
+    "inat_id": 170937,
+    "vernacular": {
+      "nl": "Siberische balsempopulier",
+      "en": "Berlin Poplar",
+      "de": "Berliner Lorbeerpappel",
+      "fr": "Peuplier de Berlin"
+    },
+    "aliases": [
+      "POPULUS BERLONINENSIS",
+      "POPULUS BERLONISIS",
+      "POPULUS BEROLINENSIS"
+    ]
+  },
+  "POPULUS × CANADENSIS": {
+    "inat_id": 181684,
+    "vernacular": {
+      "nl": "Canadapopulier",
+      "en": "Hybrid Black-poplar",
+      "de": "Hybridpappel",
+      "fr": "Peuplier du Canada"
+    },
+    "aliases": [
+      "POPULUS EURAM.",
+      "POPULUS EURAMERICANA",
+      "POPULUS × EURAMERICANA"
+    ]
+  },
+  "POPULUS × CANESCENS": {
+    "inat_id": 170939,
+    "vernacular": {
+      "nl": "Grauwe abeel",
+      "en": "Grey Poplar",
+      "de": "Grau-Pappel",
+      "fr": "Peuplier grisard"
+    },
+    "aliases": [
+      "POPULUS CANESCENS"
+    ]
+  },
+  "POPULUS × GENEROSA": {
+    "inat_id": 784561,
+    "vernacular": {
+      "nl": "Edelpopulier",
+      "en": "Generous Poplar"
+    },
+    "aliases": [
+      "POPULUS GENEROSA"
+    ]
+  },
+  "POPULUS × JACKII": {
+    "inat_id": null,
+    "aliases": [
+      "POPULUS JACKII"
+    ]
+  },
+  "POPULUS × ONTARIENSIS": {
+    "inat_id": 1567623,
+    "vernacular": {
+      "nl": "Bonte Ontariopopulier",
+      "en": "Balm-of-Gilead"
+    },
+    "aliases": [
+      "POPULUS × JACKII"
+    ]
+  },
+  "POURTHIAEA VILLOSA": {
+    "inat_id": 1308947
+  },
+  "PRUNUS": {
+    "inat_id": 47351,
+    "vernacular": {
+      "en": "plums, cherries, and allies",
+      "nl": "Pruimen, kersen en verwanten",
+      "fr": "Pruniers, cerisiers et affines"
+    },
+    "aliases": [
+      "PRUNUS SSPEC.",
+      "PRUNUS X",
+      "PRUNUS ZAAILING"
+    ]
+  },
+  "PRUNUS ACCOLADE": {
+    "inat_id": null
+  },
+  "PRUNUS AMERICANA": {
+    "inat_id": 48629,
+    "vernacular": {
+      "en": "American plum",
+      "fr": "Prunier d'Amérique"
+    }
+  },
+  "PRUNUS AMYGDALOIDES": {
+    "inat_id": 279126,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS AMYGDALO"
+    ]
+  },
+  "PRUNUS AMYGDALUS": {
+    "inat_id": 69936,
+    "vernacular": {
+      "nl": "Amandelboom",
+      "en": "Almond",
+      "de": "Mandelbaum",
+      "fr": "Amandier"
+    },
+    "aliases": [
+      "PRUNUS DULCIS"
+    ]
+  },
+  "PRUNUS ARMENIACA": {
+    "inat_id": 135331,
+    "vernacular": {
+      "nl": "Abrikoos",
+      "en": "apricot",
+      "de": "Aprikose",
+      "fr": "Abricotier"
+    }
+  },
+  "PRUNUS AUTUMNALIS": {
+    "inat_id": null
+  },
+  "PRUNUS AVIUM": {
+    "inat_id": 61964,
+    "vernacular": {
+      "nl": "Zoete kers",
+      "en": "wild cherry",
+      "de": "Vogel-Kirsche",
+      "fr": "merisier"
+    },
+    "aliases": [
+      "PRUNUS A.",
+      "PRUNUS CE"
+    ]
+  },
+  "PRUNUS BLONDE": {
+    "inat_id": null
+  },
+  "PRUNUS CERASIFERA": {
+    "inat_id": 55837,
+    "vernacular": {
+      "nl": "Kerspruim",
+      "en": "Cherry-plum",
+      "de": "Kirschpflaume",
+      "fr": "Prunier myrobolan"
+    },
+    "aliases": [
+      "PRUNUS CE.",
+      "PRUNUS CERASIFERAR"
+    ]
+  },
+  "PRUNUS CERASUS": {
+    "inat_id": 68763,
+    "vernacular": {
+      "nl": "Zure kers",
+      "en": "Sour Cherry",
+      "de": "Sauerkirsche",
+      "fr": "Cerisier acide"
+    }
+  },
+  "PRUNUS COMMUNIS": {
+    "inat_id": 1066288,
+    "vernacular": {}
+  },
+  "PRUNUS CONRADINAE": {
+    "inat_id": 504385,
+    "vernacular": {}
+  },
+  "PRUNUS CORDATA": {
+    "inat_id": null
+  },
+  "PRUNUS DOMESTICA": {
+    "inat_id": 63735,
+    "vernacular": {
+      "nl": "Pruim",
+      "en": "Plum",
+      "de": "Pflaume",
+      "fr": "Prunier cultivé"
+    },
+    "aliases": [
+      "PRUNUS D.",
+      "PRUNUS SA"
+    ]
+  },
+  "PRUNUS DUBBELE": {
+    "inat_id": null
+  },
+  "PRUNUS EFFUSA": {
+    "inat_id": null
+  },
+  "PRUNUS FRUTICOSA": {
+    "inat_id": 167459,
+    "vernacular": {
+      "en": "Ground Cherry",
+      "de": "Zwerg-Kirsche",
+      "fr": "Cerisier des steppes"
+    },
+    "aliases": [
+      "PRUNUS FR",
+      "PRUNUS FRUCTICOSA"
+    ]
+  },
+  "PRUNUS GLANDULOSA": {
+    "inat_id": 167461,
+    "vernacular": {
+      "en": "Flowering Almond",
+      "fr": "Amandier à fleurs du Japon"
+    }
+  },
+  "PRUNUS GONGSHANENSIS": {
+    "inat_id": 1186794,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS GO"
+    ]
+  },
+  "PRUNUS HILLARI": {
+    "inat_id": null
+  },
+  "PRUNUS HILLERII": {
+    "inat_id": null
+  },
+  "PRUNUS HILLIERI": {
+    "inat_id": null
+  },
+  "PRUNUS HYPOLEUCA": {
+    "inat_id": 922263
+  },
+  "PRUNUS INCISA": {
+    "inat_id": 362834,
+    "vernacular": {
+      "nl": "Fujikers",
+      "en": "Fuji Cherry"
+    }
+  },
+  "PRUNUS INSITITIA": {
+    "inat_id": 204393,
+    "vernacular": {
+      "nl": "Kroosjes",
+      "en": "Damson",
+      "de": "Hafer-Pflaume"
+    },
+    "aliases": [
+      "PRUNUS SU",
+      "PRUNUS SU."
+    ]
+  },
+  "PRUNUS JAPONICA": {
+    "inat_id": 452158,
+    "vernacular": {
+      "en": "Japanese bush cherry"
+    }
+  },
+  "PRUNUS KURSAR": {
+    "inat_id": null
+  },
+  "PRUNUS LAUROCERASUS": {
+    "inat_id": 61432,
+    "vernacular": {
+      "nl": "Laurierkers",
+      "en": "Cherry laurel",
+      "de": "Lorbeerkirsche",
+      "fr": "Prunier laurier-cerise"
+    }
+  },
+  "PRUNUS LUSITANICA": {
+    "inat_id": 127529,
+    "vernacular": {
+      "en": "Portuguese laurel",
+      "fr": "Prunier du Portugal"
+    }
+  },
+  "PRUNUS MAACKII": {
+    "inat_id": 474467,
+    "vernacular": {
+      "en": "Manchurian Cherry",
+      "fr": "Cerisier de Mandchourie"
+    },
+    "aliases": [
+      "PRUNUS MAACKI"
+    ]
+  },
+  "PRUNUS MAHALEB": {
+    "inat_id": 126808,
+    "vernacular": {
+      "nl": "Weichselboom",
+      "en": "St Lucie Cherry",
+      "de": "Felsenkirsche",
+      "fr": "Prunier mahaleb"
+    },
+    "aliases": [
+      "PRUNUS MA"
+    ]
+  },
+  "PRUNUS MUME": {
+    "inat_id": 357447,
+    "vernacular": {
+      "en": "Flowering Apricot",
+      "fr": "Abricotier du Japon"
+    }
+  },
+  "PRUNUS NIGRA": {
+    "inat_id": 54832,
+    "vernacular": {
+      "en": "Canada plum",
+      "fr": "prunier noir"
+    }
+  },
+  "PRUNUS PADUS": {
+    "inat_id": 143793,
+    "vernacular": {
+      "nl": "gewone vogelkers",
+      "en": "bird cherry",
+      "de": "Traubenkirsche",
+      "fr": "cerisier à grappes"
+    },
+    "aliases": [
+      "PRUNUS PA"
+    ]
+  },
+  "PRUNUS PANDORA": {
+    "inat_id": null
+  },
+  "PRUNUS PENSYLVANICA": {
+    "inat_id": 54833,
+    "vernacular": {
+      "en": "fire cherry",
+      "fr": "cerisier de Pennsylvanie"
+    }
+  },
+  "PRUNUS PERSICA": {
+    "inat_id": 78755,
+    "vernacular": {
+      "nl": "Perzik",
+      "en": "Peach",
+      "de": "Pfirsich",
+      "fr": "Pêcher"
+    }
+  },
+  "PRUNUS PERSICOIDES": {
+    "inat_id": null
+  },
+  "PRUNUS PUMILA": {
+    "inat_id": 58742,
+    "vernacular": {
+      "en": "sand cherry",
+      "fr": "cerisier nain"
+    }
+  },
+  "PRUNUS REGINA": {
+    "inat_id": 1634806,
+    "vernacular": {}
+  },
+  "PRUNUS RIGIDA": {
+    "inat_id": 1634806
+  },
+  "PRUNUS RUBRUM": {
+    "inat_id": null
+  },
+  "PRUNUS SALACINA": {
+    "inat_id": null
+  },
+  "PRUNUS SARGENTII": {
+    "inat_id": 325895,
+    "vernacular": {
+      "en": "North Japanese hill cherry",
+      "fr": "Cerisier de Sargent"
+    },
+    "aliases": [
+      "PRUNUS SAGENTII"
+    ]
+  },
+  "PRUNUS SEROTINA": {
+    "inat_id": 54834,
+    "vernacular": {
+      "nl": "Amerikaanse Vogelkers",
+      "en": "black cherry",
+      "de": "Spätblühende Traubenkirsche",
+      "fr": "Cerisier d'automne"
+    },
+    "aliases": [
+      "PRUNUS S.",
+      "PRUNUS SE",
+      "PRUNUS SE.",
+      "PRUNUS SERTOTINA"
+    ]
+  },
+  "PRUNUS SERRULA": {
+    "inat_id": 484175,
+    "vernacular": {
+      "en": "Tibetan Cherry"
+    }
+  },
+  "PRUNUS SERRULATA": {
+    "inat_id": 125742,
+    "vernacular": {
+      "nl": "Japanse sierkers",
+      "en": "Japanese Cherry",
+      "de": "Japanische Blütenkirsche",
+      "fr": "Cerisier du Japon"
+    },
+    "aliases": [
+      "PRUNUS SERR.",
+      "PRUNUS SERRUL."
+    ]
+  },
+  "PRUNUS SPACHIANA": {
+    "inat_id": 904630,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS SUBHIRTELLA",
+      "PRUNUS XSUBHIRTELLA"
+    ]
+  },
+  "PRUNUS SPINOSA": {
+    "inat_id": 55811,
+    "vernacular": {
+      "nl": "Sleedoorn",
+      "en": "Blackthorn",
+      "de": "Schlehdorn",
+      "fr": "Prunellier"
+    },
+    "aliases": [
+      "PRUNUS SP."
+    ]
+  },
+  "PRUNUS SPIRE": {
+    "inat_id": null
+  },
+  "PRUNUS SSPEC.": {
+    "inat_id": null
+  },
+  "PRUNUS SUBHIRTELLA": {
+    "inat_id": null,
+    "aliases": [
+      "PRUNUS SUBHERTILLA",
+      "PRUNUS SUBHIRTELLE",
+      "PRUNUS SUBHIRTHELLA",
+      "PRUNUS SUBHIRTILLA"
+    ]
+  },
+  "PRUNUS SUBSPECIES": {
+    "inat_id": null
+  },
+  "PRUNUS TENELLA": {
+    "inat_id": 543500,
+    "vernacular": {
+      "nl": "Dwergamandel",
+      "en": "Dwarf Russian Almond",
+      "de": "Zwerg-Mandel",
+      "fr": "Amandier nain"
+    }
+  },
+  "PRUNUS TOMENTOSA": {
+    "inat_id": 167472,
+    "vernacular": {
+      "en": "Nanking Cherry",
+      "fr": "cerisier tomenteux"
+    }
+  },
+  "PRUNUS TRILOBA": {
+    "inat_id": 167473,
+    "vernacular": {
+      "en": "flowering plum",
+      "fr": "Amandier de Chine"
+    }
+  },
+  "PRUNUS UMINEKO": {
+    "inat_id": null
+  },
+  "PRUNUS UNDULATA": {
+    "inat_id": 1156904,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS WALLICHII"
+    ]
+  },
+  "PRUNUS VICTORIA": {
+    "inat_id": null
+  },
+  "PRUNUS VIRGINIANA": {
+    "inat_id": 54835,
+    "vernacular": {
+      "nl": "Virginische vogelkers",
+      "en": "chokecherry",
+      "de": "Virginische Traubenkirsche",
+      "fr": "cerisier de Virginie"
+    },
+    "aliases": [
+      "PRUNUS VIRGIANA"
+    ]
+  },
+  "PRUNUS × AMYGDALOPERSICA": {
+    "inat_id": null
+  },
+  "PRUNUS × BLIREANA": {
+    "inat_id": 1665308,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS BLIREANA"
+    ]
+  },
+  "PRUNUS × CISTENA": {
+    "inat_id": 1448975,
+    "vernacular": {
+      "en": "Purple-leaved Sand Cherry"
+    },
+    "aliases": [
+      "PRUNUS CISTENA"
+    ]
+  },
+  "PRUNUS × EMINENS": {
+    "inat_id": 1588558,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS EMINENS"
+    ]
+  },
+  "PRUNUS × GONDOUINII": {
+    "inat_id": 1396061,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS GONDOUINII",
+      "PRUNUS GOUDOUNII",
+      "PRUNUS × GONDOUNII"
+    ]
+  },
+  "PRUNUS × HILLIERI": {
+    "inat_id": null
+  },
+  "PRUNUS × HYBRIDA": {
+    "inat_id": 1276584,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS HYBRIDE",
+      "PRUNUS × PERSICOIDES"
+    ]
+  },
+  "PRUNUS × SCHMITTII": {
+    "inat_id": 1676474,
+    "vernacular": {},
+    "aliases": [
+      "PRUNUS SCHMITTI",
+      "PRUNUS SCHMITTII",
+      "PRUNUS XSCHMITTII",
+      "PRUNUS × SCHMITII",
+      "PRUNUS × SMITTII"
+    ]
+  },
+  "PRUNUS × SUBHIRTELLA": {
+    "inat_id": 1004926,
+    "vernacular": {
+      "en": "Rosebud Cherry",
+      "fr": "Cerisier d'hiver"
+    }
+  },
+  "PRUNUS × YEDOENSIS": {
+    "inat_id": 47352,
+    "vernacular": {
+      "en": "Yoshino cherry"
+    },
+    "aliases": [
+      "PRUNUS XYEDOENSIS",
+      "PRUNUS YE",
+      "PRUNUS YEDOENSIS"
+    ]
+  },
+  "PSEUDOCYDONIA SINENSIS": {
+    "inat_id": 1262153,
+    "vernacular": {
+      "en": "Chinese Quince",
+      "fr": "Cognassier de Chine"
+    }
+  },
+  "PSEUDOLARIX AMABILIS": {
+    "inat_id": 135543,
+    "vernacular": {
+      "nl": "Japanse goudlarix",
+      "en": "Chinese golden larch",
+      "de": "Goldlärche",
+      "fr": "Mélèze de Chine"
+    }
+  },
+  "PSEUDOPANAX FEROX": {
+    "inat_id": 197062,
+    "vernacular": {
+      "en": "Toothed Lancewood"
+    }
+  },
+  "PSEUDOPANAX LAETUS": {
+    "inat_id": 405345,
+    "vernacular": {}
+  },
+  "PSEUDOTAXUS CHIENII": {
+    "inat_id": 135544,
+    "vernacular": {
+      "en": "Whiteberry Yew"
+    }
+  },
+  "PSEUDOTSUGA": {
+    "inat_id": 48257,
+    "vernacular": {
+      "en": "Douglas-firs",
+      "nl": "Douglassparren",
+      "fr": "Douglas",
+      "de": "Douglasien"
+    }
+  },
+  "PSEUDOTSUGA MENZIESII": {
+    "inat_id": 48256,
+    "vernacular": {
+      "nl": "Douglasspar",
+      "en": "Douglas-fir",
+      "de": "Gewöhnliche Douglasie",
+      "fr": "Douglas de Menzies"
+    },
+    "aliases": [
+      "PSEUDOTSUGA MENSZIESII"
+    ]
+  },
+  "PTELEA TRIFOLIATA": {
+    "inat_id": 50625,
+    "vernacular": {
+      "nl": "Hopboom",
+      "en": "common hoptree",
+      "de": "Kleeulme",
+      "fr": "Ptélée à trois feuilles"
+    }
+  },
+  "PTEROCARYA": {
+    "inat_id": 72325,
+    "vernacular": {
+      "en": "Wingnuts"
+    }
+  },
+  "PTEROCARYA FRAXINIFOLIA": {
+    "inat_id": 371700,
+    "vernacular": {
+      "nl": "Kaukasische vleugelnoot",
+      "en": "Caucasian Wingnut",
+      "de": "Kaukasische Flügelnuss",
+      "fr": "Ptérocaryer du Caucase"
+    },
+    "aliases": [
+      "PTEROCARYA FRAXINIFO"
+    ]
+  },
+  "PTEROCARYA RHOIFOLIA": {
+    "inat_id": 135417,
+    "vernacular": {
+      "nl": "Japanse vleugelnoot",
+      "en": "Japanese Wingnut"
+    },
+    "aliases": [
+      "PTEROCARYA RHOI."
+    ]
+  },
+  "PTEROCARYA STENOPTERA": {
+    "inat_id": 78779,
+    "vernacular": {
+      "nl": "Chinese vleugelnoot",
+      "en": "chinese wingnut",
+      "de": "Chinesische Flügelnuss"
+    }
+  },
+  "PTEROCARYA × REHDERIANA": {
+    "inat_id": 1361042,
+    "vernacular": {
+      "en": "Rehder Wingnut"
+    },
+    "aliases": [
+      "PTEROCARYA REHDERIANA",
+      "PTEROCARYA × RHEDERIANA"
+    ]
+  },
+  "PTEROSTYRAX CORYMBOSA": {
+    "inat_id": 184793,
+    "vernacular": {}
+  },
+  "PTEROSTYRAX CORYMBOSUS": {
+    "inat_id": 184793
+  },
+  "PTEROSTYRAX HISPIDA": {
+    "inat_id": 184797,
+    "vernacular": {}
+  },
+  "PYRACANTHA COCCINEA": {
+    "inat_id": 57254
+  },
+  "PYRUS": {
+    "inat_id": 58736,
+    "vernacular": {
+      "en": "pears",
+      "de": "Birnen",
+      "nl": "Peren",
+      "fr": "poiriers"
+    },
+    "aliases": [
+      "PYRUS FRUIT"
+    ]
+  },
+  "PYRUS ASIACA": {
+    "inat_id": null
+  },
+  "PYRUS BEURRE": {
+    "inat_id": null
+  },
+  "PYRUS CALLERYANA": {
+    "inat_id": 119793,
+    "vernacular": {
+      "en": "Callery pear",
+      "fr": "Poirier de Chine"
+    },
+    "aliases": [
+      "PYRUS CA",
+      "PYRUS CALL",
+      "PYRUS CALLERIANA"
+    ]
+  },
+  "PYRUS COMMUNIS": {
+    "inat_id": 63951,
+    "vernacular": {
+      "nl": "Peer",
+      "en": "Common Pear",
+      "de": "Kultur-Birne",
+      "fr": "Poirier commun"
+    },
+    "aliases": [
+      "PYRUS CAUCASICA",
+      "PYRUS COM."
+    ]
+  },
+  "PYRUS CONFERENCE": {
+    "inat_id": null
+  },
+  "PYRUS CORDATA": {
+    "inat_id": 338408,
+    "vernacular": {
+      "en": "Plymouth Pear",
+      "fr": "Poirier à feuilles en cœur"
+    },
+    "aliases": [
+      "PYRUS PYRASTER"
+    ]
+  },
+  "PYRUS ELAEAGRIFOLIA": {
+    "inat_id": 578750,
+    "vernacular": {
+      "en": "Oleaster-leaved Pear",
+      "fr": "Poirier à feuilles d'argousier"
+    },
+    "aliases": [
+      "PYRUS ELEAGNIFOLIA"
+    ]
+  },
+  "PYRUS GIESER": {
+    "inat_id": null
+  },
+  "PYRUS HYBRIDE": {
+    "inat_id": null
+  },
+  "PYRUS HYBRIDEN": {
+    "inat_id": null
+  },
+  "PYRUS KIESER": {
+    "inat_id": null
+  },
+  "PYRUS LÉGIPONT": {
+    "inat_id": null
+  },
+  "PYRUS NEOSERRULATA": {
+    "inat_id": 1485648,
+    "vernacular": {
+      "en": "serrulate pear"
+    },
+    "aliases": [
+      "PYRUS SERRULATA"
+    ]
+  },
+  "PYRUS NIVALIS": {
+    "inat_id": 485304,
+    "vernacular": {
+      "en": "Snow Pear",
+      "fr": "Poirier des neiges"
+    }
+  },
+  "PYRUS PYRIFOLIA": {
+    "inat_id": 122783,
+    "vernacular": {
+      "en": "Asian Pear",
+      "de": "Chinesische Birne"
+    }
+  },
+  "PYRUS PYRIFOLIA’CHOJURO’": {
+    "inat_id": null
+  },
+  "PYRUS REGELII": {
+    "inat_id": 994426,
+    "vernacular": {}
+  },
+  "PYRUS SALICIFOLIA": {
+    "inat_id": 425871,
+    "vernacular": {
+      "en": "Willow-leaved Pear",
+      "de": "Weidenblättrige Birne"
+    }
+  },
+  "PYRUS SALICIFOLIA PENDULA": {
+    "aliases": [
+      "PYRUS SLA.PENDALU"
+    ]
+  },
+  "PYRUS SPECIOSA": {
+    "inat_id": null
+  },
+  "PYRUS SPINOSA": {
+    "inat_id": 335885,
+    "vernacular": {
+      "en": "Almond-leaved pear",
+      "de": "Mandelblättrige Birne",
+      "fr": "Poirier à feuilles d'amandier"
+    },
+    "aliases": [
+      "PYRUS AMYGDALIFORMIS"
+    ]
+  },
+  "PYRUS × CANESCENS": {
+    "inat_id": null,
+    "aliases": [
+      "PYRUS CANESCENS"
+    ]
+  },
+  "QUERCUS": {
+    "inat_id": 47851,
+    "vernacular": {
+      "en": "oaks",
+      "de": "Eichen",
+      "fr": "chênes",
+      "nl": "Eik"
+    },
+    "aliases": [
+      "QUERCUS CS"
+    ]
+  },
+  "QUERCUS ACUTISSIMA": {
+    "inat_id": 167634,
+    "vernacular": {
+      "en": "Sawtooth oak",
+      "de": "Japanische Kastanien-Eiche",
+      "fr": "Chêne du Japon"
+    }
+  },
+  "QUERCUS ALBA": {
+    "inat_id": 54779,
+    "vernacular": {
+      "en": "white oak",
+      "de": "Amerikanische Weiß-Eiche",
+      "fr": "Chêne blanc"
+    }
+  },
+  "QUERCUS ALIENA": {
+    "inat_id": 506474,
+    "vernacular": {
+      "nl": "Japanse eik",
+      "en": "Oriental white oak",
+      "fr": "Chêne de Blume"
+    }
+  },
+  "QUERCUS ALNIFOLIA": {
+    "inat_id": 522151,
+    "vernacular": {
+      "en": "Golden Oak",
+      "de": "Erlenblättrige Eiche"
+    }
+  },
+  "QUERCUS ANDEGAVENSIS": {
+    "inat_id": null
+  },
+  "QUERCUS BICOLOR": {
+    "inat_id": 54780,
+    "vernacular": {
+      "en": "swamp white oak",
+      "de": "Zweifarbige Eiche",
+      "fr": "Chêne bicolore"
+    }
+  },
+  "QUERCUS CANARIENSIS": {
+    "inat_id": 322086,
+    "vernacular": {
+      "en": "Mirbeck's oak",
+      "de": "Algerische Eiche",
+      "fr": "Chêne Zéen"
+    }
+  },
+  "QUERCUS CASTANEIFOLIA": {
+    "inat_id": 592816,
+    "vernacular": {
+      "en": "chestnut-leaved oak",
+      "de": "Kastanienblättrige Eiche",
+      "fr": "Chêne à feuilles de châtaignier"
+    }
+  },
+  "QUERCUS CERRIS": {
+    "inat_id": 135408,
+    "vernacular": {
+      "nl": "Moseik",
+      "en": "Turkey Oak",
+      "de": "Zerreiche",
+      "fr": "Chêne chevelu"
+    }
+  },
+  "QUERCUS COCCIFERA": {
+    "inat_id": 82942,
+    "vernacular": {
+      "nl": "Hulsteik",
+      "en": "Kermes oak",
+      "de": "Kermes-Eiche",
+      "fr": "chêne kermès"
+    },
+    "aliases": [
+      "QUERCUS COCC."
+    ]
+  },
+  "QUERCUS COCCINEA": {
+    "inat_id": 54784,
+    "vernacular": {
+      "en": "scarlet oak",
+      "fr": "Chêne écarlate"
+    },
+    "aliases": [
+      "QUERCUS TU"
+    ]
+  },
+  "QUERCUS DENTATA": {
+    "inat_id": 135407,
+    "vernacular": {
+      "en": "Daimyo Oak",
+      "de": "Japanische Kaisereiche"
+    }
+  },
+  "QUERCUS ELLIPSOIDALIS": {
+    "inat_id": 144029,
+    "vernacular": {
+      "en": "northern pin oak"
+    }
+  },
+  "QUERCUS FALCATA": {
+    "inat_id": 61324,
+    "vernacular": {
+      "en": "southern red oak"
+    }
+  },
+  "QUERCUS FASTIGIATA": {
+    "inat_id": null
+  },
+  "QUERCUS FRAINETTO": {
+    "inat_id": 461386,
+    "vernacular": {
+      "nl": "Hongaarse eik",
+      "en": "Hungarian Oak",
+      "de": "Ungarische Eiche",
+      "fr": "Chêne de Hongrie"
+    }
+  },
+  "QUERCUS GLANDULIFERA": {
+    "inat_id": null
+  },
+  "QUERCUS GLAUCA": {
+    "inat_id": 191183,
+    "vernacular": {
+      "en": "ring-cupped oak",
+      "fr": "Chêne glauque"
+    }
+  },
+  "QUERCUS HARTWISSIANA": {
+    "inat_id": 792665,
+    "vernacular": {
+      "en": "strandzha oak"
+    }
+  },
+  "QUERCUS HEMISPHAERICA": {
+    "inat_id": 167652,
+    "vernacular": {
+      "en": "Darlington Oak"
+    }
+  },
+  "QUERCUS HICKELII": {
+    "inat_id": null
+  },
+  "QUERCUS ILEX": {
+    "inat_id": 78805,
+    "vernacular": {
+      "nl": "Steeneik",
+      "en": "Holm oak",
+      "de": "Steineiche",
+      "fr": "chêne vert"
+    }
+  },
+  "QUERCUS IMBRICARIA": {
+    "inat_id": 117428,
+    "vernacular": {
+      "en": "shingle oak",
+      "de": "Schindel-Eiche",
+      "fr": "Chêne à feuilles de laurier"
+    }
+  },
+  "QUERCUS ITHABURENSIS": {
+    "inat_id": 338763,
+    "vernacular": {
+      "en": "Mount Tabor oak",
+      "de": "Wallonen-Eiche",
+      "fr": "Chêne du Mont Tabor"
+    }
+  },
+  "QUERCUS LAURIFOLIA": {
+    "inat_id": 69845,
+    "vernacular": {
+      "en": "swamp laurel oak"
+    }
+  },
+  "QUERCUS LIBANI": {
+    "inat_id": 592818,
+    "vernacular": {
+      "en": "Lebanon oak",
+      "de": "Libanon-Eiche",
+      "fr": "Chêne du Liban"
+    }
+  },
+  "QUERCUS LOBATA": {
+    "inat_id": 49011,
+    "vernacular": {
+      "en": "valley oak",
+      "de": "Kalifornische Weißeiche"
+    }
+  },
+  "QUERCUS MACON": {
+    "inat_id": null
+  },
+  "QUERCUS MACRANTHERA": {
+    "inat_id": 506415,
+    "vernacular": {
+      "en": "Persian oak",
+      "de": "Persische Eiche",
+      "fr": "Chêne de Perse"
+    }
+  },
+  "QUERCUS MACROCARPA": {
+    "inat_id": 54781,
+    "vernacular": {
+      "en": "bur oak",
+      "fr": "Chêne à gros fruits"
+    }
+  },
+  "QUERCUS MARILANDICA": {
+    "inat_id": 82329,
+    "vernacular": {
+      "en": "blackjack oak",
+      "de": "Schwarz-Eiche",
+      "fr": "Chêne du Maryland"
+    }
+  },
+  "QUERCUS MICHAUXII": {
+    "inat_id": 119273,
+    "vernacular": {
+      "en": "swamp chestnut oak",
+      "de": "Korb-Eiche"
+    }
+  },
+  "QUERCUS MONGOLICA": {
+    "inat_id": 361796,
+    "vernacular": {
+      "en": "Mongolian Oak",
+      "de": "Mongolische Eiche"
+    }
+  },
+  "QUERCUS MYRSINIFOLIA": {
+    "inat_id": 425335,
+    "vernacular": {
+      "en": "Chinese evergreen oak",
+      "fr": "Chêne à feuilles de myrsine"
+    }
+  },
+  "QUERCUS NIGRA": {
+    "inat_id": 53640,
+    "vernacular": {
+      "en": "water oak",
+      "de": "Wasser-Eiche",
+      "fr": "chêne noir"
+    }
+  },
+  "QUERCUS PALUSTRIS": {
+    "inat_id": 54785,
+    "vernacular": {
+      "nl": "Moeraseik",
+      "en": "pin oak",
+      "de": "Sumpf-Eiche",
+      "fr": "chêne des marais"
+    }
+  },
+  "QUERCUS PEDUNCULARIS": {
+    "inat_id": 275471,
+    "vernacular": {},
+    "aliases": [
+      "QUERCUS SPLENDENS"
+    ]
+  },
+  "QUERCUS PETRAEA": {
+    "inat_id": 200942,
+    "vernacular": {
+      "nl": "Wintereik",
+      "en": "sessile oak",
+      "de": "Trauben-Eiche",
+      "fr": "Chêne sessile"
+    },
+    "aliases": [
+      "QUERCUS PETREA"
+    ]
+  },
+  "QUERCUS PHELLOS": {
+    "inat_id": 119983,
+    "vernacular": {
+      "en": "willow oak",
+      "de": "Weiden-Eiche"
+    }
+  },
+  "QUERCUS PHILLYREOIDES": {
+    "inat_id": 977882,
+    "vernacular": {
+      "en": "Ubame Oak",
+      "fr": "Chêne à feuilles de filaire"
+    }
+  },
+  "QUERCUS PONTICA": {
+    "inat_id": 782340,
+    "vernacular": {
+      "en": "Russian oak",
+      "de": "Armenische Eiche"
+    }
+  },
+  "QUERCUS PUBESCENS": {
+    "inat_id": 125849,
+    "vernacular": {
+      "nl": "Donzige eik",
+      "en": "downy oak",
+      "de": "Flaumeiche",
+      "fr": "chêne pubescent"
+    }
+  },
+  "QUERCUS PYRENAICA": {
+    "inat_id": 125848,
+    "vernacular": {
+      "nl": "Pyreneese eik",
+      "en": "Pyrenean Oak",
+      "de": "Pyrenäeneiche",
+      "fr": "Chêne tauzin"
+    }
+  },
+  "QUERCUS ROBUR": {
+    "inat_id": 56133,
+    "vernacular": {
+      "nl": "zomereik",
+      "en": "English oak",
+      "de": "Stieleiche",
+      "fr": "chêne pédonculé"
+    },
+    "aliases": [
+      "QUERCUS RO",
+      "QUERCUS ROBUUR"
+    ]
+  },
+  "QUERCUS RUBRA": {
+    "inat_id": 49005,
+    "vernacular": {
+      "nl": "Amerikaanse eik",
+      "en": "northern red oak",
+      "de": "Roteiche",
+      "fr": "Chêne rouge d'Amérique"
+    }
+  },
+  "QUERCUS RYSOPHYLLA": {
+    "inat_id": 209275,
+    "vernacular": {
+      "en": "loquat leaf oak",
+      "fr": "Chêne du Mexique"
+    },
+    "aliases": [
+      "QUERCUS RHYSOPHYLLA"
+    ]
+  },
+  "QUERCUS SERRATA": {
+    "inat_id": 359972,
+    "vernacular": {
+      "en": "konara oak"
+    }
+  },
+  "QUERCUS SHUMARDII": {
+    "inat_id": 54786,
+    "vernacular": {
+      "en": "Shumard's oak",
+      "de": "Shumard-Eiche",
+      "fr": "Chêne de Shumard"
+    }
+  },
+  "QUERCUS STENOPHYLLA": {
+    "inat_id": null
+  },
+  "QUERCUS SUBER": {
+    "inat_id": 50868,
+    "vernacular": {
+      "nl": "Kurkeik",
+      "en": "cork oak",
+      "de": "Korkeiche",
+      "fr": "Chêne liège"
+    }
+  },
+  "QUERCUS TEXANA": {
+    "inat_id": 167670,
+    "vernacular": {
+      "en": "Texas red oak"
+    }
+  },
+  "QUERCUS VARIABILIS": {
+    "inat_id": 415617,
+    "vernacular": {
+      "en": "Chinese cork oak",
+      "de": "Chinesische Korkeiche"
+    }
+  },
+  "QUERCUS VELUTINA": {
+    "inat_id": 49006,
+    "vernacular": {
+      "en": "black oak",
+      "de": "Färber-Eiche",
+      "fr": "chêne des teinturiers"
+    }
+  },
+  "QUERCUS XALAPENSIS": {
+    "inat_id": 282400,
+    "vernacular": {
+      "en": "xalapa oak"
+    },
+    "aliases": [
+      "QUERCUS X"
+    ]
+  },
+  "QUERCUS x": {
+    "inat_id": null,
+    "aliases": [
+      "QUERCUS LIBANERRIS"
+    ]
+  },
+  "QUERCUS × BIMUNDORUM": {
+    "inat_id": 170984,
+    "vernacular": {
+      "en": "Two Worlds Oak"
+    },
+    "aliases": [
+      "QUERCUS BIMUNDORUM",
+      "QUERCUS ×BIMUNDORUM"
+    ]
+  },
+  "QUERCUS × COLUMNARIS": {
+    "inat_id": 170994,
+    "vernacular": {
+      "en": "Column Oak"
+    }
+  },
+  "QUERCUS × HETEROPHYLLA": {
+    "inat_id": 171017,
+    "vernacular": {
+      "en": "Bartram's oak"
+    },
+    "aliases": [
+      "QUERCUS HETEROPHYLLA"
+    ]
+  },
+  "QUERCUS × HICKELII": {
+    "inat_id": null
+  },
+  "QUERCUS × HISPANICA": {
+    "inat_id": 1105913,
+    "vernacular": {
+      "en": "Spanish Oak",
+      "fr": "Faux chêne-liège"
+    },
+    "aliases": [
+      "QUERCUS HISPANICA",
+      "QUERCUS XHISPANICA"
+    ]
+  },
+  "QUERCUS × LIBANERRIS": {
+    "inat_id": null
+  },
+  "QUERCUS × LUDOVICIANA": {
+    "inat_id": 171027,
+    "vernacular": {},
+    "aliases": [
+      "QUERCUS LUDOVICIANA"
+    ]
+  },
+  "QUERCUS × MACDANIELII": {
+    "inat_id": 1542082,
+    "vernacular": {},
+    "aliases": [
+      "QUERCUS MACDANIELII"
+    ]
+  },
+  "QUERCUS × SCHOCHIANA": {
+    "inat_id": 171052,
+    "vernacular": {},
+    "aliases": [
+      "QUERCUS SCHOCHIANA"
+    ]
+  },
+  "QUERCUS × TURNERI": {
+    "inat_id": 1458255,
+    "vernacular": {
+      "en": "Turner's oak"
+    },
+    "aliases": [
+      "QUERCUS TURNERI"
+    ]
+  },
+  "QUERCUS × WAREI": {
+    "inat_id": 820730,
+    "vernacular": {
+      "en": "Ware's Oak"
+    },
+    "aliases": [
+      "QUERCUS WAREI"
+    ]
+  },
+  "RHAMNUS CATHARTICA": {
+    "inat_id": 54811,
+    "vernacular": {
+      "nl": "Wegedoorn",
+      "en": "common buckthorn",
+      "de": "Purgier-Kreuzdorn",
+      "fr": "Nerprun purgatif"
+    },
+    "aliases": [
+      "RHAMNUS CATHARICA",
+      "RHAMNUS CATHARTICUS"
+    ]
+  },
+  "RHAMNUS FRANGULA": {
+    "inat_id": null
+  },
+  "RHAMNUS PRINOIDES": {
+    "inat_id": 593043
+  },
+  "RHODODENDRON": {
+    "inat_id": 49487,
+    "vernacular": {
+      "en": "rhododendrons and azaleas",
+      "nl": "Rododendron",
+      "de": "Rhododendren",
+      "fr": "Rhododendrons et azalées"
+    }
+  },
+  "RHODODENDRON CALOPHYTUM": {
+    "inat_id": 506314,
+    "vernacular": {}
+  },
+  "RHODODENDRON GROENLANDICUM": {
+    "inat_id": 180413
+  },
+  "RHODODENDRON LONGESQUAMATUM": {
+    "inat_id": 506374,
+    "vernacular": {}
+  },
+  "RHUS": {
+    "inat_id": 54765,
+    "vernacular": {
+      "en": "sumacs",
+      "nl": "Fluweelboom",
+      "fr": "Sumacs"
+    }
+  },
+  "RHUS GLABRA": {
+    "inat_id": 54764,
+    "vernacular": {
+      "en": "smooth sumac",
+      "de": "Scharlach-Sumach",
+      "fr": "Sumac glabre"
+    }
+  },
+  "RHUS TYPHINA": {
+    "inat_id": 167829,
+    "vernacular": {
+      "nl": "Azijnboom",
+      "en": "staghorn sumac",
+      "de": "Essigbaum",
+      "fr": "Sumac vinaigrier"
+    },
+    "aliases": [
+      "RHUS TYPHICA",
+      "RHUS TYPHYNA",
+      "RHUS TYPINA"
+    ]
+  },
+  "RHUS VERNICIFLUA": {
+    "inat_id": null
+  },
+  "RIBES AUREUM": {
+    "inat_id": 55544,
+    "vernacular": {
+      "nl": "Gele ribes",
+      "en": "golden currant",
+      "de": "Gold-Johannisbeere",
+      "fr": "Groseillier doré"
+    }
+  },
+  "RIBES RUBRUM": {
+    "inat_id": 54431,
+    "vernacular": {
+      "nl": "Aalbes",
+      "en": "Red Currant",
+      "de": "Rote Johannisbeere",
+      "fr": "Groseillier rouge"
+    }
+  },
+  "RIBES SANGUINEUM": {
+    "inat_id": 53435,
+    "vernacular": {
+      "nl": "Rode ribes",
+      "en": "Red-flowering Currant",
+      "de": "Blut-Johannisbeere",
+      "fr": "Groseillier à fleurs"
+    }
+  },
+  "RIBES UVA-CRISPA": {
+    "inat_id": 54429,
+    "vernacular": {
+      "nl": "Kruisbes",
+      "en": "European gooseberry",
+      "de": "Stachelbeere",
+      "fr": "Groseillier épineux"
+    }
+  },
+  "ROB MARGARETTA": {
+    "inat_id": null
+  },
+  "ROBINIA": {
+    "inat_id": 56089,
+    "vernacular": {
+      "fr": "Robiniers",
+      "en": "Locust Trees",
+      "de": "Robinien",
+      "nl": "Robinia"
+    }
+  },
+  "ROBINIA FERTILIS": {
+    "inat_id": null
+  },
+  "ROBINIA HISPIDA": {
+    "inat_id": 129107,
+    "vernacular": {
+      "en": "Bristly locust",
+      "fr": "robinier hispide"
+    }
+  },
+  "ROBINIA LUXURIANS": {
+    "inat_id": 1015831,
+    "vernacular": {}
+  },
+  "ROBINIA PSEUDOACACIA": {
+    "inat_id": 56088,
+    "vernacular": {
+      "nl": "robinia",
+      "en": "black locust",
+      "de": "Gewöhnliche Robinie",
+      "fr": "Robinier faux-acacia"
+    },
+    "aliases": [
+      "ROBINIA PS",
+      "ROBINIA PS.",
+      "ROBINIA PSEUDOAC.",
+      "ROBINIA PSEUDOACASIA"
+    ]
+  },
+  "ROBINIA SLAVINII": {
+    "inat_id": null
+  },
+  "ROBINIA TRIACANTHOS": {
+    "inat_id": null
+  },
+  "ROBINIA VISCOSA": {
+    "inat_id": 167943,
+    "vernacular": {
+      "en": "Clammy Locust",
+      "fr": "Robinier à fleurs roses"
+    }
+  },
+  "ROBINIA × AMBIGUA": {
+    "inat_id": 171078,
+    "vernacular": {
+      "en": "Idaho Locust"
+    },
+    "aliases": [
+      "ROBINIA AM",
+      "ROBINIA AMBIGUA",
+      "ROBINIA × AMBIQUA"
+    ]
+  },
+  "ROBINIA × MARGARETTA": {
+    "inat_id": 1599342,
+    "vernacular": {
+      "nl": "Roze robinia"
+    },
+    "aliases": [
+      "ROBINIA MARGARETTA",
+      "ROBINIA × MAGARETTA",
+      "ROBINIA × MARGARETTA",
+      "ROBINIA × MARGARETTAE"
+    ]
+  },
+  "ROSA SPINOSISSIMA": {
+    "inat_id": 167993,
+    "vernacular": {
+      "nl": "Duinroos",
+      "en": "Burnet Rose",
+      "de": "Bibernell-Rose",
+      "fr": "Rosier très épineux"
+    },
+    "aliases": [
+      "ROSA PIMPINELLIFOLIA"
+    ]
+  },
+  "RUBUS PHOENICOLASIUS": {
+    "inat_id": 84227,
+    "vernacular": {
+      "nl": "Japanse wijnbes",
+      "en": "wineberry",
+      "de": "Rotborstige Brombeere",
+      "fr": "Framboisier du Japon"
+    }
+  },
+  "RUSCUS ACULEATUS": {
+    "inat_id": 82904,
+    "vernacular": {
+      "nl": "Stekelige muizendoorn",
+      "en": "butcher's-broom",
+      "de": "Stechender Mäusedorn",
+      "fr": "fragon faux-houx"
+    }
+  },
+  "SALIX": {
+    "inat_id": 53453,
+    "vernacular": {
+      "en": "Willows",
+      "fr": "saules",
+      "de": "Weiden",
+      "nl": "Wilg"
+    }
+  },
+  "SALIX ACUTIFOLIA": {
+    "inat_id": 883933,
+    "vernacular": {
+      "nl": "Kaspische zandwilg",
+      "en": "Siberian Violet-willow"
+    }
+  },
+  "SALIX ALBA": {
+    "inat_id": 54841,
+    "vernacular": {
+      "nl": "Schietwilg",
+      "en": "white willow",
+      "de": "Silberweide",
+      "fr": "Saule blanc"
+    },
+    "aliases": [
+      "SALIX AL"
+    ]
+  },
+  "SALIX AURITA": {
+    "inat_id": 85085,
+    "vernacular": {
+      "nl": "Geoorde Wilg",
+      "en": "Eared Willow",
+      "de": "Ohr-Weide",
+      "fr": "Saule à oreillettes"
+    }
+  },
+  "SALIX BABYLONICA": {
+    "inat_id": 58316,
+    "vernacular": {
+      "nl": "Groene treurwilg",
+      "en": "weeping willow",
+      "de": "Trauer-Weide",
+      "fr": "Saule de Babylone"
+    },
+    "aliases": [
+      "SALIX BAYLONICA",
+      "SALIX MATSUDANA"
+    ]
+  },
+  "SALIX CAPREA": {
+    "inat_id": 55846,
+    "vernacular": {
+      "nl": "Boswilg",
+      "en": "goat willow",
+      "de": "Sal-Weide",
+      "fr": "saule marsault"
+    }
+  },
+  "SALIX CINEREA": {
+    "inat_id": 168326,
+    "vernacular": {
+      "nl": "Grauwe wilg",
+      "en": "Grey Willow",
+      "de": "Asch-Weide",
+      "fr": "Saule cendré"
+    }
+  },
+  "SALIX DAPHNOIDES": {
+    "inat_id": 168328,
+    "vernacular": {
+      "nl": "Berijpte wilg",
+      "en": "Violet Willow",
+      "de": "Reif-Weide",
+      "fr": "Saule pruineux"
+    }
+  },
+  "SALIX ELEAGNOS": {
+    "inat_id": 338098,
+    "vernacular": {
+      "nl": "Grijze wilg",
+      "en": "Bitter Willow",
+      "de": "Lavendel-Weide",
+      "fr": "Saule drapé"
+    },
+    "aliases": [
+      "SALIX ELAEAGNOS"
+    ]
+  },
+  "SALIX ERYTHROFLEXUOSA": {
+    "inat_id": null
+  },
+  "SALIX EXIGUA": {
+    "inat_id": 59008,
+    "vernacular": {
+      "en": "Narrowleaf Willow",
+      "nl": "Smalbladige wilg"
+    }
+  },
+  "SALIX GRACILISTYLA": {
+    "inat_id": 407120,
+    "vernacular": {
+      "en": "rose-gold pussy willow"
+    }
+  },
+  "SALIX MAGNIFICA": {
+    "inat_id": 430012,
+    "vernacular": {}
+  },
+  "SALIX MATSUDANA": {
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Groene treurwilg",
+      "en": "weeping willow",
+      "de": "Trauer-Weide",
+      "fr": "Saule de Babylone"
+    },
+    "aliases": [
+      "SALIX MAT"
+    ]
+  },
+  "SALIX MOUPINENSIS": {
+    "inat_id": 1237274,
+    "vernacular": {}
+  },
+  "SALIX NIGRA": {
+    "inat_id": 54847,
+    "vernacular": {
+      "en": "black willow",
+      "fr": "saule noir"
+    }
+  },
+  "SALIX PENTANDRA": {
+    "inat_id": 168349,
+    "vernacular": {
+      "nl": "Laurierwilg",
+      "en": "Laurel willow",
+      "de": "Lorbeer-Weide",
+      "fr": "Saule à cinq étamines"
+    }
+  },
+  "SALIX PULCHRA": {
+    "inat_id": 1030044,
+    "vernacular": {
+      "en": "Tealeaf Willow",
+      "fr": "saule joli"
+    }
+  },
+  "SALIX RETICULATA": {
+    "inat_id": 168355,
+    "vernacular": {
+      "nl": "Netnervige wilg",
+      "en": "Net-leaved Willow",
+      "de": "Netz-Weide",
+      "fr": "Saule réticulé"
+    },
+    "aliases": [
+      "SALIX SE"
+    ]
+  },
+  "SALIX TRIANDRA": {
+    "inat_id": 168365,
+    "vernacular": {
+      "nl": "Amandelwilg",
+      "en": "Almond Willow",
+      "de": "Mandel-Weide",
+      "fr": "saule à trois étamines"
+    }
+  },
+  "SALIX UDENSIS": {
+    "inat_id": 450362,
+    "vernacular": {
+      "en": "Sakhalin Willow",
+      "de": "Amur-Weide"
+    }
+  },
+  "SALIX VIMINALIS": {
+    "inat_id": 55822,
+    "vernacular": {
+      "nl": "Katwilg",
+      "en": "basket willow",
+      "de": "Korb-Weide",
+      "fr": "Saule des vanniers"
+    },
+    "aliases": [
+      "SALIX VI"
+    ]
+  },
+  "SALIX × CHRYSOCOMA": {
+    "inat_id": 892442,
+    "vernacular": {}
+  },
+  "SALIX × FRAGILIS": {
+    "inat_id": 495238,
+    "vernacular": {
+      "nl": "Gewone basterdkraakwilg",
+      "en": "hybrid crack willow",
+      "de": "Bruch-Weide",
+      "fr": "Saule fragile"
+    },
+    "aliases": [
+      "SALIX FRAGILES",
+      "SALIX FRAGILIS",
+      "SALIX × RUBENS"
+    ]
+  },
+  "SALIX × PENDULINA": {
+    "inat_id": 181862,
+    "vernacular": {
+      "nl": "Glanzende treurwilg",
+      "en": "weeping crack willow",
+      "de": "Liebliche Trauer-Weide"
+    },
+    "aliases": [
+      "SALIX XSEPULCRALIS",
+      "SALIX × SEPULCRALIS"
+    ]
+  },
+  "SALIX × RUBENS": {
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Gewone basterdkraakwilg",
+      "en": "hybrid crack willow",
+      "de": "Bruch-Weide",
+      "fr": "Saule fragile"
+    },
+    "aliases": [
+      "SALIX RUBENS"
+    ]
+  },
+  "SALIX × SEPULCRALIS": {
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Franse treurwilg",
+      "en": "Golden Weeping Willow",
+      "de": "Trauerweide",
+      "fr": "Saule pleureur"
+    },
+    "aliases": [
+      "SALIX SEPULCRALIS"
+    ]
+  },
+  "SAMBUCUS": {
+    "inat_id": 52689,
+    "vernacular": {
+      "en": "elders",
+      "fr": "sureaux",
+      "nl": "Vlier",
+      "de": "Holunder"
+    }
+  },
+  "SAMBUCUS CANADENSIS": {
+    "inat_id": 84300,
+    "vernacular": {
+      "nl": "Amerikaanse Vlier",
+      "en": "American black elderberry",
+      "de": "Kanadischer Holunder",
+      "fr": "Sureau du Canada"
+    }
+  },
+  "SAMBUCUS NIGRA": {
+    "inat_id": 765394,
+    "vernacular": {
+      "nl": "Gewone vlier",
+      "en": "European black elderberry",
+      "de": "Schwarzer Holunder",
+      "fr": "sureau noir"
+    }
+  },
+  "SAMBUCUS RACEMOSA": {
+    "inat_id": 57824,
+    "vernacular": {
+      "nl": "Trosvlier",
+      "en": "red-berried elder",
+      "de": "Roter Holunder",
+      "fr": "sureau de montagne"
+    }
+  },
+  "SARCOCOCCA HOOKERIANA": {
+    "inat_id": 410816,
+    "vernacular": {
+      "en": "Himalayan sweet box"
+    }
+  },
+  "SASSAFRAS ALBIDUM": {
+    "inat_id": 54795,
+    "vernacular": {
+      "en": "sassafras",
+      "de": "Sassafrasbaum",
+      "fr": "Sassafras officinal"
+    }
+  },
+  "SCANDOSORBUS INTERMEDIA": {
+    "inat_id": 1277895,
+    "vernacular": {
+      "de": "Schwedische Mehlbeere",
+      "fr": "sorbier intermédiaire",
+      "nl": "Zweedse lijsterbes",
+      "en": "Swedish Whitebeam"
+    },
+    "aliases": [
+      "SORBUS × INTERMEDIA"
+    ]
+  },
+  "SCIADOPITYS VERTICILLATA": {
+    "inat_id": 129057,
+    "vernacular": {
+      "en": "koyamaki",
+      "de": "Schirm-Tanne",
+      "fr": "pin parasol du Japon"
+    }
+  },
+  "SEQUOIA SEMPERVIRENS": {
+    "inat_id": 47372,
+    "vernacular": {
+      "nl": "Kustmammoetboom",
+      "en": "coast redwood",
+      "de": "Küstenmammutbaum",
+      "fr": "séquoia sempervirent"
+    }
+  },
+  "SEQUOIADENDRON GIGANTEUM": {
+    "inat_id": 59567,
+    "vernacular": {
+      "nl": "Mammoetboom",
+      "en": "giant sequoia",
+      "de": "Riesenmammutbaum",
+      "fr": "séquoia géant"
+    },
+    "aliases": [
+      "SEQUIADENDRON GIGANTEUM",
+      "SEQUOIADEN. GIGANT",
+      "SEQUOIADENDRON GIGANT"
+    ]
+  },
+  "SERINGA PEKINENSIS": {
+    "inat_id": null
+  },
+  "SKIMMIA JAPONICA": {
+    "inat_id": 128909,
+    "vernacular": {
+      "nl": "Japanse skimmia",
+      "en": "Japanese Skimmia",
+      "fr": "Skimmia du Japon"
+    }
+  },
+  "SOPHORA TETRAPTERA": {
+    "inat_id": 210948,
+    "vernacular": {
+      "en": "Large-leaved kowhai"
+    }
+  },
+  "SORBOPYRUS AURICULATA": {
+    "inat_id": null
+  },
+  "SORBOPYRUS × AURICULARIS": {
+    "inat_id": null
+  },
+  "SORBUS": {
+    "inat_id": 48582,
+    "vernacular": {
+      "en": "Rowans and Mountain Ashes",
+      "fr": "sorbiers vrais",
+      "de": "Ebereschen",
+      "nl": "Lijsterbes"
+    },
+    "aliases": [
+      "SOR AL",
+      "SORBUS TH"
+    ]
+  },
+  "SORBUS ALNIFOLIA": {
+    "inat_id": null,
+    "vernacular": {
+      "en": "Alder-leaved Whitebeam"
+    },
+    "aliases": [
+      "SORBUS AL"
+    ]
+  },
+  "SORBUS AMERICANA": {
+    "inat_id": 54265,
+    "vernacular": {
+      "en": "American mountain ash",
+      "fr": "sorbier d'Amérique"
+    }
+  },
+  "SORBUS ARIA": {
+    "inat_id": null,
+    "aliases": [
+      "SORBUS AR"
+    ]
+  },
+  "SORBUS AUCUPARIA": {
+    "inat_id": 56063,
+    "vernacular": {
+      "nl": "lijsterbes",
+      "en": "European mountain ash",
+      "de": "Vogelbeere",
+      "fr": "Sorbier des oiseleurs"
+    },
+    "aliases": [
+      "SOR AU",
+      "SORBUS AMURENSIS",
+      "SORBUS AU",
+      "SORBUS AU.",
+      "SORBUS AUCUPARIA."
+    ]
+  },
+  "SORBUS AUSTRIACA": {
+    "inat_id": null
+  },
+  "SORBUS BARTHAI": {
+    "inat_id": null
+  },
+  "SORBUS CASHMIRIANA": {
+    "inat_id": 429803,
+    "vernacular": {
+      "en": "Kashmir Rowan"
+    }
+  },
+  "SORBUS COMMIXTA": {
+    "inat_id": 363884,
+    "vernacular": {
+      "en": "Japanese rowan"
+    }
+  },
+  "SORBUS CONFUSA": {
+    "inat_id": null
+  },
+  "SORBUS DANUBIALIS": {
+    "inat_id": null
+  },
+  "SORBUS DECORA": {
+    "inat_id": 54266,
+    "vernacular": {
+      "en": "showy mountain-ash",
+      "fr": "sorbier décoratif"
+    },
+    "aliases": [
+      "SORBUS DECORUS"
+    ]
+  },
+  "SORBUS DEVONIENSIS": {
+    "inat_id": null
+  },
+  "SORBUS DISCOLOR": {
+    "inat_id": 484168,
+    "vernacular": {
+      "en": "Hupeh Rowan"
+    }
+  },
+  "SORBUS DODONG": {
+    "inat_id": null
+  },
+  "SORBUS DOMESTICA": {
+    "inat_id": 1277867,
+    "vernacular": {
+      "fr": "Cormier",
+      "de": "Speierling",
+      "en": "Service-tree",
+      "nl": "Tamme lijsterbes"
+    }
+  },
+  "SORBUS FOLGNERI": {
+    "inat_id": null
+  },
+  "SORBUS FORRESTII": {
+    "inat_id": 1274403,
+    "vernacular": {}
+  },
+  "SORBUS FRUTESCENS": {
+    "inat_id": 1230492,
+    "vernacular": {},
+    "aliases": [
+      "SORBUS ERUBESCENS"
+    ]
+  },
+  "SORBUS HIMALAICA": {
+    "inat_id": 1675078,
+    "vernacular": {}
+  },
+  "SORBUS HUPEHENSIS": {
+    "inat_id": 1473610,
+    "vernacular": {}
+  },
+  "SORBUS HYBRIDA": {
+    "inat_id": null
+  },
+  "SORBUS INTERMEDIA": {
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Zweedse lijsterbes",
+      "en": "Swedish Whitebeam",
+      "de": "Schwedische Mehlbeere",
+      "fr": "sorbier intermédiaire"
+    },
+    "aliases": [
+      "SORBUS IN"
+    ]
+  },
+  "SORBUS LATIFOLIA": {
+    "inat_id": null
+  },
+  "SORBUS LATIVOLIA": {
+    "inat_id": null
+  },
+  "SORBUS MINIMA": {
+    "inat_id": null
+  },
+  "SORBUS NIGRA": {
+    "inat_id": null
+  },
+  "SORBUS OBTUSIFOLIA": {
+    "inat_id": null
+  },
+  "SORBUS PSEUDOLATIFOLIA": {
+    "inat_id": null
+  },
+  "SORBUS SARGENTIANA": {
+    "inat_id": 484169,
+    "vernacular": {
+      "en": "Sargent's Rowan"
+    }
+  },
+  "SORBUS SEROTINA": {
+    "inat_id": null
+  },
+  "SORBUS SETSCHWANENSIS": {
+    "inat_id": 1647344,
+    "vernacular": {}
+  },
+  "SORBUS THEODORII": {
+    "inat_id": null
+  },
+  "SORBUS THIBETICA": {
+    "inat_id": null
+  },
+  "SORBUS TORMINALIS": {
+    "inat_id": null
+  },
+  "SORBUS ULLEUNGENSIS": {
+    "inat_id": 1557682,
+    "vernacular": {}
+  },
+  "SORBUS VASHANENSIS": {
+    "inat_id": null
+  },
+  "SORBUS VESTITA": {
+    "inat_id": null
+  },
+  "SORBUS VILMORINII": {
+    "inat_id": 484170,
+    "vernacular": {
+      "en": "Vilmorin's Rowan"
+    }
+  },
+  "SORBUS VIRGINIANA": {
+    "inat_id": null
+  },
+  "SORBUS WILFORDII": {
+    "inat_id": null
+  },
+  "SORBUS × ARNOLDIANA": {
+    "inat_id": 1587725,
+    "vernacular": {},
+    "aliases": [
+      "SORBUS ARNOLDIANA"
+    ]
+  },
+  "SORBUS × INCANA": {
+    "inat_id": null,
+    "aliases": [
+      "SORBUS INCANA"
+    ]
+  },
+  "SORBUS × THURINGIACA": {
+    "inat_id": null,
+    "vernacular": {
+      "en": "German Service-tree"
+    },
+    "aliases": [
+      "SORBUS THURINGIACA",
+      "SORBUS THURINGIACAA"
+    ]
+  },
+  "SORBUS ‘JOSEPH": {
+    "inat_id": null
+  },
+  "SPIRAEA": {
+    "inat_id": 48681,
+    "vernacular": {
+      "en": "meadowsweets",
+      "de": "Spiersträucher",
+      "nl": "Struikspirea"
+    }
+  },
+  "SPIRAEA JAPONICA": {
+    "inat_id": 125790,
+    "vernacular": {
+      "en": "Japanese Spirea",
+      "fr": "Spirée du Japon",
+      "de": "Japanische Spiere"
+    }
+  },
+  "SPIRAEA NIPPONICA": {
+    "inat_id": 337822,
+    "vernacular": {
+      "en": "Snowmound Spirea"
+    }
+  },
+  "STANDAARDBOOM": {
+    "inat_id": null,
+    "genus_checked": true
+  },
+  "STAPHYLEA COLCHICA": {
+    "inat_id": 774115,
+    "vernacular": {
+      "en": "Caucasian Bladdernut",
+      "de": "Kolchische Pimpernuss"
+    }
+  },
+  "STAPHYLEA PINNATA": {
+    "inat_id": 336396,
+    "vernacular": {
+      "en": "European bladdernut",
+      "fr": "Faux-pistachier",
+      "nl": "Pimpernoot",
+      "de": "Gemeine Pimpernuss"
+    }
+  },
+  "STEWARTIA MONADELPHA": {
+    "inat_id": 452251,
+    "vernacular": {
+      "en": "Tall Stewartia"
+    }
+  },
+  "STEWARTIA PSEUDOCAMELLIA": {
+    "inat_id": 133373,
+    "vernacular": {
+      "en": "Japanese stewartia"
+    },
+    "aliases": [
+      "STEWARTIA PSEUDOCAMELIA"
+    ]
+  },
+  "STEWARTIA ROSTRATA": {
+    "inat_id": 505599,
+    "vernacular": {}
+  },
+  "STEWARTIA SINENSIS": {
+    "inat_id": 782294,
+    "vernacular": {}
+  },
+  "STYPHNOLOBIUM": {
+    "inat_id": 53946,
+    "vernacular": {}
+  },
+  "STYPHNOLOBIUM JAPONICUM": {
+    "inat_id": 53945,
+    "vernacular": {
+      "en": "Japanese pagoda tree",
+      "fr": "Sophora du Japon",
+      "de": "Japanischer Schnurbaum",
+      "nl": "Japanse honingboom"
+    },
+    "aliases": [
+      "SOPHORA JA",
+      "SOPHORA JAP.",
+      "SOPHORA JAPONICA",
+      "STYPHNOLOBIUM JAPONICA"
+    ]
+  },
+  "STYRAX CONFUSUS": {
+    "inat_id": 706756,
+    "vernacular": {}
+  },
+  "STYRAX HEMSLEYANUS": {
+    "inat_id": 911450,
+    "vernacular": {}
+  },
+  "STYRAX JAPONICA": {
+    "inat_id": 128570,
+    "vernacular": {
+      "en": "Japanese snowbell"
+    }
+  },
+  "STYRAX JAPONICUS": {
+    "inat_id": 128570,
+    "vernacular": {
+      "en": "Japanese snowbell"
+    }
+  },
+  "STYRAX OBASSIA": {
+    "inat_id": 452210,
+    "vernacular": {
+      "en": "fragrant snowbell"
+    }
+  },
+  "STYRAX SHIRAIANUS": {
+    "inat_id": null
+  },
+  "STYRAX WILSONII": {
+    "inat_id": 899087,
+    "vernacular": {}
+  },
+  "SYMPHORICARPOS ALBUS": {
+    "inat_id": 48523,
+    "vernacular": {
+      "en": "Common Snowberry",
+      "de": "Schneebeere",
+      "fr": "Symphorine blanche",
+      "nl": "sneeuwbes"
+    }
+  },
+  "SYMPHORICARPOS × CHENAULTII": {
+    "inat_id": 524942,
+    "vernacular": {
+      "en": "Chenault Coralberry",
+      "de": "Bastard-Korallenbeere",
+      "fr": "Symphorine de Chenault"
+    }
+  },
+  "SYMPLOCOS PANICULATA": {
+    "inat_id": 169497,
+    "vernacular": {
+      "en": "sapphire-berry"
+    }
+  },
+  "SYRINGA": {
+    "inat_id": 47732,
+    "vernacular": {
+      "en": "Lilacs",
+      "de": "Flieder"
+    }
+  },
+  "SYRINGA KOMAROWII": {
+    "inat_id": 1018173,
+    "vernacular": {}
+  },
+  "SYRINGA LACINIATA": {
+    "inat_id": null
+  },
+  "SYRINGA MICROPHYLLA": {
+    "inat_id": null
+  },
+  "SYRINGA PEKINENSIS": {
+    "inat_id": null
+  },
+  "SYRINGA PERSICA": {
+    "inat_id": 1188197,
+    "vernacular": {
+      "en": "Persian Lilac"
+    }
+  },
+  "SYRINGA RETICULATA": {
+    "inat_id": 135416,
+    "vernacular": {
+      "en": "Japanese Tree Lilac",
+      "fr": "Lilas du Japon"
+    }
+  },
+  "SYRINGA VULGARIS": {
+    "inat_id": 83072,
+    "vernacular": {
+      "en": "common lilac",
+      "de": "Gemeiner Flieder",
+      "fr": "Lilas commun",
+      "nl": "sering"
+    }
+  },
+  "TAMARIX": {
+    "inat_id": 51305,
+    "vernacular": {
+      "en": "Tamarisks",
+      "de": "Tamarisken",
+      "fr": "Tamaris"
+    }
+  },
+  "TAMARIX GALLICA": {
+    "inat_id": 51303,
+    "vernacular": {
+      "en": "French tamarisk",
+      "fr": "Tamaris de France",
+      "de": "Französische Tamariske",
+      "nl": "Franse tamarisk"
+    }
+  },
+  "TAMARIX RAMOSISSIMA": {
+    "inat_id": 56015,
+    "vernacular": {
+      "en": "saltcedar",
+      "de": "Heidetamariske",
+      "fr": "Tamaris très ramifié"
+    }
+  },
+  "TAMARIX TETRANDRA": {
+    "inat_id": 444220,
+    "vernacular": {
+      "en": "Four-stamen Tamarisk"
+    }
+  },
+  "TAXODIUM ASCENDENS": {
+    "inat_id": 169570,
+    "vernacular": {
+      "en": "pondcypress",
+      "fr": "Cyprès des marais"
+    }
+  },
+  "TAXODIUM DISTICHUM": {
+    "inat_id": 49666,
+    "vernacular": {
+      "en": "baldcypress",
+      "fr": "cyprès chauve",
+      "nl": "Moerascipres",
+      "de": "Echte Sumpfzypresse"
+    },
+    "aliases": [
+      "TAXODIUM DISTICHEM"
+    ]
+  },
+  "TAXODIUM MUCRONATUM": {
+    "inat_id": 49665,
+    "vernacular": {
+      "en": "Montezuma cypress",
+      "de": "Mexikanische Sumpfzypresse",
+      "fr": "Cyprès de marais mexicain"
+    }
+  },
+  "TAXUS": {
+    "inat_id": 47555,
+    "vernacular": {
+      "en": "yews",
+      "de": "Eiben",
+      "nl": "Taxus"
+    }
+  },
+  "TAXUS BACATTA": {
+    "inat_id": 47553,
+    "vernacular": {
+      "en": "common yew",
+      "de": "Eibe",
+      "fr": "if commun",
+      "nl": "Taxus"
+    }
+  },
+  "TAXUS BACCATA": {
+    "inat_id": 47553,
+    "vernacular": {
+      "en": "common yew",
+      "de": "Eibe",
+      "fr": "if commun",
+      "nl": "Taxus"
+    }
+  },
+  "TAXUS CUSPIDATA": {
+    "inat_id": 133386,
+    "vernacular": {
+      "en": "Japanese yew",
+      "nl": "Japanse taxus",
+      "de": "Japanische Eibe"
+    }
+  },
+  "TAXUS × MEDIA": {
+    "inat_id": 342299,
+    "vernacular": {
+      "en": "Wellesley yew",
+      "nl": "Hicks' basterdtaxus",
+      "de": "Hybrid-Eibe"
+    },
+    "aliases": [
+      "TAXUS MEDIA"
+    ]
+  },
+  "TETRACENTRON SINENSE": {
+    "inat_id": 783141,
+    "vernacular": {
+      "en": "Tetracentron"
+    }
+  },
+  "TETRADIUM": {
+    "inat_id": 332552,
+    "vernacular": {}
+  },
+  "TETRADIUM DANIELLII": {
+    "inat_id": 332549,
+    "vernacular": {
+      "en": "Korean Euodia",
+      "fr": "Arbre à miel"
+    },
+    "aliases": [
+      "TEDRDIUM DANIELLE",
+      "TETRADIUM DANIELII",
+      "TETRADIUM DANIËLLI"
+    ]
+  },
+  "TETRADIUM HUPEHENSIS": {
+    "inat_id": null
+  },
+  "TETRAPANAX PAPYRIFER": {
+    "inat_id": 372170,
+    "vernacular": {
+      "en": "Rice paper plant",
+      "fr": "Arbre à papier de riz",
+      "de": "Reispapierbaum"
+    }
+  },
+  "THUJA": {
+    "inat_id": 48253,
+    "vernacular": {
+      "en": "arborvitaes",
+      "de": "Thujen",
+      "nl": "Levensbomen"
+    }
+  },
+  "THUJA OCCIDENTALIS": {
+    "inat_id": 54037,
+    "vernacular": {
+      "en": "northern whitecedar",
+      "fr": "thuya occidental",
+      "nl": "Westerse levensboom",
+      "de": "Abendländischer Lebensbaum"
+    },
+    "aliases": [
+      "THUIS OCCIDENTALIS"
+    ]
+  },
+  "THUJA ORIENTALIS": {
+    "inat_id": null
+  },
+  "THUJA PLICATA": {
+    "inat_id": 48252,
+    "vernacular": {
+      "en": "western redcedar",
+      "fr": "thuya géant",
+      "nl": "Reuzenlevensboom",
+      "de": "Riesen-Lebensbaum"
+    }
+  },
+  "THUJA STANDISHII": {
+    "inat_id": 135551,
+    "vernacular": {
+      "en": "Japanese arborvitae",
+      "nl": "Japanse levensboom"
+    }
+  },
+  "THUJOPSIS DOLABRATA": {
+    "inat_id": 135553,
+    "vernacular": {
+      "en": "hiba",
+      "nl": "Hibacipres"
+    }
+  },
+  "THUJOPSIS DOLOBRATA": {
+    "inat_id": 135553,
+    "vernacular": {
+      "en": "hiba",
+      "nl": "Hibacipres"
+    }
+  },
+  "TIIA HETEROPHYLLA": {
+    "inat_id": null
+  },
+  "TILIA": {
+    "inat_id": 54856,
+    "vernacular": {
+      "en": "lindens, basswoods, and lime trees",
+      "de": "Linden",
+      "fr": "tilleuls",
+      "nl": "linde"
+    },
+    "aliases": [
+      "LINDE"
+    ]
+  },
+  "TILIA AMERICANA": {
+    "inat_id": 54854,
+    "vernacular": {
+      "en": "basswood",
+      "fr": "tilleul d'Amérique",
+      "de": "Amerikanische Linde",
+      "nl": "Amerikaanse linde"
+    }
+  },
+  "TILIA AMURENSIS": {
+    "inat_id": 501604,
+    "vernacular": {
+      "en": "Amur Lime",
+      "de": "Amurlinde"
+    }
+  },
+  "TILIA ARGENTEA": {
+    "inat_id": null
+  },
+  "TILIA CORDATA": {
+    "inat_id": 132600,
+    "vernacular": {
+      "en": "Small-leaved Lime",
+      "de": "Winterlinde",
+      "fr": "Tilleul à petites feuilles",
+      "nl": "Winterlinde"
+    },
+    "aliases": [
+      "TILIA CO"
+    ]
+  },
+  "TILIA HENRYANA": {
+    "inat_id": 967178,
+    "vernacular": {
+      "fr": "Tilleul de Henry",
+      "en": "Henry's Lime"
+    },
+    "aliases": [
+      "TILIA HERNYANA",
+      "TILIA HERYANA"
+    ]
+  },
+  "TILIA HETEROPHYLLA": {
+    "inat_id": null
+  },
+  "TILIA HETROPHYLLA": {
+    "inat_id": null
+  },
+  "TILIA JAPONICA": {
+    "inat_id": 448063,
+    "vernacular": {
+      "de": "Japanische Linde",
+      "en": "Japanese lime"
+    }
+  },
+  "TILIA KIUSIANA": {
+    "inat_id": 795872,
+    "vernacular": {
+      "en": "Kyushu lime"
+    }
+  },
+  "TILIA MANDSHURICA": {
+    "inat_id": 502263,
+    "vernacular": {
+      "en": "Manchurian Lime",
+      "de": "Mandschurische Linde"
+    }
+  },
+  "TILIA MONGOLICA": {
+    "inat_id": 986876,
+    "vernacular": {
+      "de": "Mongolische Linde",
+      "en": "Mongolian lime"
+    },
+    "aliases": [
+      "TILIA MONGOLYCA"
+    ]
+  },
+  "TILIA OLIVERI": {
+    "inat_id": 986462,
+    "vernacular": {
+      "de": "Olivers Linde",
+      "en": "Chinese white lime"
+    }
+  },
+  "TILIA PALLIDA": {
+    "inat_id": null
+  },
+  "TILIA PAUCICOSTATA": {
+    "inat_id": 444354,
+    "vernacular": {}
+  },
+  "TILIA PETIOLARIS": {
+    "inat_id": null
+  },
+  "TILIA PLATYPHYLLOS": {
+    "inat_id": 169761,
+    "vernacular": {
+      "en": "Bigleaf Linden",
+      "fr": "Tilleul à grandes feuilles",
+      "de": "Großblättrige Linde",
+      "nl": "Zomerlinde"
+    },
+    "aliases": [
+      "TILIA PL",
+      "TILIA PLATHYPHYLLOS",
+      "TILIA PLATYPHYLOS"
+    ]
+  },
+  "TILIA TOMENTOSA": {
+    "inat_id": 143800,
+    "vernacular": {
+      "en": "Silver Lime",
+      "fr": "Tilleul argenté",
+      "de": "Silberlinde",
+      "nl": "Zilverlinde"
+    },
+    "aliases": [
+      "TILIA TO",
+      "TILIA TOMENTOSAQQAA"
+    ]
+  },
+  "TILIA TUAN": {
+    "inat_id": 1230489,
+    "vernacular": {}
+  },
+  "TILIA VARSAVIENSIS": {
+    "inat_id": null
+  },
+  "TILIA × EUCHLORA": {
+    "inat_id": 1599148,
+    "vernacular": {
+      "en": "Caucasian Lime"
+    },
+    "aliases": [
+      "TILIA EUCHLORA"
+    ]
+  },
+  "TILIA × EUROPAEA": {
+    "inat_id": 410499,
+    "vernacular": {
+      "en": "Common Lime",
+      "de": "Holländische Linde",
+      "nl": "Hollandse linde"
+    },
+    "aliases": [
+      "TILIA EUROPAEA",
+      "TILIA EUROPEA",
+      "TILIA EUROPEAE",
+      "TILIA VU",
+      "TILIA VULG.",
+      "TILIA VULGARIS",
+      "TILIA XEUROPAEA",
+      "TILIA × EUROPEA",
+      "TILIA × EUROPEAE",
+      "TILIA ×EUROPAEA",
+      "TILIA ×VULGARIS"
+    ]
+  },
+  "TILIA × FLAVESCENS": {
+    "inat_id": null,
+    "aliases": [
+      "TILIA FLAVESCENS",
+      "TILIA ×FLAVESCENS"
+    ]
+  },
+  "TOONA SINENSIS": {
+    "inat_id": 426847,
+    "vernacular": {
+      "en": "Tun tree",
+      "fr": "Cédrèle de Chine"
+    }
+  },
+  "TORMINALIS GLABERRIMA": {
+    "inat_id": 1277891
+  },
+  "TORREYA CALIFORNICA": {
+    "inat_id": 55193,
+    "vernacular": {
+      "en": "California torreya",
+      "fr": "Muscadier de Californie",
+      "nl": "Californische torreya"
+    }
+  },
+  "TORREYA NUCIFERA": {
+    "inat_id": 55197,
+    "vernacular": {
+      "en": "Japanese torreya",
+      "nl": "Japanse torreya"
+    }
+  },
+  "TORREYA TAXIFOLIA": {
+    "inat_id": 135555,
+    "vernacular": {
+      "en": "Florida torreya",
+      "fr": "Torréya de Floride",
+      "nl": "Florida-torreya"
+    }
+  },
+  "TOXICODENDRON RADICANS": {
+    "inat_id": 58732
+  },
+  "TOXICODENDRON VERNICIFLUUM": {
+    "inat_id": 484176
+  },
+  "TRACHYCARPUS FORTUNEI": {
+    "inat_id": 64323,
+    "vernacular": {
+      "en": "Chusan Palm",
+      "fr": "Palmier de Chine",
+      "de": "Fortunes Hanfpalme",
+      "nl": "Chinese waaierpalm"
+    }
+  },
+  "TREMA ORIENTALE": {
+    "inat_id": 147425
+  },
+  "TSUGA CANADENSIS": {
+    "inat_id": 48734,
+    "vernacular": {
+      "en": "eastern hemlock",
+      "de": "Kanadische Hemlocktanne",
+      "fr": "pruche du Canada",
+      "nl": "Oostelijke hemlockspar"
+    }
+  },
+  "TSUGA HETEROPHYLLA": {
+    "inat_id": 48254,
+    "vernacular": {
+      "en": "western hemlock",
+      "fr": "pruche de l'Ouest",
+      "nl": "Westelijke hemlockspar",
+      "de": "Westliche Helmlocktanne"
+    }
+  },
+  "TSUGA MERTENSIANA": {
+    "inat_id": 68089,
+    "vernacular": {
+      "en": "mountain hemlock",
+      "fr": "pruche subalpine",
+      "de": "Mertens Hemlocktanne",
+      "nl": "Berghemlockspar"
+    }
+  },
+  "ULEX PARVIFLORUS": {
+    "inat_id": 82727,
+    "vernacular": {
+      "en": "Small-flowered Gorse",
+      "fr": "Ajonc à petites fleurs",
+      "nl": "Middelandse-zee gaspeldoorn"
+    }
+  },
+  "ULMUN LUTECE": {
+    "inat_id": null
+  },
+  "ULMUS": {
+    "inat_id": 53549,
+    "vernacular": {
+      "en": "elms",
+      "fr": "ormes",
+      "de": "Ulmen",
+      "nl": "Iepen"
+    },
+    "aliases": [
+      "ULMUS ...",
+      "ULMUS CB",
+      "ULMUS LEI-IEP",
+      "ULMUS X"
+    ]
+  },
+  "ULMUS ACCOLADE": {
+    "inat_id": null
+  },
+  "ULMUS ALATA": {
+    "inat_id": 84292,
+    "vernacular": {
+      "en": "Winged Elm",
+      "de": "Geflügelte Ulme",
+      "fr": "orme ailé"
+    }
+  },
+  "ULMUS AMERICANA": {
+    "inat_id": 53547,
+    "vernacular": {
+      "en": "American elm",
+      "fr": "Orme d'Amérique",
+      "de": "Amerikanische Ulme"
+    }
+  },
+  "ULMUS BERGMANNIANA": {
+    "inat_id": 1230090,
+    "vernacular": {}
+  },
+  "ULMUS CAMPERDOWNI": {
+    "inat_id": null
+  },
+  "ULMUS CAMPERDOWNII": {
+    "inat_id": null
+  },
+  "ULMUS CAMPESTRIS": {
+    "inat_id": null
+  },
+  "ULMUS CARPINIFOLIA": {
+    "inat_id": null,
+    "aliases": [
+      "ULMUS CARP.",
+      "ULMUS CARPINIFOLI"
+    ]
+  },
+  "ULMUS CASTANEIFOLIA": {
+    "inat_id": null
+  },
+  "ULMUS CHENMOUI": {
+    "inat_id": 444535,
+    "vernacular": {}
+  },
+  "ULMUS CLUSIUS": {
+    "inat_id": null
+  },
+  "ULMUS COLUMELLA": {
+    "inat_id": null
+  },
+  "ULMUS DAVIDIANA": {
+    "inat_id": 448047,
+    "vernacular": {
+      "en": "Japanese Elm"
+    }
+  },
+  "ULMUS DODOENS": {
+    "inat_id": null
+  },
+  "ULMUS FIORENTE": {
+    "inat_id": null
+  },
+  "ULMUS FRONTIER": {
+    "inat_id": null
+  },
+  "ULMUS FRONTLER": {
+    "inat_id": null
+  },
+  "ULMUS GLABRA": {
+    "inat_id": 170056,
+    "vernacular": {
+      "en": "Wych Elm",
+      "de": "Bergulme",
+      "fr": "Orme de montagne",
+      "nl": "Ruwe iep"
+    },
+    "aliases": [
+      "ULMUS GL"
+    ]
+  },
+  "ULMUS HOMESTEAD": {
+    "inat_id": null,
+    "aliases": [
+      "ULMUS HOMESTAED"
+    ]
+  },
+  "ULMUS LACINIATA": {
+    "inat_id": 437559,
+    "vernacular": {}
+  },
+  "ULMUS LAEVIS": {
+    "inat_id": 450330,
+    "vernacular": {
+      "en": "Fluttering Elm",
+      "nl": "Fladderiep",
+      "de": "Flatterulme",
+      "fr": "Orme lisse"
+    },
+    "aliases": [
+      "ULMUS LEAVIS"
+    ]
+  },
+  "ULMUS LOBEL": {
+    "inat_id": null
+  },
+  "ULMUS LUTECE": {
+    "inat_id": null
+  },
+  "ULMUS MINOR": {
+    "inat_id": 79461,
+    "vernacular": {
+      "en": "Field Elm",
+      "fr": "Orme champêtre",
+      "de": "Feldulme",
+      "nl": "Gladde iep"
+    }
+  },
+  "ULMUS NANGUEN": {
+    "inat_id": null
+  },
+  "ULMUS NEW": {
+    "inat_id": null
+  },
+  "ULMUS PARVIFLORA": {
+    "inat_id": null
+  },
+  "ULMUS PARVIFOLIA": {
+    "inat_id": 79462,
+    "vernacular": {
+      "en": "Chinese elm",
+      "de": "Chinesische Ulme",
+      "fr": "Orme de Chine"
+    }
+  },
+  "ULMUS PLANTIJN": {
+    "inat_id": null
+  },
+  "ULMUS PROCERA": {
+    "inat_id": 1567961,
+    "vernacular": {
+      "en": "English Elm",
+      "fr": "Orme champêtre",
+      "nl": "Engelse veldiep"
+    }
+  },
+  "ULMUS PROPINQUA": {
+    "inat_id": null
+  },
+  "ULMUS PUMILA": {
+    "inat_id": 79463,
+    "vernacular": {
+      "en": "Siberian elm",
+      "fr": "orme de Sibérie",
+      "de": "Sibirische Ulme"
+    }
+  },
+  "ULMUS REBELLA": {
+    "inat_id": null
+  },
+  "ULMUS REBONA": {
+    "inat_id": null
+  },
+  "ULMUS RESISTA": {
+    "inat_id": null
+  },
+  "ULMUS REVERTI": {
+    "inat_id": null
+  },
+  "ULMUS RUBRA": {
+    "inat_id": 54860,
+    "vernacular": {
+      "en": "slippery elm",
+      "de": "Rotulme",
+      "fr": "orme rouge"
+    }
+  },
+  "ULMUS SAN": {
+    "inat_id": null
+  },
+  "ULMUS SAPORRO": {
+    "inat_id": null
+  },
+  "ULMUS SAPPORO": {
+    "inat_id": null
+  },
+  "ULMUS THOMASII": {
+    "inat_id": 54861,
+    "vernacular": {
+      "en": "rock elm",
+      "de": "Felsenulme",
+      "fr": "orme liège"
+    }
+  },
+  "ULMUS VADA": {
+    "inat_id": null
+  },
+  "ULMUS VILLOSA": {
+    "inat_id": 601725,
+    "vernacular": {
+      "de": "Kaschmirulme",
+      "en": "cherry-bark elm"
+    }
+  },
+  "ULMUS WALLICHIANA": {
+    "inat_id": 444538,
+    "vernacular": {
+      "de": "Himalayaulme",
+      "en": "Himalayan elm",
+      "fr": "Orme de Wallich"
+    }
+  },
+  "ULMUS WANOUX": {
+    "inat_id": null
+  },
+  "ULMUS WILSONIANA": {
+    "inat_id": null
+  },
+  "ULMUS × HOLLANDICA": {
+    "inat_id": 1571260,
+    "vernacular": {
+      "nl": "Hollandse iep",
+      "de": "Holländische Ulme",
+      "en": "Dutch elm"
+    },
+    "aliases": [
+      "ULMUS HO",
+      "ULMUS HOLL.",
+      "ULMUS HOLLANDICA",
+      "ULMUS XHOLLANDICA",
+      "ULMUS × HOLL."
+    ]
+  },
+  "ULMUS ‘NEW": {
+    "inat_id": null
+  },
+  "VESALEA FLORIBUNDA": {
+    "inat_id": 549339
+  },
+  "VIBURNUM": {
+    "inat_id": 54774,
+    "vernacular": {
+      "fr": "Viornes",
+      "en": "viburnums",
+      "de": "Schneeball",
+      "nl": "Sneeuwbal"
+    }
+  },
+  "VIBURNUM DAVIDII": {
+    "inat_id": 128767,
+    "vernacular": {
+      "en": "David Viburnum",
+      "nl": "Davids Sneeuwbal",
+      "de": "Immergrüner Kissen-Schneeball",
+      "fr": "Viorne de David"
+    }
+  },
+  "VIBURNUM LANTANA": {
+    "inat_id": 124741,
+    "vernacular": {
+      "de": "Wolliger Schneeball",
+      "en": "Wayfaring-tree",
+      "fr": "Viorne lantane",
+      "nl": "Wollige Sneeuwbal"
+    }
+  },
+  "VIBURNUM LENTAGO": {
+    "inat_id": 54773,
+    "vernacular": {
+      "en": "nannyberry",
+      "fr": "viorne flexible"
+    }
+  },
+  "VIBURNUM OPULUS": {
+    "inat_id": 55969,
+    "vernacular": {
+      "en": "guelder-rose",
+      "nl": "gelderse roos",
+      "fr": "viorne obier",
+      "de": "Gemeiner Schneeball"
+    },
+    "aliases": [
+      "VIBURNUM OPPULUS"
+    ]
+  },
+  "VIBURNUM PLICATUM": {
+    "inat_id": 170203,
+    "vernacular": {
+      "en": "Japanese snowball",
+      "fr": "Viorne de Chine",
+      "nl": "Japanse Sneeuwbal",
+      "de": "Japanischer Schneeball"
+    }
+  },
+  "VIBURNUM RHYTIDOPHYLLUM": {
+    "inat_id": 128688,
+    "vernacular": {
+      "en": "Leatherleaf viburnum",
+      "de": "Runzelblättriger Schneeball",
+      "fr": "Viorne à feuilles ridées",
+      "nl": "Gerimpelde Sneeuwbal"
+    }
+  },
+  "VIBURNUM SIEBOLDII": {
+    "inat_id": 170206,
+    "vernacular": {
+      "en": "Siebold's Viburnum",
+      "fr": "Viorne de Siebold"
+    }
+  },
+  "VIBURNUM TINUS": {
+    "inat_id": 82666,
+    "vernacular": {
+      "en": "Laurustinus viburnum",
+      "fr": "Viorne tin",
+      "de": "Immergrüner Schneeball",
+      "nl": "Lauriersneeuwbal"
+    }
+  },
+  "VIBURNUM TRILOBUM": {
+    "inat_id": null
+  },
+  "VIBURNUM × BODNANTENSE": {
+    "inat_id": 523141,
+    "vernacular": {
+      "de": "Bodnant-Schneeball",
+      "nl": "Wintersneeuwbal",
+      "fr": "Viorne d'hiver",
+      "en": "Bodnant Viburnum"
+    },
+    "aliases": [
+      "VIBURNUM BODNANTENSE"
+    ]
+  },
+  "VIBURNUM × BURKWOODIIIANA": {
+    "inat_id": null
+  },
+  "VITIS VINIFERA": {
+    "inat_id": 79519,
+    "vernacular": {
+      "en": "wine grape",
+      "de": "Weinrebe",
+      "fr": "Vigne d'Europe",
+      "nl": "Wijnstok"
+    }
+  },
+  "VRUCHTBOOM": {
+    "inat_id": null,
+    "genus_checked": true
+  },
+  "WEIGELA": {
+    "inat_id": 153104,
+    "vernacular": {
+      "de": "Weigelien",
+      "en": "Weigela bushes"
+    }
+  },
+  "WISTERIA SINESIS": {
+    "inat_id": null
+  },
+  "WW": {
+    "inat_id": null,
+    "genus_checked": true
+  },
+  "XCRATAEMESPILUS": {
+    "inat_id": null
+  },
+  "ZABELIA TRIFLORA": {
+    "inat_id": 472976,
+    "vernacular": {
+      "de": "Dreiblumige Abelie",
+      "nl": "Driebloemige abelia"
+    },
+    "aliases": [
+      "ABELIA TRIFLORA"
+    ]
+  },
+  "ZANTHOXYLUM AMERICANUM": {
+    "inat_id": 54836,
+    "vernacular": {
+      "en": "northern prickly ash",
+      "fr": "clavalier d'Amérique"
+    }
+  },
+  "ZANTHOXYLUM PIPERITUM": {
+    "inat_id": 332459,
+    "vernacular": {
+      "en": "Japanese Pepper",
+      "nl": "Japanse peperboom"
+    }
+  },
+  "ZANTHOXYLUM SIMULANS": {
+    "inat_id": 170408,
+    "vernacular": {
+      "en": "Sichuan Pepper",
+      "nl": "Chinese peperboom"
+    }
+  },
+  "ZELKOVA": {
+    "inat_id": 129056,
+    "vernacular": {
+      "de": "Zelkoven",
+      "en": "Zelkovas",
+      "nl": "Zelkova"
+    }
+  },
+  "ZELKOVA CARPINIFOLIA": {
+    "inat_id": 410938,
+    "vernacular": {
+      "en": "Caucasian zelkova",
+      "de": "Kaukasische Zelkove",
+      "nl": "Kaukasische zelkova",
+      "fr": "Orme du Caucase"
+    },
+    "aliases": [
+      "ZELKOVA CAPINIFOLIA"
+    ]
+  },
+  "ZELKOVA HYBRIDE": {
+    "inat_id": null
+  },
+  "ZELKOVA SERRATA": {
+    "inat_id": 129055,
+    "vernacular": {
+      "en": "Japanese zelkova",
+      "de": "Japanische Zelkove",
+      "nl": "Japanse zelkova"
+    }
+  },
+  "ZELKOVA SINICA": {
+    "inat_id": 450605,
+    "vernacular": {
+      "en": "Chinese Zelkova",
+      "de": "Chinesische Zelkove",
+      "nl": "Chinese zelkova"
+    }
+  },
+  "ZELKOVA VERSCHAFFELTII": {
+    "inat_id": null
+  },
+  "ZIZIPHUS JUJUBA": {
+    "inat_id": 428365,
+    "vernacular": {
+      "fr": "Jujubier",
+      "en": "Jujube",
+      "nl": "Jujube",
+      "de": "Chinesische Jujube"
+    }
+  },
+  "ZIZIPHUS ZIZYPHUS": {
+    "inat_id": null
+  },
+  "× ARSORBUS": {
+    "inat_id": 1624569,
+    "vernacular": {
+      "en": "German Service-tree"
+    },
+    "aliases": [
+      "SORBUS XTHURINGIACA"
+    ]
+  },
+  "× CHITALPA": {
+    "inat_id": 349780,
+    "vernacular": {},
+    "aliases": [
+      "CHITALPA TASHKENTENSIS"
+    ]
+  },
+  "× CRATAEMESPILUS": {
+    "inat_id": null,
+    "aliases": [
+      "XCRATAEMESPILUS"
+    ]
+  },
+  "× CUPRESSOCYPARIS": {
+    "inat_id": null,
+    "aliases": [
+      "X CUPRESSOCYPARIS"
+    ]
+  },
+  "× HESPEROTROPSIS": {
+    "inat_id": 1515671
+  },
+  "× PYRARIA": {
+    "inat_id": 1277915
+  },
+  "× SYCOPARROTIA": {
+    "inat_id": 1587726,
+    "vernacular": {},
+    "aliases": [
+      "SYCOPARROTIA SEMIDECIDUA"
+    ]
+  }
+}

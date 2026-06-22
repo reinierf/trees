@@ -14,7 +14,8 @@
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
     "build-vernacular-nl": "node tools/vernacular/nl/build.js",
     "merge-vernacular-nl": "node tools/vernacular/nl/merge.js",
-    "copy-data": "node -e \"const{readdirSync,copyFileSync}=require('fs');readdirSync('data').filter(f=>f.endsWith('.db')).forEach(f=>{copyFileSync('data/'+f,'../api/data/'+f);console.log('Copied',f)})\""
+    "copy-data": "node -e \"const{readdirSync,copyFileSync}=require('fs');readdirSync('data').filter(f=>f.endsWith('.db')).forEach(f=>{copyFileSync('data/'+f,'../api/data/'+f);console.log('Copied',f)})\"",
+    "fetch-vernacular-genera": "node tools/vernacular/base/fetch-genera.js"
   },
   "dependencies": {
     "sql.js": "^1.14.1",

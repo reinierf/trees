@@ -288,7 +288,7 @@ async function main() {
         if (answer.trim().toLowerCase() !== 'n') {
             try {
                 const cmd = process.platform === 'darwin' ? 'pbcopy'
-                          : process.platform === 'win32'  ? 'clip'
+                          : process.platform === 'win32'  ? 'powershell -noprofile -command "[Console]::InputEncoding=[System.Text.Encoding]::UTF8; Set-Clipboard([Console]::In.ReadToEnd())"'
                           : 'xclip -selection clipboard';
                 execSync(cmd, { input: output });
                 process.stderr.write('Copied.\n');

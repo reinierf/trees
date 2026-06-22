@@ -279,6 +279,7 @@ async function main() {
         lines.push(`  ${key.padEnd(38)}'${value}',${tag}`);
     }
     const output = lines.join('\n') + '\n';
+    process.stderr.write(output);
     process.stdout.write(output);
 
     const rl = readline.createInterface({ input: process.stdin, output: process.stderr });

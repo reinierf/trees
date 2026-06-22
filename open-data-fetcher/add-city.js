@@ -27,13 +27,14 @@
  */
 
 import { spawnSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, copyFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline';
 import { CITIES } from './config.js';
 
-const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
+const DATA_DIR     = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
+const API_DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'api', 'data');
 
 function parseArgs(argv) {
     const args = { cities: null, yes: false };
@@ -196,8 +197,14 @@ async function main() {
         run('node', ['tools/vernacular/nl/merge.js']);
     }
 
-    if (await confirm('Copy all .db files into api/data/', yes)) {
-        run('npm', ['run', 'copy-data']);
+    if (await confirm(`Copy ${label} database(s) into api/data/`, yes)) {
+        const filesToCopy = [...cities.map(id => CITIES[id].outputFile.sqlite), 'vernacular-nl.db'];
+        for (const file of filesToCopy) {
+            const src = path.join(DATA_DIR, file);
+            if (!existsSync(src)) { process.stdout.write(`  Skipped ${file} (not found)\n`); continue; }
+            copyFileSync(src, path.join(API_DATA_DIR, file));
+            process.stdout.write(`  Copied ${file}\n`);
+        }
     }
 
     process.stdout.write('\nDone.\n');

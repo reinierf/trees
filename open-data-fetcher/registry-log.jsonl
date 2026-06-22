@@ -189,3 +189,7 @@
 {"date":"2026-06-22","action":"add-genus","binomial":"TILIA","inat_id":54856}
 {"date":"2026-06-22","action":"add-genus","binomial":"VIBURNUM","inat_id":54774}
 {"date":"2026-06-22","action":"add-genus","binomial":"ZELKOVA","inat_id":129056}
+{"date":"2026-06-22","action":"add","binomial":"CUPRESSUS","inat_id":49292,"source":"inat-auto"}
+{"date":"2026-06-22","action":"update-inat-id","binomial":"GYMNOCLADUS DIOICA","inat_id":163451,"source":"inat-auto"}
+{"date":"2026-06-22","action":"add","binomial":"PHELLODENDR AMURENSE","inat_id":166636,"source":"inat-auto"}
+{"date":"2026-06-22","action":"update-inat-id","binomial":"WISTERIA SINENSIS","inat_id":127306,"source":"inat-auto"}

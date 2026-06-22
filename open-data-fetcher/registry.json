@@ -5,12 +5,15 @@
     "ALMELANCHIER": "AMELANCHIER",
     "AMALANCHIER": "AMELANCHIER",
     "ANTHOXYLUM": "ZANTHOXYLUM",
+    "AURACARIA": "ARAUCARIA",
     "BUDDLEYA": "BUDDLEJA",
     "CAYA": "CARYA",
     "CERSIS": "CERCIS",
     "CHAECYPARIS": "CHAMAECYPARIS",
     "CHAMACYPARIS": "CALLITROPSIS",
+    "CHAMEACYPARIS": "CHAMAECYPARIS",
     "CLADASTRIS": "CLADRASTIS",
+    "CUDRANIA": "MACLURA",
     "CUPRSESSUS": "CUPRESSUS",
     "CYPRES": "CUPRESSUS",
     "DIOSPYRUS": "DIOSPYROS",
@@ -30,6 +33,7 @@
     "LEVENSBOOM": "THUJA",
     "LIRIODENDON": "LIRIODENDRON",
     "LYQUIDAMBAR": "LIQUIDAMBAR",
+    "METASEQUIOA": "METASEQUOIA",
     "METASQUOIA": "METASEQUOIA",
     "MISPILUS": "MESPILUS",
     "NOTHAFAGUS": "NOTHOFAGUS",
@@ -42,10 +46,12 @@
     "QUERICUS": "QUERCUS",
     "SASSEFRAS": "SASSAFRAS",
     "SEQUIADENDRON": "SEQUOIADENDRON",
+    "SERINGA": "SYRINGA",
     "STYPHOLOBIUM": "STYPHNOLOBIUM",
     "TILIIA": "TILIA",
     "TILLIA": "TILIA",
     "TLIA": "TILIA",
+    "ULMUN": "ULMUS",
     "ZELKO": "ZELKOVA",
     "ZELKOVE": "ZELKOVA",
     "ZELKOVIA": "ZELKOVA",
@@ -99,7 +105,10 @@
       "fr": "Sapins",
       "de": "Tannen",
       "nl": "Zilversparren"
-    }
+    },
+    "aliases": [
+      "ABIES ZILVERSPAR"
+    ]
   },
   "ABIES ALBA": {
     "inat_id": 136319,
@@ -118,9 +127,6 @@
       "de": "Purpurtanne",
       "fr": "sapin gracieux"
     }
-  },
-  "ABIES ARNOLDIANA": {
-    "inat_id": null
   },
   "ABIES BALSAMEA": {
     "inat_id": 54261,
@@ -273,7 +279,7 @@
       "fr": "Sapin de Veitch"
     }
   },
-  "ABIES ZILVERSPAR": {
+  "ABIES × ARNOLDIANA": {
     "inat_id": null
   },
   "ABIES × INSIGNIS": {
@@ -713,7 +719,10 @@
       "en": "buckeyes and horse-chestnuts",
       "de": "Rosskastanien",
       "nl": "Paardenkastanje"
-    }
+    },
+    "aliases": [
+      "AESCULUS CA"
+    ]
   },
   "AESCULUS AUTUMN": {
     "inat_id": null
@@ -723,13 +732,7 @@
     "vernacular": {
       "en": "California buckeye",
       "fr": "Marronnier de Californie"
-    },
-    "aliases": [
-      "AESCULUS CA"
-    ]
-  },
-  "AESCULUS CAR": {
-    "inat_id": null
+    }
   },
   "AESCULUS CHINENSIS": {
     "inat_id": 706743,
@@ -825,6 +828,7 @@
       "fr": "Marronnier à fleurs rouges"
     },
     "aliases": [
+      "AESCULUS CAR",
       "AESCULUS CARNEA"
     ]
   },
@@ -876,11 +880,9 @@
       "fr": "Ailante glanduleux"
     },
     "aliases": [
-      "AILANTHUS ALTISSSIMA"
+      "AILANTHUS ALTISSSIMA",
+      "AILANTHUS GIRALDII"
     ]
-  },
-  "AILANTHUS GIRALDII": {
-    "inat_id": null
   },
   "AILANTHUS VILMORINIANA": {
     "inat_id": 737941,
@@ -1068,9 +1070,10 @@
     }
   },
   "AMELANCHIER LAEVIGATA": {
+    "inat_id": null,
     "aliases": [
-      "AMELANCHIER LEAV",
-      "AMELAN LEAV"
+      "AMELAN LEAV",
+      "AMELANCHIER LEAV"
     ]
   },
   "AMELANCHIER LAEVIS": {
@@ -1148,6 +1151,9 @@
       "de": "Chilenische Araukarie",
       "fr": "Désespoir-des-singes"
     }
+  },
+  "ARAUCARIA HETROPHYLLA": {
+    "inat_id": null
   },
   "ARBUTUS": {
     "inat_id": 51047,
@@ -1233,9 +1239,6 @@
       "fr": "Aucuba du Japon"
     }
   },
-  "AURACARIA HETROPHYLLA": {
-    "inat_id": null
-  },
   "AVERRHOA CARAMBOLA": {
     "inat_id": 146977,
     "vernacular": {
@@ -1268,11 +1271,11 @@
       "fr": "bouleaux"
     }
   },
-  "BETULA ALBONISINENS": {
-    "inat_id": null
-  },
   "BETULA ALBOSINENSIS": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "BETULA ALBONISINENS"
+    ]
   },
   "BETULA ALLEGHANIENSIS": {
     "inat_id": 49882,
@@ -2021,9 +2024,6 @@
       "en": "Atlantic white cedar"
     }
   },
-  "CHAMEACYPARIS LAWSONIANA": {
-    "inat_id": null
-  },
   "CHIMONANTHUS PRAECOX": {
     "inat_id": 49080,
     "vernacular": {
@@ -2667,9 +2667,6 @@
       "fr": "cryptoméria du Japon"
     }
   },
-  "CUDRANIA TRICUSPIDATA": {
-    "inat_id": null
-  },
   "CUNNINGHAMIA LANCEOLATA": {
     "inat_id": 127861,
     "vernacular": {
@@ -2685,6 +2682,15 @@
   },
   "CUPRESSOCYPARIS × LEYLANDII": {
     "inat_id": null
+  },
+  "CUPRESSUS": {
+    "inat_id": 49292,
+    "vernacular": {
+      "en": "cypresses",
+      "nl": "Cipres",
+      "de": "Zypressen",
+      "fr": "Cyprès"
+    }
   },
   "CUPRESSUS ARIZONICA": {
     "inat_id": null,
@@ -2708,7 +2714,15 @@
     "inat_id": null
   },
   "CUPRESSUS NOOTKATENSIS": {
-    "inat_id": null
+    "inat_id": null,
+    "vernacular": {
+      "nl": "Nootka-cipres",
+      "en": "Alaska-cedar",
+      "de": "Nootka-Zypresse"
+    },
+    "aliases": [
+      "CHAMAECYPARIS NOOTKATENSIS"
+    ]
   },
   "CUPRESSUS SEMPERVIRENS": {
     "inat_id": 64261,
@@ -2956,12 +2970,6 @@
       "fr": "Arbre à gutta-percha"
     }
   },
-  "EUODIA DANIELLII": {
-    "inat_id": null
-  },
-  "EUODIA HUPEHENSIS": {
-    "inat_id": null
-  },
   "EUONYMUS": {
     "inat_id": 47538,
     "vernacular": {
@@ -3015,9 +3023,6 @@
     "vernacular": {
       "en": "Japanese Euptelea"
     }
-  },
-  "EVODIA HUPEHENSIS": {
-    "inat_id": null
   },
   "EVOLVULUS ALSINOIDES": {
     "inat_id": 162913
@@ -3293,6 +3298,9 @@
       "FRAXINUS XANTHOXYLOI"
     ]
   },
+  "FRUITBOOM": {
+    "inat_id": null
+  },
   "GARCINIA LIVINGSTONEI": {
     "inat_id": 340173,
     "vernacular": {
@@ -3381,6 +3389,13 @@
     "inat_id": 1277909
   },
   "GYMNOCLADUS DIOICA": {
+    "inat_id": 163451,
+    "vernacular": {
+      "en": "Kentucky coffeetree",
+      "nl": "doodsbeenderenboom",
+      "de": "Geweihbaum",
+      "fr": "Chicot du Canada"
+    },
     "aliases": [
       "GYMNOCLADUS DIOCA"
     ]
@@ -3835,18 +3850,6 @@
   "KARPATIOSORBUS PSEUDOLATIFOLIA": {
     "inat_id": 1291458
   },
-  "KERS HOEVE": {
-    "inat_id": null
-  },
-  "KERS KONINGSKERS": {
-    "inat_id": null
-  },
-  "KERS PATER": {
-    "inat_id": null
-  },
-  "KERS PUTTERS": {
-    "inat_id": null
-  },
   "KOELERIA GLAUCA": {
     "inat_id": 507473,
     "vernacular": {
@@ -4124,9 +4127,6 @@
       "LIGUSTRUM VULGARIS"
     ]
   },
-  "LIQIUDAMBAR ORIENTALIS": {
-    "inat_id": null
-  },
   "LIQUIDAMBAR": {
     "inat_id": 49661,
     "vernacular": {
@@ -4155,6 +4155,7 @@
       "fr": "Liquidambar oriental"
     },
     "aliases": [
+      "LIQIUDAMBAR ORIENTALIS",
       "LIQUIDAMBAR ORIENTAL"
     ]
   },
@@ -4267,7 +4268,10 @@
     }
   },
   "MACLURA TRICUSPIDATA": {
-    "inat_id": 743229
+    "inat_id": 743229,
+    "vernacular": {
+      "en": "silkworm thorn"
+    }
   },
   "MACROMELES TSCHONOSKII": {
     "inat_id": 984352
@@ -4502,8 +4506,8 @@
       "fr": "Pommiers"
     },
     "aliases": [
-      "MALUS HYBRIDE",
-      "MALUS CULTIVARS"
+      "MALUS CULTIVARS",
+      "MALUS HYBRIDE"
     ]
   },
   "MALUS 77303-8": {
@@ -4836,7 +4840,7 @@
   "MESPILUS GERMANICA": {
     "inat_id": null
   },
-  "METASEQUIOA GLYPTOSTROBOIDES": {
+  "METASEQUOIA GLYPT": {
     "inat_id": null
   },
   "METASEQUOIA GLYPTOSTROBOIDES": {
@@ -4862,7 +4866,9 @@
     "inat_id": 56091,
     "vernacular": {
       "en": "Mulberries",
-      "de": "Maulbeeren"
+      "de": "Maulbeeren",
+      "fr": "Mûriers",
+      "nl": "Moerbeien"
     }
   },
   "MORUS ALBA": {
@@ -5006,8 +5012,12 @@
       "fr": "Oliviers"
     }
   },
+  "ONBEKEND": {
+    "inat_id": null
+  },
   "OSMANTHUS DECORUS": {
-    "inat_id": 537866
+    "inat_id": 537866,
+    "vernacular": {}
   },
   "OSMANTHUS HETEROPHYLLUS": {
     "inat_id": 404400,
@@ -5118,6 +5128,14 @@
   },
   "PAVIA FLAVA": {
     "inat_id": null
+  },
+  "PHELLODENDR AMURENSE": {
+    "inat_id": 166636,
+    "vernacular": {
+      "en": "Amur Corktree",
+      "fr": "phellodendron de l'Amour",
+      "de": "Amur-Korkbaum"
+    }
   },
   "PHELLODENDRON": {
     "inat_id": 156609,
@@ -6052,6 +6070,10 @@
       "fr": "merisier"
     },
     "aliases": [
+      "KERS HOEVE",
+      "KERS KONINGSKERS",
+      "KERS PATER",
+      "KERS PUTTERS",
       "PRUNUS A.",
       "PRUNUS CE"
     ]
@@ -6136,15 +6158,6 @@
     "aliases": [
       "PRUNUS GO"
     ]
-  },
-  "PRUNUS HILLARI": {
-    "inat_id": null
-  },
-  "PRUNUS HILLERII": {
-    "inat_id": null
-  },
-  "PRUNUS HILLIERI": {
-    "inat_id": null
   },
   "PRUNUS HYPOLEUCA": {
     "inat_id": 922263
@@ -6449,7 +6462,12 @@
     ]
   },
   "PRUNUS × HILLIERI": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "PRUNUS HILLARI",
+      "PRUNUS HILLERII",
+      "PRUNUS HILLIERI"
+    ]
   },
   "PRUNUS × HYBRIDA": {
     "inat_id": 1276584,
@@ -6729,6 +6747,7 @@
     }
   },
   "PYRUS SALICIFOLIA PENDULA": {
+    "inat_id": null,
     "aliases": [
       "PYRUS SLA.PENDALU"
     ]
@@ -7361,9 +7380,6 @@
       "fr": "Groseillier épineux"
     }
   },
-  "ROB MARGARETTA": {
-    "inat_id": null
-  },
   "ROBINIA": {
     "inat_id": 56089,
     "vernacular": {
@@ -7432,6 +7448,7 @@
       "nl": "Roze robinia"
     },
     "aliases": [
+      "ROB MARGARETTA",
       "ROBINIA MARGARETTA",
       "ROBINIA × MAGARETTA",
       "ROBINIA × MARGARETTA",
@@ -7803,9 +7820,6 @@
       "SEQUOIADENDRON GIGANT"
     ]
   },
-  "SERINGA PEKINENSIS": {
-    "inat_id": null
-  },
   "SKIMMIA JAPONICA": {
     "inat_id": 128909,
     "vernacular": {
@@ -7820,11 +7834,11 @@
       "en": "Large-leaved kowhai"
     }
   },
-  "SORBOPYRUS AURICULATA": {
-    "inat_id": null
-  },
   "SORBOPYRUS × AURICULARIS": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "SORBOPYRUS AURICULATA"
+    ]
   },
   "SORBUS": {
     "inat_id": 48582,
@@ -7970,10 +7984,10 @@
     ]
   },
   "SORBUS LATIFOLIA": {
-    "inat_id": null
-  },
-  "SORBUS LATIVOLIA": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "SORBUS LATIVOLIA"
+    ]
   },
   "SORBUS MINIMA": {
     "inat_id": null
@@ -8355,13 +8369,18 @@
       "fr": "Arbre à miel"
     },
     "aliases": [
+      "EUODIA DANIELLII",
       "TEDRDIUM DANIELLE",
       "TETRADIUM DANIELII",
       "TETRADIUM DANIËLLI"
     ]
   },
   "TETRADIUM HUPEHENSIS": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "EUODIA HUPEHENSIS",
+      "EVODIA HUPEHENSIS"
+    ]
   },
   "TETRAPANAX PAPYRIFER": {
     "inat_id": 372170,
@@ -8424,9 +8443,6 @@
       "nl": "Hibacipres"
     }
   },
-  "TIIA HETEROPHYLLA": {
-    "inat_id": null
-  },
   "TILIA": {
     "inat_id": 54856,
     "vernacular": {
@@ -8482,10 +8498,11 @@
     ]
   },
   "TILIA HETEROPHYLLA": {
-    "inat_id": null
-  },
-  "TILIA HETROPHYLLA": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "TIIA HETEROPHYLLA",
+      "TILIA HETROPHYLLA"
+    ]
   },
   "TILIA JAPONICA": {
     "inat_id": 448063,
@@ -8691,9 +8708,6 @@
       "nl": "Middelandse-zee gaspeldoorn"
     }
   },
-  "ULMUN LUTECE": {
-    "inat_id": null
-  },
   "ULMUS": {
     "inat_id": 53549,
     "vernacular": {
@@ -8732,11 +8746,11 @@
     "inat_id": 1230090,
     "vernacular": {}
   },
-  "ULMUS CAMPERDOWNI": {
-    "inat_id": null
-  },
   "ULMUS CAMPERDOWNII": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "ULMUS CAMPERDOWNI"
+    ]
   },
   "ULMUS CAMPESTRIS": {
     "inat_id": null
@@ -8890,11 +8904,11 @@
   "ULMUS SAN": {
     "inat_id": null
   },
-  "ULMUS SAPORRO": {
-    "inat_id": null
-  },
   "ULMUS SAPPORO": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "ULMUS SAPORRO"
+    ]
   },
   "ULMUS THOMASII": {
     "inat_id": 54861,
@@ -9063,11 +9077,17 @@
       "en": "Weigela bushes"
     }
   },
-  "WISTERIA SINESIS": {
-    "inat_id": null
-  },
-  "XCRATAEMESPILUS": {
-    "inat_id": null
+  "WISTERIA SINENSIS": {
+    "inat_id": 127306,
+    "vernacular": {
+      "en": "Chinese wisteria",
+      "fr": "Glycine de Chine",
+      "de": "Chinesische Wisteria",
+      "nl": "Chinese blauweregen"
+    },
+    "aliases": [
+      "WISTERIA SINESIS"
+    ]
   },
   "ZABELIA TRIFLORA": {
     "inat_id": 472976,
@@ -9120,9 +9140,6 @@
       "ZELKOVA CAPINIFOLIA"
     ]
   },
-  "ZELKOVA HYBRIDE": {
-    "inat_id": null
-  },
   "ZELKOVA SERRATA": {
     "inat_id": 129055,
     "vernacular": {
@@ -9139,8 +9156,12 @@
       "nl": "Chinese zelkova"
     }
   },
-  "ZELKOVA VERSCHAFFELTII": {
-    "inat_id": null
+  "ZELKOVA × VERSCHAFFELTII": {
+    "inat_id": null,
+    "aliases": [
+      "ZELKOVA HYBRIDE",
+      "ZELKOVA VERSCHAFFELTII"
+    ]
   },
   "ZIZIPHUS JUJUBA": {
     "inat_id": 428365,

@@ -87,10 +87,18 @@ async function getDistinctSpecies() {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function fetchJson(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
-    return res.json();
+async function fetchJson(url, retries = 3) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        const res = await fetch(url);
+        if (res.ok) return res.json();
+        if (res.status === 429 && attempt < retries) {
+            const wait = 5000 * 2 ** attempt; // 5s, 10s, 20s
+            process.stderr.write(`  429 rate limit, waiting ${wait / 1000}s…\n`);
+            await sleep(wait);
+            continue;
+        }
+        throw new Error(`HTTP ${res.status}: ${url}`);
+    }
 }
 
 // Step 1: search by full name. Accepts exact match or closest result within

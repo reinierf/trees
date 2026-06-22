@@ -3,7 +3,6 @@
 Nice-to-have improvements to pick up later.
 
 - [ ] The way the binomials are fixed/processed feels messy and intransparent. It uses both overrides.js and cache.json, and takes multiple steps. It feels like there should be a single source of truth for inferring the correct binomial for a raw species values. Maybe a single step is also possible: check raw species against authorative list (fuzzily), if not found: look up in iNat, if not found: strip 2 char epithets and any other last resort fixes. Discuss how this process can be streamlined or made more transparent.
-- [ ] Improve the city button menu: show 5 last visited cities, or have a fav button in the info panel and show favs in city menu + supplement with last visited until 5 (configurable) entries. Always show 'Alle steden' on top.
 - [ ] Add more places
 - [ ] Augment city info (monumental only, multiple sources, other?)
 - [ ] What to do with species 'Onbekend' (zie Zandvoort, e.g http://localhost:5173/#/zandvoort?tree=708781&lat=52.3797354&lon=4.543056) or 'Standaardboom' (Dordrecht), or 'NOG INVULLEN' (Barendrecht/ALbrandswaard). Is it desirable to keep the trees on the map but mark them unknown somehow? Currently some are filtered out during import by filterSpecies

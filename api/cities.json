@@ -202,5 +202,17 @@
     "name": "Wageningen",
     "center": [51.9693, 5.6657],
     "meta": { "source": "Gemeente Wageningen" }
+  },
+  {
+    "id": "steenwijk",
+    "name": "Steenwijk",
+    "center": [52.7868, 6.1147],
+    "meta": { "source": "Gemeente Steenwijkerland" }
+  },
+  {
+    "id": "hilversum",
+    "name": "Hilversum",
+    "center": [52.2292, 5.1669],
+    "meta": { "source": "Gemeente Hilversum" }
   }
 ]

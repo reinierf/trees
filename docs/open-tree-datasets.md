@@ -236,6 +236,42 @@ The viewer is ArcGIS-based but the underlying FeatureServer does not appear to b
 
 ---
 
+## Steenwijk (Steenwijkerland)
+
+**Status:** Live GeoServer WFS 2.0.0 — 36,247 trees
+
+Discovered via the Neuron Smart Maps viewer at `infoopkaart.steenwijkerland.nl`. The viewer uses Socket.IO for interactive features, but the underlying geo-data is served by a standard GeoServer instance on the same host (`/geoserver/ows`). The `nsm:gd_boom` WFS layer covers all municipal trees in WGS84, no reprojection needed.
+
+| Resource | URL |
+|----------|-----|
+| WFS endpoint | https://infoopkaart.steenwijkerland.nl/geoserver/ows |
+| GetCapabilities | …/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities |
+| Layer | `nsm:gd_boom` |
+| Viewer | https://infoopkaart.steenwijkerland.nl/ |
+| Municipality page | https://www.steenwijkerland.nl/Inwoners/Leefomgeving/Wegen_en_groen/Boombeheer |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `id` | `id` | Municipality tree ID |
+| `latboomsoort` | `species` | Full Latin name incl. cultivar |
+| `aanlegjaar` | `year_planted` | Integer year; filter ≤ 1800 |
+| `woonplaats` | `neighbourhood` | Place name within municipality (e.g. "Steenwijk", "Blokzijl") |
+| `openbare_ruimte` | `street` | Format "StreetName - PlaceName"; strip ` - {place}` suffix via `lastIndexOf` |
+| geometry `coordinates` | `lon`/`lat` | WGS84 GeoJSON Point [lon, lat] via `SRSNAME=EPSG:4326` |
+| — | `trunk_diameter`, `crown_spread`, `name_vernacular` | Not available |
+
+Other fields present but not mapped: `structuurelement`, `boomtype`, `standplaats`, `inspectiedatum`, `boomconditie`, `risicoklasse`, `inspectiefrequentie`, `memo_kroon`, `memo_stam`, `memo_advies`, `kl_groenobject`.
+
+- **SSL:** `rejectUnauthorized: false` (municipal GeoServer)
+- **Pagination:** WFS 2.0.0 `COUNT`/`STARTINDEX`/`SORTBY=id`; count via `resultType=hits` → XML `numberMatched`
+- **Fetcher:** `cities/steenwijk.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [52.7868, 6.1147]`)
+
+---
+
 ## Summary
 
 | City | Full dataset | Format | Live API/WFS | License |

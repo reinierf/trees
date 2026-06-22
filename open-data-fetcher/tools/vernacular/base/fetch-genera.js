@@ -16,6 +16,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import initSqlJs from 'sql.js';
 import { CITIES } from '../../../config.js';
+import { dropTerms, unknownTerms } from '../../../overrides.js';
+
+const _dropSet = new Set(dropTerms.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
+const _dropPat = dropTerms.filter(e => e instanceof RegExp);
+const _unkSet  = new Set(unknownTerms.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
+const _unkPat  = unknownTerms.filter(e => e instanceof RegExp);
+const isJunk = s => _dropSet.has(s) || _dropPat.some(p => p.test(s)) || _unkSet.has(s) || _unkPat.some(p => p.test(s));
 
 const DIR      = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(DIR, '..', '..', '..', 'data');
@@ -94,6 +101,7 @@ async function main() {
 
     const all  = await getGenusOnly();
     const todo = all.filter(raw => {
+        if (isJunk(raw)) return false;                   // matches dropTerms/unknownTerms → skip
         const entry = registry[raw];
         if (!entry) return true;
         if (entry.genus_checked && !entry.inat_id) return noCache; // tried as genus, not found

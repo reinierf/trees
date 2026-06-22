@@ -26,6 +26,13 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import initSqlJs from 'sql.js';
 import { CITIES } from '../../../config.js';
+import { dropTerms, unknownTerms } from '../../../overrides.js';
+
+const _dropSet = new Set(dropTerms.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
+const _dropPat = dropTerms.filter(e => e instanceof RegExp);
+const _unkSet  = new Set(unknownTerms.filter(e => typeof e === 'string').map(s => s.toUpperCase()));
+const _unkPat  = unknownTerms.filter(e => e instanceof RegExp);
+const isJunk = s => _dropSet.has(s) || _dropPat.some(p => p.test(s)) || _unkSet.has(s) || _unkPat.some(p => p.test(s));
 
 const DIR      = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(DIR, '..', '..', '..', 'data');
@@ -187,6 +194,7 @@ async function main() {
 
     const all  = await getDistinctSpecies();
     const todo = all.filter(s => {
+        if (isJunk(s)) return false;                     // matches dropTerms/unknownTerms → skip
         const entry = registry[s];
         if (!entry) return true;                         // unknown species → needs full lookup
         if ('inat_id' in entry && entry.inat_id === null)

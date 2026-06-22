@@ -1025,9 +1025,6 @@
   "AMBLYCERUS ROBINIAE": {
     "inat_id": 268019
   },
-  "AMELAN LEAV": {
-    "inat_id": null
-  },
   "AMELANCHIER": {
     "inat_id": 49230,
     "vernacular": {
@@ -1072,7 +1069,8 @@
   },
   "AMELANCHIER LAEVIGATA": {
     "aliases": [
-      "AMELANCHIER LEAV"
+      "AMELANCHIER LEAV",
+      "AMELAN LEAV"
     ]
   },
   "AMELANCHIER LAEVIS": {
@@ -1990,7 +1988,8 @@
       "fr": "Petit-Cyprès de Lawson"
     },
     "aliases": [
-      "CHAMAECYPARIS LAWS"
+      "CHAMAECYPARIS LAWS",
+      "CHM LAWS"
     ]
   },
   "CHAMAECYPARIS NOOTKATENSIS": {
@@ -2049,9 +2048,6 @@
     }
   },
   "CHITALPA TASKETENSIS": {
-    "inat_id": null
-  },
-  "CHM LAWS": {
     "inat_id": null
   },
   "CHOISYA": {
@@ -4128,9 +4124,6 @@
       "LIGUSTRUM VULGARIS"
     ]
   },
-  "LINDE": {
-    "inat_id": null
-  },
   "LIQIUDAMBAR ORIENTALIS": {
     "inat_id": null
   },
@@ -4911,9 +4904,6 @@
       "fr": "mûrier rouge"
     }
   },
-  "NAME": {
-    "inat_id": null
-  },
   "NANDINA DOMESTICA": {
     "inat_id": 127010,
     "vernacular": {
@@ -4999,10 +4989,6 @@
       "en": "Osoberry",
       "fr": "oemléria faux-prunier"
     }
-  },
-  "OKKERNOOT": {
-    "inat_id": null,
-    "genus_checked": true
   },
   "OLEA": {
     "inat_id": 57145,
@@ -8093,10 +8079,6 @@
       "en": "Snowmound Spirea"
     }
   },
-  "STANDAARDBOOM": {
-    "inat_id": null,
-    "genus_checked": true
-  },
   "STAPHYLEA COLCHICA": {
     "inat_id": 774115,
     "vernacular": {
@@ -9074,10 +9056,6 @@
       "nl": "Wijnstok"
     }
   },
-  "VRUCHTBOOM": {
-    "inat_id": null,
-    "genus_checked": true
-  },
   "WEIGELA": {
     "inat_id": 153104,
     "vernacular": {
@@ -9087,10 +9065,6 @@
   },
   "WISTERIA SINESIS": {
     "inat_id": null
-  },
-  "WW": {
-    "inat_id": null,
-    "genus_checked": true
   },
   "XCRATAEMESPILUS": {
     "inat_id": null

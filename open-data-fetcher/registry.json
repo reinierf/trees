@@ -802,11 +802,6 @@
       "de": "Indische Rosskastanie"
     }
   },
-  "AESCULUS OCTANDRA": {
-    "aliases": [
-      "AESCULUS OCTANTRA"
-    ]
-  },
   "AESCULUS PARVIFLORA": {
     "inat_id": 158042,
     "vernacular": {
@@ -2578,6 +2573,9 @@
       "en": "Red Hawthorn",
       "fr": "Épine rouge"
     }
+  },
+  "CRATAEGUS SCHRADERIANA": {
+    "inat_id": null
   },
   "CRATAEGUS SUCCULENTA": {
     "inat_id": 54822,

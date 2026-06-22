@@ -272,6 +272,44 @@ Other fields present but not mapped: `structuurelement`, `boomtype`, `standplaat
 
 ---
 
+## Hilversum
+
+**Status:** Live GeoServer WFS 2.0.0 — 34,289 trees with species (45,959 total; ~11,670 have no species data)
+
+Discovered via the ArcGIS Experience at `experience.arcgis.com/experience/0c13375082334f8ca5706e6bb2616fe5`, which references web map `61054382b93346cda647375af5c70372` on `hilversum.maps.arcgis.com`. The actual data is served by a public GeoServer at `geo.hilversum.nl/geoserver/ows`, layer `hilversum:GV_BOMEN`. WGS84 via `SRSNAME=EPSG:4326` — no reprojection needed.
+
+The layer includes trees owned by adjacent municipality Wijdemeren as well as Hilversum's own inventory; Wijdemeren trees have null `SOORTNAAM`. A `CQL_FILTER=SOORTNAAM IS NOT NULL` is applied in both page and count queries to skip those ~11,670 null-species records.
+
+`JAARVANAANLEG` can be null, `"N.v.t."`, or a year string — values ≤ 1800 are treated as null.
+
+| Resource | URL |
+|----------|-----|
+| WFS endpoint | https://geo.hilversum.nl/geoserver/ows |
+| Layer | `hilversum:GV_BOMEN` |
+| ArcGIS Experience | https://experience.arcgis.com/experience/0c13375082334f8ca5706e6bb2616fe5 |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `OBJECTNUMMER` | `id` | String ID |
+| `SOORTNAAM` | `species` | Full Latin name incl. cultivar |
+| `SOORTNAAM_NED` | `name_vernacular` | Dutch common name |
+| `JAARVANAANLEG` | `year_planted` | String; `"N.v.t."` and null treated as null |
+| `BUURT` (fallback `WIJK`) | `neighbourhood` | Neighbourhood; fall back to district |
+| `OPENBARERUIMTE` | `street` | Street name |
+| `STAMDIAMETERKLASSE` | `trunk_diameter` | Dutch decimal string like `"0,2 tot 0,3 m."` → midpoint in metres |
+| geometry `coordinates` | `lon`/`lat` | WGS84 GeoJSON Point [lon, lat] |
+| — | `crown_spread` | Not available |
+
+- **SSL:** `rejectUnauthorized: false` (municipal GeoServer)
+- **Pagination:** WFS 2.0.0 `COUNT`/`STARTINDEX`/`SORTBY=OBJECTNUMMER`; count via `resultType=hits`
+- **Fetcher:** `cities/hilversum.js` ✅ implemented
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [52.2292, 5.1669]`)
+
+---
+
 ## Summary
 
 | City | Full dataset | Format | Live API/WFS | License |

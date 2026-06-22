@@ -13,6 +13,7 @@
     "CHAMACYPARIS": "CALLITROPSIS",
     "CHAMEACYPARIS": "CHAMAECYPARIS",
     "CLADASTRIS": "CLADRASTIS",
+    "CRAETEGUS": "CRATAEGUS",
     "CUDRANIA": "MACLURA",
     "CUPRSESSUS": "CUPRESSUS",
     "CYPRES": "CUPRESSUS",
@@ -36,6 +37,7 @@
     "METASEQUIOA": "METASEQUOIA",
     "METASQUOIA": "METASEQUOIA",
     "MISPILUS": "MESPILUS",
+    "NISA": "NYSSA",
     "NOTHAFAGUS": "NOTHOFAGUS",
     "OSTRIA": "OSTRYA",
     "PRUNIS": "PRUNUS",
@@ -126,7 +128,10 @@
       "en": "Pacific silver fir",
       "de": "Purpurtanne",
       "fr": "sapin gracieux"
-    }
+    },
+    "aliases": [
+      "PICEA AMABILIS"
+    ]
   },
   "ABIES BALSAMEA": {
     "inat_id": 54261,
@@ -280,7 +285,10 @@
     }
   },
   "ABIES × ARNOLDIANA": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "ABIES ARNOLDIANA"
+    ]
   },
   "ABIES × INSIGNIS": {
     "inat_id": null
@@ -755,7 +763,9 @@
     },
     "aliases": [
       "AESCULUS FL",
-      "AESCULUS OCTANDRA"
+      "AESCULUS OCTANDRA",
+      "AESCULUS OCTANTRA",
+      "PAVIA FLAVA"
     ]
   },
   "AESCULUS GLABRA": {
@@ -792,8 +802,10 @@
       "de": "Indische Rosskastanie"
     }
   },
-  "AESCULUS OCTANTRA": {
-    "inat_id": null
+  "AESCULUS OCTANDRA": {
+    "aliases": [
+      "AESCULUS OCTANTRA"
+    ]
   },
   "AESCULUS PARVIFLORA": {
     "inat_id": 158042,
@@ -1432,7 +1444,10 @@
       "en": "Paper mulberry",
       "de": "Papiermaulbeerbaum",
       "fr": "Mûrier à papier"
-    }
+    },
+    "aliases": [
+      "MORUS PAPYRIFERA"
+    ]
   },
   "BUDDLEJA DAVIDII": {
     "inat_id": 75916,
@@ -1757,9 +1772,6 @@
   "CEANOTHUS THYRSIFLORUS": {
     "inat_id": 56617
   },
-  "CEDRELA SINENSIS": {
-    "inat_id": null
-  },
   "CEDRUS ATLANTICA": {
     "inat_id": 136234,
     "vernacular": {
@@ -1889,9 +1901,6 @@
       "en": "Dwarf Japanese Plum Yew"
     }
   },
-  "CERCIDIPHYLLUM CANADENSIS": {
-    "inat_id": null
-  },
   "CERCIDIPHYLLUM JAPONICUM": {
     "inat_id": 133356,
     "vernacular": {
@@ -1899,6 +1908,7 @@
       "de": "Japanischer Kuchenbaum"
     },
     "aliases": [
+      "CERCIDIPHYLLUM CANADENSIS",
       "CERCIDIPHYLLUM JAP."
     ]
   },
@@ -2368,9 +2378,6 @@
       "COTONEASTER WATERERII",
       "COTONEASTER × WATERERII"
     ]
-  },
-  "CRAETEGUS SCHRADERIANA": {
-    "inat_id": null
   },
   "CRATAEGOMESPILUS DARDARII": {
     "inat_id": null,
@@ -3136,7 +3143,10 @@
       "en": "alder buckthorn",
       "de": "Faulbaum",
       "fr": "Bourdaine commune"
-    }
+    },
+    "aliases": [
+      "RHAMNUS FRANGULA"
+    ]
   },
   "FRAXINUS": {
     "inat_id": 54806,
@@ -3376,7 +3386,8 @@
       "GLEDITSIA TRIACANTH.",
       "GLEDITSIA TRIACANTHUS",
       "GLEDITSIA TRICANTHOS",
-      "GLESITSIA TRIACANTHOS"
+      "GLESITSIA TRIACANTHOS",
+      "ROBINIA TRIACANTHOS"
     ]
   },
   "GLYPTOSTROBUS PENSILIS": {
@@ -4898,9 +4909,6 @@
       "fr": "mûrier noir"
     }
   },
-  "MORUS PAPYRIFERA": {
-    "inat_id": null
-  },
   "MORUS RUBRA": {
     "inat_id": 54801,
     "vernacular": {
@@ -4920,9 +4928,6 @@
   },
   "NERIUM OLEANDER": {
     "inat_id": 47563
-  },
-  "NISA SYLVATICA": {
-    "inat_id": null
   },
   "NOTHOFAGUS ALPINA": {
     "inat_id": 441296,
@@ -5126,9 +5131,6 @@
       "fr": "Paulownia impérial"
     }
   },
-  "PAVIA FLAVA": {
-    "inat_id": null
-  },
   "PHELLODENDR AMURENSE": {
     "inat_id": 166636,
     "vernacular": {
@@ -5237,9 +5239,6 @@
       "en": "Alcock's spruce",
       "fr": "Épicéa d'Alcock"
     }
-  },
-  "PICEA AMABILIS": {
-    "inat_id": null
   },
   "PICEA ASPERATA": {
     "inat_id": 135792,
@@ -5401,9 +5400,6 @@
       "de": "Bunges Kiefer",
       "fr": "Pin Napoléon"
     }
-  },
-  "PINUS CANADENSIS": {
-    "inat_id": null
   },
   "PINUS CEMBRA": {
     "inat_id": 363921,
@@ -5714,7 +5710,10 @@
       "en": "Chinese arborvitae",
       "de": "Morgenländischer Lebensbaum",
       "fr": "Thuya de Chine"
-    }
+    },
+    "aliases": [
+      "THUJA ORIENTALIS"
+    ]
   },
   "PODOCARPUS": {
     "inat_id": 85284,
@@ -6293,8 +6292,10 @@
   "PRUNUS RUBRUM": {
     "inat_id": null
   },
-  "PRUNUS SALACINA": {
-    "inat_id": null
+  "PRUNUS SALICINA": {
+    "aliases": [
+      "PRUNUS SALACINA"
+    ]
   },
   "PRUNUS SARGENTII": {
     "inat_id": 325895,
@@ -7185,12 +7186,6 @@
       "QUERCUS X"
     ]
   },
-  "QUERCUS x": {
-    "inat_id": null,
-    "aliases": [
-      "QUERCUS LIBANERRIS"
-    ]
-  },
   "QUERCUS × BIMUNDORUM": {
     "inat_id": 170984,
     "vernacular": {
@@ -7231,7 +7226,10 @@
     ]
   },
   "QUERCUS × LIBANERRIS": {
-    "inat_id": null
+    "inat_id": null,
+    "aliases": [
+      "QUERCUS LIBANERRIS"
+    ]
   },
   "QUERCUS × LUDOVICIANA": {
     "inat_id": 171027,
@@ -7285,9 +7283,6 @@
       "RHAMNUS CATHARTICUS"
     ]
   },
-  "RHAMNUS FRANGULA": {
-    "inat_id": null
-  },
   "RHAMNUS PRINOIDES": {
     "inat_id": 593043
   },
@@ -7340,9 +7335,6 @@
       "RHUS TYPHYNA",
       "RHUS TYPINA"
     ]
-  },
-  "RHUS VERNICIFLUA": {
-    "inat_id": null
   },
   "RIBES AUREUM": {
     "inat_id": 55544,
@@ -7419,9 +7411,6 @@
     ]
   },
   "ROBINIA SLAVINII": {
-    "inat_id": null
-  },
-  "ROBINIA TRIACANTHOS": {
     "inat_id": null
   },
   "ROBINIA VISCOSA": {
@@ -8410,9 +8399,6 @@
       "THUIS OCCIDENTALIS"
     ]
   },
-  "THUJA ORIENTALIS": {
-    "inat_id": null
-  },
   "THUJA PLICATA": {
     "inat_id": 48252,
     "vernacular": {
@@ -8470,9 +8456,6 @@
       "en": "Amur Lime",
       "de": "Amurlinde"
     }
-  },
-  "TILIA ARGENTEA": {
-    "inat_id": null
   },
   "TILIA CORDATA": {
     "inat_id": 132600,
@@ -8574,6 +8557,7 @@
       "nl": "Zilverlinde"
     },
     "aliases": [
+      "TILIA ARGENTEA",
       "TILIA TO",
       "TILIA TOMENTOSAQQAA"
     ]
@@ -8627,7 +8611,10 @@
     "vernacular": {
       "en": "Tun tree",
       "fr": "Cédrèle de Chine"
-    }
+    },
+    "aliases": [
+      "CEDRELA SINENSIS"
+    ]
   },
   "TORMINALIS GLABERRIMA": {
     "inat_id": 1277891
@@ -8659,7 +8646,10 @@
     "inat_id": 58732
   },
   "TOXICODENDRON VERNICIFLUUM": {
-    "inat_id": 484176
+    "inat_id": 484176,
+    "aliases": [
+      "RHUS VERNICIFLUA"
+    ]
   },
   "TRACHYCARPUS FORTUNEI": {
     "inat_id": 64323,
@@ -8680,7 +8670,10 @@
       "de": "Kanadische Hemlocktanne",
       "fr": "pruche du Canada",
       "nl": "Oostelijke hemlockspar"
-    }
+    },
+    "aliases": [
+      "PINUS CANADENSIS"
+    ]
   },
   "TSUGA HETEROPHYLLA": {
     "inat_id": 48254,
@@ -9058,8 +9051,10 @@
       "VIBURNUM BODNANTENSE"
     ]
   },
-  "VIBURNUM × BURKWOODIIIANA": {
-    "inat_id": null
+  "VIBURNUM × BURKWOODII": {
+    "aliases": [
+      "VIBURNUM × BURKWOODIIIANA"
+    ]
   },
   "VITIS VINIFERA": {
     "inat_id": 79519,
@@ -9170,10 +9165,10 @@
       "en": "Jujube",
       "nl": "Jujube",
       "de": "Chinesische Jujube"
-    }
-  },
-  "ZIZIPHUS ZIZYPHUS": {
-    "inat_id": null
+    },
+    "aliases": [
+      "ZIZIPHUS ZIZYPHUS"
+    ]
   },
   "× ARSORBUS": {
     "inat_id": 1624569,

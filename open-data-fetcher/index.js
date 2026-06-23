@@ -119,11 +119,16 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
             const countRaw = await fetchRaw(url, city.countParams(layer), city.fetchOptions);
             const total    = await city.parseCount(countRaw);
             if (effectiveResume > 0) {
-                process.stderr.write(`[${city.name}] ${total} trees in dataset. Resuming from ${effectiveResume}.\n`);
+                const resumeLabel = keyset
+                    ? `Resuming from id ${resumeId}.`
+                    : `Resuming from index ${effectiveResume}.`;
+                process.stderr.write(`[${city.name}] ${total} trees in dataset. ${resumeLabel}\n`);
             } else {
                 process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
             }
-            drawProgress(effectiveResume, total);
+            const progressTotal   = keyset ? Math.max(0, total - effectiveResume) : total;
+            const progressFetched = () => keyset ? layerCount : effectiveResume + layerCount;
+            drawProgress(keyset ? 0 : effectiveResume, progressTotal);
 
             let pageBuffer    = [];
             let pagesInBuffer = 0;
@@ -138,7 +143,7 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
                 totalRaw += rawCount;
                 trees.push(...page);
                 layerCount += page.length;
-                drawProgress(effectiveResume + layerCount, total);
+                drawProgress(progressFetched(), Math.max(progressFetched(), progressTotal));
 
                 if (onCheckpoint && canResume) {
                     for (const t of page) { t.city = city.name; t.last_fetched = fetchedAt; }

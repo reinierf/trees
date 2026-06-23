@@ -126,9 +126,8 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
             } else {
                 process.stderr.write(`[${city.name}] ${total} trees in dataset.\n`);
             }
-            const progressTotal   = keyset ? Math.max(0, total - effectiveResume) : total;
-            const progressFetched = () => keyset ? layerCount : effectiveResume + layerCount;
-            drawProgress(keyset ? 0 : effectiveResume, progressTotal);
+            const progressRemaining = Math.max(0, total - effectiveResume);
+            drawProgress(0, progressRemaining);
 
             let pageBuffer    = [];
             let pagesInBuffer = 0;
@@ -143,7 +142,7 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
                 totalRaw += rawCount;
                 trees.push(...page);
                 layerCount += page.length;
-                drawProgress(progressFetched(), Math.max(progressFetched(), progressTotal));
+                drawProgress(layerCount, Math.max(layerCount, progressRemaining));
 
                 if (onCheckpoint && canResume) {
                     for (const t of page) { t.city = city.name; t.last_fetched = fetchedAt; }

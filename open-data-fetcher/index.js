@@ -20,6 +20,7 @@
  * Available cities: rotterdam, groningen, amsterdam, den-haag, utrecht, arnhem, nijmegen, zwolle, apeldoorn
  */
 
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { CITIES } from './config.js';
@@ -234,6 +235,9 @@ async function main() {
 
         // For full SQLite fetches, checkpoint every CHECKPOINT_PAGES pages and auto-resume.
         const useCheckpoint = args.all && args.format === 'sqlite';
+        if (useCheckpoint && args.fresh) {
+            try { await fs.unlink(outFile); } catch {}
+        }
         let resumeFrom = 0;
         let resumeId   = null;
         if (useCheckpoint && !args.fresh) {

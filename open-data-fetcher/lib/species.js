@@ -73,7 +73,7 @@ function fuzzyMatchKeys(candidate, keys) {
     if (!cp) return null;
     let best = null, bestDist = Infinity;
     for (const key of keys) {
-        const kp = parseParts(key);
+        const kp = parseParts(normalizeKey(key));
         if (!kp) continue;
         const gd = levenshtein(cp.genus, kp.genus);
         if (gd > 1) continue;

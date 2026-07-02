@@ -2,7 +2,7 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] When clicking 'alle steden' always zoom out to country level
+- [ ] Fetching binomials and vernaculars still intransparent/messy? Decide what we're interested in: correct/up-to-date binomials or just consistency in binomials
 - [ ] Loading indicator / spinner at startup
 - [ ] Discuss storing species binomials in scientific format versus current all uppercase. 
 - [ ] Fix species names: "SORBUS ‘JOSEPH"

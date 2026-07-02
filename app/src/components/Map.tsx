@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM } from '../config'
+import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM, NL_CENTER, NL_ZOOM } from '../config'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
@@ -185,6 +185,7 @@ export function Map({ city, cities }: Props) {
         city={city}
         cities={cities}
         onCurrentCity={city ? () => controllerRef.current?.panTo(city.center[0], city.center[1]) : undefined}
+        onOverview={!city ? () => controllerRef.current?.flyToLocation(NL_CENTER[0], NL_CENTER[1], NL_ZOOM) : undefined}
       />
       {!showingCityMarkers && <SpeciesButton />}
       {!showingCityMarkers && (

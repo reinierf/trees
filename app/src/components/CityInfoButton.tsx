@@ -11,7 +11,7 @@ export function CityInfoButton() {
   return (
     <button
       onClick={isActive ? closePopup : openCityInfo}
-      title="Stad info"
+      title="Plaats info"
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         'top-[192px] left-[12px]',

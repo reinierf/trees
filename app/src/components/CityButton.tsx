@@ -42,7 +42,7 @@ export function CityButton({ city, cities, onCurrentCity, onOverview }: Props) {
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"
-        title="Kies stad"
+        title="Kies plaats"
       >
         <Signpost className="w-4 h-4" />
       </button>
@@ -55,7 +55,7 @@ export function CityButton({ city, cities, onCurrentCity, onOverview }: Props) {
             }}
             className="block w-full text-left px-4 py-2 text-sm whitespace-nowrap text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            Alle steden
+            Alle plaatsen
           </button>
           {recent.length > 0 && (
             <div className="border-t">

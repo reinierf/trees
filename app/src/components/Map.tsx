@@ -157,7 +157,7 @@ export function Map({ city, cities }: Props) {
       {showingCityMarkers && (
         <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
-            Kies een stad om bomen te verkennen
+            Kies een plaats om bomen te verkennen
           </div>
         </div>
       )}

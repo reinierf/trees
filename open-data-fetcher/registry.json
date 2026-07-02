@@ -2716,14 +2716,6 @@
     "wfo_id": "wfo-4000010072",
     "genus_checked": true
   },
-  "CUPRESSOCYPARIS LEYLANDII": {
-    "inat_id": null,
-    "wfo_id": "wfo-0000630565"
-  },
-  "CUPRESSOCYPARIS × LEYLANDII": {
-    "inat_id": null,
-    "wfo_id": "wfo-0000630565"
-  },
   "CUPRESSUS": {
     "inat_id": 49292,
     "vernacular": {
@@ -2778,10 +2770,6 @@
       "de": "Mittelmeer-Zypresse",
       "fr": "cyprès commun"
     }
-  },
-  "CUPRESSUS × LEYLANDII": {
-    "inat_id": null,
-    "wfo_id": "wfo-0000630715"
   },
   "CYCLOCARYA PALIURUS": {
     "inat_id": 556132,
@@ -9491,6 +9479,16 @@
   },
   "× HESPEROTROPSIS": {
     "inat_id": 1515671
+  },
+  "× HESPEROTROPSIS LEYLANDII": {
+    "inat_id": null,
+    "wfo_id": "wfo-0001333418",
+    "aliases": [
+      "CUPRESSOCYPARIS × LEYLANDII",
+      "CUPRESSOCYPARIS LEYLANDII",
+      "CUPRESSUS × LEYLANDII",
+      "CUPRESSUS LEYLANDII"
+    ]
   },
   "× PYRARIA": {
     "inat_id": 1277915

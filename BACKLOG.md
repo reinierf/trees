@@ -2,8 +2,6 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] Add Trompenburg 
-- [ ] Discuss storing species binomials in scientific format versus current all uppercase. 
 - [ ] Fetching binomials and vernaculars still intransparent/messy? Decide what we're interested in: correct/up-to-date binomials or just consistency in binomials and have recognizable names
 - [ ] Fix species names: "SORBUS ‘JOSEPH"
 - [ ] Add more places
@@ -14,6 +12,18 @@ Nice-to-have improvements to pick up later.
 - [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
 - [ ] Localisation of UI: implement i18next. 
 
-## UI / Components
+## Arboreta
+https://www.botanischetuinen.nl/
 
-- [ ] **PanelHeader component** — `SpeciesListPanel` and `FavouritesPanel` share an identical header shell (`flex items-center justify-between px-4 py-3` wrapper + `flex items-center gap-2` right-side button group). Extract into a shared `PanelHeader` component in `InfoPopup.tsx` or a new file. `TreeDetailPanel` differs enough (different padding, button title, second row) to leave untouched.
+Gimborn/Trompenburg/Ten Borgh/De Dennenhorst:
+https://www.bomenmuseum.nl/collectie/collectiedatabase/
+
+Trompenburg: fetcher built (`open-data-fetcher/cities/trompenburg.js`), data
+fetched, but shelved — many specimens share exact-identical coordinates
+(positioned per planting-section, not individually surveyed), making the
+per-tree map view unusable as-is. Not re-registered in `api/cities.json`.
+Details and the entry to restore: `open-data-fetcher/README.md` → "Non-WFS
+sources: Trompenburg Arboretum".
+
+De Nieuwe Ooster:
+https://viewer.bomenwacht.nl/?code=DNO1oqxV6qBv

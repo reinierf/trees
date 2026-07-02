@@ -82,6 +82,40 @@ After running, copy the resulting `.db` files into `api/data/` alongside the cit
 
 ### Non-WFS sources: Trompenburg Arboretum
 
+**Status: fetched, but not currently registered in `api/cities.json`.** Many
+specimens share exact-identical coordinates — Trompenburg positions trees at
+the "plantvak" (planting-section) level rather than surveying each one
+individually. On the map this renders as multiple, sometimes many, trees
+stacked on the exact same point: below `CLUSTER_DISABLE_ZOOM` they merge into
+one cluster count (masking that they're distinct trees at all), and at/above
+it they render as fully overlapping, unclickable individual markers. This
+makes the dataset unusable for this app's per-tree map view as-is — it isn't
+a fetcher bug, the coordinates genuinely are that coarse in the source.
+Considered and rejected for now: deterministically jittering coincident
+points at render time to spread them apart, since that wasn't pursued further
+once the decision was made to shelve this source. (See also, unrelated but
+noted during the same investigation: a small, dense arboretum in a tiny area
+would separately cause many-DOM-marker lag once zoom disables clustering —
+a generic scalability concern for any future dense/small-area source, since
+`CLUSTER_DISABLE_ZOOM` etc. are single global constants with no per-city
+override today.)
+
+The fetcher, `lib/species.js` processing, and `data/trompenburg.db` are all
+intact — only the `api/cities.json` entry was removed. To resume:
+
+```json
+{
+  "id": "trompenburg",
+  "name": "Trompenburg",
+  "center": [51.9188, 4.5192],
+  "meta": { "source": "collectie.gimbornarboretum.nl" }
+}
+```
+
+Paste that back into `api/cities.json` (and re-run `npm run copy-data` if
+`data/trompenburg.db` has since gone stale) to pick this back up — ideally
+alongside an actual fix for the coordinate-collision problem above.
+
 ```sh
 node cities/trompenburg.js                    # full fetch → data/trompenburg.db
 node cities/trompenburg.js --format json

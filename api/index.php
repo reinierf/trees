@@ -60,23 +60,39 @@ function load_cities(): array
     $raw    = json_decode(file_get_contents($path), true);
     $margin = 0.01;
     $cities = [];
+
+    // bbox/tree_count only change when the fetcher re-imports a city, so cache them
+    // keyed by the db's mtime instead of scanning every trees table on every request.
+    $cachePath  = __DIR__ . '/data/cities-cache.json';
+    $cache      = file_exists($cachePath) ? (json_decode(file_get_contents($cachePath), true) ?: []) : [];
+    $cacheDirty = false;
+
     foreach ($raw as $city) {
         $dbPath = __DIR__ . '/data/' . $city['id'] . '.db';
         if (file_exists($dbPath)) {
-            $row = db($city['id'])
-                ->query('SELECT MIN(lat) AS s, MAX(lat) AS n, MIN(lon) AS w, MAX(lon) AS e FROM trees')
-                ->fetch();
-            $city['bbox'] = [
-                's' => (float) $row['s'] - $margin,
-                'n' => (float) $row['n'] + $margin,
-                'w' => (float) $row['w'] - $margin,
-                'e' => (float) $row['e'] + $margin,
-            ];
-            $city['tree_count'] = (int) db($city['id'])
-                ->query('SELECT COUNT(*) FROM trees')
-                ->fetchColumn();
+            $mtime  = filemtime($dbPath);
+            $cached = $cache[$city['id']] ?? null;
+            if ($cached && ($cached['mtime'] ?? null) === $mtime) {
+                $city['bbox']       = $cached['bbox'];
+                $city['tree_count'] = $cached['tree_count'];
+            } else {
+                $row = db($city['id'])
+                    ->query('SELECT MIN(lat) AS s, MAX(lat) AS n, MIN(lon) AS w, MAX(lon) AS e FROM trees')
+                    ->fetch();
+                $city['bbox'] = [
+                    's' => (float) $row['s'] - $margin,
+                    'n' => (float) $row['n'] + $margin,
+                    'w' => (float) $row['w'] - $margin,
+                    'e' => (float) $row['e'] + $margin,
+                ];
+                $city['tree_count'] = (int) db($city['id'])
+                    ->query('SELECT COUNT(*) FROM trees')
+                    ->fetchColumn();
+                $cache[$city['id']] = ['mtime' => $mtime, 'bbox' => $city['bbox'], 'tree_count' => $city['tree_count']];
+                $cacheDirty          = true;
+            }
             $city['has_data'] = true;
-            $city['meta']['lastFetched'] = date('Y-m-d', filemtime($dbPath));
+            $city['meta']['lastFetched'] = date('Y-m-d', $mtime);
         } else {
             // No database yet — provide a synthetic bbox so clients don't crash
             $city['bbox'] = [
@@ -90,6 +106,11 @@ function load_cities(): array
         }
         $cities[] = $city;
     }
+
+    if ($cacheDirty) {
+        @file_put_contents($cachePath, json_encode($cache), LOCK_EX);
+    }
+
     return $cities;
 }
 

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
+import { LoadingSpinner } from './components/LoadingSpinner'
 import { recordCityVisit } from './lib/recentCitiesStorage'
 import { useStore } from './store'
 import type { City } from './types'
@@ -46,7 +47,15 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (currentCity?.has_data) recordCityVisit(currentCity.id) }, [currentCity?.id])
 
-  if (!cities) return null
+  if (!cities) {
+    return (
+      <div className="w-screen h-dvh flex items-center justify-center">
+        <div className="scale-150">
+          <LoadingSpinner />
+        </div>
+      </div>
+    )
+  }
 
   // Suppress flash while redirect is in flight
   if (!isOverview && !currentCity) return null

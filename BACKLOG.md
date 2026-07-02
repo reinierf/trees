@@ -2,7 +2,10 @@
 
 Nice-to-have improvements to pick up later.
 
-- [ ] The way the binomials are fixed/processed feels messy and intransparent. It uses both overrides.js and cache.json, and takes multiple steps. It feels like there should be a single source of truth for inferring the correct binomial for a raw species values. Maybe a single step is also possible: check raw species against authorative list (fuzzily), if not found: look up in iNat, if not found: strip 2 char epithets and any other last resort fixes. Discuss how this process can be streamlined or made more transparent.
+- [ ] When clicking 'alle steden' always zoom out to country level
+- [ ] Loading indicator / spinner at startup
+- [ ] Discuss storing species binomials in scientific format versus current all uppercase. 
+- [ ] Fix species names: "SORBUS ‘JOSEPH"
 - [ ] Add more places
 - [ ] Augment city info (monumental only, multiple sources, other?)
 - [ ] Sort species list by name or count

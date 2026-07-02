@@ -4,6 +4,10 @@
  * Writes results into registry.json (as `vernacular: { nl, en, de, fr }`) and
  * rebuilds vernacular-base.db.
  *
+ * WFO pre-resolution runs before iNat for new species: calls the WFO Plant List
+ * API to canonicalize the name (resolves synonyms to accepted names), then uses
+ * the WFO-canonical name for the iNat search. Stores wfo_id in registry.json.
+ *
  * iNat resolution is two steps:
  *   1. GET /taxa?q={name}[&rank=species]  — species-level search
  *   2. Genus-level fallback if step 1 fails: list all species in the genus,
@@ -24,6 +28,7 @@ import fs from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import https from 'https';
 import initSqlJs from 'sql.js';
 import { CITIES } from '../../../config.js';
 import { dropTerms, unknownTerms } from '../../../overrides.js';
@@ -41,6 +46,7 @@ const LOG_PATH = path.join(DIR, '..', '..', '..', 'registry-log.jsonl');
 const OUT_FILE = path.join(DATA_DIR, 'vernacular-base.db');
 
 const API     = 'https://api.inaturalist.org/v1';
+const WFO_API = 'https://list.worldfloraonline.org/matching_rest.php';
 const RATE_MS = 700; // ~85 req/min, safely under 100/min unauthenticated cap
 
 const LANGS = ['nl', 'en', 'de', 'fr'];
@@ -149,6 +155,73 @@ async function resolveViaGenus(name, registryKeys) {
     return best;
 }
 
+// WFO: resolve a name to its accepted canonical binomial.
+// Returns { wfoId, resolvedName } or null if no match found.
+// WFO's server omits intermediate certs; use https directly with rejectUnauthorized: false.
+function fetchWFO(url) {
+    return new Promise((resolve, reject) => {
+        https.get(url, { rejectUnauthorized: false }, res => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => { try { resolve(JSON.parse(body)); } catch (e) { reject(e); } });
+        }).on('error', reject);
+    });
+}
+
+// Extract a two- or three-token binomial from full_name_plain, handling:
+//   "× Genus epithet ..."   → "× Genus epithet"  (nothogenus)
+//   "Genus × epithet ..."   → "Genus × epithet"   (nothospecies)
+//   "Genus epithet ..."     → "Genus epithet"
+// Returns null when the result looks like an author abbreviation (junk match).
+function extractBinomial(full_name_plain) {
+    const words = (full_name_plain ?? '').trim().split(/\s+/).filter(Boolean);
+    let rn;
+    if      (words[0] === '×' && words[2])    rn = `× ${words[1]} ${words[2]}`;
+    else if (words[0] === '×' && words[1])    rn = `× ${words[1]}`;
+    else if (words[1] === '×' && words[2])    rn = `${words[0]} × ${words[2]}`;
+    else if (words.length >= 2)               rn = `${words[0]} ${words[1]}`;
+    else                                      rn = words[0] ?? null;
+    if (!rn) return null;
+    const epithet = rn.split(' ').at(-1) ?? '';
+    return /^[A-Z]|\./.test(epithet) ? null : rn;
+}
+
+async function resolveViaWFO(name) {
+    const url  = `${WFO_API}?input_string=${encodeURIComponent(name)}&accept_single_candidate=true`;
+    const data = await fetchWFO(url);
+    if (!data.match) return null;
+
+    const wfoId     = data.match.wfo_id;
+    const placement = data.match.placement ?? '';
+    let resolvedName;
+
+    if (placement.includes('$')) {
+        // Placement encodes synonym→accepted: walk back from '$' to find the last
+        // capitalised segment (genus) and pair it with the following epithet.
+        const parts = placement.split('$')[0].split('/');
+        let tentative;
+        for (let i = parts.length - 2; i >= 0; i--) {
+            if (/^[A-Z][a-z]/.test(parts[i]) && parts[i + 1]) {
+                tentative = `${parts[i]} ${parts[i + 1]}`;
+                break;
+            }
+        }
+        if (tentative) {
+            // Second call to get the accepted taxon's full_name_plain, which includes
+            // the '×' prefix for nothogenera that the placement path omits.
+            await sleep(200);
+            const accepted = await fetchWFO(`${WFO_API}?input_string=${encodeURIComponent(tentative)}&accept_single_candidate=true`);
+            resolvedName = extractBinomial(accepted?.match?.full_name_plain) ?? tentative;
+        }
+    }
+
+    if (!resolvedName) {
+        resolvedName = extractBinomial(data.match.full_name_plain) ?? name;
+    }
+
+    return { wfoId, resolvedName };
+}
+
 // iNat binomial → uppercase canonical registry key
 function canonicalKey(inatName) {
     const upper = inatName.toUpperCase().replace(/\s+/g, ' ').trim();
@@ -172,9 +245,10 @@ async function saveRegistry(registry) {
     for (const k of Object.keys(registry._genusCorrections ?? {}).sort())
         sorted._genusCorrections[k] = registry._genusCorrections[k];
     for (const k of Object.keys(registry).filter(k => !k.startsWith('_')).sort()) {
-        const { inat_id, vernacular, aliases, ...rest } = registry[k];
+        const { inat_id, wfo_id, vernacular, aliases, ...rest } = registry[k];
         sorted[k] = {
             ...(inat_id !== undefined   ? { inat_id }                         : {}),
+            ...(wfo_id !== undefined    ? { wfo_id }                          : {}),
             ...(vernacular !== undefined ? { vernacular }                      : {}),
             ...(aliases?.length         ? { aliases: [...aliases].sort() }    : {}),
             ...rest,
@@ -207,29 +281,62 @@ async function main() {
     let fetched = 0, notFound = 0, errors = 0, regAdded = 0;
 
     for (const raw of todo) {
-        const name       = toProperCase(raw);
+        const name        = toProperCase(raw);
         const isGenusOnly = !raw.includes(' ');
-        let   entry = registry[raw];
+        let   entry   = registry[raw];
         let   taxonId = entry?.inat_id ?? null;
+        const isNew   = !entry; // track before WFO may create the entry
 
         if (!taxonId) {
-            await sleep(RATE_MS);
+            // WFO pre-resolution: canonicalize name (resolves synonyms) before iNat lookup.
+            // Skipped when wfo_id is already cached.
+            let inatName = name;
+            const alreadyHasWFO = entry && 'wfo_id' in entry;
+            const didWFO = !alreadyHasWFO || (noCache && entry?.wfo_id === null);
+            if (didWFO) {
+                await sleep(RATE_MS);
+                try {
+                    const wfo = await resolveViaWFO(name);
+                    if (!entry) { registry[raw] = {}; entry = registry[raw]; }
+                    entry.wfo_id = wfo?.wfoId ?? null;
+                    registryDirty = true;
+                    if (wfo?.resolvedName && wfo.resolvedName.toLowerCase() !== name.toLowerCase()) {
+                        process.stderr.write(`  [WFO] ${name} → ${wfo.resolvedName}\n`);
+                        inatName = wfo.resolvedName;
+                    }
+                } catch (e) {
+                    process.stderr.write(`  ERROR WFO ${name}: ${e.message}\n`);
+                }
+            }
+
+            if (!didWFO) await sleep(RATE_MS);
             let taxon;
             try {
-                taxon = await resolveByName(name, isGenusOnly ? 'genus' : 'species');
+                taxon = await resolveByName(inatName, isGenusOnly ? 'genus' : 'species');
                 if (!taxon && !isGenusOnly) {
                     await sleep(RATE_MS);
-                    taxon = await resolveViaGenus(name, registryKeys);
-                    if (taxon) process.stderr.write(`  [genus fallback] ${name} → ${taxon.name}\n`);
+                    taxon = await resolveViaGenus(inatName, registryKeys);
+                    if (taxon) process.stderr.write(`  [genus fallback] ${inatName} → ${taxon.name}\n`);
+                }
+                // WFO may have redirected to a name iNat hasn't adopted yet; fall back to original.
+                if (!taxon && inatName !== name) {
+                    process.stderr.write(`  [iNat fallback] ${inatName} not found, retrying as ${name}\n`);
+                    await sleep(RATE_MS);
+                    taxon = await resolveByName(name, isGenusOnly ? 'genus' : 'species');
+                    if (!taxon && !isGenusOnly) {
+                        await sleep(RATE_MS);
+                        taxon = await resolveViaGenus(name, registryKeys);
+                        if (taxon) process.stderr.write(`  [genus fallback] ${name} → ${taxon.name}\n`);
+                    }
                 }
             } catch (e) {
-                process.stderr.write(`  ERROR resolving ${name}: ${e.message}\n`);
+                process.stderr.write(`  ERROR resolving ${inatName}: ${e.message}\n`);
                 errors++;
                 continue;
             }
 
             if (!taxon) {
-                process.stderr.write(`  NOT FOUND: ${name}\n`);
+                process.stderr.write(`  [iNat] NOT FOUND: ${inatName}\n`);
                 if (!entry) { registry[raw] = {}; entry = registry[raw]; }
                 entry.inat_id = null; // explicit null = "looked up, not on iNat"
                 registryDirty = true;
@@ -241,9 +348,9 @@ async function main() {
 
             // Extend registry entry: add inat_id, and add new canonical if iNat name differs
             const ck = canonicalKey(taxon.name);
-            if (!entry) {
-                registry[raw] = { inat_id: taxonId };
-                entry = registry[raw];
+            if (!entry) { registry[raw] = {}; entry = registry[raw]; }
+            if (isNew) {
+                entry.inat_id = taxonId;
                 registryKeys.push(raw);
                 registryDirty = true;
                 regAdded++;

@@ -165,6 +165,15 @@ export function processSpeciesTagged(raw) {
     return { species_binomial, species_cultivar: extractSpeciesCultivar(upper), resolvedBy };
 }
 
+// Dutch vernacular name for a canonical species_binomial (as returned by
+// processSpecies), or null if the registry has none. Reuses the same
+// lazily-loaded registry cache as resolveCandidate.
+export function getVernacularNl(binomial) {
+    if (!binomial) return null;
+    const { registry } = getRegistry();
+    return registry[binomial]?.vernacular?.nl ?? null;
+}
+
 export function extractSpeciesBinomial(s) {
     if (!s) return null;
     s = s.replace(/["`]/g, "'");

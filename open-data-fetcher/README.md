@@ -80,6 +80,45 @@ npm run patch-binomials -- --city amsterdam
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
 
+### Non-WFS sources: Trompenburg Arboretum
+
+```sh
+node cities/trompenburg.js                    # full fetch → data/trompenburg.db
+node cities/trompenburg.js --format json
+node cities/trompenburg.js --include-unmapped  # also keep specimens with no recorded coordinate
+node cities/trompenburg.js --term "Fagus"      # debug: one exact search term
+node cities/trompenburg.js -d                  # dry run, print JSON, no file written
+```
+
+Trompenburg Tuinen & Arboretum (Rotterdam) has no public API — its collection
+lives in a shared database (`collectie.gimbornarboretum.nl`) alongside three
+other institutions, behind a legacy ASP.NET WebForms + Telerik app driven
+entirely by postbacks. `cities/trompenburg.js` replays that choreography
+directly (session bootstrap → autocomplete round-trip → search postback,
+chaining the ViewState/EventValidation each response returns) rather than
+using WFS `GetFeature`. It lives in `cities/` alongside the WFS-based fetchers
+despite the very different fetch mechanism, but it is **not** registered in
+`config.js`/`CITIES` and doesn't run through `index.js` — its fetch/pagination
+model doesn't fit that WFS-oriented engine, so it's invoked directly instead.
+Full protocol notes and known caveats are documented in the file's header
+comment, including:
+
+- The site's own arboretum filter checkbox has no effect on results (confirmed
+  empirically); this fetcher filters to Trompenburg's known coordinate range
+  instead — a workaround, not a first-class server-side capability.
+- Coverage comes from searching every letter a–z (substring matching against
+  each specimen's full name), not from `registry.json`, since this is a
+  specialist collection likely to include species/genera the municipal-derived
+  registry has never seen.
+- species_binomial/species_cultivar run through the standard `processSpecies()`
+  pipeline, same as every other city fetcher — run `npm run validate-species`
+  afterwards, since an arboretum collection surfaces more unresolved/fuzzy
+  matches than municipal street-tree data does.
+- `name_vernacular` keeps Trompenburg's own source name where present; only
+  missing ones are filled in from `registry.json` — existing data always wins.
+- Requires Node ≥ 22 with `--use-system-ca` if outbound TLS to this host fails
+  certificate verification in your environment (seen in sandboxed dev setups).
+
 ### End-to-end pipeline for a new (or refreshed) city
 
 Once `cities/<id>.js` exists and is registered in `config.js`, run the whole

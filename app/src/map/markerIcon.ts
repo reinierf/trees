@@ -83,21 +83,28 @@ export function createCityCircleMarker(city: City): L.CircleMarker {
 const groupIconCache = new Map<number, L.DivIcon>()
 
 // Multiple trees at the exact same coordinate (common for datasets positioned
-// per planting-section rather than individually surveyed). Deliberately amber,
-// distinct from both the green species marker and the dark-green cluster icon
-// — a cluster represents "many trees over an area", this represents "one
-// point, multiple distinct trees", which needs its own visual language so the
-// two aren't confused for the same thing at a glance.
+// per planting-section rather than individually surveyed). Drawn as a stack of
+// largely-overlapping circles (back to front) with the count badge on the
+// front one — deliberately amber and shaped differently from both the plain
+// green species marker and the dark-green cluster icon, so "one point,
+// multiple distinct trees" doesn't read as the same thing as either.
 function buildGroupIcon(count: number): L.DivIcon {
-  const r = 15
-  const d = r * 2
+  const r = 13
+  const offset = 3
+  const w = r * 2
+  const h = r * 2 + offset * 2
+  const cx = r
+  const cyBack = r + offset * 2
+  const cyMid = r + offset
+  const cyFront = r
+  const circle = (cy: number) => `<circle cx="${cx}" cy="${cy}" r="${r - 1.5}" fill="#f59e0b" stroke="#7c4a03" stroke-width="1.5"/>`
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" style="display:block">` +
-    `<circle cx="${r}" cy="${r}" r="${r - 1.5}" fill="#f59e0b" stroke="#7c4a03" stroke-width="2"/>` +
-    `<text x="${r}" y="${r + 4}" font-family="Arial" font-size="11"` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" style="display:block">` +
+    circle(cyBack) + circle(cyMid) + circle(cyFront) +
+    `<text x="${cx}" y="${cyFront + 4}" font-family="Arial" font-size="10"` +
     ` font-weight="bold" text-anchor="middle" fill="#ffffff">${count}</text>` +
     `</svg>`
-  return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
+  return L.divIcon({ html: svg, className: '', iconSize: [w, h], iconAnchor: [cx, h / 2] })
 }
 
 export function createGroupIcon(count: number): L.DivIcon {

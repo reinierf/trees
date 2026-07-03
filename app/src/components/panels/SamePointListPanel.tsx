@@ -15,7 +15,7 @@ export function SamePointListPanel({ trees }: Props) {
   return (
     <PopupShell>
       <div className="px-4 pt-2 pb-2 flex items-center justify-between gap-2 border-b">
-        <span className="font-semibold text-sm">{trees.length} bomen op dit punt</span>
+        <span className="font-semibold text-sm">{trees.length} bomen op dezelfde locatie</span>
         <CloseButton onClick={closePopup} />
       </div>
       <div className="max-h-64 overflow-y-auto">

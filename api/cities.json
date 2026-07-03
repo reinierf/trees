@@ -3,228 +3,266 @@
     "id": "rotterdam",
     "name": "Rotterdam",
     "center": [51.9225, 4.4792],
+    "type": "city",
     "meta": { "source": "Gemeente Rotterdam" }
   },
   {
     "id": "groningen",
     "name": "Groningen",
     "center": [53.2194, 6.5665],
+    "type": "city",
     "meta": { "source": "Gemeente Groningen" }
   },
   {
     "id": "den-haag",
     "name": "Den Haag",
     "center": [52.0705, 4.3007],
+    "type": "city",
     "meta": { "source": "Gemeente Den Haag" }
   },
   {
     "id": "amsterdam",
     "name": "Amsterdam",
     "center": [52.3676, 4.9041],
+    "type": "city",
     "meta": { "source": "Gemeente Amsterdam" }
   },
   {
     "id": "utrecht",
     "name": "Utrecht",
     "center": [52.0907, 5.1214],
+    "type": "city",
     "meta": { "source": "Gemeente Utrecht" }
   },
   {
     "id": "arnhem",
     "name": "Arnhem",
     "center": [51.9851, 5.8987],
+    "type": "city",
     "meta": { "source": "Gemeente Arnhem" }
   },
   {
     "id": "nijmegen",
     "name": "Nijmegen",
     "center": [51.8426, 5.8546],
+    "type": "city",
     "meta": { "source": "Gemeente Nijmegen" }
   },
   {
     "id": "zwolle",
     "name": "Zwolle",
     "center": [52.5168, 6.0830],
+    "type": "city",
     "meta": { "source": "Gemeente Zwolle" }
   },
   {
     "id": "eindhoven",
     "name": "Eindhoven",
     "center": [51.4416, 5.4697],
+    "type": "city",
     "meta": { "source": "Gemeente Eindhoven" }
   },
   {
     "id": "amersfoort",
     "name": "Amersfoort",
     "center": [52.1561, 5.3878],
+    "type": "city",
     "meta": { "source": "Gemeente Amersfoort" }
   },
   {
     "id": "breda",
     "name": "Breda",
     "center": [51.5719, 4.7683],
+    "type": "city",
     "meta": { "source": "Gemeente Breda" }
   },
   {
     "id": "assen",
     "name": "Assen",
     "center": [52.9925, 6.5642],
+    "type": "city",
     "meta": { "source": "Gemeente Assen" }
   },
   {
     "id": "delft",
     "name": "Delft",
     "center": [52.0116, 4.3571],
+    "type": "city",
     "meta": { "source": "Gemeente Delft" }
   },
   {
     "id": "haarlem",
     "name": "Haarlem",
     "center": [52.3874, 4.6462],
+    "type": "city",
     "meta": { "source": "Gemeente Haarlem" }
   },
   {
     "id": "zandvoort",
     "name": "Zandvoort",
     "center": [52.3725, 4.5325],
+    "type": "city",
     "meta": { "source": "Gemeente Zandvoort" }
   },
   {
     "id": "oss",
     "name": "Oss",
     "center": [51.7649, 5.5181],
+    "type": "city",
     "meta": { "source": "Gemeente Oss" }
   },
   {
     "id": "voorschoten",
     "name": "Voorschoten",
     "center": [52.1291, 4.4482],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "deventer",
     "name": "Deventer",
     "center": [52.2553, 6.1638],
+    "type": "city",
     "meta": { "source": "Gemeente Deventer" }
   },
   {
     "id": "apeldoorn",
     "name": "Apeldoorn",
     "center": [52.2112, 5.9699],
+    "type": "city",
     "meta": { "source": "Gemeente Apeldoorn" }
   },
   {
     "id": "enschede",
     "name": "Enschede",
     "center": [52.2215, 6.8937],
+    "type": "city",
     "meta": { "source": "Gemeente Enschede" }
   },
   {
     "id": "leiden",
     "name": "Leiden",
     "center": [52.1601, 4.4970],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "dordrecht",
     "name": "Dordrecht",
     "center": [51.8133, 4.6899],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "alkmaar",
     "name": "Alkmaar",
     "center": [52.6324, 4.7534],
+    "type": "city",
     "meta": { "source": "Gemeente Alkmaar" }
   },
   {
     "id": "den-bosch",
     "name": "Den Bosch",
     "center": [51.6978, 5.3037],
+    "type": "city",
     "meta": { "source": "Gemeente Den Bosch" }
   },
   {
     "id": "ede",
     "name": "Ede",
     "center": [52.0407, 5.6616],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "albrandswaard",
     "name": "Albrandswaard",
     "center": [51.858, 4.427],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "barendrecht",
     "name": "Barendrecht",
     "center": [51.855, 4.535],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "leeuwarden",
     "name": "Leeuwarden",
     "center": [53.2010, 5.7987],
+    "type": "city",
     "meta": { "source": "Gemeente Leeuwarden" }
   },
   {
     "id": "roosendaal",
     "name": "Roosendaal",
     "center": [51.5321, 4.4630],
+    "type": "city",
     "meta": { "source": "Gemeente Roosendaal" }
   },
   {
     "id": "almere",
     "name": "Almere",
     "center": [52.3508, 5.2647],
+    "type": "city",
     "meta": { "source": "Gemeente Almere" }
   },
   {
     "id": "maastricht",
     "name": "Maastricht",
     "center": [50.8514, 5.6910],
+    "type": "city",
     "meta": { "source": "Gemeente Maastricht" }
   },
   {
     "id": "ridderkerk",
     "name": "Ridderkerk",
     "center": [51.8647, 4.6049],
+    "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
   {
     "id": "gouda",
     "name": "Gouda",
     "center": [52.0116, 4.7106],
+    "type": "city",
     "meta": { "source": "Gemeente Gouda" }
   },
   {
     "id": "wageningen",
     "name": "Wageningen",
     "center": [51.9693, 5.6657],
+    "type": "city",
     "meta": { "source": "Gemeente Wageningen" }
   },
   {
     "id": "steenwijk",
     "name": "Steenwijk",
     "center": [52.7868, 6.1147],
+    "type": "city",
     "meta": { "source": "Gemeente Steenwijkerland" }
   },
   {
     "id": "hilversum",
     "name": "Hilversum",
     "center": [52.2292, 5.1669],
+    "type": "city",
     "meta": { "source": "Gemeente Hilversum" }
   },
   {
     "id": "gorinchem",
     "name": "Gorinchem",
     "center": [51.8350, 4.9756],
+    "type": "city",
     "meta": { "source": "Gemeente Gorinchem" }
   },
   {
     "id": "bomenmuseum-gimborn",
     "name": "Bomenmuseum Gimborn",
     "center": [52.0330, 5.3090],
+    "type": "institution",
     "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
@@ -233,6 +271,7 @@
     "id": "trompenburg",
     "name": "Trompenburg",
     "center": [51.9188, 4.5192],
+    "type": "institution",
     "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
@@ -241,6 +280,7 @@
     "id": "pinetum-ter-borgh",
     "name": "Pinetum Ter Borgh",
     "center": [53.0284, 6.7052],
+    "type": "institution",
     "mapZoom": 17,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
@@ -249,7 +289,8 @@
     "id": "pinetum-dennenhorst",
     "name": "Pinetum de Dennenhorst",
     "center": [52.0896, 5.6458],
-    "mapZoom": 16,
+    "type": "institution",
+    "mapZoom": 17,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
   }

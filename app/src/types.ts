@@ -69,6 +69,9 @@ export interface City {
   tree_count: number
   has_data: boolean
   meta?: CityMeta
+  /** 'city' for regular municipalities, 'institution' for arboretums and similar.
+   *  Defaults to 'city' if absent. */
+  type?: 'city' | 'institution'
   /** Overrides config.ts's CLUSTER_DISABLE_ZOOM for this city — only needed for
    *  dense, spatially small datasets (e.g. an arboretum) where the default would
    *  render too many individual DOM markers at once. Falls back to the global

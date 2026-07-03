@@ -66,9 +66,13 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
 }
 
 export function createCityCircleMarker(city: City): L.CircleMarker {
+  const isInstitution = city.type === 'institution'
+  const fillColor = isInstitution
+    ? (city.has_data ? '#f59e0b' : '#cbd5e1')
+    : (city.has_data ? '#2d6a4f' : '#9ca3af')
   const m = L.circleMarker(city.center, {
     radius: 10,
-    fillColor: city.has_data ? '#2d6a4f' : '#9ca3af',
+    fillColor,
     fillOpacity: city.has_data ? 1 : 0.7,
     color: 'white',
     weight: 2,

@@ -2,7 +2,9 @@
 
 Interactive map of municipal trees for Dutch cities. Data is loaded on demand for the visible viewport; no full dataset is downloaded upfront.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Apeldoorn · Deventer · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem · Bomenmuseum Gimborn
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Apeldoorn · Deventer · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem
+
+**Institutions (arboretums):** Bomenmuseum Gimborn · Trompenburg · Pinetum Ter Borgh · Pinetum de Dennenhorst
 
 ---
 
@@ -143,15 +145,31 @@ Optional `strict` param (default `false`):
 }
 ```
 
-**Species item** (from `GET /api/species`)
+**City object** (from `GET /api/cities`)
 ```json
 {
-  "species": "QUERCUS ROBUR",
-  "species_binomial": "QUERCUS ROBUR",
-  "name_vernacular": "ZOMEREIK",
-  "count": 4231
+  "id": "rotterdam",
+  "name": "Rotterdam",
+  "center": [51.9225, 4.4792],
+  "type": "city",
+  "bbox": { "s": 51.8, "n": 52.1, "w": 4.2, "e": 4.6 },
+  "tree_count": 200000,
+  "has_data": true,
+  "meta": { "source": "Gemeente Rotterdam" }
 }
 ```
+
+**Field notes:**
+- `type`: `'city'` for regular municipalities, `'institution'` for arboretums and similar (defaults to `'city'` if absent)
+- `mapZoom`: optional override for this location's initial zoom (used for spatially small datasets like arboretums)
+- `clusterDisableZoom`: optional override for clustering disable threshold
+
+On the map overview (zoom ≤ `MIN_CITY_SWITCH_ZOOM`), cities and institutions are rendered with different marker colors:
+- **Cities with tree data:** dark green (#2d6a4f)
+- **Cities without tree data:** gray (#9ca3af)
+- **Institutions with tree data:** amber/orange (#f59e0b)
+- **Institutions without tree data:** light slate (#cbd5e1)
+
 
 ### API access control
 

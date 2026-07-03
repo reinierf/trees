@@ -21,7 +21,7 @@ export default function App() {
   useEffect(() => {
     fetchCities().then((data) => setCities(data)).catch(console.error)
     fetchVernacularNames().then(setVernacularNames).catch(console.error)
-  }, [])
+  }, [setVernacularNames])
 
   useEffect(() => {
     if (!cities) return

@@ -55,6 +55,8 @@ interface Props {
 export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
   const openFavourites = useStore((s) => s.openFavourites)
+  const openSamePointList = useStore((s) => s.openSamePointList)
+  const visibleTrees = useStore((s) => s.visibleTrees)
   const closePopup = useStore((s) => s.closePopup)
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const toggleFavourite = useStore((s) => s.toggleFavourite)
@@ -115,6 +117,8 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   function handleUpButton() {
     if (returnTo === PopupKind.Favourites) {
       openFavourites()
+    } else if (returnTo === PopupKind.SamePointList) {
+      openSamePointList(visibleTrees.filter((t) => t.lat === tree.lat && t.lon === tree.lon))
     } else {
       openSpeciesListAt(speciesKey, tree.id)
     }

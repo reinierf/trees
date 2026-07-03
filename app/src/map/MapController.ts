@@ -2,12 +2,13 @@ import L from 'leaflet'
 import 'leaflet.markercluster'
 import type { Bbox, City, Tree } from '../types'
 import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM } from '../config'
-import { createSpeciesIcon, createClusterIcon, createSelectedSpeciesIcon, createCityCircleMarker } from './markerIcon'
+import { createSpeciesIcon, createClusterIcon, createGroupIcon, createSelectedSpeciesIcon, createCityCircleMarker } from './markerIcon'
 import { capitalizeFirst } from '../lib/utils'
 
 interface Callbacks {
     onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
     onMarkerClick: (tree: Tree) => void
+    onGroupMarkerClick: (trees: Tree[]) => void
     onMapClick: () => void
 }
 
@@ -143,19 +144,51 @@ export class MapController {
         m.on('mouseout', () => this.clearActiveTip())
     }
 
+    // Trees positioned per planting-section rather than individually surveyed
+    // can share an exact coordinate — grouped into one marker instead of fully
+    // overlapping, unclickable individual ones. Grouping happens here, before
+    // markers reach the cluster layer, so a coincident group is just one more
+    // marker as far as clustering is concerned.
+    private static groupByCoordinate(trees: Tree[]): Tree[][] {
+        const groups = new Map<string, Tree[]>()
+        for (const tree of trees) {
+            const key = `${tree.lat},${tree.lon}`
+            const group = groups.get(key)
+            if (group) group.push(tree)
+            else groups.set(key, [tree])
+        }
+        return [...groups.values()]
+    }
+
     setTrees(trees: Tree[]): void {
         this.tooltipGen++
         this.clusterLayer.clearLayers()
         this.markers = []
         const layerMarkers: L.Marker[] = []
         const gen = this.tooltipGen
-        for (const tree of trees) {
-            if (!tree.species_binomial) continue
-            const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial) })
-            this.addDelayedTooltip(m, tree, gen, () => this.tooltipGen)
-            m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
-            this.markers.push({ m, species: tree.species_binomial })
-            layerMarkers.push(m)
+        // Below disableClusteringAtZoom, Leaflet's own proximity-based clustering
+        // already absorbs coincident points into a normal cluster count — no
+        // special treatment needed, and showing an amber group marker in isolation
+        // while ordinary clustering is still active elsewhere is just confusing.
+        // Group markers only earn their keep once clustering is fully off, which
+        // is the only point where a coordinate collision is actually unclickable.
+        const groupingActive = (this.map?.getZoom() ?? 0) >= this.clusterDisableZoom
+        for (const group of MapController.groupByCoordinate(trees.filter((t) => t.species_binomial))) {
+            if (group.length === 1 || !groupingActive) {
+                for (const tree of group) {
+                    const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial!) })
+                    this.addDelayedTooltip(m, tree, gen, () => this.tooltipGen)
+                    m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
+                    this.markers.push({ m, species: tree.species_binomial! })
+                    layerMarkers.push(m)
+                }
+            } else {
+                const [{ lat, lon }] = group
+                const m = L.marker([lat, lon], { icon: createGroupIcon(group.length) })
+                m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onGroupMarkerClick(group) })
+                this.markers.push({ m, species: '' })
+                layerMarkers.push(m)
+            }
         }
         this.clusterLayer.addLayers(layerMarkers)
         this.applyOpacities()

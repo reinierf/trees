@@ -5,6 +5,7 @@ import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
 import { IssuesPanel } from './panels/IssuesPanel'
 import { CityInfoPanel } from './panels/CityInfoPanel'
+import { SamePointListPanel } from './panels/SamePointListPanel'
 import type { City } from '../types'
 
 export const BASE =
@@ -62,6 +63,8 @@ export function InfoPopup({ cities, currentCityId }: Props) {
         selectedTreeId={popupView.selectedTreeId}
       />
     )
+  if (popupView.kind === PopupKind.SamePointList)
+    return <SamePointListPanel trees={popupView.trees} />
   return (
     <TreeDetailPanel
       tree={popupView.tree}

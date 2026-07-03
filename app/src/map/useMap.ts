@@ -63,11 +63,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     prevSpeciesFilterRef.current = speciesFilter
   }, [speciesFilter])
 
-  const { onMapClick, onMarkerClick } = useMapClickHandlers()
+  const { onMapClick, onMarkerClick, onGroupMarkerClick } = useMapClickHandlers()
   const onMapClickRef = useRef(onMapClick)
   onMapClickRef.current = onMapClick
   const onMarkerClickRef = useRef(onMarkerClick)
   onMarkerClickRef.current = onMarkerClick
+  const onGroupMarkerClickRef = useRef(onGroupMarkerClick)
+  onGroupMarkerClickRef.current = onGroupMarkerClick
 
   const checkCitySwitch = useCitySwitcher(city, cities)
   const checkCitySwitchRef = useRef(checkCitySwitch)
@@ -172,6 +174,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       },
       onMapClick: (...args) => onMapClickRef.current(...args),
       onMarkerClick: (...args) => onMarkerClickRef.current(...args),
+      onGroupMarkerClick: (...args) => onGroupMarkerClickRef.current(...args),
     })
 
     controller.init(el, initCenter, initZoom)

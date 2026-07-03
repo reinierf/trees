@@ -15,10 +15,11 @@ export const PopupKind = {
   Favourites: 'favourites',
   Issues: 'issues',
   CityInfo: 'city-info',
+  SamePointList: 'same-point-list',
 } as const
 export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
 
-export type PopupReturnTo = typeof PopupKind.SpeciesList | typeof PopupKind.Favourites
+export type PopupReturnTo = typeof PopupKind.SpeciesList | typeof PopupKind.Favourites | typeof PopupKind.SamePointList
 
 export type PopupView =
   | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: string; selectedTreeId?: string }
@@ -26,6 +27,7 @@ export type PopupView =
   | { kind: typeof PopupKind.Favourites }
   | { kind: typeof PopupKind.Issues }
   | { kind: typeof PopupKind.CityInfo }
+  | { kind: typeof PopupKind.SamePointList; trees: Tree[] }
 
 interface AppStore {
   popupView: PopupView | null
@@ -55,6 +57,7 @@ interface AppStore {
   selectTreeInList: (treeId: string) => void
   openTreeDetail: (tree: Tree, returnTo?: PopupReturnTo) => void
   openFavourites: () => void
+  openSamePointList: (trees: Tree[]) => void
   closePopup: () => void
   setVisibleTrees: (trees: Tree[]) => void
   setIsLoading: (v: boolean) => void
@@ -124,6 +127,7 @@ export const useStore = create<AppStore>((set) => ({
   openTreeDetail: (tree, returnTo = PopupKind.SpeciesList) =>
     set({ popupView: { kind: PopupKind.TreeDetail, tree, returnTo } }),
   openFavourites: () => set({ popupView: { kind: PopupKind.Favourites } }),
+  openSamePointList: (trees) => set({ popupView: { kind: PopupKind.SamePointList, trees } }),
   closePopup: () => set({ popupView: null }),
   setVisibleTrees: (trees) => set({ visibleTrees: trees }),
   setIsLoading: (v) => set({ isLoading: v }),

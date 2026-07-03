@@ -228,5 +228,13 @@
     "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
+  },
+  {
+    "id": "trompenburg",
+    "name": "Trompenburg",
+    "center": [51.9188, 4.5192],
+    "mapZoom": 16,
+    "clusterDisableZoom": 19,
+    "meta": { "source": "collectie.gimbornarboretum.nl" }
   }
 ]

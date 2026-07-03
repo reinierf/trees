@@ -80,6 +80,35 @@ export function createCityCircleMarker(city: City): L.CircleMarker {
   return m
 }
 
+const groupIconCache = new Map<number, L.DivIcon>()
+
+// Multiple trees at the exact same coordinate (common for datasets positioned
+// per planting-section rather than individually surveyed). Deliberately amber,
+// distinct from both the green species marker and the dark-green cluster icon
+// — a cluster represents "many trees over an area", this represents "one
+// point, multiple distinct trees", which needs its own visual language so the
+// two aren't confused for the same thing at a glance.
+function buildGroupIcon(count: number): L.DivIcon {
+  const r = 15
+  const d = r * 2
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${d}" height="${d}" style="display:block">` +
+    `<circle cx="${r}" cy="${r}" r="${r - 1.5}" fill="#f59e0b" stroke="#7c4a03" stroke-width="2"/>` +
+    `<text x="${r}" y="${r + 4}" font-family="Arial" font-size="11"` +
+    ` font-weight="bold" text-anchor="middle" fill="#ffffff">${count}</text>` +
+    `</svg>`
+  return L.divIcon({ html: svg, className: '', iconSize: [d, d], iconAnchor: [r, r] })
+}
+
+export function createGroupIcon(count: number): L.DivIcon {
+  let icon = groupIconCache.get(count)
+  if (!icon) {
+    icon = buildGroupIcon(count)
+    groupIconCache.set(count, icon)
+  }
+  return icon
+}
+
 export function createClusterIcon(count: number): L.DivIcon {
   const size = count < 100 ? 34 : 40
   const r = size / 2

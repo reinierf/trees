@@ -114,41 +114,25 @@ Shared behaviour across all institutions on this database:
 - Requires Node ≥ 22 with `--use-system-ca` if outbound TLS to this host fails
   certificate verification in your environment (seen in sandboxed dev setups).
 
+All four institutions on this database are now fetched and registered in
+`api/cities.json`, each with `mapZoom`/`clusterDisableZoom` overrides (see
+"Per-city map zoom / clustering overrides" below) since all four are small,
+dense sites where the global defaults would leave them looking like a dot
+zoomed out, or dump thousands of individual DOM markers at once zoomed in.
+
 #### Trompenburg Tuinen & Arboretum (Rotterdam)
 
-**Status: fetched, but not currently registered in `api/cities.json`.** Many
+**Status: fetched (3,281 trees) and registered in `api/cities.json`.** Many
 specimens share exact-identical coordinates — Trompenburg positions trees at
 the "plantvak" (planting-section) level rather than surveying each one
-individually. On the map this renders as multiple, sometimes many, trees
-stacked on the exact same point: below `CLUSTER_DISABLE_ZOOM` they merge into
-one cluster count (masking that they're distinct trees at all), and at/above
-it they render as fully overlapping, unclickable individual markers. This
-makes the dataset unusable for this app's per-tree map view as-is — it isn't
-a fetcher bug, the coordinates genuinely are that coarse in the source.
-Considered and rejected for now: deterministically jittering coincident
-points at render time to spread them apart, since that wasn't pursued further
-once the decision was made to shelve this source. (See also, unrelated but
-noted during the same investigation: a small, dense arboretum in a tiny area
-would separately cause many-DOM-marker lag once zoom disables clustering —
-a generic scalability concern for any future dense/small-area source, since
-`CLUSTER_DISABLE_ZOOM` etc. are single global constants with no per-city
-override today.)
-
-The fetcher, species processing, and `data/trompenburg.db` are all intact —
-only the `api/cities.json` entry was removed. To resume:
-
-```json
-{
-  "id": "trompenburg",
-  "name": "Trompenburg",
-  "center": [51.9188, 4.5192],
-  "meta": { "source": "collectie.gimbornarboretum.nl" }
-}
-```
-
-Paste that back into `api/cities.json` (and re-run `npm run copy-data` if
-`data/trompenburg.db` has since gone stale) to pick this back up — ideally
-alongside an actual fix for the coordinate-collision problem above.
+individually. This isn't a fetcher bug; the coordinates genuinely are that
+coarse in the source. It made this dataset unusable at first (fully
+overlapping, unclickable markers once zoom disabled clustering) and it was
+shelved for a while — see git history around "shelve Trompenburg" — until
+the app's own marker layer gained coordinate-collision grouping
+(`MapController.ts`'s `groupByCoordinate`/`onGroupMarkerClick`), which turns
+an exact-coordinate collision into one clickable group marker instead of
+stacked individual ones. Re-registered once that landed.
 
 ```sh
 node cities/trompenburg.js                    # full fetch → data/trompenburg.db
@@ -164,10 +148,9 @@ confirmed to actually filter correctly, unlike the institution checkbox).
 #### Nationaal Bomenmuseum Gimborn (Doorn)
 
 **Status: fetched (3,169 trees) and registered in `api/cities.json`.**
-Unlike Trompenburg, coordinates here are individually granular — only 26 of
-3,169 specimens share a coordinate with another (max 5-way collision), vs.
-Trompenburg's pervasive plantvak-level duplication — so this dataset doesn't
-appear to hit the same blocker.
+Coordinates here are individually granular — only 26 of 3,169 specimens
+share a coordinate with another (max 5-way collision), vs. Trompenburg's
+pervasive plantvak-level duplication.
 
 This institution's own manual search flow has no growth-form ("WOODY" etc.)
 selection step at all — `growthFormIndex: null` in `cities/bomenmuseum-gimborn.js`
@@ -183,16 +166,57 @@ node cities/bomenmuseum-gimborn.js --term "Fagus"
 node cities/bomenmuseum-gimborn.js -d
 ```
 
-#### Adding Pinetum de Dennenhorst or Pinetum Ter Borgh
+#### Pinetum Ter Borgh (Anloo)
 
-Not yet implemented. Both share the same database and protocol — a new
-`cities/<id>.js` following `cities/bomenmuseum-gimborn.js`'s pattern (a
-`runCli()` call into `lib/collectie-gimborn.js` with that institution's
-`arboretumIndex` — 1 for Dennenhorst, 3 for Ter Borgh — plus a geographic
-`bbox` derived the same way: fetch a sample term, inspect the coordinate
-spread, set a bounding box with margin) should be most of the work. Confirm
-whether each has a growth-form selection step in its own manual search flow
-before deciding `growthFormIndex`.
+**Status: fetched (225 trees) and registered in `api/cities.json`.** The
+smallest and most dense of the four — the whole site is under 200m across.
+`growthFormIndex: null`, same as Gimborn, but here it's an **assumption**
+carried over rather than independently confirmed: Ter Borgh is a "pinetum"
+(conifer-only collection), so a WOODY/PERENNIAL/SUCCULENT distinction seems
+unlikely to matter in its own manual search flow, but this hasn't been
+checked directly against the real site the way Gimborn's absence of that
+step was. Genus breakdown is entirely conifers (Juniperus, Chamaecyparis,
+Thuja, Abies, Picea, ...), consistent with that assumption holding.
+
+```sh
+node cities/pinetum-ter-borgh.js
+node cities/pinetum-ter-borgh.js --format json
+node cities/pinetum-ter-borgh.js --include-unmapped
+node cities/pinetum-ter-borgh.js --term "Pinus"
+node cities/pinetum-ter-borgh.js -d
+```
+
+Institution-specific: `arboretumIndex: 3`.
+
+#### Pinetum de Dennenhorst (Lunteren)
+
+**Status: fetched (349 trees) and registered in `api/cities.json`.** Same
+`growthFormIndex: null` assumption as Ter Borgh (also a conifer-only
+"pinetum", not independently confirmed) — genus breakdown is again entirely
+conifers (Chamaecyparis, Juniperus, Picea, Taxus, Pinus, ...).
+
+```sh
+node cities/pinetum-dennenhorst.js
+node cities/pinetum-dennenhorst.js --format json
+node cities/pinetum-dennenhorst.js --include-unmapped
+node cities/pinetum-dennenhorst.js --term "Pinus"
+node cities/pinetum-dennenhorst.js -d
+```
+
+Institution-specific: `arboretumIndex: 1`.
+
+#### Per-city map zoom / clustering overrides
+
+`api/cities.json` entries may carry optional `mapZoom` and `clusterDisableZoom`
+fields (see `app/src/types.ts`'s `City` type), overriding `app/src/config.ts`'s
+`MAP_ZOOM`/`CLUSTER_DISABLE_ZOOM` globals for that one city — `mapZoom` for
+how far to zoom in when flying to the city's center, `clusterDisableZoom` for
+the zoom at/above which the map stops clustering and renders individual
+markers. Only set where they deviate from the default; most (municipal)
+cities don't need either. All four institutions on this collection database
+set both, since each is a small, dense site where the defaults would either
+leave it looking like a dot when flown to, or dump many individual DOM
+markers at once past the default clustering cutoff.
 
 ### End-to-end pipeline for a new (or refreshed) city
 

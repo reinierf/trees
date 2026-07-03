@@ -227,7 +227,7 @@ async function post(fields, session, label = '', ajax = true) {
 
 // ── Session bootstrap ────────────────────────────────────────────────────────
 
-async function bootstrapSession(arboretumIndex, growthFormIndex) {
+export async function bootstrapSession(arboretumIndex, growthFormIndex) {
     const getRes = await httpRequest('GET', SEARCH_PATH, null, null);
     if (getRes.status !== 200) throw new Error(`GET ${SEARCH_PATH} → HTTP ${getRes.status}`);
     let session = { cookie: getRes.cookie, ...extractInitialState(getRes.body) };
@@ -296,6 +296,41 @@ async function searchTerm(term, session, arboretumIndex, growthFormIndex) {
     return { markers, session: nextSession };
 }
 
+// The server caps Zoek results at exactly 1000 markers — confirmed live (not
+// the earlier stale-ViewState artifact from this project's history). The cap
+// applies across ALL FOUR institutions combined, not per institution, so a
+// common single letter can silently drown out a small institution's true
+// matches under a larger one's (e.g. searching "e" alone returns 1000 markers
+// total, of which only a handful fall within a small institution's bounding
+// box — its real matches for "e" mostly never made it into the capped batch).
+// When a search hits the cap, shard it further by appending each letter a–z
+// and recurse, merging by lceid. This only catches names where the matched
+// substring has room to extend (a name ending in exactly "e" with nothing
+// after would need prepending instead) — a small residual gap accepted for
+// now rather than doubling every query to also shard backwards.
+const RESULT_CAP = 1000;
+const MAX_SHARD_DEPTH = 3; // 3-character shards; deeper is not expected to ever be needed
+
+async function searchTermRecursive(term, session, arboretumIndex, growthFormIndex, depth, warn) {
+    const { markers, session: nextSession } = await searchTerm(term, session, arboretumIndex, growthFormIndex);
+    session = nextSession;
+    if (markers.length < RESULT_CAP || depth >= MAX_SHARD_DEPTH) {
+        if (markers.length >= RESULT_CAP) {
+            warn(`"${term}" still at the ${RESULT_CAP}-result cap at max shard depth (${MAX_SHARD_DEPTH}); some matches may be missing.`);
+        }
+        return { markers, session };
+    }
+    warn(`"${term}" hit the ${RESULT_CAP}-result cap — sharding into "${term}a".."${term}z"...`);
+    const merged = new Map(markers.map(m => [m.lceid, m]));
+    for (const letter of ALPHABET) {
+        const sub = await searchTermRecursive(term + letter, session, arboretumIndex, growthFormIndex, depth + 1, warn);
+        session = sub.session;
+        for (const m of sub.markers) merged.set(m.lceid, m);
+        await sleep(REQUEST_DELAY_MS);
+    }
+    return { markers: [...merged.values()], session };
+}
+
 // ── List view (--include-unmapped: specimens with no coordinate) ───────────
 
 function extractVirtualItemCount(text) {
@@ -311,7 +346,7 @@ function extractVirtualItemCount(text) {
 // confirmed against a real capture.
 const ROW_RE = /<tr class="rg(?:Alt)?Row"[^>]*>\s*<td>[\s\S]*?<\/td><td>[\s\S]*?<\/td><td[^>]*>([^<]*)<\/td><td>([^<]*)<\/td><td[^>]*>([^<]*)<\/td><td[^>]*>([^<]*)<\/td><td[^>]*>([^<]*)<\/td><td[^>]*>([^<]*)<\/td>/g;
 
-async function listRows(term, session, arboretumIndex, growthFormIndex, warn) {
+export async function listRows(term, session, arboretumIndex, growthFormIndex, warn) {
     const rows = [];
     let currentSession = session;
     for (let page = 0; page < MAX_LIST_PAGES; page++) {
@@ -435,7 +470,10 @@ export async function fetchCollection(institution, { includeUnmapped, letters } 
         const term = terms[i];
         drawProgress(i, terms.length);
 
-        const { markers, session: s1 } = await searchTerm(term, session, arboretumIndex, growthFormIndex);
+        const { markers, session: s1 } = await searchTermRecursive(
+            term, session, arboretumIndex, growthFormIndex, 1,
+            msg => process.stderr.write(`[${cityId}] ${msg}\n`),
+        );
         session = s1;
         for (const marker of markers) {
             if (!withinBbox(marker.latitude, marker.longitude, bbox)) { droppedOtherArboretum++; continue; }

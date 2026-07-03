@@ -236,5 +236,21 @@
     "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
+  },
+  {
+    "id": "pinetum-ter-borgh",
+    "name": "Pinetum Ter Borgh",
+    "center": [53.0284, 6.7052],
+    "mapZoom": 17,
+    "clusterDisableZoom": 19,
+    "meta": { "source": "collectie.gimbornarboretum.nl" }
+  },
+  {
+    "id": "pinetum-dennenhorst",
+    "name": "Pinetum de Dennenhorst",
+    "center": [52.0896, 5.6458],
+    "mapZoom": 16,
+    "clusterDisableZoom": 19,
+    "meta": { "source": "collectie.gimbornarboretum.nl" }
   }
 ]

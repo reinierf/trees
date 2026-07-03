@@ -220,5 +220,13 @@
     "name": "Gorinchem",
     "center": [51.8350, 4.9756],
     "meta": { "source": "Gemeente Gorinchem" }
+  },
+  {
+    "id": "bomenmuseum-gimborn",
+    "name": "Bomenmuseum Gimborn",
+    "center": [52.0330, 5.3090],
+    "mapZoom": 16,
+    "clusterDisableZoom": 19,
+    "meta": { "source": "collectie.gimbornarboretum.nl" }
   }
 ]

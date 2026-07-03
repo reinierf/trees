@@ -10,10 +10,10 @@ export const RESTORE_CITY_POSITION = false  // restore last saved position when 
 export const NL_CENTER: [number, number] = [52.22, 5.29]
 export const NL_ZOOM = 7               // zoom level for the Netherlands overview
 
-export const MAP_ZOOM = 14              // initial map zoom level
+export const MAP_ZOOM = 14              // initial map zoom level, possible overridden by city-specific value
 export const SHARE_ZOOM = 19            // zoom level used when opening a shared tree link
 export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap
-export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual
+export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual, possibly overriden by city-specific value
 
 export const LOCATION_MIN_ZOOM = 15     // zoom floor when flying to the user's GPS location, however inaccurate
 export const LOCATION_MAX_ZOOM = MAP_MAX_ZOOM  // zoom ceiling for a highly accurate GPS fix

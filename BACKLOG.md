@@ -18,12 +18,22 @@ https://www.botanischetuinen.nl/
 Gimborn/Trompenburg/Ten Borgh/De Dennenhorst:
 https://www.bomenmuseum.nl/collectie/collectiedatabase/
 
+Shared fetcher client for this database: `open-data-fetcher/lib/collectie-gimborn.js`.
+
 Trompenburg: fetcher built (`open-data-fetcher/cities/trompenburg.js`), data
 fetched, but shelved — many specimens share exact-identical coordinates
 (positioned per planting-section, not individually surveyed), making the
 per-tree map view unusable as-is. Not re-registered in `api/cities.json`.
-Details and the entry to restore: `open-data-fetcher/README.md` → "Non-WFS
-sources: Trompenburg Arboretum".
+
+Bomenmuseum Gimborn: fetcher built (`open-data-fetcher/cities/bomenmuseum-gimborn.js`),
+3,169 trees fetched, coordinates look individually granular (unlike
+Trompenburg). Live in `api/cities.json`.
+
+Ten Borgh / De Dennenhorst: not yet implemented, same database/protocol —
+see `open-data-fetcher/README.md` for the pattern to follow.
+
+Details: `open-data-fetcher/README.md` → "Non-WFS sources: Von Gimborn
+Arboretum collection database".
 
 De Nieuwe Ooster:
 https://viewer.bomenwacht.nl/?code=DNO1oqxV6qBv

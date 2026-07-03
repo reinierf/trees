@@ -69,4 +69,14 @@ export interface City {
   tree_count: number
   has_data: boolean
   meta?: CityMeta
+  /** Overrides config.ts's CLUSTER_DISABLE_ZOOM for this city — only needed for
+   *  dense, spatially small datasets (e.g. an arboretum) where the default would
+   *  render too many individual DOM markers at once. Falls back to the global
+   *  default when absent. */
+  clusterDisableZoom?: number
+  /** Overrides config.ts's MAP_ZOOM when flying to this city's center (initial
+   *  load, city picker, clicking its overview marker, or returning with no saved
+   *  position) — only needed for small places (e.g. an arboretum) where the
+   *  default zoom is too far out. Falls back to the global default when absent. */
+  mapZoom?: number
 }

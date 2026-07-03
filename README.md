@@ -2,7 +2,7 @@
 
 Interactive map of municipal trees for Dutch cities. Data is loaded on demand for the visible viewport; no full dataset is downloaded upfront.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Apeldoorn · Deventer · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem
+**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Apeldoorn · Deventer · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem · Bomenmuseum Gimborn
 
 ---
 

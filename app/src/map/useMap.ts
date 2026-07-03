@@ -6,7 +6,7 @@ import { TileCache } from './tileCache'
 import { useStore, PopupKind } from '../store'
 import {
   DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM,
-  NL_CENTER, NL_ZOOM, MIN_CITY_SWITCH_ZOOM,
+  NL_CENTER, NL_ZOOM, MIN_CITY_SWITCH_ZOOM, CLUSTER_DISABLE_ZOOM,
 } from '../config'
 import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
@@ -127,7 +127,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       initCenter = treeDeepLink
         ? [treeDeepLink.lat, treeDeepLink.lon]
         : (saved?.center ?? initialCity.center)
-      initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? MAP_ZOOM)
+      initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? initialCity.mapZoom ?? MAP_ZOOM)
     } else {
       initCenter = NL_CENTER
       initZoom = NL_ZOOM
@@ -175,6 +175,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     })
 
     controller.init(el, initCenter, initZoom)
+    controller.setClusterDisableZoom(initialCity?.clusterDisableZoom ?? CLUSTER_DISABLE_ZOOM)
     controllerRef.current = controller
 
     controller.setCityMarkers(
@@ -225,6 +226,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     const ctrl = controllerRef.current
     if (!ctrl) return
 
+    ctrl.setClusterDisableZoom(city?.clusterDisableZoom ?? CLUSTER_DISABLE_ZOOM)
+
     const state = locationStateRef.current
     // Clear consumed navigation state so page reload doesn't re-apply it
     if (state?.fromPicker || state?.fromCityMarker) {
@@ -256,7 +259,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
           return
         }
       }
-      ctrl.flyToLocation(city.center[0], city.center[1], MAP_ZOOM)
+      ctrl.flyToLocation(city.center[0], city.center[1], city.mapZoom ?? MAP_ZOOM)
       return
     }
 
@@ -271,7 +274,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     if (validSaved) {
       ctrl.flyToLocation(validSaved.center[0], validSaved.center[1], validSaved.zoom)
     } else {
-      ctrl.flyToLocation(city.center[0], city.center[1], MAP_ZOOM)
+      ctrl.flyToLocation(city.center[0], city.center[1], city.mapZoom ?? MAP_ZOOM)
     }
   }, [city?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 

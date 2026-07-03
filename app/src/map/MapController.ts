@@ -14,7 +14,8 @@ interface Callbacks {
 export class MapController {
     private map: L.Map | null = null
     private tileLayer: L.TileLayer | null = null
-    private readonly clusterLayer: L.MarkerClusterGroup
+    private clusterLayer: L.MarkerClusterGroup
+    private clusterDisableZoom: number = CLUSTER_DISABLE_ZOOM
     private readonly favouriteLayer: L.LayerGroup = L.layerGroup()
     private readonly callbacks: Callbacks
     private dragOccurred = false
@@ -24,12 +25,31 @@ export class MapController {
 
     constructor(callbacks: Callbacks) {
         this.callbacks = callbacks
-        this.clusterLayer = L.markerClusterGroup({
+        this.clusterLayer = this.buildClusterLayer(this.clusterDisableZoom)
+    }
+
+    private buildClusterLayer(disableClusteringAtZoom: number): L.MarkerClusterGroup {
+        return L.markerClusterGroup({
             iconCreateFunction: (cluster) => createClusterIcon(cluster.getChildCount()),
-            disableClusteringAtZoom: CLUSTER_DISABLE_ZOOM,
+            disableClusteringAtZoom,
             chunkedLoading: true,
             animate: false,
         })
+    }
+
+    // disableClusteringAtZoom is constructor-only in Leaflet.markercluster (no
+    // live setter), so a change means tearing down and recreating the cluster
+    // group. Guarded on the value actually changing — most city switches share
+    // the same (default) zoom, and recreating the layer needlessly would be
+    // wasted work and a visible flicker.
+    setClusterDisableZoom(zoom: number): void {
+        if (zoom === this.clusterDisableZoom) return
+        this.clusterDisableZoom = zoom
+        const currentMarkers = this.markers.map(({ m }) => m)
+        this.clusterLayer.remove()
+        this.clusterLayer = this.buildClusterLayer(zoom)
+        if (this.map) this.clusterLayer.addTo(this.map)
+        this.clusterLayer.addLayers(currentMarkers)
     }
 
     init(el: HTMLDivElement, center: [number, number], zoom?: number): void {

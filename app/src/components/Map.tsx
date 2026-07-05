@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM, NL_CENTER, NL_ZOOM } from '../config'
+import { MIN_CITY_SWITCH_ZOOM, NL_CENTER, NL_ZOOM } from '../config'
+import { getMapSettings } from '../map/cityMapSettings'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
@@ -128,10 +129,12 @@ export function Map({ city, cities }: Props) {
     }
   }, [pendingSpeciesSelect, setPendingSpeciesSelect, handleSpeciesSelect])
 
+  const { minFetchZoom: effectiveMinFetchZoom, clusterDisableZoom: effectiveClusterDisableZoom } = getMapSettings(city)
+
   function handleClearFilter() {
     speciesAbortRef.current?.abort()
     clearSpeciesFilter()
-    if (currentZoom < MIN_FETCH_ZOOM) {
+    if (currentZoom < effectiveMinFetchZoom) {
       setTooZoomedOut(true)
     }
   }
@@ -166,7 +169,7 @@ export function Map({ city, cities }: Props) {
       {!showingCityMarkers && tooZoomedOut && !speciesFilter && (
         <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
-            {t('map.zoomIn', { n: Math.ceil(MIN_FETCH_ZOOM - currentZoom) })}
+            {t('map.zoomIn', { n: Math.ceil(effectiveMinFetchZoom - currentZoom) })}
           </div>
         </div>
       )}
@@ -177,7 +180,7 @@ export function Map({ city, cities }: Props) {
       )}
       {debugMode && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none z-[1000] font-mono text-xs bg-black/60 text-white px-2 py-1 rounded">
-          z{currentZoom} · fetch≥{MIN_FETCH_ZOOM} · solo≥{CLUSTER_DISABLE_ZOOM}{centerStr && ` · ${centerStr}`}
+          z{currentZoom} · fetch≥{effectiveMinFetchZoom} · solo≥{effectiveClusterDisableZoom}{centerStr && ` · ${centerStr}`}
         </div>
       )}
       {!showingCityMarkers && <SpeciesFilterBadge onClear={handleClearFilter} />}

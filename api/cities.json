@@ -193,6 +193,9 @@
     "name": "Leeuwarden",
     "center": [53.2010, 5.7987],
     "type": "city",
+    "mapZoom": 12,
+    "minFetchZoom": 11,
+    "maxViewportDeg2": 5,
     "meta": { "source": "Gemeente Leeuwarden" }
   },
   {
@@ -308,6 +311,9 @@
     "name": "Bergen (NH)",
     "center": [52.6689, 4.6937],
     "type": "city",
+    "mapZoom": 12,
+    "minFetchZoom": 11,
+    "maxViewportDeg2": 5,
     "meta": { "source": "viewer.bomenwacht.nl" }
   }
 ]

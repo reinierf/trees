@@ -163,6 +163,8 @@ Optional `strict` param (default `false`):
 - `type`: `'city'` for regular municipalities, `'institution'` for arboretums and similar (defaults to `'city'` if absent)
 - `mapZoom`: optional override for this location's initial zoom (used for spatially small datasets like arboretums)
 - `clusterDisableZoom`: optional override for clustering disable threshold
+- `minFetchZoom`: optional override for `MIN_FETCH_ZOOM` (used for sparse, spatially spread datasets — e.g. a curated "monumental trees" layer covering a whole merged municipality — so outlying trees aren't stuck behind a fetch gate tuned for dense city centers)
+- `maxViewportDeg2`: optional override for `MAX_VIEWPORT_DEG2`, needed alongside a lowered `minFetchZoom` since the global cap assumes street-level zoom and would otherwise block the wider viewport a lower `minFetchZoom` allows
 
 On the map overview (zoom ≤ `MIN_CITY_SWITCH_ZOOM`), cities and institutions are rendered with different marker colors:
 - **Cities with tree data:** dark green (#2d6a4f)

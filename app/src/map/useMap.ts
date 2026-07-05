@@ -5,13 +5,14 @@ import { MapController } from './MapController'
 import { TileCache } from './tileCache'
 import { useStore, PopupKind } from '../store'
 import {
-  DEBOUNCE_MS, MAP_ZOOM, RESTORE_CITY_POSITION, SHARE_ZOOM,
-  NL_CENTER, NL_ZOOM, MIN_CITY_SWITCH_ZOOM, CLUSTER_DISABLE_ZOOM,
+  DEBOUNCE_MS, RESTORE_CITY_POSITION, SHARE_ZOOM,
+  NL_CENTER, NL_ZOOM, MIN_CITY_SWITCH_ZOOM,
 } from '../config'
 import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
 import { useCitySwitcher } from './useCitySwitcher'
+import { getMapSettings } from './cityMapSettings'
 import { LAYERS } from './layers'
 import type { City } from '../types'
 
@@ -49,7 +50,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
   const speciesFilter = useStore((s) => s.speciesFilter)
 
   // Tree loader updates when city.id changes; refs let the stable onMoveEnd closure always use the latest
-  const { load: loadTrees, abort: abortLoad } = useTreeLoader(city?.id ?? '', tileCacheRef.current)
+  const { minFetchZoom, maxViewportDeg2 } = getMapSettings(city)
+  const { load: loadTrees, abort: abortLoad } = useTreeLoader(
+    city?.id ?? '',
+    minFetchZoom,
+    maxViewportDeg2,
+    tileCacheRef.current,
+  )
   const loadTreesRef = useRef(loadTrees)
   loadTreesRef.current = loadTrees
   const abortLoadRef = useRef(abortLoad)
@@ -129,7 +136,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
       initCenter = treeDeepLink
         ? [treeDeepLink.lat, treeDeepLink.lon]
         : (saved?.center ?? initialCity.center)
-      initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? initialCity.mapZoom ?? MAP_ZOOM)
+      initZoom = treeDeepLink ? SHARE_ZOOM : (saved?.zoom ?? getMapSettings(initialCity).mapZoom)
     } else {
       initCenter = NL_CENTER
       initZoom = NL_ZOOM
@@ -178,7 +185,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     })
 
     controller.init(el, initCenter, initZoom)
-    controller.setClusterDisableZoom(initialCity?.clusterDisableZoom ?? CLUSTER_DISABLE_ZOOM)
+    controller.setClusterDisableZoom(getMapSettings(initialCity).clusterDisableZoom)
     controllerRef.current = controller
 
     controller.setCityMarkers(
@@ -245,7 +252,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     const ctrl = controllerRef.current
     if (!ctrl) return
 
-    ctrl.setClusterDisableZoom(city?.clusterDisableZoom ?? CLUSTER_DISABLE_ZOOM)
+    const { mapZoom, clusterDisableZoom } = getMapSettings(city)
+    ctrl.setClusterDisableZoom(clusterDisableZoom)
 
     const state = locationStateRef.current
     // Clear consumed navigation state so page reload doesn't re-apply it
@@ -278,7 +286,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
           return
         }
       }
-      ctrl.flyToLocation(city.center[0], city.center[1], city.mapZoom ?? MAP_ZOOM)
+      ctrl.flyToLocation(city.center[0], city.center[1], mapZoom)
       return
     }
 
@@ -293,7 +301,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     if (validSaved) {
       ctrl.flyToLocation(validSaved.center[0], validSaved.center[1], validSaved.zoom)
     } else {
-      ctrl.flyToLocation(city.center[0], city.center[1], city.mapZoom ?? MAP_ZOOM)
+      ctrl.flyToLocation(city.center[0], city.center[1], mapZoom)
     }
   }, [city?.id]) // eslint-disable-line react-hooks/exhaustive-deps
 

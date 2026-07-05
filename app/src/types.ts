@@ -82,4 +82,16 @@ export interface City {
    *  position) — only needed for small places (e.g. an arboretum) where the
    *  default zoom is too far out. Falls back to the global default when absent. */
   mapZoom?: number
+  /** Overrides config.ts's MIN_FETCH_ZOOM — only needed for sparse, spatially
+   *  spread datasets (e.g. a curated "monumental trees" layer covering a whole
+   *  merged municipality) where trees far from the city center would otherwise
+   *  never be fetched/discovered unless the user already knows to pan there.
+   *  Pairs with maxViewportDeg2 below, since a lower fetch zoom implies a wider
+   *  viewport. Falls back to the global default when absent. */
+  minFetchZoom?: number
+  /** Overrides config.ts's MAX_VIEWPORT_DEG2 — only needed alongside a lowered
+   *  minFetchZoom, since the global cap assumes fetches happen at street-level
+   *  zoom and would otherwise silently block fetching the wider viewport a low
+   *  minFetchZoom allows. Falls back to the global default when absent. */
+  maxViewportDeg2?: number
 }

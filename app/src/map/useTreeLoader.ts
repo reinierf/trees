@@ -2,11 +2,15 @@ import { useCallback, useEffect, useRef } from 'react'
 import { fetchTrees } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { useStore } from '../store'
-import { MIN_FETCH_ZOOM, MAX_VIEWPORT_DEG2 } from '../config'
 import type { TileCache } from './tileCache'
 import type { Bbox } from '../types'
 
-export function useTreeLoader(cityId: string, cache: TileCache) {
+export function useTreeLoader(
+  cityId: string,
+  minFetchZoom: number,
+  maxViewportDeg2: number,
+  cache: TileCache,
+) {
   const abortControllerRef = useRef<AbortController | null>(null)
   const setIsLoading = useStore((s) => s.setIsLoading)
   const setTooZoomedOut = useStore((s) => s.setTooZoomedOut)
@@ -19,7 +23,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
 
   const load = useCallback(async (bounds: Bbox, zoom: number) => {
     if (speciesFilterRef.current) return
-    if (zoom < MIN_FETCH_ZOOM) {
+    if (zoom < minFetchZoom) {
       setTooZoomedOut(true)
       setVisibleTrees([])
       return
@@ -27,7 +31,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
     setTooZoomedOut(false)
 
     const area = (bounds.nw.lat - bounds.se.lat) * (bounds.se.lon - bounds.nw.lon)
-    if (area > MAX_VIEWPORT_DEG2) return
+    if (area > maxViewportDeg2) return
 
     const missing = cache.getMissingCells(bounds)
     if (missing.length === 0) {
@@ -50,7 +54,7 @@ export function useTreeLoader(cityId: string, cache: TileCache) {
     } finally {
       setIsLoading(false)
     }
-  }, [cityId, cache, setIsLoading, setTooZoomedOut, setVisibleTrees])
+  }, [cityId, minFetchZoom, maxViewportDeg2, cache, setIsLoading, setTooZoomedOut, setVisibleTrees])
 
   const abort = useCallback(() => {
     abortControllerRef.current?.abort()

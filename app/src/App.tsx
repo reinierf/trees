@@ -4,8 +4,10 @@ import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
 import { LoadingSpinner } from './components/LoadingSpinner'
+import { LanguageButton } from './components/LanguageButton'
 import { recordCityVisit } from './lib/recentCitiesStorage'
 import { useStore } from './store'
+import { useT } from './translations/useT'
 import type { City } from './types'
 
 function hasVisitedAnyCity(cities: City[]): boolean {
@@ -17,6 +19,7 @@ export default function App() {
   const navigate = useNavigate()
   const [cities, setCities] = useState<City[] | null>(null)
   const setVernacularNames = useStore((s) => s.setVernacularNames)
+  const t = useT()
 
   useEffect(() => {
     fetchCities().then((data) => setCities(data)).catch(console.error)
@@ -50,6 +53,7 @@ export default function App() {
   if (!cities) {
     return (
       <div className="w-screen h-dvh flex items-center justify-center">
+        <LanguageButton />
         <div className="scale-150">
           <LoadingSpinner />
         </div>
@@ -63,13 +67,14 @@ export default function App() {
   if (!isOverview && currentCity && !currentCity.has_data) {
     return (
       <div className="w-screen h-dvh flex flex-col items-center justify-center gap-4 text-center px-6">
+        <LanguageButton />
         <h1 className="text-2xl font-bold text-gray-800">{currentCity.name}</h1>
-        <p className="text-gray-500">Boomdata voor {currentCity.name} is nog niet beschikbaar.</p>
+        <p className="text-gray-500">{t('app.dataUnavailable', { city: currentCity.name })}</p>
         <button
           onClick={() => navigate(`/${cities.find((c) => c.has_data)?.id ?? ''}`)}
           className="mt-2 px-4 py-2 rounded-lg bg-[#2d6a4f] text-white text-sm hover:bg-[#1e4d38] transition-colors"
         >
-          Terug naar kaart
+          {t('app.backToMap')}
         </button>
       </div>
     )
@@ -79,6 +84,7 @@ export default function App() {
     <div className="w-screen h-dvh">
       <Map city={currentCity} cities={cities} />
       {currentCity && <InfoPopup cities={cities} currentCityId={currentCity.id} />}
+      <LanguageButton />
     </div>
   )
 }

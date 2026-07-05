@@ -5,6 +5,7 @@ import { useStore } from '../../store'
 import type { Tree } from '../../types'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
+import { useT } from '../../translations/useT'
 
 let savedScroll = 0
 let savedKey = ''
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
+  const t = useT()
   const visibleTrees = useStore((s) => s.visibleTrees)
   const selectTreeInList = useStore((s) => s.selectTreeInList)
   const openTreeDetail = useStore((s) => s.openTreeDetail)
@@ -95,7 +97,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
     <PopupShell>
       <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
-          Species in view{' '}
+          {t('species.title')}{' '}
           <span className="text-muted-foreground font-normal">({speciesList.length})</span>
         </p>
         <div className="flex items-center gap-2">
@@ -106,7 +108,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
       </div>
       {!collapsed && <div ref={scrollRef} className="overflow-y-auto max-h-[60vh] border-t">
         {speciesList.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-muted-foreground">No trees in view</p>
+          <p className="px-4 py-3 text-sm text-muted-foreground">{t('species.empty')}</p>
         ) : (
           speciesList.map(({ name, count, nameVernacular }) => {
             const isOpen = openSpecies === name
@@ -135,8 +137,8 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
                   <button
                     onClick={() => { setPendingSpeciesSelect(name); closePopup() }}
                     className="shrink-0 p-1.5 pr-3 text-muted-foreground hover:text-foreground"
-                    aria-label="Filter by species"
-                    title="Show all trees of this species on the map"
+                    aria-label={t('species.filterBy')}
+                    title={t('species.showAllOnMap')}
                   >
                     <Filter size={13} />
                   </button>
@@ -171,7 +173,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
                           <button
                             onClick={() => openTreeDetail(tree)}
                             className="shrink-0 p-1.5 text-muted-foreground hover:text-foreground"
-                            aria-label="Open tree detail"
+                            aria-label={t('species.openDetail')}
                           >
                             <Info size={13} />
                           </button>

@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
+import { useT } from '../translations/useT'
 import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
@@ -16,11 +17,12 @@ export function PopupShell({ children }: { children: React.ReactNode }) {
 }
 
 export function CloseButton({ onClick }: { onClick: () => void }) {
+  const t = useT()
   return (
     <button
       onClick={onClick}
       className="text-muted-foreground hover:text-foreground leading-none text-2xl"
-      aria-label="Close"
+      aria-label={t('popup.close')}
     >
       ×
     </button>
@@ -28,11 +30,12 @@ export function CloseButton({ onClick }: { onClick: () => void }) {
 }
 
 export function CollapseButton({ collapsed, onClick }: { collapsed: boolean; onClick: () => void }) {
+  const t = useT()
   return (
     <button
       onClick={onClick}
       className="text-muted-foreground hover:text-foreground"
-      aria-label={collapsed ? 'Uitklappen' : 'Inklappen'}
+      aria-label={collapsed ? t('popup.expand') : t('popup.collapse')}
     >
       <ChevronDown size={16} className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
     </button>

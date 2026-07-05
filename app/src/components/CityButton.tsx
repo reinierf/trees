@@ -2,6 +2,7 @@ import { Signpost } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { loadRecentCityIds } from '../lib/recentCitiesStorage'
+import { useT } from '../translations/useT'
 import type { City } from '../types'
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function CityButton({ city, cities, onCurrentCity, onOverview }: Props) {
+  const t = useT()
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const ref = useRef<HTMLDivElement>(null)
@@ -42,7 +44,7 @@ export function CityButton({ city, cities, onCurrentCity, onOverview }: Props) {
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded-full p-2 bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors"
-        title="Kies plaats"
+        title={t('city.choose')}
       >
         <Signpost className="w-4 h-4" />
       </button>
@@ -55,7 +57,7 @@ export function CityButton({ city, cities, onCurrentCity, onOverview }: Props) {
             }}
             className="block w-full text-left px-4 py-2 text-sm whitespace-nowrap text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            Alle plaatsen
+            {t('city.allPlaces')}
           </button>
           {recent.length > 0 && (
             <div className="border-t">

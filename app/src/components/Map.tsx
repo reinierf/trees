@@ -7,6 +7,7 @@ import { MIN_FETCH_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM, NL_CENTER, 
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
+import { useT } from '../translations/useT'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
@@ -41,6 +42,7 @@ function pickCity(lat: number, lon: number, cities: City[]): string {
 }
 
 export function Map({ city, cities }: Props) {
+  const t = useT()
   const containerRef = useRef<HTMLDivElement>(null)
   const controllerRef = useMap(containerRef, city, cities)
   const navigate = useNavigate()
@@ -157,14 +159,14 @@ export function Map({ city, cities }: Props) {
       {showingCityMarkers && (
         <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
-            Kies een plaats om bomen te verkennen
+            {t('map.chooseCity')}
           </div>
         </div>
       )}
       {!showingCityMarkers && tooZoomedOut && !speciesFilter && (
         <div className="absolute inset-x-0 top-2 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
-            Zoom in {Math.ceil(MIN_FETCH_ZOOM - currentZoom)}x to see trees
+            {t('map.zoomIn', { n: Math.ceil(MIN_FETCH_ZOOM - currentZoom) })}
           </div>
         </div>
       )}

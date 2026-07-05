@@ -5,6 +5,8 @@ import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore, PopupKind } from '../../store'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { NameModeToggle } from '../NameModeToggle'
+import { useT } from '../../translations/useT'
+import { intlTag } from '../../translations/locale'
 import type { City, Tree } from '../../types'
 
 interface Props {
@@ -13,8 +15,10 @@ interface Props {
 }
 
 export function FavouritesPanel({ cities, currentCityId }: Props) {
+  const t = useT()
   const favourites = useStore((s) => s.favourites)
   const nameMode = useStore((s) => s.nameMode)
+  const locale = useStore((s) => s.locale)
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const setPendingHighlight = useStore((s) => s.setPendingHighlight)
   const openTreeDetail = useStore((s) => s.openTreeDetail)
@@ -28,7 +32,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
     .sort((a, b) => {
       if (a.id === currentCityId) return -1
       if (b.id === currentCityId) return 1
-      return a.name.localeCompare(b.name, 'nl')
+      return a.name.localeCompare(b.name, intlTag(locale))
     })
 
   const [openCities, setOpenCities] = useState<Set<string>>(
@@ -55,7 +59,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
     <PopupShell>
       <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
-          Favorieten{' '}
+          {t('favourites.title')}{' '}
           <span className="text-muted-foreground font-normal">({totalFavs})</span>
         </p>
         <div className="flex items-center gap-2">
@@ -66,7 +70,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
       </div>
       {!collapsed && <div className="overflow-y-auto max-h-[60vh] border-t">
         {citiesWithFavs.length === 0 ? (
-          <p className="px-4 py-3 text-sm text-muted-foreground">Geen favorieten</p>
+          <p className="px-4 py-3 text-sm text-muted-foreground">{t('favourites.empty')}</p>
         ) : (
           citiesWithFavs.map((city) => {
             const trees = favourites[city.id] ?? []
@@ -129,7 +133,7 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
                           <button
                             onClick={() => openTreeDetail(tree, PopupKind.Favourites)}
                             className="shrink-0 p-1.5 text-muted-foreground hover:text-foreground"
-                            aria-label="Open boomdetails"
+                            aria-label={t('species.openDetail')}
                           >
                             <Info size={13} />
                           </button>

@@ -1,7 +1,9 @@
 import { Heart } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
+import { useT } from '../translations/useT'
 
 export function FavouritesButton() {
+  const t = useT()
   const popupView = useStore((s) => s.popupView)
   const openFavourites = useStore((s) => s.openFavourites)
   const closePopup = useStore((s) => s.closePopup)
@@ -17,7 +19,7 @@ export function FavouritesButton() {
     else openFavourites()
   }
 
-  const title = totalFavs > 0 ? `Favorieten (${totalFavs})` : 'Favorieten'
+  const title = totalFavs > 0 ? `${t('favourites.title')} (${totalFavs})` : t('favourites.title')
 
   return (
     <button

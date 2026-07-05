@@ -2,12 +2,14 @@ import { Layers } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store'
 import { LAYERS } from '../map/layers'
+import { useT } from '../translations/useT'
 
 interface Props {
   onSwitch: (url: string, attribution: string, maxZoom: number) => void
 }
 
 export function LayerButton({ onSwitch }: Props) {
+  const t = useT()
   const tileLayerId = useStore((s) => s.tileLayerId)
   const setTileLayerId = useStore((s) => s.setTileLayerId)
   const [open, setOpen] = useState(false)
@@ -32,7 +34,7 @@ export function LayerButton({ onSwitch }: Props) {
     <div ref={ref} className="absolute top-[44px] right-2 z-[1000]">
       <button
         onClick={() => setOpen((o) => !o)}
-        title="Kaartlaag"
+        title={t('map.layer')}
         className={[
           'rounded-full p-2 shadow-md transition-colors',
           open ? 'bg-gray-100 text-green-700' : 'bg-white text-gray-700 hover:bg-gray-50',

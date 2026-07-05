@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, Search, X } from 'lucide-react'
 import { useStore } from '../store'
 import { capitalizeFirst } from '../lib/utils'
+import { useT } from '../translations/useT'
+import { intlTag } from '../translations/locale'
 
 const MAX_RESULTS = 100
 
@@ -15,6 +17,8 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
   const citySpecies = useStore((s) => s.citySpecies)
   const isLoadingSpeciesFilter = useStore((s) => s.isLoadingSpeciesFilter)
   const nameMode = useStore((s) => s.nameMode)
+  const locale = useStore((s) => s.locale)
+  const t = useT()
   const [query, setQuery] = useState(initialQuery ?? '')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -32,10 +36,10 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
     matches.sort((a, b) => {
       const nameA = nameMode === 'vernacular' && a.name_vernacular ? a.name_vernacular : a.species
       const nameB = nameMode === 'vernacular' && b.name_vernacular ? b.name_vernacular : b.species
-      return nameA.localeCompare(nameB, 'nl')
+      return nameA.localeCompare(nameB, intlTag(locale))
     })
     return matches.slice(0, MAX_RESULTS)
-  }, [query, citySpecies, nameMode])
+  }, [query, citySpecies, nameMode, locale])
 
   useEffect(() => {
     setActiveIndex(0)
@@ -87,7 +91,7 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Zoek op soortnaam..."
+            placeholder={t('search.placeholder')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -98,21 +102,21 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
               onClick={() => setQuery('')}
               className="text-gray-300 hover:text-gray-500"
               tabIndex={-1}
-              aria-label="Wis zoekopdracht"
+              aria-label={t('search.clear')}
             >
               <X className="w-3 h-3" />
             </button>
           )}
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 ml-1" aria-label="Sluiten">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 ml-1" aria-label={t('search.close')}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Results */}
         {citySpecies.length === 0 ? (
-          <div className="px-4 py-3 text-sm text-gray-400">Soorten laden…</div>
+          <div className="px-4 py-3 text-sm text-gray-400">{t('search.loading')}</div>
         ) : filtered.length === 0 ? (
-          <div className="px-4 py-3 text-sm text-gray-400">Geen soorten gevonden</div>
+          <div className="px-4 py-3 text-sm text-gray-400">{t('search.noResults')}</div>
         ) : (
           <div ref={listRef} className="overflow-y-auto max-h-[min(60vh,400px)]">
             {filtered.map((item, i) => {
@@ -153,14 +157,14 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
                     )}
                   </span>
                   <span className="text-xs text-gray-400 shrink-0">
-                    {item.count.toLocaleString('nl-NL')}
+                    {item.count.toLocaleString(intlTag(locale))}
                   </span>
                 </button>
               )
             })}
             {filtered.length === MAX_RESULTS && (
               <div className="px-4 py-2 text-xs text-gray-400 text-center border-t">
-                Typ meer om te verfijnen
+                {t('search.typeMore')}
               </div>
             )}
           </div>

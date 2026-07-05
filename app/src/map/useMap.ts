@@ -214,6 +214,22 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── EFFECT: rebuild city marker tooltips when the language changes ────────
+  // (skip the first run — mount's setCityMarkers call above already used the
+  // locale active at that time)
+  const locale = useStore((s) => s.locale)
+  const isFirstLocaleRef = useRef(true)
+  useEffect(() => {
+    if (isFirstLocaleRef.current) {
+      isFirstLocaleRef.current = false
+      return
+    }
+    controllerRef.current?.setCityMarkers(
+      citiesRef.current,
+      (id) => navigateRef.current(`/${id}`, { state: { fromCityMarker: true } }),
+    )
+  }, [locale])
+
   // ── EFFECT 2: react to city changes after initial mount ───────────────────
   const isFirstCityRef = useRef(true)
   useEffect(() => {

@@ -7,6 +7,7 @@ import { resolveIssue } from '../../api/trees'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { TREE_FLAGS, SPECIES_FLAGS } from '../FlagModal'
 import { CLUSTER_DISABLE_ZOOM } from '../../config'
+import { useT } from '../../translations/useT'
 import type { City } from '../../types'
 
 const treeFlagLabel   = Object.fromEntries(TREE_FLAGS.map((f) => [f.id, f.label]))
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export function IssuesPanel({ cities, currentCityId }: Props) {
+  const t = useT()
   const treeIssues         = useStore((s) => s.treeIssues)
   const speciesIssues      = useStore((s) => s.speciesIssues)
   const removeTreeIssue    = useStore((s) => s.removeTreeIssue)
@@ -75,7 +77,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
     <PopupShell>
       <div className="flex items-center justify-between px-4 py-3">
         <p className="font-semibold text-sm">
-          Data issues{' '}
+          {t('issues.title')}{' '}
           <span className="text-muted-foreground font-normal">({total})</span>
         </p>
         <div className="flex items-center gap-2">
@@ -90,7 +92,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
           {treeIssues.length > 0 && (
             <div>
               <p className="px-4 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide bg-gray-50 border-b">
-                Bomen
+                {t('issues.trees')}
               </p>
               {treeIssues.map((issue) => {
                 const key         = `tree:${issue.city}:${issue.tree_id}`
@@ -123,19 +125,19 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                     </button>
                     {isConfirm ? (
                       <div className="flex items-center gap-1 shrink-0 p-2 mt-1">
-                        <span className="text-xs text-muted-foreground mr-0.5">Zeker?</span>
+                        <span className="text-xs text-muted-foreground mr-0.5">{t('issues.confirm')}</span>
                         <button
                           onClick={() => void handleResolveTree(issue.city, issue.tree_id)}
                           disabled={isResolving}
                           className="text-green-600 hover:text-green-700 disabled:opacity-40"
-                          aria-label="Bevestig oplossen"
+                          aria-label={t('issues.confirmResolve')}
                         >
                           <Check size={14} />
                         </button>
                         <button
                           onClick={() => setConfirmKey(null)}
                           className="text-muted-foreground hover:text-foreground"
-                          aria-label="Annuleer"
+                          aria-label={t('issues.cancel')}
                         >
                           <X size={14} />
                         </button>
@@ -145,8 +147,8 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                         onClick={() => setConfirmKey(key)}
                         disabled={isResolving}
                         className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
-                        aria-label="Markeer als opgelost"
-                        title="Markeer als opgelost"
+                        aria-label={t('issues.markResolved')}
+                        title={t('issues.markResolved')}
                       >
                         <Check size={14} />
                       </button>
@@ -161,7 +163,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
           {speciesIssues.length > 0 && (
             <div>
               <p className="px-4 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide bg-gray-50 border-b">
-                Soorten
+                {t('issues.species')}
               </p>
               {speciesIssues.map((issue) => {
                 const key         = `species:${issue.species_binomial}`
@@ -179,7 +181,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                       <button
                         onClick={() => handleSpeciesSearch(issue.species_binomial)}
                         className="text-sm italic truncate hover:underline text-left w-full"
-                        title="Zoek op soort"
+                        title={t('issues.searchSpecies')}
                       >
                         {name}{dutch}
                       </button>
@@ -192,19 +194,19 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                     </div>
                     {isConfirm ? (
                       <div className="flex items-center gap-1 shrink-0 p-2 mt-1">
-                        <span className="text-xs text-muted-foreground mr-0.5">Zeker?</span>
+                        <span className="text-xs text-muted-foreground mr-0.5">{t('issues.confirm')}</span>
                         <button
                           onClick={() => void handleResolveSpecies(issue.species_binomial)}
                           disabled={isResolving}
                           className="text-green-600 hover:text-green-700 disabled:opacity-40"
-                          aria-label="Bevestig oplossen"
+                          aria-label={t('issues.confirmResolve')}
                         >
                           <Check size={14} />
                         </button>
                         <button
                           onClick={() => setConfirmKey(null)}
                           className="text-muted-foreground hover:text-foreground"
-                          aria-label="Annuleer"
+                          aria-label={t('issues.cancel')}
                         >
                           <X size={14} />
                         </button>
@@ -214,8 +216,8 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                         onClick={() => setConfirmKey(key)}
                         disabled={isResolving}
                         className="shrink-0 p-2 mt-1 text-muted-foreground hover:text-green-600 disabled:opacity-40"
-                        aria-label="Markeer als opgelost"
-                        title="Markeer als opgelost"
+                        aria-label={t('issues.markResolved')}
+                        title={t('issues.markResolved')}
                       >
                         <Check size={14} />
                       </button>
@@ -227,7 +229,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
           )}
 
           {total === 0 && (
-            <p className="px-4 py-3 text-sm text-muted-foreground">Geen meldingen</p>
+            <p className="px-4 py-3 text-sm text-muted-foreground">{t('issues.empty')}</p>
           )}
         </div>
       )}

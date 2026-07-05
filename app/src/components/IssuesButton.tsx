@@ -1,7 +1,9 @@
 import { Flag } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
+import { useT } from '../translations/useT'
 
 export function IssuesButton() {
+  const t = useT()
   const debugMode     = useStore((s) => s.debugMode)
   const popupView     = useStore((s) => s.popupView)
   const openIssues    = useStore((s) => s.openIssues)
@@ -17,7 +19,7 @@ export function IssuesButton() {
   return (
     <button
       onClick={isActive ? closePopup : openIssues}
-      title={total > 0 ? `Data issues (${total})` : 'Data issues'}
+      title={total > 0 ? `${t('issues.title')} (${total})` : t('issues.title')}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         'bottom-[12px] left-[12px]',

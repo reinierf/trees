@@ -8,6 +8,7 @@ import { useTreePhotos } from '../../api/useTreePhotos'
 import { TreeImageModal } from '../TreeImageModal'
 import { FlagModal } from '../FlagModal'
 import { flagTree, flagSpecies } from '../../api/trees'
+import { useT } from '../../translations/useT'
 import type { Tree, TreeIssue, SpeciesIssue } from '../../types'
 
 function wikiUrl(binomial: string): string {
@@ -53,6 +54,7 @@ interface Props {
 }
 
 export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
+  const t = useT()
   const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
   const openFavourites = useStore((s) => s.openFavourites)
   const openSamePointList = useStore((s) => s.openSamePointList)
@@ -108,7 +110,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
 
     try {
       await navigator.clipboard.writeText(url)
-      showToast('Link gekopieerd')
+      showToast(t('tree.linkCopied'))
     } catch {
       showToast(url)
     }
@@ -141,8 +143,8 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
               <button
                 onClick={() => setSpeciesFlagOpen(true)}
                 className={hasSpeciesIssue ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground'}
-                aria-label="Markeer datafout voor soort"
-                title={hasSpeciesIssue ? 'Soort al gemeld — klik om te bewerken' : 'Markeer datafout voor soort'}
+                aria-label={t('tree.flagSpecies')}
+                title={hasSpeciesIssue ? t('tree.speciesFlagged') : t('tree.flagSpecies')}
               >
                 <Flag size={13} className={hasSpeciesIssue ? 'fill-amber-500' : ''} />
               </button>
@@ -163,10 +165,10 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         <>
           <div className="flex gap-2 px-4 pb-3 border-t pt-2">
             <div className="flex-1 space-y-1 min-w-0">
-              <Row label="Geplant" value={tree.year_planted} />
-              <Row label="Straat" value={tree.street != null ? capitalize(tree.street) : null} />
-              <Row label="Stamdiam." value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
-              <Row label="Kroon" value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
+              <Row label={t('tree.planted')} value={tree.year_planted} />
+              <Row label={t('tree.street')} value={tree.street != null ? capitalize(tree.street) : null} />
+              <Row label={t('tree.trunkDiameter')} value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
+              <Row label={t('tree.crown')} value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
             </div>
             {binomial && (
               <div className="w-11 h-11 shrink-0 self-start flex items-center justify-center">
@@ -180,7 +182,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
                   <button
                     onClick={openPhotos}
                     className="w-full h-full rounded-sm overflow-hidden block"
-                    aria-label="Bekijk foto's"
+                    aria-label={t('tree.viewPhotos')}
                   >
                     <img src={thumbnail.mediumUrl} alt="" className="w-full h-full object-cover" />
                   </button>
@@ -217,8 +219,8 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
                 <button
                   onClick={() => setTreeFlagOpen(true)}
                   className={hasTreeIssue ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground'}
-                  aria-label="Markeer datafout voor boom"
-                  title={hasTreeIssue ? 'Boom al gemeld — klik om te bewerken' : 'Markeer datafout voor boom'}
+                  aria-label={t('tree.flagTree')}
+                  title={hasTreeIssue ? t('tree.treeFlagged') : t('tree.flagTree')}
                 >
                   <Flag size={15} className={hasTreeIssue ? 'fill-amber-500' : ''} />
                 </button>
@@ -228,21 +230,21 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
               <button
                 onClick={() => toggleFavourite(cityId, tree)}
                 className={`${isFav ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
-                aria-label={isFav ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
+                aria-label={isFav ? t('tree.removeFavourite') : t('tree.addFavourite')}
               >
                 <Heart size={15} className={isFav ? 'fill-red-400' : ''} />
               </button>
               <button
                 onClick={handleShare}
                 className="text-muted-foreground hover:text-foreground"
-                aria-label="Deel link naar boom"
+                aria-label={t('tree.shareLink')}
               >
                 <Share2 size={15} />
               </button>
               <button
                 onClick={() => setPendingCenter([tree.lat, tree.lon])}
                 className="text-muted-foreground hover:text-foreground"
-                aria-label="Center map on tree"
+                aria-label={t('tree.centerOnTree')}
               >
                 <Crosshair size={15} />
               </button>

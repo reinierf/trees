@@ -1,7 +1,9 @@
 import { Trees } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
+import { useT } from '../translations/useT'
 
 export function SpeciesButton() {
+  const t = useT()
   const popupView = useStore((s) => s.popupView)
   const openSpeciesList = useStore((s) => s.openSpeciesList)
   const closePopup = useStore((s) => s.closePopup)
@@ -21,7 +23,7 @@ export function SpeciesButton() {
     <button
       onClick={toggle}
       disabled={tooZoomedOut}
-      title="Species in view"
+      title={t('species.title')}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         'top-[84px] left-[12px]',

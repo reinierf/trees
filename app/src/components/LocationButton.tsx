@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { LocateFixed, Loader2 } from 'lucide-react'
+import { useT } from '../translations/useT'
 
 interface Props {
   onLocate: (lat: number, lon: number, accuracy: number) => void
@@ -8,6 +9,7 @@ interface Props {
 type State = 'idle' | 'loading' | { error: string }
 
 export function LocationButton({ onLocate }: Props) {
+  const t = useT()
   const [state, setState] = useState<State>('idle')
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -25,9 +27,9 @@ export function LocationButton({ onLocate }: Props) {
       },
       (err) => {
         const msg =
-          err.code === err.PERMISSION_DENIED ? 'Location access denied'
-          : err.code === err.POSITION_UNAVAILABLE ? 'Location unavailable'
-          : 'Location timed out'
+          err.code === err.PERMISSION_DENIED ? t('location.denied')
+          : err.code === err.POSITION_UNAVAILABLE ? t('location.unavailable')
+          : t('location.timeout')
         setState({ error: msg })
         timerRef.current = setTimeout(() => setState('idle'), 3000)
       },
@@ -42,7 +44,7 @@ export function LocationButton({ onLocate }: Props) {
     <button
       onClick={handleClick}
       disabled={isLoading}
-      title="Go to my location"
+      title={t('location.goTo')}
       className={[
         'absolute top-[80px] right-2 z-[1000] flex items-center gap-1.5',
         'bg-white shadow-md text-gray-700 hover:bg-gray-50 transition-colors',

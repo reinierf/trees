@@ -3,11 +3,15 @@ import type { Tree, SpeciesItem, TreeIssue, SpeciesIssue, VernacularNames } from
 import { loadPreference, savePreference } from './lib/preferencesStorage'
 import { loadFavourites, saveFavourites, type Favourites } from './lib/favouritesStorage'
 import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
+import { type Locale } from './translations/locale'
+import { resolveVernacularNames } from './lib/vernacular'
 
 export type { TileLayerId }
 
 const NAME_MODE_KEY = 'species-name-mode'
 export type NameMode = 'scientific' | 'vernacular'
+
+const LOCALE_KEY = 'app-locale'
 
 export const PopupKind = {
   SpeciesList: 'species-list',
@@ -43,6 +47,7 @@ interface AppStore {
   speciesFilter: string | null
   isLoadingSpeciesFilter: boolean
   nameMode: NameMode
+  locale: Locale
   tileLayerId: TileLayerId
   vernacularNames: VernacularNames
   favourites: Favourites
@@ -72,6 +77,7 @@ interface AppStore {
   clearSpeciesFilter: () => void
   setIsLoadingSpeciesFilter: (v: boolean) => void
   setNameMode: (mode: NameMode) => void
+  setLocale: (locale: Locale) => void
   setVernacularNames: (names: VernacularNames) => void
   setTileLayerId: (id: TileLayerId) => void
   toggleFavourite: (cityId: string, tree: Tree) => void
@@ -105,6 +111,7 @@ export const useStore = create<AppStore>((set) => ({
   speciesFilter: null,
   isLoadingSpeciesFilter: false,
   nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
+  locale: loadPreference<Locale>(LOCALE_KEY, 'nl'),
   vernacularNames: {},
   tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
   favourites: loadFavourites(),
@@ -142,6 +149,32 @@ export const useStore = create<AppStore>((set) => ({
   clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
   setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
   setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
+  setLocale: (locale) => {
+    savePreference(LOCALE_KEY, locale)
+    set((state) => {
+      const remap = <T extends { species_binomial: string | null; name_vernacular: string | null }>(items: T[]) =>
+        resolveVernacularNames(items, state.vernacularNames, locale)
+
+      const favourites = Object.fromEntries(
+        Object.entries(state.favourites).map(([cityId, trees]) => [cityId, remap(trees)]),
+      )
+
+      let popupView = state.popupView
+      if (popupView?.kind === PopupKind.TreeDetail) {
+        popupView = { ...popupView, tree: remap([popupView.tree])[0] }
+      } else if (popupView?.kind === PopupKind.SamePointList) {
+        popupView = { ...popupView, trees: remap(popupView.trees) }
+      }
+
+      return {
+        locale,
+        visibleTrees: remap(state.visibleTrees),
+        citySpecies: remap(state.citySpecies),
+        favourites,
+        popupView,
+      }
+    })
+  },
   setVernacularNames: (names) => set({ vernacularNames: names }),
   setTileLayerId: (id) => { savePreference(TILE_LAYER_KEY, id); set({ tileLayerId: id }) },
   setDebugMode: (v) => set({ debugMode: v }),

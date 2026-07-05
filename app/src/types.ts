@@ -58,7 +58,7 @@ export type VernacularNames = Record<string, { nl?: string; en?: string; de?: st
 export interface CityMeta {
   source?: string
   lastFetched?: string
-  description?: string
+  description?: { nl?: string; en?: string; de?: string; fr?: string }
 }
 
 export interface City {

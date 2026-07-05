@@ -1,4 +1,5 @@
 import { Search } from 'lucide-react'
+import { useT } from '../translations/useT'
 
 interface Props {
   onClick: () => void
@@ -6,10 +7,11 @@ interface Props {
 }
 
 export function SearchButton({ onClick, active }: Props) {
+  const t = useT()
   return (
     <button
       onClick={onClick}
-      title="Zoek op soort"
+      title={t('issues.searchSpecies')}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         'top-[120px] left-[12px]',

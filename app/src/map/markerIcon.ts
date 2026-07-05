@@ -1,4 +1,7 @@
 import L from 'leaflet'
+import { useStore } from '../store'
+import { TRANSLATIONS } from '../translations/strings'
+import { intlTag } from '../translations/locale'
 import type { City } from '../types'
 
 function speciesCode(binomial: string): string {
@@ -66,6 +69,8 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
 }
 
 export function createCityCircleMarker(city: City): L.CircleMarker {
+  const locale = useStore.getState().locale
+  const t = TRANSLATIONS[locale]
   const isInstitution = city.type === 'institution'
   const fillColor = isInstitution
     ? (city.has_data ? '#f59e0b' : '#cbd5e1')
@@ -78,8 +83,8 @@ export function createCityCircleMarker(city: City): L.CircleMarker {
     weight: 2,
   })
   const tooltip = city.has_data
-    ? `<strong>${city.name}</strong><br>${city.tree_count.toLocaleString('nl-NL')} bomen`
-    : `<strong>${city.name}</strong><br><em>Boomdata binnenkort beschikbaar</em>`
+    ? `<strong>${city.name}</strong><br>${city.tree_count.toLocaleString(intlTag(locale))} ${t['marker.trees']}`
+    : `<strong>${city.name}</strong><br><em>${t['marker.dataComingSoon']}</em>`
   m.bindTooltip(tooltip, { direction: 'top', offset: [0, -12] })
   return m
 }

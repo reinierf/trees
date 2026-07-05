@@ -31,7 +31,7 @@ export const unknownTerms = [
   'WW',
   'VRUCHTBOOM',
   'STANDAARDBOOM',
-  /\bDIVERS/i,        // various (administrative)
+  /\b(DIVERS|DIVERSE|DIVERSEN)\b/i, // various (administrative) — word-bounded so it doesn't also catch "Diversifolia" or "biodiversiteit"
   /^SOORTNAAM /i,     // "species name: …" field label
   /^BOOM/i,           // "BOOM…" catch-all for field noise
   /\bAANPLANT/i,      // planting note

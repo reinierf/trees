@@ -302,5 +302,12 @@
     "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "viewer.bomenwacht.nl" }
+  },
+  {
+    "id": "bergen-monumentale-bomen",
+    "name": "Bergen (NH)",
+    "center": [52.6689, 4.6937],
+    "type": "city",
+    "meta": { "source": "viewer.bomenwacht.nl" }
   }
 ]

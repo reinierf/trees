@@ -69,8 +69,10 @@ npm run build-vernacular-nl
 ### Species quality tools
 
 ```sh
-# Check for stale binomials and unresolvable species; suggest overrides.js entries
-npm run validate-species
+# Compare current pipeline output against what's stored in each city DB
+# (only reports species whose stored binomial would now differ; won't
+# catch species that fail to resolve at both fetch time and now — see below)
+npm run validate-pipeline
 
 # Re-apply overrides.js corrections to city DBs in-place (no re-import needed)
 npm run patch-binomials
@@ -79,6 +81,17 @@ npm run patch-binomials -- --city amsterdam
 ```
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
+
+**Known gap:** `tools/validate-species.js` — which used to flag species that
+fail to resolve *at all* for a freshly-fetched city (so a human could add an
+`overrides.js`/`registry.json` entry before the data goes live) — was
+removed in the registry-based pipeline rewrite without a replacement.
+`validate-pipeline` above and `patch-binomials --dry` both only surface
+species whose resolution *changes* relative to what's already stored, which
+is empty right after a fresh fetch (the stored value already reflects the
+current pipeline). `add-city.js` still calls the deleted script by name and
+will error at that step. Checking a newly-fetched city's unresolved species
+today means querying its DB directly for `species_binomial IS NULL`.
 
 ### Non-WFS sources: Von Gimborn Arboretum collection database
 
@@ -106,9 +119,10 @@ Shared behaviour across all institutions on this database:
   specialist collections likely to include species/genera the
   municipal-derived registry has never seen.
 - species_binomial/species_cultivar run through the standard `processSpecies()`
-  pipeline, same as every other city fetcher — run `npm run validate-species`
-  afterwards, since these collections surface more unresolved/fuzzy matches
-  than municipal street-tree data does.
+  pipeline, same as every other city fetcher — these collections surface more
+  unresolved/fuzzy matches than municipal street-tree data does (see the
+  "Known gap" note under "Species quality tools" for how to check for these
+  now that `validate-species.js` is gone).
 - `name_vernacular` keeps the source's own name where present; only missing
   ones are filled in from `registry.json` — existing source data always wins.
 - Requires Node ≥ 22 with `--use-system-ca` if outbound TLS to this host fails
@@ -264,6 +278,46 @@ node index.js --city de-nieuwe-ooster --all --format json
 node index.js --city de-nieuwe-ooster    # sample 100, dry-run
 ```
 
+#### Bergen (NH) — bijzondere en monumentale bomen
+
+**Status: fetched (4,114 trees) and registered in `api/cities.json`.** Unlike
+De Nieuwe Ooster, this org populates the platform's named fields directly
+(`soort`, `soort_nl`, `straat`, `buurt`, `diameterklasse`) rather than the
+generic `custom_*` slots. `diameterklasse` is a class range (e.g. `"50 -
+100"`), not a precise measurement — parsed to a metre midpoint the same way
+as Deventer's `i_stamdiameterklasse` (see `parseDiameterClass` in both
+files). `custom_one` carries the special/monumental status ("Bijzonder" /
+"Monumentaal" / "Monumentaal (landelijk)") that justified each tree's
+inclusion in this curated list in the first place — this is a subset of
+Bergen's trees (those on the municipal special/monumental tree register),
+not the full municipal tree stock, hence the distinct
+`bergen-monumentale-bomen` id rather than plain `bergen`. Registered as
+`type: "city"` (spread across the whole municipality, not a single dense
+site) rather than `"institution"`.
+
+Found via Bomenwacht's own project showcase page rather than a link supplied
+directly by an end user of this project — same "organisation publishes a
+public viewer link" pattern as De Nieuwe Ooster, so treated with the same
+posture. Other share codes turned up by web search with no identifiable
+public source page were deliberately left unresolved: the platform's
+function key is shared across every organisation on it, so fetching an
+org's data on the strength of a bare code, with no visible "this org meant
+to share this" trail, isn't something this project does.
+
+While investigating this source, found and fixed an unrelated pre-existing
+bug in `overrides.js`: the `unknownTerms` pattern `/\bDIVERS/i` (meant to
+catch the Dutch administrative placeholder "divers"/"diverse"/"diversen")
+also matched inside real species names — "Fraxinus excelsior 'Diversifolia'"
+and "Tsuga diversifolia" — wrongly nulling their `species_binomial` in four
+already-registered cities (Rotterdam, Bomenmuseum Gimborn, Pinetum de
+Dennenhorst, Trompenburg) as well as in this new Bergen data. Tightened to
+`/\b(DIVERS|DIVERSE|DIVERSEN)\b/i` and re-ran `npm run patch-binomials`
+across all cities to apply the fix.
+
+```sh
+node index.js --city bergen-monumentale-bomen --all
+```
+
 ### Per-city map zoom / clustering overrides
 
 `api/cities.json` entries may carry optional `mapZoom` and `clusterDisableZoom`
@@ -300,6 +354,11 @@ fetch full dataset(s) for whichever cities need it → `validate-species` for
 the given city/cities → (pause here if it suggests `overrides.js` entries —
 paste them in manually, then press Enter) → patch binomials → rebuild
 vernacular names → `copy-data`.
+
+**Currently broken:** the `validate-species` step calls a script that no
+longer exists (see "Known gap" under "Species quality tools") — running
+`add-city.js` will error there. Skip past it manually or check the DB
+directly for `species_binomial IS NULL` before that step.
 
 Under `--yes`, the existing-data check defaults to **not** refetching — the
 point of `--yes` there is to skip needless network calls, not to force a

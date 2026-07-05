@@ -337,6 +337,12 @@
       "fr": "Érable trident"
     }
   },
+  "ACER CAMPBELLII": {
+    "inat_id": 544388,
+    "vernacular": {
+      "en": "Campbell's Maple"
+    }
+  },
   "ACER CAMPESTRE": {
     "inat_id": 56193,
     "vernacular": {
@@ -5103,6 +5109,10 @@
     "inat_id": 867197,
     "vernacular": {}
   },
+  "MELLIODENDRON XYLOCARPUM": {
+    "inat_id": 706428,
+    "vernacular": {}
+  },
   "MESPILUS GERMANICA": {
     "inat_id": null,
     "wfo_id": "wfo-0001010802"
@@ -5892,6 +5902,14 @@
       "en": "Mountain Pine",
       "de": "Spirke",
       "fr": "Pin à crochets"
+    }
+  },
+  "PINUS VIRGINIANA": {
+    "inat_id": 49395,
+    "vernacular": {
+      "nl": "Virginia-den",
+      "en": "Virginia pine",
+      "fr": "pin de Virginie"
     }
   },
   "PINUS WALLICHIANA": {

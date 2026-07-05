@@ -205,7 +205,66 @@ node cities/pinetum-dennenhorst.js -d
 
 Institution-specific: `arboretumIndex: 1`.
 
-#### Per-city map zoom / clustering overrides
+### Non-WFS sources: GRIB viewer platform (bomenwacht.nl)
+
+`viewer.bomenwacht.nl` is a white-labelled instance of a generic tree/asset
+inventory product ("GRIB", `*.grib.app`) — an Angular SPA backed by Azure
+Functions, unrelated to the Von Gimborn collection database above. No public
+API; the fetcher replays the two calls the viewer's own JS bundle makes,
+using the same client-side function key every viewer build embeds
+(`environment.appFunctionKey` in `main-*.js`).
+
+Protocol, resolved once per site and hardcoded rather than re-resolved on
+every run (the mapping from share code to internal ID is stable):
+
+1. `GET start/{shareCode}?code={functionKey}` — resolves the public share
+   code from the viewer URL (e.g. `?code=DNO1oqxV6qBv`) to a numeric
+   `keten_id` plus the org's field-label config.
+2. `GET start/keten/{keten_id}?code={functionKey}` — the full tree array in
+   one uncapped response, no pagination.
+
+Unlike the Gimborn institutions (a genuine postback/session/pagination
+protocol that doesn't fit `index.js`'s WFS-shaped loop), this fits the
+`singleFetch` path perfectly — one URL, one uncapped JSON response, same
+shape as `cities/apeldoorn.js`'s ZIP fetch. It's registered normally in
+`config.js`. The one wrinkle: this URL already carries its own
+`?code=...`, and `index.js`'s `singleFetch` path always used to append a
+bare `?` for non-paginated fetches — which would land inside the auth key's
+value and 401 (confirmed live). Fixed in `lib/http.js`'s `fetchRaw()`:
+it now joins with `&` when the URL already contains `?`, and skips the join
+entirely when there are no extra params — a small, backward-compatible
+change (no other city's `wfsUrl` contains `?`, so nothing else changes
+behaviour).
+
+Coordinates come back as EPSG:3857 (Web Mercator) — a plain spherical
+inverse projection is exact here (no proj4/datum grid needed, unlike RD New).
+
+#### Arboretum De Nieuwe Ooster (Amsterdam)
+
+**Status: fetched (2,972 trees) and registered in `api/cities.json`.** A
+cemetery park with an arboretum collection — trees are positioned relative
+to grave-plot sections rather than street addresses, so `custom_four`
+("Grafvak") is mapped to `street` as the closest equivalent, same role it
+plays for the Gimborn institutions' path/section numbers. `custom_five`
+("Herkomst" / origin) has no equivalent column in this project's tree schema
+and is dropped. 17 records with administrative/placeholder species values
+were dropped by the standard `processSpecies()` pipeline; ~45 more have
+`species_binomial: null` because the source itself marks them `"Onbekend"`
+or with a trailing `?` (uncertain identification — both already handled by
+existing `overrides.js` rules, not new ones added for this source).
+
+Being a normal `config.js` entry (unlike the standalone Gimborn fetchers),
+this one is picked up automatically by `add-city.js`, `patch-binomials.js`,
+and `tools/vernacular/base/fetch.js` — no separate CLI or manual vernacular
+step needed:
+
+```sh
+node index.js --city de-nieuwe-ooster --all
+node index.js --city de-nieuwe-ooster --all --format json
+node index.js --city de-nieuwe-ooster    # sample 100, dry-run
+```
+
+### Per-city map zoom / clustering overrides
 
 `api/cities.json` entries may carry optional `mapZoom` and `clusterDisableZoom`
 fields (see `app/src/types.ts`'s `City` type), overriding `app/src/config.ts`'s
@@ -213,10 +272,11 @@ fields (see `app/src/types.ts`'s `City` type), overriding `app/src/config.ts`'s
 how far to zoom in when flying to the city's center, `clusterDisableZoom` for
 the zoom at/above which the map stops clustering and renders individual
 markers. Only set where they deviate from the default; most (municipal)
-cities don't need either. All four institutions on this collection database
-set both, since each is a small, dense site where the defaults would either
-leave it looking like a dot when flown to, or dump many individual DOM
-markers at once past the default clustering cutoff.
+cities don't need either. All five institutions above (the four on the
+Gimborn collection database, plus De Nieuwe Ooster) set both, since each is a
+small, dense site where the defaults would either leave it looking like a
+dot when flown to, or dump many individual DOM markers at once past the
+default clustering cutoff.
 
 ### End-to-end pipeline for a new (or refreshed) city
 

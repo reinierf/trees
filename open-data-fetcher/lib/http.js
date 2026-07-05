@@ -10,7 +10,13 @@ export function fetchRaw(url, params, { rejectUnauthorized = true, encoding = 'u
         // Some ArcGIS/IIS servers silently drop requests without a User-Agent header.
         const options = { headers: { 'User-Agent': 'bomen-fetcher/1.0' } };
         if (agent) options.agent = agent;
-        const req = https.get(`${url}?${qs}`, options, res => {
+        // Some sources' wfsUrl already carries its own query string (e.g. an API
+        // key as `?code=...`) — append with '&' instead of a second '?', which
+        // would land inside the previous param's value rather than starting a
+        // new one.
+        const separator = url.includes('?') ? '&' : '?';
+        const fullUrl = qs ? `${url}${separator}${qs}` : url;
+        const req = https.get(fullUrl, options, res => {
             if (res.statusCode !== 200) {
                 reject(new Error(`HTTP ${res.statusCode} ${res.statusMessage}`));
                 res.resume();

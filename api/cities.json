@@ -293,5 +293,14 @@
     "mapZoom": 17,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
+  },
+  {
+    "id": "de-nieuwe-ooster",
+    "name": "Arboretum De Nieuwe Ooster",
+    "center": [52.3438, 4.9395],
+    "type": "institution",
+    "mapZoom": 16,
+    "clusterDisableZoom": 19,
+    "meta": { "source": "viewer.bomenwacht.nl" }
   }
 ]

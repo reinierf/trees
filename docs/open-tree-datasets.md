@@ -847,3 +847,57 @@ Other fields present but not mapped: `beheergroep`, `beheerobjectomschrijving`, 
 - **Fetcher:** `cities/gorinchem.js` ✅ implemented
 - **Registered:** `config.js` ✅
 - **API entry:** `api/cities.json` ✅ (`center: [51.8350, 4.9756]`)
+
+---
+
+## Arboreta and institutions (non-municipal)
+
+Unlike the municipal datasets above, these are private collections or a
+cemetery/arboretum site, not published open-data feeds — in both cases
+below, an undocumented API reverse-engineered from a public viewer's own
+client calls. Full protocol/reverse-engineering detail lives in
+`open-data-fetcher/README.md`'s "Non-WFS sources" sections; this is a
+status summary.
+
+General lead not yet pursued: https://www.botanischetuinen.nl/ — an index
+of Dutch botanical gardens, no specific dataset identified yet.
+
+### Von Gimborn Arboretum collection database
+
+Four institutions share one collection database at
+`collectie.gimbornarboretum.nl` — a legacy ASP.NET WebForms + Telerik app
+with no public API, driven entirely by postbacks. Shared client:
+`open-data-fetcher/lib/collectie-gimborn.js`.
+
+| Institution | Status | Trees | Notes |
+|---|---|---|---|
+| Nationaal Bomenmuseum Gimborn (Doorn) | ✅ Live in `api/cities.json` | 3,169 | Coordinates individually granular |
+| Arboretum Trompenburg (Rotterdam) | ✅ Live in `api/cities.json` | 3,281 | Specimens positioned per planting-section (shared exact coordinates) — needed the app's coordinate-collision marker grouping before this was usable; initially shelved for that reason |
+| Pinetum Ter Borgh (Anloo) | ✅ Live in `api/cities.json` | 225 | Smallest/densest of the four |
+| Pinetum de Dennenhorst (Lunteren) | ✅ Live in `api/cities.json` | 349 | |
+
+Fetchers: `cities/trompenburg.js`, `cities/bomenmuseum-gimborn.js`,
+`cities/pinetum-ter-borgh.js`, `cities/pinetum-dennenhorst.js` — all invoked
+directly (`node cities/<id>.js`), not registered in `config.js`: the
+postback/session/pagination model doesn't fit `index.js`'s WFS-oriented
+engine.
+
+### GRIB viewer platform (bomenwacht.nl)
+
+A generic tree/asset-inventory SaaS product (`*.grib.app`) behind various
+white-labelled viewers; De Nieuwe Ooster's is at
+`viewer.bomenwacht.nl/?code=DNO1oqxV6qBv`. No public API — the fetcher
+replays the two calls the Angular viewer's own JS bundle makes, using the
+same client-side function key every viewer build embeds.
+
+| Institution | Status | Trees | Notes |
+|---|---|---|---|
+| Arboretum De Nieuwe Ooster (Amsterdam) | ✅ Live in `api/cities.json` | 2,972 | Cemetery park with an arboretum collection; trees positioned by grave-plot section, not street address |
+
+- **Fetcher:** `cities/de-nieuwe-ooster.js` ✅ implemented
+- **Registered:** `config.js` ✅ — unlike the Gimborn institutions, this
+  fits `index.js`'s `singleFetch` path directly (one URL, one uncapped JSON
+  response), which required a small backward-compatible fix to
+  `lib/http.js`'s `fetchRaw()` URL-joining logic (the URL already carries
+  its own `?code=...` auth param)
+- **API entry:** `api/cities.json` ✅ (`center: [52.3438, 4.9395]`)

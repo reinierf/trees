@@ -550,6 +550,10 @@
       "fr": "Érable palmé"
     }
   },
+  "ACER PALMATUM’HELENA’": {
+    "inat_id": null,
+    "wfo_id": "wfo-4000000188"
+  },
   "ACER PECTINATUM": {
     "inat_id": 1062328,
     "vernacular": {}
@@ -914,6 +918,9 @@
       "en": "Planeleaf Alangium"
     }
   },
+  "ALBIZIA": {
+    "wfo_id": "wfo-4000001104"
+  },
   "ALBIZIA JULIBRISSIN": {
     "inat_id": 47443,
     "vernacular": {
@@ -1277,6 +1284,16 @@
   "BERBERIS BEALEI": {
     "inat_id": 277657
   },
+  "BERBERIS DARWINII": {
+    "inat_id": 75751,
+    "wfo_id": "wfo-0000563041",
+    "vernacular": {
+      "en": "Darwin's Barberry",
+      "nl": "Darwins berberis",
+      "de": "Darwins Berberitze",
+      "fr": "Épine-vinette de Darwin"
+    }
+  },
   "BERBERIS JULIANAE": {
     "inat_id": 437555,
     "vernacular": {
@@ -1490,6 +1507,10 @@
       "fr": "Buis commun"
     }
   },
+  "CALICARPA BODINIERI": {
+    "inat_id": null,
+    "wfo_id": null
+  },
   "CALLICARPA JAPONICA": {
     "inat_id": 371978,
     "vernacular": {
@@ -1521,6 +1542,17 @@
     "aliases": [
       "CALOCEDRUS DECURENS"
     ]
+  },
+  "CALYCANTHUS × RAULSTONII": {
+    "inat_id": 1158752,
+    "wfo_id": "wfo-0001329656",
+    "vernacular": {
+      "en": "Raulston's allspice"
+    }
+  },
+  "CAMAERCYPARIS OBTUSA": {
+    "inat_id": null,
+    "wfo_id": null
   },
   "CAMELLIA JAPONICA": {
     "inat_id": 83056,
@@ -1677,6 +1709,16 @@
     "aliases": [
       "CARYA ALBA"
     ]
+  },
+  "CARYOPTERIS × CLANDONENSIS": {
+    "inat_id": 940371,
+    "wfo_id": "wfo-0000808858",
+    "vernacular": {
+      "de": "Clandon-Bartblume",
+      "en": "Blue Mist Spirea",
+      "nl": "Blauwe spirea",
+      "fr": "Barbe-bleue des jardins"
+    }
   },
   "CARYOTA MITIS": {
     "inat_id": 160169,
@@ -1952,6 +1994,13 @@
       "fr": "Gainier de Chine"
     }
   },
+  "CERCIS GLABRA": {
+    "inat_id": 1148554,
+    "wfo_id": "wfo-0000196980",
+    "vernacular": {
+      "en": "smooth redbud"
+    }
+  },
   "CERCIS RACEMOSA": {
     "inat_id": 1466518,
     "vernacular": {}
@@ -2092,8 +2141,18 @@
       "fr": "Oranger du Mexique"
     }
   },
+  "CISTUS × LEDON": {
+    "inat_id": null,
+    "wfo_id": "wfo-0000607427"
+  },
   "CITRUS TRIFOLIATA": {
-    "inat_id": 200071
+    "inat_id": 200071,
+    "vernacular": {
+      "en": "trifoliate orange",
+      "fr": "Citronnier épineux",
+      "de": "Dreiblättrige Bitterorange",
+      "nl": "Wilde citroen"
+    }
   },
   "CLADRASTIS": {
     "inat_id": 117431,
@@ -2199,6 +2258,15 @@
       "fr": "quatre-temps"
     }
   },
+  "CORNUS CAPITATA": {
+    "inat_id": 337814,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "Strawberry dogwood",
+      "fr": "Cornouiller de l'Himalaya",
+      "nl": "Himalaya-kornoelje"
+    }
+  },
   "CORNUS CONTROVERSA": {
     "inat_id": 452130,
     "vernacular": {
@@ -2289,6 +2357,14 @@
       "en": "Walter's dogwood"
     }
   },
+  "CORNUS ‘EDDIE": {
+    "inat_id": null,
+    "wfo_id": "wfo-4000009342"
+  },
+  "CORNUS ‘STELLAR": {
+    "inat_id": null,
+    "wfo_id": "wfo-4000009342"
+  },
   "CORYLOPSIS PAUCIFLORA": {
     "inat_id": 190912,
     "vernacular": {
@@ -2339,6 +2415,11 @@
       "en": "beaked hazelnut",
       "fr": "Noisetier à long bec"
     }
+  },
+  "CORYLUS FEROX": {
+    "inat_id": 542542,
+    "wfo_id": "wfo-0000925310",
+    "vernacular": {}
   },
   "CORYLUS MAXIMA": {
     "inat_id": 122974,
@@ -2716,6 +2797,18 @@
     "wfo_id": "wfo-4000010072",
     "genus_checked": true
   },
+  "CUPRESSOCYPARIS LEYLANDII": {
+    "inat_id": 1515671,
+    "wfo_id": "wfo-0000630565",
+    "vernacular": {
+      "en": "Leyland cypress",
+      "nl": "Leylandcypres",
+      "fr": "Cyprès de Leyland"
+    }
+  },
+  "CUPRESSOCYPARIS × LEYLANDII": {
+    "wfo_id": "wfo-0000630565"
+  },
   "CUPRESSUS": {
     "inat_id": 49292,
     "vernacular": {
@@ -2771,6 +2864,15 @@
       "fr": "cyprès commun"
     }
   },
+  "CUPRESSUS × LEYLANDII": {
+    "inat_id": 1515671,
+    "wfo_id": "wfo-0000630715",
+    "vernacular": {
+      "en": "Leyland cypress",
+      "nl": "Leylandcypres",
+      "fr": "Cyprès de Leyland"
+    }
+  },
   "CYCLOCARYA PALIURUS": {
     "inat_id": 556132,
     "vernacular": {
@@ -2813,6 +2915,15 @@
     "vernacular": {
       "nl": "Paarse Deutzia"
     }
+  },
+  "DEUTZIA SCHNEIDERIANA": {
+    "inat_id": 932606,
+    "wfo_id": "wfo-0000642682",
+    "vernacular": {}
+  },
+  "DEUTZIA × HYBRIDA": {
+    "inat_id": null,
+    "wfo_id": "wfo-1000052302"
   },
   "DIERVILLA SPLENDENS": {
     "inat_id": null,
@@ -2945,6 +3056,15 @@
       "en": "campanulate enkianthus"
     }
   },
+  "ERICA ARBOREA": {
+    "inat_id": 82688,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "Tree heath",
+      "fr": "Bruyère en arbre",
+      "de": "Baumheide"
+    }
+  },
   "ERIOBOTRYA JAPONICA": {
     "inat_id": 76949,
     "vernacular": {
@@ -3049,6 +3169,13 @@
     "vernacular": {
       "nl": "Aziatische kardinaalsmuts",
       "en": "Hamilton's spindle"
+    }
+  },
+  "EUONYMUS OXYPHYLLUS": {
+    "inat_id": 447695,
+    "wfo_id": "wfo-0000681974",
+    "vernacular": {
+      "en": "Korean spindle tree"
     }
   },
   "EUONYMUS SACHALINENSIS": {
@@ -3350,6 +3477,14 @@
     "inat_id": 340173,
     "vernacular": {
       "en": "African mangosteen"
+    }
+  },
+  "GARRYA ELLIPTICA": {
+    "inat_id": 53399,
+    "wfo_id": "wfo-0000428258",
+    "vernacular": {
+      "en": "Coast silk tassel",
+      "fr": "Garrya à feuilles elliptiques"
     }
   },
   "GENISTA LYDIA": {
@@ -3714,6 +3849,13 @@
     "inat_id": 1394044,
     "vernacular": {
       "en": "Blue Holly"
+    }
+  },
+  "INDIGOFERA KIRILOWII": {
+    "inat_id": 164058,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "Kirilow's Indigo"
     }
   },
   "ITEA VIRGINICA": {
@@ -4292,6 +4434,14 @@
   },
   "LOPHOCAMPA CARYAE": {
     "inat_id": 82225
+  },
+  "LUMA APICULATA": {
+    "inat_id": 77844,
+    "wfo_id": "wfo-0000231064",
+    "vernacular": {
+      "en": "arrayan",
+      "fr": "Myrte luma"
+    }
   },
   "LYSSOMANES VIRIDIS": {
     "inat_id": 68315
@@ -5035,6 +5185,9 @@
       "fr": "bambou sacré"
     }
   },
+  "NEILLIA INCISA": {
+    "inat_id": 1367313
+  },
   "NERIUM OLEANDER": {
     "inat_id": 47563
   },
@@ -5292,6 +5445,9 @@
       "de": "Echte Dattelpalme",
       "fr": "Dattier"
     }
+  },
+  "PHOTINIA BEAUVERDIANA": {
+    "wfo_id": "wfo-0000990455"
   },
   "PHOTINIA DAVIDIANA": {
     "inat_id": 166736,
@@ -5753,6 +5909,24 @@
     "aliases": [
       "PINUS XSCHWERINII"
     ]
+  },
+  "PITTOSPORUM TENUIFOLIUM": {
+    "inat_id": 78591,
+    "wfo_id": "wfo-0001094611",
+    "vernacular": {
+      "en": "Kōhūhū",
+      "de": "Schmalblättriger Klebsame",
+      "fr": "Pittospore de Nouvelle-Zélande"
+    }
+  },
+  "PITTOSPORUM TOBIRA": {
+    "inat_id": 78592,
+    "wfo_id": "wfo-0000487958",
+    "vernacular": {
+      "en": "Japanese cheesewood",
+      "fr": "Pittospore du japon",
+      "de": "Chinesischer Klebsame"
+    }
   },
   "PLANERA AQUATICA": {
     "inat_id": 122113,
@@ -6656,6 +6830,10 @@
       "PRUNUS YEDOENSIS"
     ]
   },
+  "PRUNUS ‘COLLINGWOOD": {
+    "inat_id": null,
+    "wfo_id": "wfo-4000031284"
+  },
   "PSEUDOCYDONIA SINENSIS": {
     "inat_id": 1262153,
     "vernacular": {
@@ -6735,6 +6913,13 @@
     "aliases": [
       "PTEROCARYA FRAXINIFO"
     ]
+  },
+  "PTEROCARYA MACROPTERA": {
+    "inat_id": 1118223,
+    "wfo_id": "wfo-0001067521",
+    "vernacular": {
+      "en": "Large-winged Wingnut"
+    }
   },
   "PTEROCARYA RHOIFOLIA": {
     "inat_id": 135417,
@@ -7493,6 +7678,16 @@
     "inat_id": 506374,
     "vernacular": {}
   },
+  "RHODODENDRON PONTICUM": {
+    "inat_id": 60364,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "Pontic Rhododendron",
+      "fr": "Rhododendron des parcs",
+      "nl": "Pontische Rododendron",
+      "de": "Pontischer Rhododendron"
+    }
+  },
   "RHUS": {
     "inat_id": 54765,
     "vernacular": {
@@ -7644,6 +7839,9 @@
     "aliases": [
       "ROSA PIMPINELLIFOLIA"
     ]
+  },
+  "ROSA ‘ROSE": {
+    "wfo_id": "wfo-4000033476"
   },
   "RUBUS PHOENICOLASIUS": {
     "inat_id": 84227,
@@ -7813,6 +8011,16 @@
       "fr": "saule joli"
     }
   },
+  "SALIX PURPUREA": {
+    "inat_id": 54849,
+    "wfo_id": "wfo-0000930408",
+    "vernacular": {
+      "fr": "Saule pourpre",
+      "en": "Purple Willow",
+      "de": "Purpur-Weide",
+      "nl": "Bittere wilg"
+    }
+  },
   "SALIX RETICULATA": {
     "inat_id": 168355,
     "vernacular": {
@@ -7909,6 +8117,10 @@
       "SALIX SEPULCRALIS"
     ]
   },
+  "SAMBUCA RACEMOSA": {
+    "inat_id": null,
+    "wfo_id": null
+  },
   "SAMBUCUS": {
     "inat_id": 52689,
     "vernacular": {
@@ -7959,6 +8171,14 @@
       "fr": "Sassafras officinal"
     }
   },
+  "SAXEGOTHAEA CONSPICUA": {
+    "inat_id": 135546,
+    "wfo_id": "wfo-0000503269",
+    "vernacular": {
+      "en": "Prince Albert's yew",
+      "de": "Patagonische Eibe"
+    }
+  },
   "SCANDOSORBUS INTERMEDIA": {
     "inat_id": 1277895,
     "vernacular": {
@@ -7978,6 +8198,10 @@
       "de": "Schirm-Tanne",
       "fr": "pin parasol du Japon"
     }
+  },
+  "SCIADOPYTUS VERTICILATA": {
+    "inat_id": null,
+    "wfo_id": null
   },
   "SEQUOIA SEMPERVIRENS": {
     "inat_id": 47372,
@@ -8099,6 +8323,10 @@
   "SORBUS CONFUSA": {
     "inat_id": null,
     "wfo_id": "wfo-0001008859"
+  },
+  "SORBUS DACICIA": {
+    "inat_id": null,
+    "wfo_id": null
   },
   "SORBUS DANUBIALIS": {
     "inat_id": null,
@@ -8303,11 +8531,35 @@
       "en": "Snowmound Spirea"
     }
   },
+  "SPIRAEA × BILLARDII": {
+    "inat_id": 1019057,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "Billard's Bridewort",
+      "de": "Billard-Spiere",
+      "nl": "Basterdspirea",
+      "fr": "Spirée de Billiard"
+    }
+  },
+  "STACHYURUS PRAECOX": {
+    "inat_id": 448007,
+    "wfo_id": "wfo-0001256971",
+    "vernacular": {
+      "en": "Early spiketail"
+    }
+  },
   "STAPHYLEA COLCHICA": {
     "inat_id": 774115,
     "vernacular": {
       "en": "Caucasian Bladdernut",
       "de": "Kolchische Pimpernuss"
+    }
+  },
+  "STAPHYLEA HOLOCARPA": {
+    "inat_id": 510042,
+    "wfo_id": "wfo-0001247169",
+    "vernacular": {
+      "en": "Chinese Bladdernut"
     }
   },
   "STAPHYLEA PINNATA": {
@@ -8317,6 +8569,14 @@
       "fr": "Faux-pistachier",
       "nl": "Pimpernoot",
       "de": "Gemeine Pimpernuss"
+    }
+  },
+  "STEPHANANDRA INCISA": {
+    "inat_id": 1367313,
+    "wfo_id": "wfo-0001008071",
+    "vernacular": {
+      "en": "Laceshrub",
+      "de": "Kleine Kranzspiere"
     }
   },
   "STEWARTIA MONADELPHA": {
@@ -8570,6 +8830,9 @@
       "TAXUS MEDIA"
     ]
   },
+  "TAXUS………": {
+    "inat_id": null
+  },
   "TETRACENTRON SINENSE": {
     "inat_id": 783141,
     "vernacular": {
@@ -8736,6 +8999,13 @@
     "vernacular": {
       "en": "Manchurian Lime",
       "de": "Mandschurische Linde"
+    }
+  },
+  "TILIA MIQUELIANA": {
+    "inat_id": 1233468,
+    "wfo_id": "wfo-0001142807",
+    "vernacular": {
+      "en": "Temple lime"
     }
   },
   "TILIA MONGOLICA": {
@@ -9360,6 +9630,22 @@
       "WISTERIA SINESIS"
     ]
   },
+  "WOLLEMIA NOBILIS": {
+    "inat_id": 49381,
+    "wfo_id": "wfo-0000334493",
+    "vernacular": {
+      "en": "Wollemi Pine",
+      "de": "Wollemie",
+      "fr": "Arbre de Wollemi"
+    }
+  },
+  "XANTHOCERAS SORBIFOLIUM": {
+    "inat_id": 559435,
+    "wfo_id": "wfo-0001135169",
+    "vernacular": {
+      "en": "yellowhorn"
+    }
+  },
   "ZABELIA TRIFLORA": {
     "inat_id": 472976,
     "vernacular": {
@@ -9377,11 +9663,25 @@
       "fr": "clavalier d'Amérique"
     }
   },
+  "ZANTHOXYLUM ARMATUM": {
+    "inat_id": 471802,
+    "wfo_id": null,
+    "vernacular": {
+      "en": "winged prickly ash"
+    }
+  },
   "ZANTHOXYLUM PIPERITUM": {
     "inat_id": 332459,
     "vernacular": {
       "en": "Japanese Pepper",
       "nl": "Japanse peperboom"
+    }
+  },
+  "ZANTHOXYLUM SCHINIFOLIUM": {
+    "inat_id": 473422,
+    "wfo_id": "wfo-0000429345",
+    "vernacular": {
+      "en": "Mastic-leaf prickly ash"
     }
   },
   "ZANTHOXYLUM SIMULANS": {
@@ -9484,10 +9784,10 @@
     "inat_id": null,
     "wfo_id": "wfo-0001333418",
     "aliases": [
-      "CUPRESSOCYPARIS × LEYLANDII",
       "CUPRESSOCYPARIS LEYLANDII",
-      "CUPRESSUS × LEYLANDII",
-      "CUPRESSUS LEYLANDII"
+      "CUPRESSOCYPARIS × LEYLANDII",
+      "CUPRESSUS LEYLANDII",
+      "CUPRESSUS × LEYLANDII"
     ]
   },
   "× PYRARIA": {

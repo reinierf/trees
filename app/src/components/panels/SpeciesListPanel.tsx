@@ -4,7 +4,6 @@ import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
 import type { Tree } from '../../types'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
-import { NameModeToggle } from '../NameModeToggle'
 import { useT } from '../../translations/useT'
 
 let savedScroll = 0
@@ -101,7 +100,6 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeId }: Props) {
           <span className="text-muted-foreground font-normal">({speciesList.length})</span>
         </p>
         <div className="flex items-center gap-2">
-          <NameModeToggle />
           <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
           <CloseButton onClick={handleClose} />
         </div>

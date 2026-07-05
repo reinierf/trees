@@ -76,6 +76,8 @@ const nl = {
   'nameMode.scientific': 'Wetenschappelijke namen',
   'nameMode.vernacular': 'Volksnamen',
 
+  'settings.title': 'Instellingen',
+
   'species.loadingTrees': 'Bomen laden…',
   'species.clearFilter': 'Filter wissen',
 } as const
@@ -159,6 +161,8 @@ const en: Dict = {
   'nameMode.scientific': 'Scientific names',
   'nameMode.vernacular': 'Vernacular names',
 
+  'settings.title': 'Settings',
+
   'species.loadingTrees': 'Loading trees…',
   'species.clearFilter': 'Clear filter',
 }
@@ -239,6 +243,8 @@ const de: Dict = {
   'nameMode.scientific': 'Wissenschaftliche Namen',
   'nameMode.vernacular': 'Trivialnamen',
 
+  'settings.title': 'Einstellungen',
+
   'species.loadingTrees': 'Bäume werden geladen…',
   'species.clearFilter': 'Filter löschen',
 }
@@ -318,6 +324,8 @@ const fr: Dict = {
 
   'nameMode.scientific': 'Noms scientifiques',
   'nameMode.vernacular': 'Noms vernaculaires',
+
+  'settings.title': 'Paramètres',
 
   'species.loadingTrees': 'Chargement des arbres…',
   'species.clearFilter': 'Effacer le filtre',

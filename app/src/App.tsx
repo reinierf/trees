@@ -4,7 +4,7 @@ import { fetchCities, fetchVernacularNames } from './api/trees'
 import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
 import { LoadingSpinner } from './components/LoadingSpinner'
-import { LanguageButton } from './components/LanguageButton'
+import { SettingsButton } from './components/SettingsButton'
 import { recordCityVisit } from './lib/recentCitiesStorage'
 import { useStore } from './store'
 import { useT } from './translations/useT'
@@ -53,7 +53,7 @@ export default function App() {
   if (!cities) {
     return (
       <div className="w-screen h-dvh flex items-center justify-center">
-        <LanguageButton />
+        <SettingsButton />
         <div className="scale-150">
           <LoadingSpinner />
         </div>
@@ -67,7 +67,7 @@ export default function App() {
   if (!isOverview && currentCity && !currentCity.has_data) {
     return (
       <div className="w-screen h-dvh flex flex-col items-center justify-center gap-4 text-center px-6">
-        <LanguageButton />
+        <SettingsButton />
         <h1 className="text-2xl font-bold text-gray-800">{currentCity.name}</h1>
         <p className="text-gray-500">{t('app.dataUnavailable', { city: currentCity.name })}</p>
         <button
@@ -84,7 +84,7 @@ export default function App() {
     <div className="w-screen h-dvh">
       <Map city={currentCity} cities={cities} />
       {currentCity && <InfoPopup cities={cities} currentCityId={currentCity.id} />}
-      <LanguageButton />
+      <SettingsButton />
     </div>
   )
 }

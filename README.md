@@ -17,7 +17,7 @@ Interactive map of municipal trees for Dutch cities. Data is loaded on demand fo
 - **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
 - **Species filter** — search the full city species list; filter the map to a single species. Active filter persists across map moves.
 - **Favourites** — save trees across cities; stored in `localStorage`.
-- **Name mode toggle** — switch between scientific and vernacular (common) names throughout the UI.
+- **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular) throughout the UI; both persisted in `localStorage`.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
 - **Current location** — geolocation button flies to user position and places a location dot.
 - **Multi-city routing** — URL is `/:city` (e.g. `/rotterdam`); auto-switches city when the map centre crosses a city boundary.
@@ -315,19 +315,24 @@ src/
     LocationButton.tsx          geolocation (idle/loading/error states)
     FullscreenButton.tsx
     LayerButton.tsx             tile layer switcher
+    SettingsButton.tsx          gear-icon menu: language switcher (nl/en/de/fr) + name mode toggle
     FavouritesButton.tsx
     SearchButton.tsx
     SearchOverlay.tsx           full-city species search with keyboard navigation
     SpeciesButton.tsx
     SpeciesFilterBadge.tsx      active filter indicator + clear button
     CityButton.tsx
-    NameModeToggle.tsx          scientific ↔ vernacular name display
     LoadingSpinner.tsx
     TreeImageModal.tsx          species photo viewer (portal, swipeable gallery)
     panels/
       SpeciesListPanel.tsx      tree count + expandable species list
       TreeDetailPanel.tsx       full tree detail + Wikipedia link + photo thumbnail
       FavouritesPanel.tsx       saved favourites grouped by city
+  translations/
+    locale.ts                   supported locales, labels, Intl tag mapping
+    strings.ts                  flat UI string dictionary per locale
+    useT.ts                     useT() hook — translate + {var} interpolation
+    cityFields.ts               resolves per-locale city metadata (e.g. description)
 ```
 
 ### Zustand store (`src/store.ts`)

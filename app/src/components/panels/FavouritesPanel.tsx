@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { useStore, PopupKind } from '../../store'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
-import { NameModeToggle } from '../NameModeToggle'
 import { useT } from '../../translations/useT'
 import { intlTag } from '../../translations/locale'
 import type { City, Tree } from '../../types'
@@ -63,7 +62,6 @@ export function FavouritesPanel({ cities, currentCityId }: Props) {
           <span className="text-muted-foreground font-normal">({totalFavs})</span>
         </p>
         <div className="flex items-center gap-2">
-          <NameModeToggle />
           <CollapseButton collapsed={collapsed} onClick={() => setCollapsed((c) => !c)} />
           <CloseButton onClick={closePopup} />
         </div>

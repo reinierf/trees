@@ -22,8 +22,9 @@
  *   node add-city.js --city utrecht,arnhem --yes   # skip confirmation prompts
  *
  * The override-review pause is not controlled by --yes: when
- * validate-species finds suggestions, pasting them into overrides.js is a
- * manual edit no flag can substitute for, so the script always stops there.
+ * validate-species finds unresolved species, adding registry.json entries
+ * for them is a manual edit no flag can substitute for, so the script
+ * always stops there.
  */
 
 import { spawnSync } from 'child_process';
@@ -90,15 +91,15 @@ function runCapturingStdout(cmd, args) {
     return result.stdout;
 }
 
-// Corrections found by validate-species are derived from this batch's
+// Unresolved species found by validate-species are derived from this batch's
 // species, so patching just the newly added city/cities is usually enough —
-// a binomialCorrections entry only matters for cities that actually contain
-// the misspelled value. It can still affect other cities if the same typo
+// a registry.json entry only matters for cities that actually contain the
+// misspelled value. It can still affect other cities if the same typo
 // happens to exist there too, which is why "all" remains an option.
 async function askPatchScope(hasSuggestions, cityArg, yes) {
     const note = hasSuggestions
-        ? `New overrides were found for ${cityArg}. They almost always fix typos specific to this batch — patching just these cities is usually enough; "all" only matters if the same misspelling exists elsewhere too.`
-        : `No automatic suggestions were found. If you added overrides manually, they most likely target species in ${cityArg} specifically.`;
+        ? `Unresolved species were found for ${cityArg}. They almost always are typos specific to this batch — patching just these cities is usually enough; "all" only matters if the same misspelling exists elsewhere too.`
+        : `No unresolved species were found. If you added registry.json entries manually anyway, they most likely target species in ${cityArg} specifically.`;
     process.stdout.write(`\n${note}\n`);
 
     if (yes) {
@@ -162,18 +163,17 @@ async function main() {
     }
 
     const label = cities.length > 1 ? `${cities.length} cities (${cityArg})` : cityArg;
-    process.stdout.write(`\n→ Checking for species needing new overrides (${label})...\n`);
+    process.stdout.write(`\n→ Checking for unresolved species (${label})...\n`);
     const suggestions = runCapturingStdout('node', ['tools/validate-species.js', '--city', cityArg]);
 
     const hasSuggestions = Boolean(suggestions.trim());
 
     if (hasSuggestions) {
-        process.stdout.write('\nSuggested overrides.js entries:\n\n' + suggestions + '\n');
-        process.stdout.write('⚠ Add the relevant entries to binomialCorrections in overrides.js now.\n');
-        process.stdout.write('  Review lines marked "// fuzzy" / "// fuzzy-genus" before accepting.\n');
-        await ask('Press Enter once overrides.js is updated (Ctrl+C to abort)... ');
+        process.stdout.write('\nUnresolved species:\n\n' + suggestions + '\n');
+        process.stdout.write('⚠ Add a registry.json entry (alias or _genusCorrections) for each one now.\n');
+        await ask('Press Enter once registry.json is updated (Ctrl+C to abort)... ');
     } else {
-        process.stdout.write('  No new overrides needed.\n');
+        process.stdout.write('  No unresolved species found.\n');
     }
 
     const patchScope = await askPatchScope(hasSuggestions, cityArg, yes);

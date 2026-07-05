@@ -74,6 +74,13 @@ npm run build-vernacular-nl
 # catch species that fail to resolve at both fetch time and now — see below)
 npm run validate-pipeline
 
+# Flag species that fail to resolve at all for a city (so a human can add a
+# registry.json entry before the data goes live) — unlike validate-pipeline
+# above, this re-derives resolution from scratch, so it also catches species
+# that never resolved even at fetch time, not just ones that changed
+npm run validate-species -- --city rotterdam
+npm run validate-species              # all cities
+
 # Re-apply overrides.js corrections to city DBs in-place (no re-import needed)
 npm run patch-binomials
 npm run patch-binomials -- --dry       # preview changes without writing
@@ -81,17 +88,6 @@ npm run patch-binomials -- --city amsterdam
 ```
 
 After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
-
-**Known gap:** `tools/validate-species.js` — which used to flag species that
-fail to resolve *at all* for a freshly-fetched city (so a human could add an
-`overrides.js`/`registry.json` entry before the data goes live) — was
-removed in the registry-based pipeline rewrite without a replacement.
-`validate-pipeline` above and `patch-binomials --dry` both only surface
-species whose resolution *changes* relative to what's already stored, which
-is empty right after a fresh fetch (the stored value already reflects the
-current pipeline). `add-city.js` still calls the deleted script by name and
-will error at that step. Checking a newly-fetched city's unresolved species
-today means querying its DB directly for `species_binomial IS NULL`.
 
 ### Non-WFS sources: Von Gimborn Arboretum collection database
 

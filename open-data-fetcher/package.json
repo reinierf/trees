@@ -10,6 +10,7 @@
     "add-city": "node add-city.js",
     "patch-binomials": "node patch-binomials.js",
     "validate-pipeline": "node tools/validate-pipeline.js",
+    "validate-species": "node tools/validate-species.js",
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
     "build-vernacular-nl": "node tools/vernacular/nl/build.js",
     "merge-vernacular-nl": "node tools/vernacular/nl/merge.js",

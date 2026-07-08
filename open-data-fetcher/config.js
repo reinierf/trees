@@ -37,5 +37,6 @@ import hilversum    from './cities/hilversum.js';
 import gorinchem    from './cities/gorinchem.js';
 import deNieuweOoster from './cities/de-nieuwe-ooster.js';
 import bergenMonumentaleBomen from './cities/bergen-monumentale-bomen.js';
+import zoetermeer from './cities/zoetermeer.js';
 
-export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht, alkmaar, 'den-bosch': denBosch, ede, albrandswaard, barendrecht, leeuwarden, roosendaal, almere, maastricht, ridderkerk, gouda, wageningen, steenwijk, hilversum, gorinchem, 'de-nieuwe-ooster': deNieuweOoster, 'bergen-monumentale-bomen': bergenMonumentaleBomen };
+export const CITIES = { rotterdam, groningen, 'den-haag': denHaag, amsterdam, utrecht, arnhem, nijmegen, zwolle, eindhoven, amersfoort, breda, assen, delft, haarlem, zandvoort, oss, voorschoten, apeldoorn, deventer, enschede, leiden, dordrecht, alkmaar, 'den-bosch': denBosch, ede, albrandswaard, barendrecht, leeuwarden, roosendaal, almere, maastricht, ridderkerk, gouda, wageningen, steenwijk, hilversum, gorinchem, 'de-nieuwe-ooster': deNieuweOoster, 'bergen-monumentale-bomen': bergenMonumentaleBomen, zoetermeer };

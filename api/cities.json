@@ -262,6 +262,13 @@
     "meta": { "source": "Gemeente Gorinchem" }
   },
   {
+    "id": "zoetermeer",
+    "name": "Zoetermeer",
+    "center": [52.0571, 4.4946],
+    "type": "city",
+    "meta": { "source": "Gemeente Zoetermeer" }
+  },
+  {
     "id": "bomenmuseum-gimborn",
     "name": "Bomenmuseum Gimborn",
     "center": [52.0330, 5.3090],

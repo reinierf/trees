@@ -19,6 +19,7 @@ export const dropTerms = [
 export const unknownTerms = [
   'NULL',
   'ONBEKEND',
+  'NTB',
   /\?/,              // any value containing ? = uncertain identification
   'NAME',
   'CONIFEREN',

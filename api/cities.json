@@ -328,6 +328,9 @@
     "name": "Súdwest-Fryslân",
     "center": [53.0328, 5.6608],
     "type": "city",
+    "mapZoom": 13,
+    "minFetchZoom": 11,
+    "maxViewportDeg2": 5,
     "meta": { "source": "Gemeente Súdwest-Fryslân" }
   }
 ]

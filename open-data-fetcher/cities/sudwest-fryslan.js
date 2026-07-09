@@ -3,8 +3,6 @@ import { processSpeciesTagged } from '../lib/species.js';
 const WFS_URL = 'https://geo.sudwestfryslan.nl/geoserver/ows';
 const LAYER   = 'swf:gv_bomen_4326';
 
-const PROPERTY_NAMES = 'id,soortnaam,soortnaam_ned,jaarvanaanleg,woonplaats,openbareruimte';
-
 function toTree(feature) {
     if (!feature?.properties) return null;
     const p      = feature.properties;
@@ -43,7 +41,6 @@ export default {
             STARTINDEX: String(startIndex),
             sortBy: 'id',
             outputFormat: 'application/json',
-            PROPERTYNAME: PROPERTY_NAMES,
         });
     },
 

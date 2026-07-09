@@ -322,5 +322,12 @@
     "minFetchZoom": 11,
     "maxViewportDeg2": 5,
     "meta": { "source": "viewer.bomenwacht.nl" }
+  },
+  {
+    "id": "sudwest-fryslan",
+    "name": "Súdwest-Fryslân",
+    "center": [53.0328, 5.6608],
+    "type": "city",
+    "meta": { "source": "Gemeente Súdwest-Fryslân" }
   }
 ]

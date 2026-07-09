@@ -310,6 +310,38 @@ The layer includes trees owned by adjacent municipality Wijdemeren as well as Hi
 
 ---
 
+## Lingewaard
+
+**Status:** Partial — 804 waardevolle (notable/protected) trees via GeoServer WFS. Full municipal inventory not publicly available.
+
+The dataset published at data.overheid.nl covers only trees protected under the municipal tree ordinance (APV), not the full street-tree inventory. The GeoServer WFS endpoint at `geo.lingewaard.nl` was found by probing the standard path.
+
+| Resource | URL |
+|----------|-----|
+| data.overheid.nl | https://data.overheid.nl/dataset/waardevolle-bomen-gemeente-lingewaard |
+| WFS endpoint | https://geo.lingewaard.nl/geoserver/wfs |
+| GetCapabilities | …/wfs?SERVICE=WFS&REQUEST=GetCapabilities |
+| Layer | `LNGW:WaardevolleBomen` |
+
+**Count:** 804 features — but some represent groves (`Aantal` can be 250 or 36), so the actual individual tree count is higher and unknowable without summing.
+
+**Spatial extent (WGS84):**
+- SW: 5.858°E, 51.856°N → NE: 6.028°E, 51.951°N
+- Span: ~11.7 × 10.6 km — the entire municipality in one contiguous block (Betuwe, between Rhine/Waal, just southwest of Arnhem)
+- No geographically separate clusters
+
+**Available fields:** `Nummer` (id), `Boomsoort` (Dutch common name only — no Latin name), `Aantal` (tree count per feature), `Link` (PDF documentation URL)
+
+**Key limitations:**
+- Geometry is **polygon** in EPSG:28992 (RD New), not WGS84 points — centroid extraction + reprojection needed
+- `Boomsoort` is Dutch common name only; no Latin species name → cannot run through `processSpecies()`, limits species resolution
+- No `year_planted`, `trunk_diameter`, `crown_spread`, `street`, or `neighbourhood`
+- `Aantal` mixes individual trees with grove-counts; unclear how to normalise
+
+**Conclusion:** Not worth adding. Too few features (804), polygon geometry, Dutch-only species names, and very sparse attributes. Comparable to Leeuwarden's situation. Revisit only if the municipality publishes a full street-tree inventory.
+
+---
+
 ## Summary
 
 | City | Full dataset | Format | Live API/WFS | License |
@@ -324,6 +356,7 @@ The layer includes trees owned by adjacent municipality Wijdemeren as well as Hi
 | Gouda | Yes (24,736 trees, all municipal) | WFS 2.0.0 GeoJSON (GeoServer) | Yes | Open |
 | Gorinchem | Yes (18,180 trees) | WFS 2.0.0 GeoJSON (GeoServer) | Yes | Open |
 | Leeuwarden | Partial (monumental only) | GeoJSON, CSV | No | — |
+| Lingewaard | Partial (804 waardevolle bomen) | WFS GeoJSON (GeoServer, polygon geometry) | Yes | CC-0 |
 
 ---
 
@@ -847,6 +880,63 @@ Other fields present but not mapped: `beheergroep`, `beheerobjectomschrijving`, 
 - **Fetcher:** `cities/gorinchem.js` ✅ implemented
 - **Registered:** `config.js` ✅
 - **API entry:** `api/cities.json` ✅ (`center: [51.8350, 4.9756]`)
+
+---
+
+## Zwartewaterland
+
+**Status: Blocked — ArcGIS FeatureServer requires authentication. No public fallback found.**
+
+Gemeente Zwartewaterland publishes a bomenregistratie on data.overheid.nl (last updated 2022-04-06, CC-BY 4.0). The underlying service is an ArcGIS Online FeatureServer hosted on `services1.arcgis.com` (org `qiyVnepR04wyiozk`). Every access path is blocked without an ArcGIS login token: the REST query endpoint returns 499 "Token Required", and the CSV/KML/Shapefile download links listed on data.overheid.nl all redirect to `hub.arcgis.com` which returns 403. Tree count could not be determined. OpenBomenKaart has no entry for Zwartewaterland (404).
+
+| Resource | URL |
+|----------|-----|
+| data.overheid.nl | https://data.overheid.nl/dataset/bomen-zwartewaterland |
+| ArcGIS FeatureServer | https://services1.arcgis.com/qiyVnepR04wyiozk/arcgis/rest/services/Bomen/FeatureServer |
+| ArcGIS item (CSV/KML/SHP, auth required) | `70e9a2ad03cf49a5a45b2076091b7ef3` |
+
+**Geography:** 87.86 km² total (82.49 km² land), population ~23k. Three main towns: Hasselt (~5 km north of Zwolle), Genemuiden and Zwartsluis (~5 km further north, roughly opposite each other across the Zwarte Water). Total spread ~10–15 km. This is a compact municipality — no `minFetchZoom`/`maxViewportDeg2` override would be needed (unlike Bergen/Leeuwarden, which are sparse curated-subset datasets thinly spread over large merged municipalities).
+
+**Possible unblock paths:** (1) Request a public ArcGIS token from the municipality, (2) manually download the Shapefile once (if logged into ArcGIS Online) and import via the Apeldoorn shapefile pattern, (3) ask the municipality to publish via PDOK or OGC WFS.
+
+---
+
+## Súdwest-Fryslân
+
+**Status:** Live GeoServer WFS 2.0.0 — 55,286 trees, full municipal inventory, CC-0
+
+The dataset is published on [data.overheid.nl](https://data.overheid.nl/dataset/bomen-s-dwest-frysl-n) by Gemeente Súdwest-Fryslân (the largest municipality in the Netherlands by area, ~838 km² land). A static ZIP download is available at `geo.sudwestfryslan.nl/public/download.html?layer=gbi_boom`; the live source is a public GeoServer with two tree layers — use `swf:gv_bomen_4326` (EPSG:4326 coordinates, no reprojection needed). The service advertises `ImplementsResultPaging` with a default count ceiling of 1,000,000 — practically single-fetch — but standard WFS 2.0.0 pagination works fine. Updated daily.
+
+| Resource | URL |
+|----------|-----|
+| data.overheid.nl | https://data.overheid.nl/dataset/bomen-s-dwest-frysl-n |
+| GeoServer WFS | https://geo.sudwestfryslan.nl/geoserver/ows |
+| GetCapabilities | …/ows?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities |
+| Layer (WGS84) | `swf:gv_bomen_4326` |
+| Layer (RD New) | `swf:gv_bomen` — skip, use the 4326 variant |
+| Record count | `resultType=hits` → `numberMatched="55286"` |
+
+**Field mapping (source → schema):**
+
+| Source field | Schema field | Notes |
+|---|---|---|
+| `id` | `id` | Integer tree ID (e.g. `14258`) |
+| `soortnaam` | `species` | Full Latin name, e.g. `Fraxinus excelsior` |
+| `soortnaam_ned` | `name_vernacular` | Dutch common name, e.g. `Es` |
+| `jaarvanaanleg` | `year_planted` | Integer planting year → string |
+| `woonplaats` | `neighbourhood` | Town/village name (e.g. `Burgwerd`, `Sneek`) — no neighbourhood field present |
+| `openbareruimte` | `street` | Street name |
+| geometry coordinates | `lon`/`lat` | WGS84 Point, [lon, lat] order |
+| — | `trunk_diameter`, `crown_spread` | Not in this dataset |
+
+Other fields present but not mapped: `geovisia_id` / `boom_id` (UUID), `kl_boomconditie` (condition), `typeomgevingsrisicoklasse` (risk class), `veiligheidsmaatregel`, `inspectiedatum`, `kl_kapvergunning`, `kl_motivatie_boom`, `kl_herplant`, `laatste_inspectie`.
+
+**Geography and clustering:** Bounding box 5.353°E–5.789°E, 52.850°N–53.148°N (~29 km wide × 33 km tall). The municipality spans many dispersed Frisian villages — Sneek (~33k pop, the main urban centre), Bolsward, Workum, IJlst, Makkum, Stavoren, Hindeloopen, Lemmer — separated by open polderland and water. Comparable to Bergen (NH) in cluster structure: multiple geographically distinct population centres spread over a large area with low tree density between them. A `maxViewportDeg2` or similar zoom-level override would likely be needed in the app to avoid an overwhelming initial view.
+
+- **SSL:** Public GeoServer — no certificate override needed
+- **Fetcher:** `cities/sudwest-fryslan.js` ✅ implemented (GeoServer WFS 2.0.0, same pattern as Groningen)
+- **Registered:** `config.js` ✅
+- **API entry:** `api/cities.json` ✅ (`center: [53.0328, 5.6608]`, centred on Sneek)
 
 ---
 

@@ -1,16 +1,17 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL = 'https://infoopkaart.steenwijkerland.nl/geoserver/ows';
 const LAYER   = 'nsm:gd_boom';
 
 function toTree(feature) {
-    if (!feature?.properties || !feature.geometry?.coordinates) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
+    if (!feature.geometry?.coordinates) return { dropped: 'no_geometry' };
     const p      = feature.properties;
     const [lon, lat] = feature.geometry.coordinates;
 
     const rawSpecies = (p.latboomsoort ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     // openbare_ruimte format: "StreetName - PlaceName" — strip the place suffix
     const road = p.openbare_ruimte ?? '';
@@ -41,13 +42,17 @@ export default {
     outputFile: { json: 'steenwijk.json', sqlite: 'steenwijk.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    pageParams(layer, count, lastId) {
+        const p = {
             SERVICE: 'WFS', VERSION: '2.0.0', REQUEST: 'GetFeature',
-            TYPENAMES: layer, COUNT: String(count), STARTINDEX: String(startIndex),
+            TYPENAMES: layer, COUNT: String(count),
             SORTBY: 'id',
             OUTPUTFORMAT: 'application/json', SRSNAME: 'EPSG:4326',
-        });
+        };
+        if (lastId != null) p.CQL_FILTER = `id>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(layer) {
@@ -63,8 +68,13 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(toTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toTree)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     parseCount(raw) {

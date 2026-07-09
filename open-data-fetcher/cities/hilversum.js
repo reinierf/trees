@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL = 'https://geo.hilversum.nl/geoserver/ows';
 const LAYER   = 'hilversum:GV_BOMEN';
@@ -15,13 +15,14 @@ function parseDiameterClass(s) {
 }
 
 function toTree(feature) {
-    if (!feature?.properties || !feature.geometry?.coordinates) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
+    if (!feature.geometry?.coordinates) return { dropped: 'no_geometry' };
     const p = feature.properties;
     const [lon, lat] = feature.geometry.coordinates;
 
     const rawSpecies = (p.SOORTNAAM ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     // JAARVANAANLEG can be null, "N.v.t.", or a year string/number
     const rawYear = p.JAARVANAANLEG;
@@ -50,12 +51,16 @@ export default {
     outputFile: { json: 'hilversum.json', sqlite: 'hilversum.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(layer, count, startIndex) {
+    keysetPaging: true,
+
+    pageParams(layer, count, lastId) {
         return new URLSearchParams({
             SERVICE: 'WFS', VERSION: '2.0.0', REQUEST: 'GetFeature',
-            TYPENAMES: layer, COUNT: String(count), STARTINDEX: String(startIndex),
+            TYPENAMES: layer, COUNT: String(count),
             SORTBY: 'OBJECTNUMMER',
-            CQL_FILTER: 'SOORTNAAM IS NOT NULL',
+            CQL_FILTER: lastId != null
+                ? `SOORTNAAM IS NOT NULL AND OBJECTNUMMER>${lastId}`
+                : 'SOORTNAAM IS NOT NULL',
             OUTPUTFORMAT: 'application/json', SRSNAME: 'EPSG:4326',
         });
     },
@@ -74,8 +79,13 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(toTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toTree)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     parseCount(raw) {

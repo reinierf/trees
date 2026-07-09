@@ -1,16 +1,16 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL  = 'https://datalab.alkmaar.nl/geoserver/Alkmaar/wfs';
 const LAYER    = 'Alkmaar:Bomen';
 
 function toTree(feature) {
-    if (!feature?.properties) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
     const p      = feature.properties;
     const coords = feature.geometry?.coordinates; // GeoJSON: [lon, lat]
 
     const rawSpecies = (p.latnaam ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     const tree = {
         id:              String(p.boomnr ?? ''),
@@ -39,13 +39,17 @@ export default {
     outputFile: { json: 'alkmaar.json', sqlite: 'alkmaar.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    pageParams(layer, count, lastId) {
+        const p = {
             service: 'WFS', version: '2.0.0', request: 'GetFeature',
             typeNames: layer, outputFormat: 'application/json', srsName: 'EPSG:4326',
             sortBy: 'boomnr',
-            count: String(count), startIndex: String(startIndex),
-        });
+            count: String(count),
+        };
+        if (lastId != null) p.CQL_FILTER = `boomnr>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(layer) {
@@ -61,8 +65,13 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(f => toTree(f)).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(f => toTree(f))) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

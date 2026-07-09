@@ -157,7 +157,7 @@ export function processSpeciesTagged(raw) {
     raw = raw.replace(/\?([A-Za-z][A-Za-z0-9 ]*)\?/g, (_, n) => `'${n.trim()}'`);
     raw = raw.replace(/ -[A-Za-z].*/g, '');
     const upper = raw.trim().replace(/\s+/g, ' ').toUpperCase();
-    if (isDrop(upper))    return { dropped: 'filtered' };
+    if (isDrop(upper))    return { dropped: 'excluded' };
     if (isUnknown(upper)) return { species_binomial: null, species_cultivar: null, resolvedBy: 'unknown' };
     const candidate = extractSpeciesBinomial(upper);
     if (!candidate) return { dropped: 'no_binomial' };

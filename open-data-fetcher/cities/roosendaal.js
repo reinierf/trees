@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 // ArcGIS FeatureServer — 63k trees, paginated at 2000/page
 const BASE_URL = 'https://services-eu1.arcgis.com/JxE7X5eyCPYNhczD/arcgis/rest/services'
@@ -7,11 +7,11 @@ const BASE_URL = 'https://services-eu1.arcgis.com/JxE7X5eyCPYNhczD/arcgis/rest/s
 function toTree(feature) {
     const a = feature.attributes;
     const g = feature.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
 
     const rawSpecies = (a.soortnaam ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     return {
         id:              String(a.OBJECTID),
@@ -34,13 +34,15 @@ export default {
     layer: null,
     outputFile: { json: 'roosendaal.json', sqlite: 'roosendaal.db' },
 
-    pageParams(_layer, count, startIndex) {
+    keysetPaging: true,
+
+    pageParams(_layer, count, lastId) {
         return new URLSearchParams({
-            where:             '1=1',
+            where:             lastId != null ? `OBJECTID > ${lastId}` : '1=1',
             outFields:         'OBJECTID,soortnaam,jaar_van_aanleg,Buurtnaam,Openbareruimte_naam',
             f:                 'json',
             outSR:             '4326',
-            resultOffset:      String(startIndex),
+            orderByFields:     'OBJECTID ASC',
             resultRecordCount: String(count),
         });
     },
@@ -53,8 +55,13 @@ export default {
         const json = JSON.parse(raw);
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
-        const trees = features.map(toTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toTree)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

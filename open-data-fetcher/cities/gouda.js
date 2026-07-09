@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 // GeoServer WFS 2.0.0 — 24,736 municipal trees
 // Full dataset at V_BOMEN_GRIB_GEM (not just the 430 monumental trees in V_BOMEN_GRIB_MON)
@@ -18,14 +18,14 @@ function parseDiameter(kl) {
 }
 
 function toTree(feature) {
-    if (!feature?.properties) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
     const p      = feature.properties;
     const coords = feature.geometry?.coordinates; // GeoJSON [lon, lat]
-    if (!Array.isArray(coords) || coords.length < 2) return null;
+    if (!Array.isArray(coords) || coords.length < 2) return { dropped: 'no_geometry' };
 
     const rawSpecies = (p.SOORT ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     return {
         id:             String(p.GRIB_ID ?? ''),
@@ -48,18 +48,21 @@ export default {
     layer: LAYER,
     outputFile: { json: 'gouda.json', sqlite: 'gouda.db' },
 
-    pageParams(layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    pageParams(layer, count, lastId) {
+        const p = {
             service:      'WFS',
             version:      '2.0.0',
             request:      'GetFeature',
             TYPENAMES:    layer,
             COUNT:        String(count),
-            startIndex:   String(startIndex),
             sortBy:       'GRIB_ID',
             outputFormat: 'application/json',
             SRSNAME:      'EPSG:4326',
-        });
+        };
+        if (lastId != null) p.CQL_FILTER = `GRIB_ID>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(layer) {
@@ -80,8 +83,13 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(toTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toTree)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

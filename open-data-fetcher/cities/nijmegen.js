@@ -1,17 +1,9 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL = 'https://services.nijmegen.nl/geoservices/extern_BOR_Groen/ows';
 const LAYER   = 'extern_BOR_Groen:GRN_BOMEN';
 
 const PROPERTY_NAMES = 'GEOMETRIE,ID,BOOMSOORT,PLANTJAAR,WIJKNAAM,STRAATNAAM,KROONDIAMETER';
-
-function sanitiseTree(tree) {
-    if (!tree?.species) return null;
-    const result = processSpecies(tree.species);
-    if (!result) return null;
-    Object.assign(tree, result);
-    return tree;
-}
 
 function toTree(feature) {
     if (!feature?.properties) return null;
@@ -46,14 +38,18 @@ export default {
     outputFile: { json: 'nijmegen.json', sqlite: 'nijmegen.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    pageParams(layer, count, lastId) {
+        const p = {
             service: 'WFS', version: '1.0.0', request: 'GetFeature',
-            typeName: layer, maxFeatures: String(count), startIndex: String(startIndex),
+            typeName: layer, maxFeatures: String(count),
             sortBy: 'ID',
             outputFormat: 'application/json', srsName: 'EPSG:4326',
             PROPERTYNAME: PROPERTY_NAMES,
-        });
+        };
+        if (lastId != null) p.CQL_FILTER = `ID>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(layer) {
@@ -70,8 +66,17 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(f => sanitiseTree(toTree(f))).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const feature of features) {
+            const raw = toTree(feature);
+            if (!raw) { dropped.invalid_record = (dropped.invalid_record ?? 0) + 1; continue; }
+            const speciesResult = processSpeciesTagged(raw.species);
+            if (speciesResult.dropped) { dropped[speciesResult.dropped] = (dropped[speciesResult.dropped] ?? 0) + 1; continue; }
+            Object.assign(raw, speciesResult);
+            trees.push(raw);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

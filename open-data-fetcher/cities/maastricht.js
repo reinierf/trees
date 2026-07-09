@@ -1,15 +1,7 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL = 'https://kaartviewer.maastricht.nl/geoserver/maastricht/ows';
 const LAYER   = 'maastricht:Bomen';
-
-function sanitiseTree(tree) {
-    if (!tree) return null;
-    const result = processSpecies(tree.species);
-    if (!result) return null;
-    Object.assign(tree, result);
-    return tree;
-}
 
 function toTree(feature) {
     if (!feature?.properties) return null;
@@ -81,8 +73,17 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(f => sanitiseTree(toTree(f))).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const feature of features) {
+            const raw = toTree(feature);
+            if (!raw) { dropped.invalid_record = (dropped.invalid_record ?? 0) + 1; continue; }
+            const speciesResult = processSpeciesTagged(raw.species);
+            if (speciesResult.dropped) { dropped[speciesResult.dropped] = (dropped[speciesResult.dropped] ?? 0) + 1; continue; }
+            Object.assign(raw, speciesResult);
+            trees.push(raw);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

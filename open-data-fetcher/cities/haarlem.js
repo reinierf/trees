@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL    = 'https://data.haarlem.nl/geoserver/wfs';
 const TYPE_NAME  = 'gemeentehaarlem:bor_bomen';
@@ -14,19 +14,19 @@ function parseRangeAverage(s) {
 }
 
 function toTree(feature, fetchYear) {
-    if (!feature?.properties) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
     const p      = feature.properties;
     const coords = feature.geometry?.coordinates; // GeoJSON: [lon, lat]
 
     const rawSpecies = (p.naam_lt ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     const age = p.leeftijd;
     const diameterCm = p.diameter != null ? parseFloat(String(p.diameter).replace(',', '.')) : null;
 
     const tree = {
-        id:              String(p.boomnummer ?? p.id),
+        id:              String(p.id),
         species:         rawSpecies,
         ...speciesResult,
         name_vernacular: null,
@@ -52,12 +52,15 @@ export default {
     outputFile: { json: 'haarlem.json', sqlite: 'haarlem.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(_layer, count, startIndex) {
+    keysetPaging: true,
+
+    pageParams(_layer, count, lastId) {
         return new URLSearchParams({
             service: 'WFS', version: '2.0.0', request: 'GetFeature',
             typeNames: TYPE_NAME, outputFormat: 'application/json', srsName: 'EPSG:4326',
-            CQL_FILTER, sortBy: 'id',
-            count: String(count), startIndex: String(startIndex),
+            CQL_FILTER: lastId != null ? `${CQL_FILTER} AND id>${lastId}` : CQL_FILTER,
+            sortBy: 'id',
+            count: String(count),
         });
     },
 
@@ -75,8 +78,13 @@ export default {
         }
         const features  = geojson.features ?? [];
         const fetchYear = new Date().getFullYear();
-        const trees = features.map(f => toTree(f, fetchYear)).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(f => toTree(f, fetchYear))) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     // resultType=hits returns XML regardless of outputFormat, with the count in numberMatched.

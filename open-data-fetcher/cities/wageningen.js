@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const LAYER_URLS = {
     'bomen':    'https://geoportaal.wageningen.nl/arcgis/rest/services/Thema/Bomen/FeatureServer/0/query',
@@ -29,11 +29,11 @@ function parseDiameter(s) {
 function toBomenTree(f) {
     const a = f.attributes;
     const g = f.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
     const raw = normalizeSpecies(a.SOORT_WET ?? '');
-    if (!raw) return null;
-    const speciesResult = processSpecies(raw);
-    if (!speciesResult) return null;
+    if (!raw) return { dropped: 'empty_species' };
+    const speciesResult = processSpeciesTagged(raw);
+    if (speciesResult.dropped) return speciesResult;
     return {
         id:              'b-' + String(a.OBJECTID),
         lat:             +parseFloat(g.y).toFixed(7),
@@ -52,10 +52,10 @@ function toBomenTree(f) {
 function toMonPartTree(f) {
     const a = f.attributes;
     const g = f.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
     const raw = (a.Boomsoort ?? '').trim();
-    const speciesResult = processSpecies(raw);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(raw);
+    if (speciesResult.dropped) return speciesResult;
     return {
         id:              'mp-' + String(a.OBJECTID),
         lat:             +parseFloat(g.y).toFixed(7),
@@ -74,10 +74,10 @@ function toMonPartTree(f) {
 function toMonGemTree(f) {
     const a = f.attributes;
     const g = f.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
     const raw = (a.ALGEMEEN03 ?? '').trim();
-    const speciesResult = processSpecies(raw);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(raw);
+    if (speciesResult.dropped) return speciesResult;
     return {
         id:              'mg-' + String(a.OBJECTID),
         lat:             +parseFloat(g.y).toFixed(7),
@@ -136,11 +136,14 @@ export default {
         const json = JSON.parse(raw);
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
-        let trees;
-        if (layer === 'bomen')         trees = features.map(toBomenTree).filter(Boolean);
-        else if (layer === 'mon-part') trees = features.map(toMonPartTree).filter(Boolean);
-        else                           trees = features.map(toMonGemTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const toFn = layer === 'bomen' ? toBomenTree : layer === 'mon-part' ? toMonPartTree : toMonGemTree;
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toFn)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

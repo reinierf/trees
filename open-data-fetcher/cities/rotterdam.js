@@ -1,5 +1,5 @@
 import { parseStringPromise, processors } from 'xml2js';
-import { processSpecies } from '../lib/species.js';
+import { processSpecies, processSpeciesTagged } from '../lib/species.js';
 
 const OBK_SOURCES = [
   { label: 'blijdorp (OBK)', url: 'https://openbomenkaart.org/data/trees_blijdorp.json' },
@@ -65,16 +65,6 @@ function sanitiseVernacularName(s) {
   s = s.replace(/\s*\(CV\)\s*$/i, '').replace(/\s*\(V\)\s*$/i, '').trim();
   if (!s || s.toUpperCase() === 'NIET INBOETEN') return null;
   return s;
-}
-
-function sanitiseTree(tree) {
-  if (!tree) return null;
-  const result = processSpecies(tree.species);
-  if (!result) return null;
-  Object.assign(tree, result);
-  const rawIndigenous = (tree.name_vernacular ?? '').trim().replace(/\s+/g, ' ');
-  tree.name_vernacular = sanitiseVernacularName(applyVernacularTypoCorrections(rawIndigenous));
-  return tree;
 }
 
 function parsePoint(geomNode) {
@@ -154,8 +144,18 @@ export default {
     if (!Array.isArray(members)) members = [members];
     // Feature nodes are nested under the typename's local part
     const localName = this.layer.split(':').pop();
-    const trees = members.map(m => sanitiseTree(toTree(m[localName]))).filter(Boolean);
-    return { trees, rawCount: members.length };
+    const trees = [];
+    const dropped = {};
+    for (const m of members) {
+      const raw = toTree(m[localName]);
+      if (!raw) { dropped.invalid_record = (dropped.invalid_record ?? 0) + 1; continue; }
+      const speciesResult = processSpeciesTagged(raw.species);
+      if (speciesResult.dropped) { dropped[speciesResult.dropped] = (dropped[speciesResult.dropped] ?? 0) + 1; continue; }
+      Object.assign(raw, speciesResult);
+      raw.name_vernacular = sanitiseVernacularName(applyVernacularTypoCorrections((raw.name_vernacular ?? '').trim().replace(/\s+/g, ' ')));
+      trees.push(raw);
+    }
+    return { trees, rawCount: members.length, dropped };
   },
 
   async parseCount(raw) {

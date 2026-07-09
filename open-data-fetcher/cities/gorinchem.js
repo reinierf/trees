@@ -1,16 +1,16 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 const WFS_URL   = 'https://geoportaal.gorinchem.nl/geoserver/data/wfs';
 const TYPE_NAME = 'data:monumentale_beeldbepalende_bomen';
 
 function toTree(feature) {
-    if (!feature?.properties) return null;
+    if (!feature?.properties) return { dropped: 'invalid_record' };
     const p      = feature.properties;
     const coords = feature.geometry?.coordinates; // GeoJSON [lon, lat] in WGS84
 
     const rawSpecies = (p.wetensch_naam ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     const diameterCm = p.diameter != null ? parseFloat(String(p.diameter)) : null;
 
@@ -41,14 +41,18 @@ export default {
     outputFile: { json: 'gorinchem.json', sqlite: 'gorinchem.db' },
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(_layer, count, startIndex) {
-        return new URLSearchParams({
+    keysetPaging: true,
+
+    pageParams(_layer, count, lastId) {
+        const p = {
             service: 'WFS', version: '2.0.0', request: 'GetFeature',
             typeNames: TYPE_NAME, outputFormat: 'application/json',
             srsName: 'urn:ogc:def:crs:EPSG::4326',
             sortBy: 'elementnummer',
-            count: String(count), startIndex: String(startIndex),
-        });
+            count: String(count),
+        };
+        if (lastId != null) p.CQL_FILTER = `elementnummer>${lastId}`;
+        return new URLSearchParams(p);
     },
 
     countParams(_layer) {
@@ -64,8 +68,13 @@ export default {
             throw new Error(`WFS exception: ${JSON.stringify(geojson)}`);
         }
         const features = geojson.features ?? [];
-        const trees = features.map(toTree).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(toTree)) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

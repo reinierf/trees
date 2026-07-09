@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 // ArcGIS MapServer query — layer 0 = all trees
 const BASE_URL = 'https://gis.zoetermeer.nl/arcgis/rest/services/Public/Bomen/MapServer/0/query';
@@ -8,12 +8,12 @@ function toTree(feature) {
     const g = feature.geometry;
     // Layer uses esriGeometryMultipoint: geometry.points = [[lon, lat]]
     const pt = g?.points?.[0];
-    if (!pt) return null;
+    if (!pt) return { dropped: 'no_geometry' };
     const [lon, lat] = pt;
 
     const rawSpecies = (a.BMN_BOOMSOORT_LAT ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     const year = a.BMN_PLANTJAAR ? String(a.BMN_PLANTJAAR).trim() : null;
 
@@ -61,8 +61,13 @@ export default {
         const json = JSON.parse(raw);
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
-        const trees = features.map(f => toTree(f)).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(f => toTree(f))) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

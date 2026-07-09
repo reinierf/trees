@@ -1,4 +1,4 @@
-import { processSpecies } from '../lib/species.js';
+import { processSpeciesTagged } from '../lib/species.js';
 
 // ArcGIS MapServer query — layer 0 = Straatboom (street trees), 127k trees
 const BASE_URL = 'https://geoservices.denhaag.nl/arcgis/rest/services'
@@ -17,16 +17,16 @@ function parseDiameterClass(s) {
 function toTree(feature, fetchYear) {
     const a = feature.attributes;
     const g = feature.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
 
     const rawSpecies = (a.BOOMSOORT_WETENSCHAPPELIJ ?? '').trim();
-    const speciesResult = processSpecies(rawSpecies);
-    if (!speciesResult) return null;
+    const speciesResult = processSpeciesTagged(rawSpecies);
+    if (speciesResult.dropped) return speciesResult;
 
     const age = a.LEEFTIJD;
 
     return {
-        id:              String(a.BOOMNUMMER ?? a.ID ?? a.COUNTER),
+        id:              String(a.COUNTER),
         lat:             +parseFloat(g.y).toFixed(7),
         lon:             +parseFloat(g.x).toFixed(7),
         species:         rawSpecies,
@@ -48,14 +48,16 @@ export default {
     // geoservices.denhaag.nl has an incomplete certificate chain
     fetchOptions: { rejectUnauthorized: false },
 
-    pageParams(_layer, count, startIndex) {
+    keysetPaging: true,
+
+    pageParams(_layer, count, lastId) {
         return new URLSearchParams({
-            where: '1=1',
-            outFields: 'BOOMNUMMER,ID,COUNTER,BOOMSOORT_WETENSCHAPPELIJ,BOOMSOORT_NEDERLANDS,'
-                + 'BUURT,STRAATNAAM,LEEFTIJD,STAMDIAMETERKLASSE',
-            f: 'json',
-            outSR: '4326',
-            resultOffset:      String(startIndex),
+            where:             lastId != null ? `COUNTER > ${lastId}` : '1=1',
+            outFields:         'COUNTER,BOOMSOORT_WETENSCHAPPELIJ,BOOMSOORT_NEDERLANDS,'
+                             + 'BUURT,STRAATNAAM,LEEFTIJD,STAMDIAMETERKLASSE',
+            orderByFields:     'COUNTER ASC',
+            f:                 'json',
+            outSR:             '4326',
             resultRecordCount: String(count),
         });
     },
@@ -69,8 +71,13 @@ export default {
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
         const fetchYear = new Date().getFullYear();
-        const trees = features.map(f => toTree(f, fetchYear)).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(f => toTree(f, fetchYear))) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

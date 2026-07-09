@@ -32,13 +32,15 @@ export default {
     layer: null,
     outputFile: { json: 'almere.json', sqlite: 'almere.db' },
 
-    pageParams(_layer, count, startIndex) {
+    keysetPaging: true,
+
+    pageParams(_layer, count, lastId) {
         return new URLSearchParams({
-            where:             '1=1',
+            where:             lastId != null ? `OBJECTID > ${lastId}` : '1=1',
             outFields:         'OBJECTID,soort,soort_nl,plantjaar,buurt,wijk,straat,Stamdiameter_cm',
             f:                 'json',
             outSR:             '4326',
-            resultOffset:      String(startIndex),
+            orderByFields:     'OBJECTID ASC',
             resultRecordCount: String(count),
         });
     },

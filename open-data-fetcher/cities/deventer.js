@@ -94,10 +94,12 @@ function resolveSpecies(raw, cultivarMap) {
 function toTree(feature, cultivarMap) {
     const a = feature.attributes;
     const g = feature.geometry;
-    if (!g?.x || !g?.y) return null;
+    if (!g?.x || !g?.y) return { dropped: 'no_geometry' };
 
     const resolution = resolveSpecies(a.i_boomsoort_latijn ?? '', cultivarMap);
-    if (!resolution) return null;
+    if (!resolution) {
+        return { dropped: (a.i_boomsoort_latijn ?? '').trim() ? 'excluded' : 'empty_species' };
+    }
     const { rawSpecies, species_binomial, species_cultivar } = resolution;
 
     return {
@@ -124,11 +126,12 @@ export default {
 
     pageParams(_layer, count, startIndex) {
         return new URLSearchParams({
-            where: '1=1',
-            outFields: OUT_FIELDS,
-            returnGeometry: 'true',
-            outSR: '4326',
-            f: 'json',
+            where:             '1=1',
+            outFields:         OUT_FIELDS,
+            returnGeometry:    'true',
+            outSR:             '4326',
+            f:                 'json',
+            orderByFields:     'OBJECTID ASC',
             resultOffset:      String(startIndex),
             resultRecordCount: String(count),
         });
@@ -143,8 +146,13 @@ export default {
         if (json.error) throw new Error(`ArcGIS error ${json.error.code}: ${json.error.message}`);
         const features = json.features ?? [];
         const cultivarMap = buildCultivarMap(features);
-        const trees = features.map(f => toTree(f, cultivarMap)).filter(Boolean);
-        return { trees, rawCount: features.length };
+        const trees = [];
+        const dropped = {};
+        for (const r of features.map(f => toTree(f, cultivarMap))) {
+            if (r?.dropped) { dropped[r.dropped] = (dropped[r.dropped] ?? 0) + 1; }
+            else if (r) trees.push(r);
+        }
+        return { trees, rawCount: features.length, dropped };
     },
 
     async parseCount(raw) {

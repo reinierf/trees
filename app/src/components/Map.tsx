@@ -5,6 +5,7 @@ import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
 import { MIN_CITY_SWITCH_ZOOM, NL_CENTER, NL_ZOOM } from '../config'
 import { getMapSettings } from '../map/cityMapSettings'
+import { findSmallestContainingCity } from '../map/cityLookup'
 import { fetchCitySpecies, fetchTreesBySpecies, fetchIssues } from '../api/trees'
 import { applyVernacularNames } from '../lib/vernacular'
 import { zoomForAccuracy } from '../lib/utils'
@@ -26,20 +27,6 @@ import type { City } from '../types'
 interface Props {
   city: City | null
   cities: City[]
-}
-
-function pickCity(lat: number, lon: number, cities: City[]): string {
-  const contained = cities.filter(
-    (c) => lat >= c.bbox.s && lat <= c.bbox.n && lon >= c.bbox.w && lon <= c.bbox.e,
-  )
-  if (contained.length === 1) return contained[0].id
-  let nearest = cities[0]
-  let minDist = Infinity
-  for (const c of cities) {
-    const d = Math.hypot(lat - c.center[0], lon - c.center[1])
-    if (d < minDist) { minDist = d; nearest = c }
-  }
-  return nearest.id
 }
 
 export function Map({ city, cities }: Props) {
@@ -144,9 +131,9 @@ export function Map({ city, cities }: Props) {
     : ''
 
   function handleLocate(lat: number, lon: number, accuracy: number) {
-    const pickedCityId = pickCity(lat, lon, cities)
-    if (!city || pickedCityId !== city.id) {
-      navigate(`/${pickedCityId}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
+    const target = findSmallestContainingCity(lat, lon, cities)
+    if (target && target.id !== city?.id) {
+      navigate(`/${target.id}?lat=${lat.toFixed(7)}&lon=${lon.toFixed(7)}`)
     } else {
       controllerRef.current?.flyToLocation(lat, lon, zoomForAccuracy(accuracy))
       controllerRef.current?.setLocationMarker(lat, lon)

@@ -57,9 +57,16 @@ function load_cities(): array
     if ($cities !== null) return $cities;
     $path = __DIR__ . '/cities.json';
     if (!file_exists($path)) respond(503, ['error' => 'cities.json not found']);
-    $raw    = json_decode(file_get_contents($path), true);
-    $margin = 0.01;
+    $raw = json_decode(file_get_contents($path), true);
     $cities = [];
+
+    // Bbox margin scales with each dataset's own extent instead of a flat degree value,
+    // so a small institution (e.g. an arboretum spanning a few hundred metres) doesn't end
+    // up with a buffer several times larger than the dataset itself, while a city-sized
+    // dataset keeps roughly the old ~1km buffer (capped at $marginMax).
+    $marginPct = 0.10;
+    $marginMin = 0.0005;
+    $marginMax = 0.01;
 
     // bbox/tree_count only change when the fetcher re-imports a city, so cache them
     // keyed by the db's mtime instead of scanning every trees table on every request.
@@ -79,11 +86,15 @@ function load_cities(): array
                 $row = db($city['id'])
                     ->query('SELECT MIN(lat) AS s, MAX(lat) AS n, MIN(lon) AS w, MAX(lon) AS e FROM trees')
                     ->fetch();
+                $s = (float) $row['s']; $n = (float) $row['n'];
+                $w = (float) $row['w']; $e = (float) $row['e'];
+                $latMargin = max($marginMin, min($marginMax, ($n - $s) * $marginPct));
+                $lonMargin = max($marginMin, min($marginMax, ($e - $w) * $marginPct));
                 $city['bbox'] = [
-                    's' => (float) $row['s'] - $margin,
-                    'n' => (float) $row['n'] + $margin,
-                    'w' => (float) $row['w'] - $margin,
-                    'e' => (float) $row['e'] + $margin,
+                    's' => $s - $latMargin,
+                    'n' => $n + $latMargin,
+                    'w' => $w - $lonMargin,
+                    'e' => $e + $lonMargin,
                 ];
                 $city['tree_count'] = (int) db($city['id'])
                     ->query('SELECT COUNT(*) FROM trees')

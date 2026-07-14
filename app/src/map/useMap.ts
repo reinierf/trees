@@ -12,6 +12,7 @@ import { loadSavedPosition, savePosition } from './positionStorage'
 import { useTreeLoader } from './useTreeLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
 import { useCitySwitcher } from './useCitySwitcher'
+import { findSmallestContainingCity } from './cityLookup'
 import { getMapSettings } from './cityMapSettings'
 import { LAYERS } from './layers'
 import type { City } from '../types'
@@ -157,11 +158,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
         }
         if (!isOverviewZoom && !currentCity) {
           const [lat, lon] = center
-          const target = citiesRef.current.find(
-            (c) => c.has_data &&
-              lat >= c.bbox.s && lat <= c.bbox.n &&
-              lon >= c.bbox.w && lon <= c.bbox.e,
-          )
+          const target = findSmallestContainingCity(lat, lon, citiesRef.current)
           if (target) navigateRef.current(`/${target.id}`, { replace: true, state: { autoSwitch: true } })
           return
         }

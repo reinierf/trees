@@ -126,6 +126,10 @@
   animation: marker-pop 0.45s ease-out;
 }
 
+.leaflet-control-zoom {
+  user-select: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

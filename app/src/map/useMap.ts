@@ -259,7 +259,11 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>, city: Cit
     }
 
     if (state?.autoSwitch) {
-      // User panned/zoomed there — already in place, don't fly
+      // User panned/zoomed there — already in place, don't fly. But the pan that triggered
+      // this switch bailed out of onMoveEnd before scheduling a tree fetch (see checkCitySwitch
+      // early-return above), so replay the current position through onMoveEnd to fetch trees
+      // for the new city.
+      ctrl.refresh()
       return
     }
 

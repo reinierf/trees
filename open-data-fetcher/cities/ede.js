@@ -2,6 +2,11 @@ import { processSpecies } from '../lib/species.js';
 
 const DATA_URL = 'https://openbomenkaart.org/data/trees_ede.json';
 
+// OBK's Ede export contains a handful of points ~450km away near the French/Belgian
+// border — a bad geocode, not a real tree. No Dutch municipality spans anywhere near
+// this distance, so anything this far from the dataset's median coordinate gets dropped.
+const MAX_DISTANCE_FROM_MEDIAN_DEG = 0.5;
+
 function toTree(element, index) {
     const t = element?.tags;
     if (!t || element.lat == null || element.lon == null) return null;
@@ -28,6 +33,12 @@ function toTree(element, index) {
     };
 }
 
+function median(nums) {
+    const sorted = nums.slice().sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
 export default {
     name: 'ede',
     wfsUrl: DATA_URL,
@@ -38,7 +49,21 @@ export default {
 
     async parse(raw) {
         const elements = JSON.parse(raw).elements ?? [];
-        const trees = elements.map((el, i) => toTree(el, i)).filter(Boolean);
-        return { trees };
+        const parsed = elements.map((el, i) => toTree(el, i)).filter(Boolean);
+
+        const medianLat = median(parsed.map((t) => t.lat));
+        const medianLon = median(parsed.map((t) => t.lon));
+
+        const trees = [];
+        let outliers = 0;
+        for (const t of parsed) {
+            if (Math.hypot(t.lat - medianLat, t.lon - medianLon) > MAX_DISTANCE_FROM_MEDIAN_DEG) {
+                outliers++;
+                continue;
+            }
+            trees.push(t);
+        }
+
+        return { trees, dropped: outliers > 0 ? { outlier_coordinate: outliers } : undefined };
     },
 };

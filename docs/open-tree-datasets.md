@@ -974,10 +974,7 @@ engine.
 
 **Trompenburg's excluded second cluster:** the source data includes ~130
 specimens (accession codes `HTD*`) forming a separate cluster ~4km south of
-the main garden (lat 51.883-51.888 vs. the garden's 51.918-51.9225). Eyeballed
-on satellite imagery, these look like real planted trees rather than bad
-coordinates — the working theory is a second, off-site nursery/growing
-location under the same collection records, not a geocoding error. They're
+the main garden (lat 51.883-51.888 vs. the garden's 51.918-51.9225). These are Trompenburg managed trees in the Donckse Velden of Huys Ten Donck, not a geocoding error. They're
 excluded via `cities/trompenburg.js`'s `TROMPENBURG_BBOX` (`latMin: 51.90`),
 because a bbox spanning both clusters would swallow the empty gap between
 them, and the app's bbox-based dataset-switching would misfire for anyone

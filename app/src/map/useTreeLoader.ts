@@ -33,9 +33,9 @@ export function useTreeLoader(
     const area = (bounds.nw.lat - bounds.se.lat) * (bounds.se.lon - bounds.nw.lon)
     if (area > maxViewportDeg2) return
 
-    const missing = cache.getMissingCells(bounds)
+    const missing = cache.getMissingCells(cityId, bounds)
     if (missing.length === 0) {
-      setVisibleTrees(cache.getVisibleTrees(bounds))
+      setVisibleTrees(cache.getVisibleTrees(cityId, bounds))
       return
     }
 
@@ -47,8 +47,8 @@ export function useTreeLoader(
     try {
       const bboxes = cache.mergeMissingToBboxes(missing)
       const trees = await fetchTrees(bboxes, cityId, signal)
-      cache.storeFetchResult(missing, applyVernacularNames(trees))
-      setVisibleTrees(cache.getVisibleTrees(bounds))
+      cache.storeFetchResult(cityId, missing, applyVernacularNames(trees))
+      setVisibleTrees(cache.getVisibleTrees(cityId, bounds))
     } catch (e) {
       if ((e as Error).name !== 'AbortError') console.error('fetch trees failed', e)
     } finally {

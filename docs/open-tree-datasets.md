@@ -962,7 +962,7 @@ with no public API, driven entirely by postbacks. Shared client:
 | Institution | Status | Trees | Notes |
 |---|---|---|---|
 | Nationaal Bomenmuseum Gimborn (Doorn) | ✅ Live in `api/cities.json` | 3,169 | Coordinates individually granular |
-| Arboretum Trompenburg (Rotterdam) | ✅ Live in `api/cities.json` | 3,281 | Specimens positioned per planting-section (shared exact coordinates) — needed the app's coordinate-collision marker grouping before this was usable; initially shelved for that reason |
+| Arboretum Trompenburg (Rotterdam) | ✅ Live in `api/cities.json` | ~3,148 | Specimens positioned per planting-section (shared exact coordinates) — needed the app's coordinate-collision marker grouping before this was usable; initially shelved for that reason |
 | Pinetum Ter Borgh (Anloo) | ✅ Live in `api/cities.json` | 225 | Smallest/densest of the four |
 | Pinetum de Dennenhorst (Lunteren) | ✅ Live in `api/cities.json` | 349 | |
 
@@ -971,6 +971,19 @@ Fetchers: `cities/trompenburg.js`, `cities/bomenmuseum-gimborn.js`,
 directly (`node cities/<id>.js`), not registered in `config.js`: the
 postback/session/pagination model doesn't fit `index.js`'s WFS-oriented
 engine.
+
+**Trompenburg's excluded second cluster:** the source data includes ~130
+specimens (accession codes `HTD*`) forming a separate cluster ~4km south of
+the main garden (lat 51.883-51.888 vs. the garden's 51.918-51.9225). Eyeballed
+on satellite imagery, these look like real planted trees rather than bad
+coordinates — the working theory is a second, off-site nursery/growing
+location under the same collection records, not a geocoding error. They're
+excluded via `cities/trompenburg.js`'s `TROMPENBURG_BBOX` (`latMin: 51.90`),
+because a bbox spanning both clusters would swallow the empty gap between
+them, and the app's bbox-based dataset-switching would misfire for anyone
+panning through that gap while nowhere near either cluster. If this second
+location is ever worth showing, give it its own city entry rather than
+re-merging it into Trompenburg's bbox.
 
 ### GRIB viewer platform (bomenwacht.nl)
 

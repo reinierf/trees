@@ -1,11 +1,11 @@
 import type { Bbox, Tree } from '../types'
 import { CELL_SIZE_DEG, MAX_CACHE_CELLS } from '../config'
 
-function toCellKey(lat: number, lon: number): string {
-  return `${Math.floor(lat / CELL_SIZE_DEG)}:${Math.floor(lon / CELL_SIZE_DEG)}`
+function toCellKey(cityId: string, lat: number, lon: number): string {
+  return `${cityId}:${Math.floor(lat / CELL_SIZE_DEG)}:${Math.floor(lon / CELL_SIZE_DEG)}`
 }
 
-function bboxToCells(bbox: Bbox): Set<string> {
+function bboxToCells(cityId: string, bbox: Bbox): Set<string> {
   const latSIdx = Math.floor(bbox.se.lat / CELL_SIZE_DEG)
   const latNIdx = Math.floor(bbox.nw.lat / CELL_SIZE_DEG)
   const lonWIdx = Math.floor(bbox.nw.lon / CELL_SIZE_DEG)
@@ -14,7 +14,7 @@ function bboxToCells(bbox: Bbox): Set<string> {
   const cells = new Set<string>()
   for (let lat = latSIdx; lat <= latNIdx; lat++) {
     for (let lon = lonWIdx; lon <= lonEIdx; lon++) {
-      cells.add(`${lat}:${lon}`)
+      cells.add(`${cityId}:${lat}:${lon}`)
     }
   }
   return cells
@@ -31,9 +31,10 @@ function scanlineMerge(keys: string[]): Bbox[] {
 
   const byRow = new Map<number, number[]>()
   for (const key of keys) {
-    const [latStr, lonStr] = key.split(':')
-    const latIdx = Number(latStr)
-    const lonIdx = Number(lonStr)
+    // Keys are "cityId:latIdx:lonIdx" — take the last two segments so cityId itself may contain ':' safely
+    const parts = key.split(':')
+    const lonIdx = Number(parts[parts.length - 1])
+    const latIdx = Number(parts[parts.length - 2])
     const arr = byRow.get(latIdx) ?? []
     arr.push(lonIdx)
     byRow.set(latIdx, arr)
@@ -92,13 +93,13 @@ function scanlineMerge(keys: string[]): Bbox[] {
 export class TileCache {
   private readonly cache = new Map<string, Tree[]>()
 
-  getMissingCells(bbox: Bbox): string[] {
-    const cells = bboxToCells(bbox)
+  getMissingCells(cityId: string, bbox: Bbox): string[] {
+    const cells = bboxToCells(cityId, bbox)
     return [...cells].filter((k) => !this.cache.has(k))
   }
 
-  getVisibleTrees(bbox: Bbox): Tree[] {
-    const cells = bboxToCells(bbox)
+  getVisibleTrees(cityId: string, bbox: Bbox): Tree[] {
+    const cells = bboxToCells(cityId, bbox)
     const byId = new Map<string, Tree>()
     for (const key of cells) {
       const trees = this.cache.get(key)
@@ -122,7 +123,7 @@ export class TileCache {
     return scanlineMerge(missingCells)
   }
 
-  storeFetchResult(requestedCells: string[], trees: Tree[]): void {
+  storeFetchResult(cityId: string, requestedCells: string[], trees: Tree[]): void {
     // Initialise all requested cells — prevents re-fetching cells that have zero trees
     for (const key of requestedCells) {
       if (!this.cache.has(key)) this.cache.set(key, [])
@@ -130,7 +131,7 @@ export class TileCache {
 
     // Distribute trees to their cell
     for (const tree of trees) {
-      const key = toCellKey(tree.lat, tree.lon)
+      const key = toCellKey(cityId, tree.lat, tree.lon)
       this.cache.get(key)?.push(tree)
     }
 

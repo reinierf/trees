@@ -34,10 +34,27 @@
 import { runCli } from '../lib/collectie-gimborn.js';
 
 // The shared database's four institutions form four distinct, well-separated
-// geographic clusters — a small ~0.04° margin around Trompenburg's observed
-// specimen cluster (also incidentally drops a handful of source records with
-// corrupt/swapped coordinates).
-const TROMPENBURG_BBOX = { latMin: 51.87, latMax: 51.93, lonMin: 4.50, lonMax: 4.61 };
+// geographic clusters — this bbox is a margin around Trompenburg's own cluster,
+// used to exclude the other three institutions' specimens (the cbArboreta
+// checkbox has no server-side effect — see collectie-gimborn.js).
+//
+// latMin is deliberately raised to 51.90, above Trompenburg's actual garden
+// (lat 51.918-51.9225, lon 4.5166-4.5228), to also exclude a second cluster of
+// ~130 specimens ~4km south (lat 51.883-51.888, lon 4.595-4.599; accession
+// codes like "HTD1A-025", vs. the main garden's "KY-xxx" plots). Checked on
+// satellite imagery — these look like real, planted trees, not bad geocoding,
+// so the working theory is a second, off-site nursery/growing location that
+// shares Trompenburg's collection records rather than a data error. Excluding
+// it isn't just cosmetic: a bbox spanning both clusters would engulf a large
+// empty area between them (nothing exists for lat 51.90-51.915), and the
+// app's dataset-switching logic (bbox-based) would treat any point in that
+// empty gap as "inside Trompenburg" — reproduced by panning east from
+// Rotterdam while staying north of the real garden, which incorrectly
+// switched the active dataset to Trompenburg despite the garden never being
+// on screen. If this second cluster should actually be shown on the map one
+// day, it needs its own separate bbox/city entry rather than being folded
+// back into Trompenburg's.
+const TROMPENBURG_BBOX = { latMin: 51.90, latMax: 51.93, lonMin: 4.50, lonMax: 4.61 };
 
 runCli({
     cityId: 'trompenburg',

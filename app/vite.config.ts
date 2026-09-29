@@ -21,8 +21,8 @@ export default defineConfig(({ mode }) => ({
       name: 'place-path-redirect',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          const m = /^\/([a-z][a-z0-9-]+)\/?(\?.*)?$/.exec(req.url ?? '')
-          if (!m || m[1] === 'api') return next()
+          const m = /^\/([a-z][a-z0-9-]+)\/?(\?.*)?$/i.exec(req.url ?? '')
+          if (!m || m[1].toLowerCase() === 'api') return next()
           res.statusCode = 302
           res.setHeader('Location', `/#/${m[1]}`)
           res.end()

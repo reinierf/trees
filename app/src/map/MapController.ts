@@ -85,6 +85,8 @@ export class MapController {
         this.map.on('drag', () => { this.dragOccurred = true })
         this.map.on('click', () => { if (!this.dragOccurred) this.callbacks.onMapClick() })
         this.map.on('zoomstart', () => this.clearActiveTip())
+        this.lastZoom = zoom
+        this.map.on('zoomend', () => this.dropStaleServerClusters())
         el.addEventListener('pointerdown', this.onPointerDown)
         this.map.whenReady(() => {
             this.map?.invalidateSize()
@@ -194,6 +196,23 @@ export class MapController {
         }
         this.clusterLayer.addLayers(layerMarkers)
         this.applyOpacities()
+    }
+
+    private lastZoom = 0
+
+    // After zooming in, the previous zoom's server clusters are twice as far apart on screen
+    // (~128 px for 64 px cells), beyond the grouping radius, so markercluster would show each on
+    // its own — a flash of the server's grid until the new zoom's tiles arrive. Drop them
+    // instead; the map briefly shows only the trees while loading. Zooming out needs nothing:
+    // finer clusters move closer together and group correctly.
+    private dropStaleServerClusters(): void {
+        if (!this.map) return
+        const zoom = this.map.getZoom()
+        if (zoom > this.lastZoom && this.serverMarkers.length > 0) {
+            this.clusterLayer.removeLayers(this.serverMarkers)
+            this.serverMarkers = []
+        }
+        this.lastZoom = zoom
     }
 
     setServerClusters(clusters: Cluster[]): void {

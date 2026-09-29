@@ -12,7 +12,8 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 
 - **Map view across all sources** — the map shows every tree in view regardless of which dataset (city or institution) it comes from, so trees near municipal borders or inside overlapping datasets are never hidden. The source is per-tree metadata.
 - **Clusters at every zoom** — the server decides per 256 px map tile: more than 500 trees → precomputed clusters, otherwise individual trees. Zoomed out you see tree density across the country; zoomed in, individual trees. Sparse datasets (e.g. monumental-trees-only layers) show individual trees from far out without any per-city settings.
-- **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*). Markers also cluster client-side until `CLUSTER_DISABLE_ZOOM`.
+- **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*).
+- **One set of bubbles** — server clusters join the tree markers in Leaflet.markercluster, carrying their tree count, so bubbles group by on-screen distance (120 px below zoom 16, 80 px from 16) instead of showing the server's 64 px grid, and cluster tiles and tree tiles blend seamlessly. Clustering stops at `CLUSTER_DISABLE_ZOOM`.
 - **Species list panel** — species in view with counts; expanding a species lists its individual trees (where the map shows individual trees); clicking highlights the tree on the map.
 - **Search** — searches the species in view; selecting one sets the species filter.
 - **Species filter** — the map shows only one species (clusters and trees); the filter persists across map moves.
@@ -277,7 +278,7 @@ React store (Zustand)
 └─────────────────────────┘     └──────────────────────────┘
 ```
 
-**`MapController`** (`src/map/MapController.ts`) — owns the Leaflet map: tree markers in a markercluster group, a layer of server clusters, favourites, the place markers overlay and the selection ring. Exposes imperative methods; fires outward via `onMoveEnd` and click callbacks.
+**`MapController`** (`src/map/MapController.ts`) — owns the Leaflet map: tree markers and server clusters (as markers with a tree count) in one markercluster group, favourites, the place markers overlay and the selection ring. Exposes imperative methods; fires outward via `onMoveEnd` and click callbacks.
 
 **`useMap`** (`src/map/useMap.ts`) — holds a `MapController` in a `useRef`. Wires callbacks to store setters, keeps the URL position up to date, handles back/forward, and calls controller methods as side effects of store changes.
 

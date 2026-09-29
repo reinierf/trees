@@ -6,6 +6,9 @@ import { createSpeciesIcon, createClusterIcon, createGroupIcon, createSelectedSp
 import { capitalizeFirst } from '../lib/utils'
 import { formatVernacular, lookupSpeciesNames } from '../lib/species'
 
+/** Marker options of a server cluster: how many trees the single marker stands for. */
+type TreeCountOptions = L.MarkerOptions & { treeCount?: number }
+
 interface Callbacks {
     onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
     onMarkerClick: (tree: Tree) => void
@@ -25,7 +28,10 @@ export class MapController {
     private readonly onPointerDown = () => { this.dragOccurred = false }
     private readonly placeMarkersLayer: L.LayerGroup = L.layerGroup()
     // Clusters computed by the server for tiles holding too many trees to send individually.
-    private readonly serverClusterLayer: L.LayerGroup = L.layerGroup()
+    // They join the tree markers in the markercluster group, carrying their tree count, so
+    // bubbles form by on-screen distance instead of the server's fixed 64 px grid, and the
+    // border between cluster tiles and tree tiles disappears.
+    private serverMarkers: L.Marker[] = []
 
     constructor(callbacks: Callbacks) {
         this.callbacks = callbacks
@@ -34,8 +40,13 @@ export class MapController {
 
     private buildClusterLayer(disableClusteringAtZoom: number): L.MarkerClusterGroup {
         return L.markerClusterGroup({
-            iconCreateFunction: (cluster) => createClusterIcon(cluster.getChildCount()),
+            iconCreateFunction: (cluster) => createClusterIcon(
+                cluster.getAllChildMarkers().reduce((sum, m) => sum + ((m.options as TreeCountOptions).treeCount ?? 1), 0),
+            ),
             disableClusteringAtZoom,
+            // Wider grouping while bubbles stand for whole neighbourhoods; the default 80 px from
+            // zoom 16, where they group individual trees.
+            maxClusterRadius: (zoom: number) => (zoom < 16 ? 120 : 80),
             chunkedLoading: true,
             animate: false,
         })
@@ -49,7 +60,7 @@ export class MapController {
     setClusterDisableZoom(zoom: number): void {
         if (zoom === this.clusterDisableZoom) return
         this.clusterDisableZoom = zoom
-        const currentMarkers = this.markers.map(({ m }) => m)
+        const currentMarkers = [...this.markers.map(({ m }) => m), ...this.serverMarkers]
         this.clusterLayer.remove()
         this.clusterLayer = this.buildClusterLayer(zoom)
         if (this.map && !this.placesVisible) this.clusterLayer.addTo(this.map)
@@ -67,7 +78,6 @@ export class MapController {
         this.map.createPane('favouritePane').style.zIndex = '620'
         this.map.createPane('selectionPane').style.zIndex = '640'
 
-        this.serverClusterLayer.addTo(this.map)
         this.clusterLayer.addTo(this.map)
         this.favouriteLayer.addTo(this.map)
 
@@ -154,7 +164,7 @@ export class MapController {
 
     setTrees(trees: Tree[]): void {
         this.tooltipGen++
-        this.clusterLayer.clearLayers()
+        this.clusterLayer.removeLayers(this.markers.map(({ m }) => m))
         this.markers = []
         const layerMarkers: L.Marker[] = []
         const gen = this.tooltipGen
@@ -187,15 +197,16 @@ export class MapController {
     }
 
     setServerClusters(clusters: Cluster[]): void {
-        this.serverClusterLayer.clearLayers()
-        for (const c of clusters) {
-            const m = L.marker([c.lat, c.lon], { icon: createClusterIcon(c.count) })
+        this.clusterLayer.removeLayers(this.serverMarkers)
+        this.serverMarkers = clusters.map((c) => {
+            const m = L.marker([c.lat, c.lon], { icon: createClusterIcon(c.count), treeCount: c.count } as TreeCountOptions)
             m.on('click', (e) => {
                 L.DomEvent.stopPropagation(e)
                 if (this.map) this.map.setView([c.lat, c.lon], Math.min(this.map.getZoom() + 2, MAP_MAX_ZOOM))
             })
-            this.serverClusterLayer.addLayer(m)
-        }
+            return m
+        })
+        this.clusterLayer.addLayers(this.serverMarkers)
     }
 
     setFavouriteMarkers(trees: Tree[]): void {
@@ -320,12 +331,10 @@ export class MapController {
         if (!this.map) return
         this.placesVisible = visible
         if (visible) {
-            this.serverClusterLayer.remove()
             this.clusterLayer.remove()
             this.placeMarkersLayer.addTo(this.map)
         } else {
             this.placeMarkersLayer.remove()
-            this.serverClusterLayer.addTo(this.map)
             this.clusterLayer.addTo(this.map)
         }
     }

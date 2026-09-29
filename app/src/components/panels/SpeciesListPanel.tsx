@@ -189,6 +189,12 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
     }
   }
 
+  function nearestIcon(speciesId: number) {
+    return nearestLoading === speciesId
+      ? <Loader2 size={13} className="animate-spin" />
+      : <Navigation size={13} className={nearest?.speciesId === speciesId ? 'text-green-700' : ''} />
+  }
+
   function nearestButton(speciesId: number) {
     return (
       <button
@@ -197,9 +203,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
         aria-label={t('species.nearest')}
         title={t('species.nearest')}
       >
-        {nearestLoading === speciesId
-          ? <Loader2 size={13} className="animate-spin" />
-          : <Navigation size={13} className={nearest?.speciesId === speciesId ? 'text-green-700' : ''} />}
+        {nearestIcon(speciesId)}
       </button>
     )
   }
@@ -356,10 +360,15 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
               const name = nameCell(n)
               return (
                 <div key={speciesId}>
-                  <div className="flex items-center w-full text-sm hover:bg-gray-50">
-                    <span title={name.title} className="flex-1 flex items-center pl-4 pr-1 py-2 min-w-0">{name.node}</span>
-                    {nearestButton(speciesId)}
-                  </div>
+                  {/* Nearest tree is the only action here, so the whole row triggers it. */}
+                  <button
+                    onClick={() => void lookUpNearest(speciesId)}
+                    title={name.title ? `${name.title} · ${t('species.nearest')}` : t('species.nearest')}
+                    className="group flex items-center w-full text-sm text-left hover:bg-gray-50"
+                  >
+                    <span className="flex-1 flex items-center pl-4 pr-1 py-2 min-w-0">{name.node}</span>
+                    <span className="shrink-0 p-1.5 pr-3 text-muted-foreground group-hover:text-foreground">{nearestIcon(speciesId)}</span>
+                  </button>
                   {nearestResult(speciesId)}
                 </div>
               )

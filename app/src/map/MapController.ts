@@ -69,8 +69,11 @@ export class MapController {
         this.clusterLayer.addLayers(currentMarkers)
     }
 
-    init(el: HTMLDivElement, center: [number, number], zoom: number): void {
-        this.map = L.map(el, { center, zoom, minZoom: MIN_MAP_ZOOM })
+    /** Starts at a center and zoom, or fitted to a place's extent. */
+    init(el: HTMLDivElement, view: { center: [number, number]; zoom: number } | { bbox: Source['bbox'] }): void {
+        this.map = 'bbox' in view
+            ? L.map(el, { minZoom: MIN_MAP_ZOOM }).fitBounds(MapController.bounds(view.bbox), MapController.fitOptions)
+            : L.map(el, { center: view.center, zoom: view.zoom, minZoom: MIN_MAP_ZOOM })
 
         this.tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -88,7 +91,7 @@ export class MapController {
         this.map.on('drag', () => { this.dragOccurred = true })
         this.map.on('click', () => { if (!this.dragOccurred) this.callbacks.onMapClick() })
         this.map.on('zoomstart', () => this.clearActiveTip())
-        this.lastZoom = zoom
+        this.lastZoom = this.map.getZoom()
         this.map.on('zoomend', () => this.dropStaleServerClusters())
         el.addEventListener('pointerdown', this.onPointerDown)
         this.map.whenReady(() => {
@@ -264,8 +267,14 @@ export class MapController {
         }
     }
 
+    private static bounds(bbox: Source['bbox']): L.LatLngBoundsExpression {
+        return [[bbox.s, bbox.w], [bbox.n, bbox.e]]
+    }
+
+    private static readonly fitOptions: L.FitBoundsOptions = { padding: [40, 40], maxZoom: PLACE_MAX_ZOOM }
+
     fitBbox(bbox: Source['bbox']): void {
-        this.map?.flyToBounds([[bbox.s, bbox.w], [bbox.n, bbox.e]], { padding: [40, 40], maxZoom: PLACE_MAX_ZOOM })
+        this.map?.flyToBounds(MapController.bounds(bbox), MapController.fitOptions)
     }
 
     private selectedRing: L.Marker | null = null

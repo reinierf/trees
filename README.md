@@ -24,6 +24,7 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 - **Favourites** — save trees from any source; stored in `localStorage`.
 - **Position in the URL** — `#@lat,lon,zoom`; reloading or sharing a URL keeps the view. Panning updates the current history entry, so the back button isn't flooded; deliberate jumps (picking a place, locate-me, flying to a favourite or issue) add one, so back returns to where you were.
 - **Share a tree** — `#@lat,lon,19?tree=<source>:<id>` opens the tree's detail panel.
+- **Place links** — `#/<source-id>` (e.g. `#/rotterdam`, `#/bomenmuseum-gimborn`; ids as in `sources.json`, case-insensitive) opens the map fitted to that place; the URL then becomes a position like any other. Unknown ids show the national overview.
 - **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular); both persisted in `localStorage`.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
 - **Current location** — geolocation button flies to the user's position and places a location dot.

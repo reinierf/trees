@@ -88,9 +88,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
     if (!el) return
 
     const urlState = readUrlState()
-    if (urlState?.tree) setPendingTree(urlState.tree)
-    // First visit (no position in the URL): national overview with the places to pick from.
-    if (!urlState) setPlacesOverlay(true)
+    const position = urlState?.kind === 'position' ? urlState : null
+    // #/rotterdam: start fitted to that place. Unknown ids fall through to the overview.
+    const place = urlState?.kind === 'place' ? useStore.getState().sourcesById.get(urlState.sourceId) : undefined
+    if (place) recordCityVisit(place.id)
+    if (position?.tree) setPendingTree(position.tree)
+    // First visit (no position or place in the URL): national overview with the places to pick from.
+    if (!position && !place) setPlacesOverlay(true)
 
     const controller = new MapController({
       // A new move makes any load for the previous view pointless: cancel it before it starts,
@@ -122,8 +126,9 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
 
     controller.init(
       el,
-      urlState?.center ?? NL_CENTER,
-      urlState ? (urlState.tree ? SHARE_ZOOM : urlState.zoom) : NL_ZOOM,
+      position ? { center: position.center, zoom: position.tree ? SHARE_ZOOM : position.zoom }
+        : place ? { bbox: place.bbox }
+        : { center: NL_CENTER, zoom: NL_ZOOM },
     )
     controllerRef.current = controller
 
@@ -138,6 +143,17 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
       useStore.getState().hideBackBar()
       const state = readUrlState()
       if (!state) return
+      if (state.kind === 'place') {
+        // Typed into the address bar of an open tab. The browser already made a history entry
+        // for it, so don't add another (back would land on #/<place> and fly there again):
+        // fit the place, and moveend turns this entry's URL into the position.
+        const source = useStore.getState().sourcesById.get(state.sourceId)
+        if (!source) return
+        setPlacesOverlay(false)
+        recordCityVisit(source.id)
+        controller.fitBbox(source.bbox)
+        return
+      }
       if (state.tree) setPendingTree(state.tree)
       controller.flyToLocation(state.center[0], state.center[1], state.tree ? SHARE_ZOOM : state.zoom, { fly: false })
     }

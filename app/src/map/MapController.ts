@@ -10,6 +10,8 @@ import { formatVernacular, lookupSpeciesNames } from '../lib/species'
 type TreeCountOptions = L.MarkerOptions & { treeCount?: number }
 
 interface Callbacks {
+    /** A pan or zoom begins (also for animated flights). */
+    onMoveStart: () => void
     onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
     onMarkerClick: (tree: Tree) => void
     onGroupMarkerClick: (trees: Tree[]) => void
@@ -81,6 +83,7 @@ export class MapController {
         this.clusterLayer.addTo(this.map)
         this.favouriteLayer.addTo(this.map)
 
+        this.map.on('movestart', () => this.callbacks.onMoveStart())
         this.map.on('moveend', () => this.fireMoveEnd())
         this.map.on('drag', () => { this.dragOccurred = true })
         this.map.on('click', () => { if (!this.dragOccurred) this.callbacks.onMapClick() })

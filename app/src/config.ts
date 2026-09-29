@@ -1,4 +1,4 @@
-export const DEBOUNCE_MS = 300
+export const DEBOUNCE_MS = 300          // delay after panning before loading tiles; zoom steps load at once
 export const MAX_CACHE_TILES = 2000      // LRU cap of the tile cache (all zooms and filters together)
 
 // Limits of the API — keep in sync with api/index.php.

@@ -27,6 +27,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   const highlightedIssueKeyRef = useRef<string | null>(null)
   const tileCacheRef = useRef(new TileCache())
   const moveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const loadedZoomRef = useRef<number | null>(null)
 
   const closePopup = useStore((s) => s.closePopup)
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
@@ -91,6 +92,12 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
     if (!urlState) setPlacesOverlay(true)
 
     const controller = new MapController({
+      // A new move makes any load for the previous view pointless: cancel it before it starts,
+      // or abort it in flight.
+      onMoveStart: () => {
+        if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
+        abortLoadRef.current()
+      },
       onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
         setCurrentCenter(center)
@@ -98,7 +105,13 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
         // Zooming in by hand means the user has found their place: back to the trees.
         if (zoom > PLACES_OVERLAY_MAX_ZOOM && useStore.getState().placesOverlay) setPlacesOverlay(false)
         if (moveTimerRef.current) clearTimeout(moveTimerRef.current)
-        moveTimerRef.current = setTimeout(() => loadTilesRef.current(bounds, zoom), DEBOUNCE_MS)
+        // A zoom step is one discrete action: load at once. While scrolling through several
+        // levels, the next step's movestart aborts the load for the level passed through.
+        // Panning comes in small drags, so its load waits until the map has been still a while.
+        const zoomChanged = zoom !== loadedZoomRef.current
+        loadedZoomRef.current = zoom
+        if (zoomChanged) loadTilesRef.current(bounds, zoom)
+        else moveTimerRef.current = setTimeout(() => loadTilesRef.current(bounds, zoom), DEBOUNCE_MS)
       },
       onMapClick: (...args) => onMapClickRef.current(...args),
       onMarkerClick: (...args) => onMarkerClickRef.current(...args),
@@ -140,6 +153,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   // Reload what's in view when the data (build version) or the species filter changes;
   // both are part of the tile cache key, so this fetches fresh tiles.
   useEffect(() => {
+    loadedZoomRef.current = null  // deliberate change: load at once, not after the pan delay
     controllerRef.current?.refresh()
   }, [meta?.version, speciesFilter])
 

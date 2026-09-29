@@ -282,7 +282,7 @@ React store (Zustand)
 
 **`useMap`** (`src/map/useMap.ts`) — holds a `MapController` in a `useRef`. Wires callbacks to store setters, keeps the URL position up to date, handles back/forward, and calls controller methods as side effects of store changes.
 
-**`useTileLoader`** (`src/map/useTileLoader.ts`) — on every map move (debounced): takes the 256 px tiles covering the viewport at the current zoom, loads the missing ones with one `POST /api/tiles`, and publishes what's in view to the store (trees, clusters, counts per source).
+**`useTileLoader`** (`src/map/useTileLoader.ts`) — on every map move (at once after a zoom step, after `DEBOUNCE_MS` after panning; a new move cancels a pending or running load): takes the 256 px tiles covering the viewport at the current zoom, loads the missing ones with one `POST /api/tiles`, and publishes what's in view to the store (trees, clusters, counts per source).
 
 **`TileCache`** (`src/map/tileCache.ts`) — LRU cache of tile payloads keyed by build version, species filter and `z/x/y`. A tile the server sent as individual trees holds all trees of its area, so its descendant tiles at higher zooms are derived without a request.
 
@@ -360,7 +360,7 @@ src/
 
 | Constant | Default | Purpose |
 |---|---|---|
-| `DEBOUNCE_MS` | `300` | Delay after pan/zoom before loading tiles |
+| `DEBOUNCE_MS` | `300` | Delay after panning before loading tiles; a zoom step loads at once, and any new move cancels a pending or running load |
 | `MAX_CACHE_TILES` | `2000` | LRU limit of the tile cache |
 | `MIN_MAP_ZOOM` | `5` | Lowest map zoom (the pyramids start here) |
 | `NL_CENTER` / `NL_ZOOM` | `[52.22, 5.29]` / `7` | National overview |

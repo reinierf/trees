@@ -5,8 +5,9 @@ import { formatVernacular, useSpeciesNames, type SpeciesNames } from '../../lib/
 import { treeKey } from '../../lib/treeKey'
 import { useSpeciesInView } from '../../api/useSpeciesInView'
 import { useTreesDetails } from '../../api/useTreeDetails'
-import { fetchNearestTree } from '../../api/trees'
+import { fetchNearestTree, type NearestTree } from '../../api/trees'
 import { NEAREST_TREE_ZOOM } from '../../config'
+import { inBounds } from '../../map/mercator'
 import { useStore } from '../../store'
 import type { Tree, TreeDetails } from '../../types'
 import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
@@ -21,6 +22,12 @@ const MAX_NOT_IN_VIEW = 50
 
 function treeLocation(details: TreeDetails | undefined) {
   return details?.street ?? details?.neighbourhood ?? ''
+}
+
+function formatDistance(metres: number, locale: string): string {
+  if (metres < 1000) return `${Math.round(metres / 10) * 10} m`
+  const km = metres / 1000
+  return `${km.toLocaleString(locale, { maximumFractionDigits: km < 10 ? 1 : 0 })} km`
 }
 
 function matches(names: SpeciesNames, q: string): boolean {
@@ -45,6 +52,8 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
   const setPendingTree = useStore((s) => s.setPendingTree)
   const setPendingFlyTo = useStore((s) => s.setPendingFlyTo)
   const clearSpeciesFilter = useStore((s) => s.clearSpeciesFilter)
+  const showBackBar = useStore((s) => s.showBackBar)
+  const sourcesById = useStore((s) => s.sourcesById)
   const nameMode = useStore((s) => s.nameMode)
   const locale = useStore((s) => s.locale)
   const names = useSpeciesNames()
@@ -53,6 +62,8 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
   const [collapsed, setCollapsed] = useState(false)
   const [query, setQuery] = useState(initialQuery ?? '')
   const [nearestLoading, setNearestLoading] = useState<number | null>(null)
+  // Result of the last nearest-tree lookup, shown under its species row until confirmed.
+  const [nearest, setNearest] = useState<{ speciesId: number; tree: NearestTree } | null>(null)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const selectedRowRef = useRef<HTMLDivElement>(null)
@@ -109,19 +120,22 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
     closePopup()
   }
 
-  async function goToNearest(speciesId: number) {
-    const center = useStore.getState().currentCenter
+  // First tap: look up the nearest tree. Already in view → open it right away (no surprise);
+  // otherwise show distance and place under the row, and only "Go there" moves the map.
+  async function lookUpNearest(speciesId: number) {
+    if (nearest?.speciesId === speciesId) { setNearest(null); return }
+    const { currentCenter: center, currentBounds: bounds } = useStore.getState()
     if (!center || nearestLoading !== null) return
     setNearestLoading(speciesId)
     try {
       const tree = await fetchNearestTree(speciesId, center[0], center[1])
       if (!tree) return
-      // A filter on another species would hide the tree we're flying to.
-      const filter = useStore.getState().speciesFilter
-      if (filter !== null && filter !== speciesId) clearSpeciesFilter()
-      // Opens the tree's detail panel once its tile has loaded, like a shared tree link.
-      setPendingTree({ source: tree.source, id: tree.id })
-      setPendingFlyTo({ lat: tree.lat, lon: tree.lon, minZoom: NEAREST_TREE_ZOOM })
+      if (bounds && inBounds(tree.lat, tree.lon, bounds)) {
+        setNearest(null)
+        openTreeDetail(tree)
+      } else {
+        setNearest({ speciesId, tree })
+      }
     } catch (e) {
       console.error('fetch nearest tree failed', e)
     } finally {
@@ -129,12 +143,23 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
     }
   }
 
+  function goToNearest(tree: NearestTree) {
+    // A filter on another species would hide the tree we're flying to.
+    const filter = useStore.getState().speciesFilter
+    if (filter !== null && filter !== tree.speciesId) clearSpeciesFilter()
+    // Opens the tree's detail panel once its tile has loaded, like a shared tree link.
+    setPendingTree({ source: tree.source, id: tree.id })
+    setPendingFlyTo({ lat: tree.lat, lon: tree.lon, minZoom: NEAREST_TREE_ZOOM })
+    showBackBar()
+    setNearest(null)
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
       // Enter acts on the top row: filter on it, or fly to the nearest tree if it's not in view.
       const first = speciesList?.[0] ?? null
       if (first) filterOn(first.speciesId)
-      else if (notInView[0]) void goToNearest(notInView[0].speciesId)
+      else if (notInView[0]) void lookUpNearest(notInView[0].speciesId)
     } else if (e.key === 'Escape') {
       if (query) setQuery('')
       else handleClose()
@@ -167,13 +192,35 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
   function nearestButton(speciesId: number) {
     return (
       <button
-        onClick={() => void goToNearest(speciesId)}
+        onClick={() => void lookUpNearest(speciesId)}
         className="shrink-0 p-1.5 pr-3 text-muted-foreground hover:text-foreground"
         aria-label={t('species.nearest')}
         title={t('species.nearest')}
       >
-        {nearestLoading === speciesId ? <Loader2 size={13} className="animate-spin" /> : <Navigation size={13} />}
+        {nearestLoading === speciesId
+          ? <Loader2 size={13} className="animate-spin" />
+          : <Navigation size={13} className={nearest?.speciesId === speciesId ? 'text-green-700' : ''} />}
       </button>
+    )
+  }
+
+  function nearestResult(speciesId: number) {
+    if (nearest?.speciesId !== speciesId) return null
+    const { tree } = nearest
+    const place = [sourcesById.get(tree.source)?.name ?? tree.source, tree.street ? capitalize(tree.street) : null]
+      .filter(Boolean).join(', ')
+    return (
+      <div className="flex items-center gap-2 pl-6 pr-3 py-1.5 text-xs bg-gray-50 border-y">
+        <span className="flex-1 min-w-0 truncate text-muted-foreground" title={place}>
+          <span className="font-semibold text-foreground">{formatDistance(tree.distance, intlTag(locale))}</span> · {place}
+        </span>
+        <button
+          onClick={() => goToNearest(tree)}
+          className="shrink-0 px-2 py-0.5 rounded bg-[#2d6a4f] text-white hover:bg-[#1e4d38] transition-colors"
+        >
+          {t('nearest.goThere')}
+        </button>
+      </div>
     )
   }
 
@@ -250,6 +297,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
                   </button>
                   {nearestButton(speciesId)}
                 </div>
+                {nearestResult(speciesId)}
                 {isOpen && (
                   <div className="bg-gray-50 border-t border-b">
                     {!allTreeMode && (
@@ -305,9 +353,12 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
             {notInView.slice(0, MAX_NOT_IN_VIEW).map(({ speciesId, names: n }) => {
               const name = nameCell(n)
               return (
-                <div key={speciesId} className="flex items-center w-full text-sm hover:bg-gray-50">
-                  <span title={name.title} className="flex-1 flex items-center pl-4 pr-1 py-2 min-w-0">{name.node}</span>
-                  {nearestButton(speciesId)}
+                <div key={speciesId}>
+                  <div className="flex items-center w-full text-sm hover:bg-gray-50">
+                    <span title={name.title} className="flex-1 flex items-center pl-4 pr-1 py-2 min-w-0">{name.node}</span>
+                    {nearestButton(speciesId)}
+                  </div>
+                  {nearestResult(speciesId)}
                 </div>
               )
             })}

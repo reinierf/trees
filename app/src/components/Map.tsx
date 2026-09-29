@@ -16,6 +16,7 @@ import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
 import { IssuesButton } from './IssuesButton'
 import { SourcesButton } from './SourcesButton'
+import { BackBar } from './BackBar'
 
 export function Map() {
   const t = useT()
@@ -88,6 +89,7 @@ export function Map() {
         </div>
       )}
       <SpeciesFilterBadge onClear={clearSpeciesFilter} />
+      <BackBar />
       <FullscreenButton />
       <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
       <CityButton onAllPlaces={handleAllPlaces} onPlace={goToPlace} />

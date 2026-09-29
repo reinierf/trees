@@ -361,7 +361,8 @@ function handle_tree(): void
 }
 
 /**
- * Nearest tree of a species to a point, as a slim tree {source, id, lat, lon, speciesId}.
+ * Nearest tree of a species to a point: a slim tree {source, id, lat, lon, speciesId} plus its
+ * street and distance in metres, so the client can say where it is before flying there.
  * Searches boxes of growing size on the (species_id, lat, lon) index until one holds a tree,
  * then re-queries a box as large as that tree's distance: a tree just outside the first box's
  * corner can be closer than one inside it.
@@ -382,7 +383,7 @@ function handle_nearest(): void
         $dLat = $metres / $metresPerDegLat;
         $dLon = $metres / $metresPerDegLon;
         [$s, $n, $w, $e] = array_map(fn($v) => sprintf('%.9F', $v), [$lat - $dLat, $lat + $dLat, $lon - $dLon, $lon + $dLon]);
-        return trees_db()->query("SELECT source_idx, id, lat, lon FROM trees
+        return trees_db()->query("SELECT source_idx, id, lat, lon, street FROM trees
                                   WHERE species_id = {$species} AND lat BETWEEN {$s} AND {$n} AND lon BETWEEN {$w} AND {$e}")
                           ->fetchAll();
     };
@@ -401,6 +402,8 @@ function handle_nearest(): void
             'lat'       => (float) $r['lat'],
             'lon'       => (float) $r['lon'],
             'speciesId' => $species,
+            'street'    => $r['street'],
+            'distance'  => (int) round($distance($r)),
         ]);
     }
     respond(404, ['error' => 'No tree of this species found']);

@@ -15,7 +15,7 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 - **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*).
 - **One set of bubbles** — server clusters join the tree markers in Leaflet.markercluster, carrying their tree count, so bubbles group by on-screen distance (120 px below zoom 16, 80 px from 16) instead of showing the server's 64 px grid, and cluster tiles and tree tiles blend seamlessly. Clustering stops at `CLUSTER_DISABLE_ZOOM`.
 - **Species list panel** — species in view with counts, with a search box at the top (scientific and vernacular names; Enter filters on the top row). Expanding a species lists its individual trees (where the map shows individual trees); clicking highlights the tree on the map. Each row has two actions: filter the map on this species, and fly to the nearest tree of it.
-- **Nearest tree** — finds the tree of a species closest to the map centre, across all sources, flies there (zoom 18, as a history entry so back returns) and opens its detail panel. While searching, matching species that aren't in view are listed under "Not in view" with only this action, so any species in the country can be found.
+- **Nearest tree** — finds the tree of a species closest to the map centre, across all sources. If it's in view, its detail panel opens right away. Otherwise the distance and place (source, street) appear under the species row, and only "Go there" flies to it (zoom 18, as a history entry so back returns) and opens its panel; a "Back to previous position" bar then shows for 8 seconds. While searching, matching species that aren't in view are listed under "Not in view" with only this action, so any species in the country can be found.
 - **Species filter** — the map shows only one species (clusters and trees); the filter persists across map moves.
 - **Tree detail panel** — species, vernacular name, year planted, street, trunk diameter, crown spread, Wikipedia/Google links and a photo thumbnail. Details are fetched when the tree is opened.
 - **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
@@ -130,7 +130,7 @@ PHP reads `trees.db` and `meta.db` (read-only) and `issues.db`.
 | POST | `/api/tiles` | `{"z", "tiles": [[x, y], …], "species"?}` (≤ 100 tiles) | `{version, tiles: [...]}` — see below |
 | GET | `/api/species` | `z, x0, x1, y0, y1` (tile range, ≤ 400 tiles) | `[[speciesId, count], …]`, most common first |
 | GET | `/api/tree` | `source, id` | tree details object |
-| GET | `/api/nearest` | `species, lat, lon` | nearest tree of the species as `{source, id, lat, lon, speciesId}`, or 404 |
+| GET | `/api/nearest` | `species, lat, lon` | nearest tree of the species as `{source, id, lat, lon, speciesId, street, distance}` (distance in metres), or 404 |
 | POST | `/api/trees/details` | `{"trees": [[source, id], …]}` (≤ 200) | array of tree details objects |
 | POST | `/api/flag` | issue report | `{ok}` |
 | GET | `/api/issues` | — | `{trees, species}` |

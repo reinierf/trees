@@ -130,10 +130,16 @@ export async function resolveIssue(
   await postJson('/issues/resolve', body)
 }
 
+export interface NearestTree extends Tree {
+  street: string | null
+  /** metres from the point asked about */
+  distance: number
+}
+
 /** Nearest tree of a species to a point, or null if the species has no trees. */
-export async function fetchNearestTree(speciesId: number, lat: number, lon: number, signal?: AbortSignal): Promise<Tree | null> {
+export async function fetchNearestTree(speciesId: number, lat: number, lon: number, signal?: AbortSignal): Promise<NearestTree | null> {
   const response = await fetch(`${API_BASE}/nearest?species=${speciesId}&lat=${lat.toFixed(6)}&lon=${lon.toFixed(6)}`, { signal })
   if (response.status === 404) return null
   if (!response.ok) throw new Error(`API ${response.status}`)
-  return response.json() as Promise<Tree>
+  return response.json() as Promise<NearestTree>
 }

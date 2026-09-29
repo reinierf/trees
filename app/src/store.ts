@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Cluster, Meta, Source, SpeciesEntry, Tree, TreeDetails, TreeIssue, SpeciesIssue } from './types'
+import type { Bbox, Cluster, Meta, Source, SpeciesEntry, Tree, TreeDetails, TreeIssue, SpeciesIssue } from './types'
 import type { TileRange } from './map/mercator'
 import type { TreeRef } from './map/urlState'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
@@ -56,6 +56,9 @@ interface AppStore extends ViewContents {
   isLoading: boolean
   currentZoom: number
   currentCenter: [number, number] | null
+  currentBounds: Bbox | null
+  /** Time of the last jump far from the previous view; shows the "back" bar for a while. */
+  backBarAt: number | null
   pendingTree: TreeRef | null
   pendingCenter: [number, number] | null
   pendingHighlight: Tree | null
@@ -87,6 +90,9 @@ interface AppStore extends ViewContents {
   setIsLoading: (v: boolean) => void
   setCurrentZoom: (z: number) => void
   setCurrentCenter: (c: [number, number]) => void
+  setCurrentBounds: (b: Bbox) => void
+  showBackBar: () => void
+  hideBackBar: () => void
   setPendingTree: (tree: TreeRef | null) => void
   setPendingCenter: (c: [number, number] | null) => void
   setPendingHighlight: (tree: Tree | null) => void
@@ -126,6 +132,8 @@ export const useStore = create<AppStore>((set) => ({
   isLoading: false,
   currentZoom: 0,
   currentCenter: null,
+  currentBounds: null,
+  backBarAt: null,
   pendingTree: null,
   pendingCenter: null,
   pendingHighlight: null,
@@ -169,6 +177,9 @@ export const useStore = create<AppStore>((set) => ({
   setIsLoading: (v) => set({ isLoading: v }),
   setCurrentZoom: (z) => set({ currentZoom: z }),
   setCurrentCenter: (c) => set({ currentCenter: c }),
+  setCurrentBounds: (b) => set({ currentBounds: b }),
+  showBackBar: () => set({ backBarAt: Date.now() }),
+  hideBackBar: () => set({ backBarAt: null }),
   setPendingTree: (tree) => set({ pendingTree: tree }),
   setPendingCenter: (c) => set({ pendingCenter: c }),
   setPendingHighlight: (tree) => set({ pendingHighlight: tree }),

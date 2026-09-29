@@ -32,6 +32,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   const closePopup = useStore((s) => s.closePopup)
   const setCurrentZoom = useStore((s) => s.setCurrentZoom)
   const setCurrentCenter = useStore((s) => s.setCurrentCenter)
+  const setCurrentBounds = useStore((s) => s.setCurrentBounds)
   const setPendingTree = useStore((s) => s.setPendingTree)
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const setPendingHighlight = useStore((s) => s.setPendingHighlight)
@@ -101,6 +102,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
       onMoveEnd: (bounds, zoom, center) => {
         setCurrentZoom(zoom)
         setCurrentCenter(center)
+        setCurrentBounds(bounds)
         replaceUrlPosition(center, zoom)
         // Zooming in by hand means the user has found their place: back to the trees.
         if (zoom > PLACES_OVERLAY_MAX_ZOOM && useStore.getState().placesOverlay) setPlacesOverlay(false)
@@ -133,6 +135,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
 
     // Back/forward (and editing the URL by hand): move the map to the entry's position.
     function onPopState() {
+      useStore.getState().hideBackBar()
       const state = readUrlState()
       if (!state) return
       if (state.tree) setPendingTree(state.tree)

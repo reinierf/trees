@@ -211,7 +211,7 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
       .filter(Boolean).join(', ')
     return (
       <div className="flex items-center gap-2 pl-6 pr-3 py-1.5 text-xs bg-gray-50 border-y">
-        <span className="flex-1 min-w-0 truncate text-muted-foreground" title={place}>
+        <span className="flex-1 min-w-0 line-clamp-2 text-muted-foreground" title={place}>
           <span className="font-semibold text-foreground">{formatDistance(tree.distance, intlTag(locale))}</span> · {place}
         </span>
         <button

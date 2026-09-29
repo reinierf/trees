@@ -144,12 +144,13 @@ function main() {
         const db = new DatabaseSync(dbPath, { readOnly: true });
         let n = 0, s = 90, nn = -90, w = 180, e = -180, lastFetched = null;
         // Source ids are not always unique: some datasets list the same tree twice (identical or
-        // sub-metre positions), others reuse an id for different trees (Gorinchem). Same id within
-        // DUPLICATE_RADIUS_M → same tree, keep one; further apart → a different tree, kept under a
-        // suffixed id ("1~2") so it stays addressable.
+        // sub-metre positions), others reuse an id for different trees (Gorinchem). Same id and
+        // species within DUPLICATE_RADIUS_M → same tree, keep one; otherwise a different tree, kept
+        // under a suffixed id ("1~2") so it stays addressable. The species check matters for ids
+        // derived from coordinates (Ridderkerk): two trees planted on one point share such an id.
         // Ids shared by many rows are placeholders ("undefined" for all of Dordrecht, "Onbekend" in
         // Deventer), not identities: those rows are all kept, numbered, without duplicate detection.
-        const seen = new Map();  // id → [[lat, lon], ...] of kept rows
+        const seen = new Map();  // id → [[lat, lon, species], ...] of kept rows
         const placeholders = new Set(db.prepare('SELECT id FROM trees GROUP BY id HAVING COUNT(*) > ?')
             .all(PLACEHOLDER_ID_MIN_ROWS).map((r) => String(r.id)));
         for (const id of placeholders) log(`  ⚠ ${src.id}: id "${id}" is a placeholder — trees get generated ids`);
@@ -158,6 +159,7 @@ function main() {
             const lat = Number(r.lat), lon = Number(r.lon);
             if (r.lat == null || r.lon == null || !isFinite(lat) || !isFinite(lon)) { skippedNoCoords++; continue; }
             let id = String(r.id);
+            const speciesKey = r.species_binomial ?? r.species;
             const kept = seen.get(id);
             if (placeholders.has(id)) {
                 const seq = (placeholderSeq.get(id) ?? 0) + 1;
@@ -165,11 +167,13 @@ function main() {
                 id = `${id}~${seq}`;
                 generatedIds++;
             } else if (kept) {
-                if (kept.some(([la, lo]) => distanceM(la, lo, lat, lon) <= DUPLICATE_RADIUS_M)) { duplicates++; continue; }
-                kept.push([lat, lon]);
+                const sameTree = kept.some(([la, lo, sp]) =>
+                    sp === speciesKey && distanceM(la, lo, lat, lon) <= DUPLICATE_RADIUS_M);
+                if (sameTree) { duplicates++; continue; }
+                kept.push([lat, lon, speciesKey]);
                 id = `${id}~${kept.length}`;
                 renamedIds++;
-            } else seen.set(id, [[lat, lon]]);
+            } else seen.set(id, [[lat, lon, speciesKey]]);
 
             const sp = speciesOf(r.species_binomial, r.species);
             sp.count++;
@@ -312,7 +316,7 @@ function main() {
     const mb = (f) => (statSync(path.join(out, f)).size / 1e6).toFixed(1) + ' MB';
     log(`\nBuild ${version}`);
     log(`  trees:        ${total.toLocaleString()} from ${sourceRows.length} sources (${skippedNoCoords} without coordinates skipped)`);
-    log(`  duplicates:   ${duplicates.toLocaleString()} dropped (same id within ${DUPLICATE_RADIUS_M} m), ${renamedIds.toLocaleString()} kept under a suffixed id`);
+    log(`  duplicates:   ${duplicates.toLocaleString()} dropped (same id and species within ${DUPLICATE_RADIUS_M} m), ${renamedIds.toLocaleString()} kept under a suffixed id`);
     log(`  placeholders: ${generatedIds.toLocaleString()} trees with a placeholder id got a generated id`);
     log(`  species:      ${species.size.toLocaleString()}`);
     log(`  cluster_cell: ${cellRows.toLocaleString()} rows, tile_species: ${tsRows.toLocaleString()} rows, tile_source: ${tsrcRows.toLocaleString()} rows, species_cell: ${scRows.toLocaleString()} rows`);

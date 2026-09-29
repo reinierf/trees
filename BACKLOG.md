@@ -19,3 +19,4 @@ Nice-to-have improvements to pick up later.
 - [ ] Filters: year, genus?
 - [ ] Somehow show selected tree if behind popup (or indicate that it is behind)
 - [ ] "Nearest tree of species X": from search/species list, fly to the closest tree of the chosen species relative to the map centre (or GPS position), across all sources. Depends on the single national tree database (one indexed query instead of one per city).
+- [ ] Maastricht: the WFS layer `maastricht:Bomen` no longer exists on kaartviewer.maastricht.nl (checked 2026-09-29), so the fetcher cannot refresh it. Find the new source. The current database (June 2026) holds every tree exactly twice (identical records); the build drops the copies.

@@ -111,9 +111,10 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
             drawProgress(page.length, args.all ? all.length : args.count);
         } else if (args.all) {
             const pageSize = 1000;
-            const keyset   = canResume && city.keysetPaging;
+            // Keyset paging doesn't depend on resume support; only resuming from resumeId does.
+            const keyset   = Boolean(city.keysetPaging);
             let startIndex = keyset ? 0 : effectiveResume;
-            let lastId     = keyset ? (resumeId ?? null) : null;
+            let lastId     = keyset && canResume ? (resumeId ?? null) : null;
             let layerCount = 0;
 
             process.stderr.write(`[${city.name}] Counting trees${tag}...\n`);
@@ -159,7 +160,8 @@ async function fetchCity(city, args, fetchedAt, resumeFrom = 0, resumeId = null,
                 if (rawCount < pageSize) break;
 
                 if (keyset) {
-                    lastId = Math.max(...page.map(t => Number(t.id)));
+                    // pageKey: the numeric field the source pages on, when the tree id is something else.
+                    lastId = Math.max(...page.map(t => Number(city.pageKey ? city.pageKey(t) : t.id)));
                 } else {
                     startIndex += pageSize;
                 }

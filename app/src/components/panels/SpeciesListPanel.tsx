@@ -1,4 +1,4 @@
-import { ChevronRight, Filter, Info, Loader2, Navigation, Search, X } from 'lucide-react'
+import { ChevronRight, Crosshair, Filter, Info, Loader2, Navigation, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { capitalize, capitalizeFirst } from '../../lib/utils'
 import { formatVernacular, useSpeciesNames, type SpeciesNames } from '../../lib/species'
@@ -216,9 +216,11 @@ export function SpeciesListPanel({ expandedSpecies, selectedTreeKey, initialQuer
         </span>
         <button
           onClick={() => goToNearest(tree)}
-          className="shrink-0 px-2 py-0.5 rounded bg-[#2d6a4f] text-white hover:bg-[#1e4d38] transition-colors"
+          className="shrink-0 p-1 -mr-1 text-muted-foreground hover:text-foreground"
+          aria-label={t('nearest.goThere')}
+          title={t('nearest.goThere')}
         >
-          {t('nearest.goThere')}
+          <Crosshair size={14} />
         </button>
       </div>
     )

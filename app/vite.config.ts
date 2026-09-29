@@ -15,6 +15,20 @@ export default defineConfig(({ mode }) => ({
         server.watcher.add(path.resolve(__dirname, '../map'))
       },
     },
+    {
+      // Dev counterpart of public/.htaccess: /rotterdam → /#/rotterdam, the app's place link.
+      // 302 rather than production's 301, so browsers don't cache it while developing.
+      name: 'place-path-redirect',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          const m = /^\/([a-z][a-z0-9-]+)\/?(\?.*)?$/.exec(req.url ?? '')
+          if (!m || m[1] === 'api') return next()
+          res.statusCode = 302
+          res.setHeader('Location', `/#/${m[1]}`)
+          res.end()
+        })
+      },
+    },
   ],
   resolve: {
     alias: {

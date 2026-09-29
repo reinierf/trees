@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { useStore, PopupKind } from '../store'
+import { treeKey } from '../lib/treeKey'
 import type { Tree } from '../types'
 
 export function useMapClickHandlers() {
@@ -16,7 +17,7 @@ export function useMapClickHandlers() {
 
   const onMarkerClick = useCallback((tree: Tree) => {
     const current = useStore.getState().popupView
-    if (current?.kind === PopupKind.TreeDetail && current.tree.id === tree.id) {
+    if (current?.kind === PopupKind.TreeDetail && treeKey(current.tree) === treeKey(tree)) {
       closePopup()
     } else {
       openTreeDetail(tree)

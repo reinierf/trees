@@ -5,9 +5,8 @@ import { SpeciesListPanel } from './panels/SpeciesListPanel'
 import { TreeDetailPanel } from './panels/TreeDetailPanel'
 import { FavouritesPanel } from './panels/FavouritesPanel'
 import { IssuesPanel } from './panels/IssuesPanel'
-import { CityInfoPanel } from './panels/CityInfoPanel'
+import { SourcesPanel } from './panels/SourcesPanel'
 import { SamePointListPanel } from './panels/SamePointListPanel'
-import type { City } from '../types'
 
 export const BASE =
   'fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-[1000] w-72 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden'
@@ -42,37 +41,21 @@ export function CollapseButton({ collapsed, onClick }: { collapsed: boolean; onC
   )
 }
 
-interface Props {
-  cities: City[]
-  currentCityId: string
-}
-
-export function InfoPopup({ cities, currentCityId }: Props) {
+export function InfoPopup() {
   const popupView = useStore((s) => s.popupView)
 
   if (!popupView) return null
-  if (popupView.kind === PopupKind.Favourites)
-    return <FavouritesPanel cities={cities} currentCityId={currentCityId} />
-  if (popupView.kind === PopupKind.Issues)
-    return <IssuesPanel cities={cities} currentCityId={currentCityId} />
-  if (popupView.kind === PopupKind.CityInfo) {
-    const city = cities.find((c) => c.id === currentCityId) ?? null
-    return <CityInfoPanel city={city} />
-  }
+  if (popupView.kind === PopupKind.Favourites) return <FavouritesPanel />
+  if (popupView.kind === PopupKind.Issues) return <IssuesPanel />
+  if (popupView.kind === PopupKind.Sources) return <SourcesPanel />
   if (popupView.kind === PopupKind.SpeciesList)
     return (
       <SpeciesListPanel
         expandedSpecies={popupView.expandedSpecies}
-        selectedTreeId={popupView.selectedTreeId}
+        selectedTreeKey={popupView.selectedTreeKey}
       />
     )
   if (popupView.kind === PopupKind.SamePointList)
     return <SamePointListPanel trees={popupView.trees} />
-  return (
-    <TreeDetailPanel
-      tree={popupView.tree}
-      returnTo={popupView.returnTo}
-      cityId={currentCityId}
-    />
-  )
+  return <TreeDetailPanel tree={popupView.tree} returnTo={popupView.returnTo} />
 }

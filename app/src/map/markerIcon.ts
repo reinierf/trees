@@ -2,7 +2,7 @@ import L from 'leaflet'
 import { useStore } from '../store'
 import { TRANSLATIONS } from '../translations/strings'
 import { intlTag } from '../translations/locale'
-import type { City } from '../types'
+import type { Source } from '../types'
 
 function speciesCode(binomial: string): string {
   const parts = binomial.trim().split(/\s+/)
@@ -68,23 +68,18 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
   return icon
 }
 
-export function createCityCircleMarker(city: City): L.CircleMarker {
+export function createPlaceMarker(source: Source): L.CircleMarker {
   const locale = useStore.getState().locale
   const t = TRANSLATIONS[locale]
-  const isInstitution = city.type === 'institution'
-  const fillColor = isInstitution
-    ? (city.has_data ? '#f59e0b' : '#cbd5e1')
-    : (city.has_data ? '#2d6a4f' : '#9ca3af')
-  const m = L.circleMarker(city.center, {
+  const m = L.circleMarker(source.center, {
     radius: 10,
-    fillColor,
-    fillOpacity: city.has_data ? 1 : 0.7,
+    fillColor: source.type === 'institution' ? '#f59e0b' : '#2d6a4f',
+    fillOpacity: 1,
     color: 'white',
     weight: 2,
+    pane: 'selectionPane',
   })
-  const tooltip = city.has_data
-    ? `<strong>${city.name}</strong><br>${city.tree_count.toLocaleString(intlTag(locale))} ${t['marker.trees']}`
-    : `<strong>${city.name}</strong><br><em>${t['marker.dataComingSoon']}</em>`
+  const tooltip = `<strong>${source.name}</strong><br>${source.tree_count.toLocaleString(intlTag(locale))} ${t['marker.trees']}`
   m.bindTooltip(tooltip, { direction: 'top', offset: [0, -12] })
   return m
 }
@@ -125,15 +120,24 @@ export function createGroupIcon(count: number): L.DivIcon {
   return icon
 }
 
+// Server clusters at national zoom hold hundreds of thousands of trees: abbreviate so the
+// label fits the bubble ("456k").
+function clusterLabel(count: number): string {
+  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`
+  if (count >= 10_000) return `${Math.round(count / 1000)}k`
+  return String(count)
+}
+
 export function createClusterIcon(count: number): L.DivIcon {
+  const label = clusterLabel(count)
   const size = count < 100 ? 34 : 40
   const r = size / 2
-  const fs = count < 100 ? 11 : 9
+  const fs = label.length <= 2 ? 11 : label.length <= 4 ? 10 : 9
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" style="display:block">` +
     `<circle cx="${r}" cy="${r}" r="${r - 1}" fill="#2d6a4f" opacity="0.85" stroke="white" stroke-width="1.5"/>` +
     `<text x="${r}" y="${r + 4}" font-family="Arial,sans-serif" font-size="${fs}"` +
-    ` font-weight="normal" text-anchor="middle" fill="white">${count}</text>` +
+    ` font-weight="normal" text-anchor="middle" fill="white">${label}</text>` +
     `</svg>`
   return L.divIcon({ html: svg, className: '', iconSize: [size, size], iconAnchor: [r, r] })
 }

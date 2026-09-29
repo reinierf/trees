@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Loader2, Search, X } from 'lucide-react'
 import { useStore } from '../store'
+import { useSpeciesInView } from '../api/useSpeciesInView'
+import { formatVernacular, useSpeciesNames } from '../lib/species'
 import { capitalizeFirst } from '../lib/utils'
 import { useT } from '../translations/useT'
 import { intlTag } from '../translations/locale'
@@ -8,14 +10,20 @@ import { intlTag } from '../translations/locale'
 const MAX_RESULTS = 100
 
 interface Props {
-  onSelect: (speciesBinomial: string) => void
+  onSelect: (speciesId: number) => void
   onClose: () => void
   initialQuery?: string
 }
 
 export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
-  const citySpecies = useStore((s) => s.citySpecies)
-  const isLoadingSpeciesFilter = useStore((s) => s.isLoadingSpeciesFilter)
+  const isLoading = useStore((s) => s.isLoading)
+  const names = useSpeciesNames()
+  // Search covers the species in view, like the species list.
+  const inView = useSpeciesInView(true)
+  const speciesItems = useMemo(() => (inView ?? []).map(({ speciesId, count }) => {
+    const n = names(speciesId)
+    return { speciesId, species: n.key, name_vernacular: n.vernacular ? formatVernacular(n.vernacular) : null, count }
+  }), [inView, names])
   const nameMode = useStore((s) => s.nameMode)
   const locale = useStore((s) => s.locale)
   const t = useT()
@@ -27,19 +35,19 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
   const filtered = useMemo(() => {
     const q = query.trim().toUpperCase()
     const matches = q
-      ? citySpecies.filter(
+      ? speciesItems.filter(
           (s) =>
             s.species.toUpperCase().includes(q) ||
             (s.name_vernacular?.toUpperCase().includes(q) ?? false),
         )
-      : citySpecies.slice()
+      : speciesItems.slice()
     matches.sort((a, b) => {
       const nameA = nameMode === 'vernacular' && a.name_vernacular ? a.name_vernacular : a.species
       const nameB = nameMode === 'vernacular' && b.name_vernacular ? b.name_vernacular : b.species
       return nameA.localeCompare(nameB, intlTag(locale))
     })
     return matches.slice(0, MAX_RESULTS)
-  }, [query, citySpecies, nameMode, locale])
+  }, [query, speciesItems, nameMode, locale])
 
   useEffect(() => {
     setActiveIndex(0)
@@ -66,7 +74,7 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
       setActiveIndex((i) => Math.max(i - 1, 0))
     } else if (e.key === 'Enter') {
       const item = filtered[activeIndex]
-      if (item) onSelect(item.species_binomial ?? item.species)
+      if (item) onSelect(item.speciesId)
     } else if (e.key === 'Escape') {
       onClose()
     }
@@ -83,7 +91,7 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
       >
         {/* Input row */}
         <div className="flex items-center gap-2 px-3 py-2.5 border-b">
-          {isLoadingSpeciesFilter ? (
+          {isLoading ? (
             <Loader2 className="w-4 h-4 shrink-0 text-gray-400 animate-spin" />
           ) : (
             <Search className="w-4 h-4 shrink-0 text-gray-400" />
@@ -113,7 +121,7 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
         </div>
 
         {/* Results */}
-        {citySpecies.length === 0 ? (
+        {inView === null ? (
           <div className="px-4 py-3 text-sm text-gray-400">{t('search.loading')}</div>
         ) : filtered.length === 0 ? (
           <div className="px-4 py-3 text-sm text-gray-400">{t('search.noResults')}</div>
@@ -133,9 +141,9 @@ export function SearchOverlay({ onSelect, onClose, initialQuery }: Props) {
 
               return (
                 <button
-                  key={item.species_binomial ?? item.species}
+                  key={item.speciesId}
                   data-active={i === activeIndex ? 'true' : undefined}
-                  onClick={() => onSelect(item.species_binomial ?? item.species)}
+                  onClick={() => onSelect(item.speciesId)}
                   onMouseEnter={() => setActiveIndex(i)}
                   className={[
                     'w-full flex items-center justify-between px-4 py-1.5 text-left text-sm transition-colors',

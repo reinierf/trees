@@ -4,7 +4,6 @@ import { Flag, Check } from 'lucide-react'
 import { CloseButton } from './InfoPopup'
 import { capitalizeFirst } from '../lib/utils'
 import { useStore } from '../store'
-import type { Tree } from '../types'
 
 // ── Flag definitions ──────────────────────────────────────────────────────────
 
@@ -31,25 +30,34 @@ function formatName(binomial: string | null, cultivar: string | null, dutch: str
   return `${base}${cv}${nl}`
 }
 
+/** The tree or species being flagged, with the names the modal shows. */
+export interface FlagSubject {
+  source: string
+  id: string
+  binomial: string | null
+  cultivar: string | null
+  vernacular: string | null
+  street: string | null
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface Props {
   mode: 'tree' | 'species'
-  tree: Tree
-  cityId: string
+  subject: FlagSubject
   /** true = confirmed no images (used to auto-check no-images in species mode) */
   noImages: boolean
   onClose: () => void
   onSubmit: (flags: string[], note: string) => Promise<void>
 }
 
-export function FlagModal({ mode, tree, cityId, noImages, onClose, onSubmit }: Props) {
+export function FlagModal({ mode, subject, noImages, onClose, onSubmit }: Props) {
   const treeIssues    = useStore((s) => s.treeIssues)
   const speciesIssues = useStore((s) => s.speciesIssues)
 
   const existing = mode === 'tree'
-    ? treeIssues.find((i) => i.city === cityId && i.tree_id === tree.id)
-    : speciesIssues.find((i) => i.species_binomial === tree.species_binomial)
+    ? treeIssues.find((i) => i.city === subject.source && i.tree_id === subject.id)
+    : speciesIssues.find((i) => i.species_binomial === subject.binomial)
 
   const flags = mode === 'tree' ? TREE_FLAGS : SPECIES_FLAGS
 
@@ -101,7 +109,7 @@ export function FlagModal({ mode, tree, cityId, noImages, onClose, onSubmit }: P
     }
   }
 
-  const nameStr = formatName(tree.species_binomial, tree.species_cultivar, tree.name_vernacular)
+  const nameStr = formatName(subject.binomial, subject.cultivar, subject.vernacular)
   const header  = mode === 'tree' ? 'Markeer datafout voor boom' : 'Markeer datafout voor soort'
 
   return createPortal(
@@ -132,8 +140,8 @@ export function FlagModal({ mode, tree, cityId, noImages, onClose, onSubmit }: P
             {/* Context */}
             <div className="px-4 pt-3 pb-2">
               <p className="text-sm font-medium italic">{nameStr}</p>
-              {mode === 'tree' && tree.street && (
-                <p className="text-xs text-muted-foreground mt-0.5">{tree.street}</p>
+              {mode === 'tree' && subject.street && (
+                <p className="text-xs text-muted-foreground mt-0.5">{subject.street}</p>
               )}
             </div>
 

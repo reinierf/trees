@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'react-vendor': ['react', 'react-dom'],
           'leaflet-vendor': ['leaflet', 'leaflet.markercluster'],
           'ui-vendor': ['radix-ui', 'lucide-react'],
         },

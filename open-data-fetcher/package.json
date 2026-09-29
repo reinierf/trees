@@ -14,14 +14,14 @@
     "fetch-vernacular-base": "node tools/vernacular/base/fetch.js",
     "build-vernacular-nl": "node tools/vernacular/nl/build.js",
     "merge-vernacular-nl": "node tools/vernacular/nl/merge.js",
-    "copy-data": "node -e \"const{readdirSync,copyFileSync}=require('fs');readdirSync('data').filter(f=>f.endsWith('.db')).forEach(f=>{copyFileSync('data/'+f,'../api/data/'+f);console.log('Copied',f)})\"",
-    "fetch-vernacular-genera": "node tools/vernacular/base/fetch-genera.js"
+    "fetch-vernacular-genera": "node tools/vernacular/base/fetch-genera.js",
+    "build-db": "node tools/build-db.js"
   },
   "dependencies": {
     "sql.js": "^1.14.1",
     "xml2js": "^0.6.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.13"
   }
 }

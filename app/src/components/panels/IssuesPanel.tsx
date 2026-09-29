@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Check, X } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 import { capitalizeFirst } from '../../lib/utils'
 import { useStore } from '../../store'
 import { resolveIssue } from '../../api/trees'
@@ -8,27 +7,22 @@ import { CloseButton, CollapseButton, PopupShell } from '../InfoPopup'
 import { TREE_FLAGS, SPECIES_FLAGS } from '../FlagModal'
 import { CLUSTER_DISABLE_ZOOM } from '../../config'
 import { useT } from '../../translations/useT'
-import type { City } from '../../types'
+import { treeKey } from '../../lib/treeKey'
 
 const treeFlagLabel   = Object.fromEntries(TREE_FLAGS.map((f) => [f.id, f.label]))
 const speciesFlagLabel = Object.fromEntries(SPECIES_FLAGS.map((f) => [f.id, f.label]))
 
-interface Props {
-  cities: City[]
-  currentCityId: string
-}
-
-export function IssuesPanel({ cities, currentCityId }: Props) {
+export function IssuesPanel() {
   const t = useT()
   const treeIssues         = useStore((s) => s.treeIssues)
   const speciesIssues      = useStore((s) => s.speciesIssues)
   const removeTreeIssue    = useStore((s) => s.removeTreeIssue)
   const removeSpeciesIssue = useStore((s) => s.removeSpeciesIssue)
   const setPendingFlyTo        = useStore((s) => s.setPendingFlyTo)
-  const setPendingHighlightId  = useStore((s) => s.setPendingHighlightId)
+  const setPendingHighlightKey = useStore((s) => s.setPendingHighlightKey)
+  const sourcesById            = useStore((s) => s.sourcesById)
   const setPendingSearch       = useStore((s) => s.setPendingSearch)
   const closePopup             = useStore((s) => s.closePopup)
-  const navigate = useNavigate()
 
   const [collapsed, setCollapsed]   = useState(false)
   const [confirmKey, setConfirmKey] = useState<string | null>(null)
@@ -36,14 +30,14 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
 
   const total = treeIssues.length + speciesIssues.length
 
-  const cityName = (id: string) => cities.find((c) => c.id === id)?.name ?? id
+  const sourceName = (id: string) => sourcesById.get(id)?.name ?? id
 
   async function handleResolveTree(city: string, treeId: string) {
     const key = `tree:${city}:${treeId}`
     setResolving(key)
     setConfirmKey(null)
     try {
-      await resolveIssue({ type: 'tree', city, treeId })
+      await resolveIssue({ type: 'tree', source: city, treeId })
       removeTreeIssue(city, treeId)
     } finally {
       setResolving(null)
@@ -64,9 +58,8 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
 
   function handleTreeClick(city: string, treeId: string, lat: number | null, lon: number | null) {
     if (!lat || !lon) return
-    if (city !== currentCityId) navigate(`/${city}`)
     setPendingFlyTo({ lat, lon, minZoom: CLUSTER_DISABLE_ZOOM })
-    setPendingHighlightId(treeId)
+    setPendingHighlightKey(treeKey({ source: city, id: treeId }))
   }
 
   function handleSpeciesSearch(binomial: string) {
@@ -114,7 +107,7 @@ export function IssuesPanel({ cities, currentCityId }: Props) {
                     >
                       <span className="block text-sm italic truncate">{name}{dutch}</span>
                       <span className="block text-xs text-muted-foreground truncate">
-                        {issue.street && `${issue.street} · `}{cityName(issue.city)}
+                        {issue.street && `${issue.street} · `}{sourceName(issue.city)}
                       </span>
                       {flagText && (
                         <span className="block text-xs text-amber-600 mt-0.5 truncate">{flagText}</span>

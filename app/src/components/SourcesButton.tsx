@@ -2,18 +2,18 @@ import { Info } from 'lucide-react'
 import { useStore, PopupKind } from '../store'
 import { useT } from '../translations/useT'
 
-export function CityInfoButton() {
+export function SourcesButton() {
   const t = useT()
   const popupView = useStore((s) => s.popupView)
-  const openCityInfo = useStore((s) => s.openCityInfo)
+  const openSources = useStore((s) => s.openSources)
   const closePopup = useStore((s) => s.closePopup)
 
-  const isActive = popupView?.kind === PopupKind.CityInfo
+  const isActive = popupView?.kind === PopupKind.Sources
 
   return (
     <button
-      onClick={isActive ? closePopup : openCityInfo}
-      title={t('city.info')}
+      onClick={isActive ? closePopup : openSources}
+      title={t('sources.title')}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
         'top-[192px] left-[12px]',

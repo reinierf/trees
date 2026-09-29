@@ -87,7 +87,7 @@ npm run patch-binomials -- --dry       # preview changes without writing
 npm run patch-binomials -- --city amsterdam
 ```
 
-After running, copy the resulting `.db` files into `api/data/` alongside the city databases (`npm run copy-data`).
+After running, rebuild the national databases the API serves (`npm run build-db`).
 
 ### Non-WFS sources: Von Gimborn Arboretum collection database
 
@@ -125,14 +125,14 @@ Shared behaviour across all institutions on this database:
   certificate verification in your environment (seen in sandboxed dev setups).
 
 All four institutions on this database are now fetched and registered in
-`api/cities.json`, each with `mapZoom`/`clusterDisableZoom` overrides (see
-"Per-city map zoom / clustering overrides" below) since all four are small,
-dense sites where the global defaults would leave them looking like a dot
-zoomed out, or dump thousands of individual DOM markers at once zoomed in.
+`sources.json`, each with a `clusterDisableZoom` override (see
+"Per-source clustering override" below) since all four are small, dense
+sites where the global default would dump thousands of individual DOM
+markers at once zoomed in.
 
 #### Trompenburg Tuinen & Arboretum (Rotterdam)
 
-**Status: fetched (3,281 trees) and registered in `api/cities.json`.** Many
+**Status: fetched (3,281 trees) and registered in `sources.json`.** Many
 specimens share exact-identical coordinates — Trompenburg positions trees at
 the "plantvak" (planting-section) level rather than surveying each one
 individually. This isn't a fetcher bug; the coordinates genuinely are that
@@ -157,7 +157,7 @@ confirmed to actually filter correctly, unlike the institution checkbox).
 
 #### Nationaal Bomenmuseum Gimborn (Doorn)
 
-**Status: fetched (3,169 trees) and registered in `api/cities.json`.**
+**Status: fetched (3,169 trees) and registered in `sources.json`.**
 Coordinates here are individually granular — only 26 of 3,169 specimens
 share a coordinate with another (max 5-way collision), vs. Trompenburg's
 pervasive plantvak-level duplication.
@@ -178,7 +178,7 @@ node cities/bomenmuseum-gimborn.js -d
 
 #### Pinetum Ter Borgh (Anloo)
 
-**Status: fetched (225 trees) and registered in `api/cities.json`.** The
+**Status: fetched (225 trees) and registered in `sources.json`.** The
 smallest and most dense of the four — the whole site is under 200m across.
 `growthFormIndex: null`, same as Gimborn, but here it's an **assumption**
 carried over rather than independently confirmed: Ter Borgh is a "pinetum"
@@ -200,7 +200,7 @@ Institution-specific: `arboretumIndex: 3`.
 
 #### Pinetum de Dennenhorst (Lunteren)
 
-**Status: fetched (349 trees) and registered in `api/cities.json`.** Same
+**Status: fetched (349 trees) and registered in `sources.json`.** Same
 `growthFormIndex: null` assumption as Ter Borgh (also a conifer-only
 "pinetum", not independently confirmed) — genus breakdown is again entirely
 conifers (Chamaecyparis, Juniperus, Picea, Taxus, Pinus, ...).
@@ -251,7 +251,7 @@ inverse projection is exact here (no proj4/datum grid needed, unlike RD New).
 
 #### Arboretum De Nieuwe Ooster (Amsterdam)
 
-**Status: fetched (2,972 trees) and registered in `api/cities.json`.** A
+**Status: fetched (2,972 trees) and registered in `sources.json`.** A
 cemetery park with an arboretum collection — trees are positioned relative
 to grave-plot sections rather than street addresses, so `custom_four`
 ("Grafvak") is mapped to `street` as the closest equivalent, same role it
@@ -276,7 +276,7 @@ node index.js --city de-nieuwe-ooster    # sample 100, dry-run
 
 #### Bergen (NH) — bijzondere en monumentale bomen
 
-**Status: fetched (4,114 trees) and registered in `api/cities.json`.** Unlike
+**Status: fetched (4,114 trees) and registered in `sources.json`.** Unlike
 De Nieuwe Ooster, this org populates the platform's named fields directly
 (`soort`, `soort_nl`, `straat`, `buurt`, `diameterklasse`) rather than the
 generic `custom_*` slots. `diameterklasse` is a class range (e.g. `"50 -
@@ -314,24 +314,25 @@ across all cities to apply the fix.
 node index.js --city bergen-monumentale-bomen --all
 ```
 
-### Per-city map zoom / clustering overrides
+### Per-source clustering override
 
-`api/cities.json` entries may carry optional `mapZoom` and `clusterDisableZoom`
-fields (see `app/src/types.ts`'s `City` type), overriding `app/src/config.ts`'s
-`MAP_ZOOM`/`CLUSTER_DISABLE_ZOOM` globals for that one city — `mapZoom` for
-how far to zoom in when flying to the city's center, `clusterDisableZoom` for
-the zoom at/above which the map stops clustering and renders individual
-markers. Only set where they deviate from the default; most (municipal)
-cities don't need either. All five institutions above (the four on the
-Gimborn collection database, plus De Nieuwe Ooster) set both, since each is a
-small, dense site where the defaults would either leave it looking like a
-dot when flown to, or dump many individual DOM markers at once past the
-default clustering cutoff.
+`sources.json` entries may carry an optional `clusterDisableZoom` (see
+`app/src/types.ts`'s `Source` type): while that source has trees in view, the
+map keeps clustering markers up to this zoom instead of `app/src/config.ts`'s
+`CLUSTER_DISABLE_ZOOM`. Only set where it deviates from the default; municipal
+datasets don't need it. All five institutions above (the four on the Gimborn
+collection database, plus De Nieuwe Ooster) set it, since each is a small,
+dense site that would otherwise dump many individual DOM markers at once.
+
+The former `mapZoom`, `minFetchZoom` and `maxViewportDeg2` overrides are gone:
+the map now fits a place's extent when it's picked, and the server sends
+individual trees instead of clusters wherever a tile holds 500 trees or fewer,
+so sparse datasets are visible from far out without per-city tuning.
 
 ### End-to-end pipeline for a new (or refreshed) city
 
 Once `cities/<id>.js` exists and is registered in `config.js`, run the whole
-fetch → override-check → patch → vernacular → copy sequence in one go:
+fetch → override-check → patch → vernacular → build sequence in one go:
 
 ```sh
 node add-city.js --city utrecht
@@ -349,7 +350,8 @@ asks whether to refetch (`[y/N]`, declining reuses the file on disk) — then
 fetch full dataset(s) for whichever cities need it → `validate-species` for
 the given city/cities → (pause here if it suggests `overrides.js` entries —
 paste them in manually, then press Enter) → patch binomials → rebuild
-vernacular names → `copy-data`.
+vernacular names → `build-db` (national databases for the API; a new city
+must also be added to `sources.json`, or the build leaves it out).
 
 **Currently broken:** the `validate-species` step calls a script that no
 longer exists (see "Known gap" under "Species quality tools") — running
@@ -481,7 +483,7 @@ this to correct names that automated sources get wrong, e.g. preferring
 `'Magnolia'` over the Wikipedia name `'Beverboom'`.
 
 Adding or changing an override does **not** require a city database re-fetch.
-Only `npm run merge-vernacular-nl && npm run copy-data` is needed.
+Only `npm run merge-vernacular-nl && npm run build-db` is needed.
 
 ### `tools/vernacular/nl/build.js`
 
@@ -546,7 +548,7 @@ with the following fields:
 4. **Rebuild and deploy:**
    ```sh
    npm run merge-vernacular-nl
-   npm run copy-data
+   npm run build-db
    ```
 
 ---

@@ -3,9 +3,11 @@
  * End-to-end pipeline to run after wiring up one or more new cities
  * (cities/<id>.js + config.js registration already done): fetch their full
  * datasets, find any new species overrides, patch all city databases,
- * rebuild vernacular names, and copy every .db into api/data/.
+ * rebuild vernacular names, and rebuild the national databases the API serves
+ * (tools/build-db.js → api/data/trees.db + meta.db). A new city also needs an
+ * entry in sources.json, or the build leaves it out.
  *
- * The global steps (patch/vernacular/copy) run once for the whole batch,
+ * The global steps (patch/vernacular/build) run once for the whole batch,
  * not once per city — pass a comma-separated list to avoid redundant
  * validate-species / patch-binomials / fetch-vernacular-base runs.
  *
@@ -28,14 +30,14 @@
  */
 
 import { spawnSync } from 'child_process';
-import { existsSync, copyFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline';
 import { CITIES } from './config.js';
 
 const DATA_DIR     = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data');
-const API_DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'api', 'data');
+const SOURCES_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), 'sources.json');
 
 function parseArgs(argv) {
     const args = { cities: null, yes: false };
@@ -197,14 +199,12 @@ async function main() {
         run('node', ['tools/vernacular/nl/merge.js']);
     }
 
-    if (await confirm(`Copy ${label} database(s) into api/data/`, yes)) {
-        const filesToCopy = [...cities.map(id => CITIES[id].outputFile.sqlite), 'vernacular-nl.db'];
-        for (const file of filesToCopy) {
-            const src = path.join(DATA_DIR, file);
-            if (!existsSync(src)) { process.stdout.write(`  Skipped ${file} (not found)\n`); continue; }
-            copyFileSync(src, path.join(API_DATA_DIR, file));
-            process.stdout.write(`  Copied ${file}\n`);
-        }
+    const registered = new Set(JSON.parse(readFileSync(SOURCES_FILE, 'utf8')).map(s => s.id));
+    for (const id of cities.filter(id => !registered.has(id))) {
+        process.stdout.write(`  ⚠ ${id} is not in sources.json — add it there, or the build leaves it out.\n`);
+    }
+    if (await confirm('Rebuild api/data/trees.db and meta.db from all city databases', yes)) {
+        run('node', ['tools/build-db.js']);
     }
 
     process.stdout.write('\nDone.\n');

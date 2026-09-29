@@ -51,7 +51,7 @@
   {
     "id": "zwolle",
     "name": "Zwolle",
-    "center": [52.5168, 6.0830],
+    "center": [52.5168, 6.083],
     "type": "city",
     "meta": { "source": "Gemeente Zwolle" }
   },
@@ -142,7 +142,7 @@
   {
     "id": "leiden",
     "name": "Leiden",
-    "center": [52.1601, 4.4970],
+    "center": [52.1601, 4.497],
     "type": "city",
     "meta": { "source": "openbomenkaart.org" }
   },
@@ -191,17 +191,14 @@
   {
     "id": "leeuwarden",
     "name": "Leeuwarden",
-    "center": [53.2010, 5.7987],
+    "center": [53.201, 5.7987],
     "type": "city",
-    "mapZoom": 13,
-    "minFetchZoom": 11,
-    "maxViewportDeg2": 5,
     "meta": { "source": "Gemeente Leeuwarden" }
   },
   {
     "id": "roosendaal",
     "name": "Roosendaal",
-    "center": [51.5321, 4.4630],
+    "center": [51.5321, 4.463],
     "type": "city",
     "meta": { "source": "Gemeente Roosendaal" }
   },
@@ -215,7 +212,7 @@
   {
     "id": "maastricht",
     "name": "Maastricht",
-    "center": [50.8514, 5.6910],
+    "center": [50.8514, 5.691],
     "type": "city",
     "meta": { "source": "Gemeente Maastricht" }
   },
@@ -257,7 +254,7 @@
   {
     "id": "gorinchem",
     "name": "Gorinchem",
-    "center": [51.8350, 4.9756],
+    "center": [51.835, 4.9756],
     "type": "city",
     "meta": { "source": "Gemeente Gorinchem" }
   },
@@ -271,9 +268,8 @@
   {
     "id": "bomenmuseum-gimborn",
     "name": "Bomenmuseum Gimborn",
-    "center": [52.0330, 5.3090],
+    "center": [52.033, 5.309],
     "type": "institution",
-    "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
   },
@@ -282,7 +278,6 @@
     "name": "Arboretum Trompenburg",
     "center": [51.9188, 4.5192],
     "type": "institution",
-    "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
   },
@@ -291,7 +286,6 @@
     "name": "Pinetum Ter Borgh",
     "center": [53.0284, 6.7052],
     "type": "institution",
-    "mapZoom": 17,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
   },
@@ -300,7 +294,6 @@
     "name": "Pinetum de Dennenhorst",
     "center": [52.0896, 5.6458],
     "type": "institution",
-    "mapZoom": 17,
     "clusterDisableZoom": 19,
     "meta": { "source": "collectie.gimbornarboretum.nl" }
   },
@@ -309,7 +302,6 @@
     "name": "Arboretum De Nieuwe Ooster",
     "center": [52.3438, 4.9395],
     "type": "institution",
-    "mapZoom": 16,
     "clusterDisableZoom": 19,
     "meta": { "source": "viewer.bomenwacht.nl" }
   },
@@ -318,9 +310,6 @@
     "name": "Bergen (NH)",
     "center": [52.6689, 4.6937],
     "type": "city",
-    "mapZoom": 13,
-    "minFetchZoom": 11,
-    "maxViewportDeg2": 5,
     "meta": { "source": "viewer.bomenwacht.nl" }
   },
   {
@@ -328,9 +317,6 @@
     "name": "Súdwest-Fryslân",
     "center": [53.0328, 5.6608],
     "type": "city",
-    "mapZoom": 13,
-    "minFetchZoom": 11,
-    "maxViewportDeg2": 5,
     "meta": { "source": "Gemeente Súdwest-Fryslân" }
   }
 ]

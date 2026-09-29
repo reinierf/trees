@@ -1,4 +1,7 @@
 import { capitalizeFirst } from '../../lib/utils'
+import { displayName, useSpeciesNames } from '../../lib/species'
+import { treeKey } from '../../lib/treeKey'
+import { useTreesDetails } from '../../api/useTreeDetails'
 import { useStore, PopupKind } from '../../store'
 import { PopupShell, CloseButton } from '../InfoPopup'
 import type { Tree } from '../../types'
@@ -11,6 +14,8 @@ export function SamePointListPanel({ trees }: Props) {
   const openTreeDetail = useStore((s) => s.openTreeDetail)
   const closePopup = useStore((s) => s.closePopup)
   const nameMode = useStore((s) => s.nameMode)
+  const names = useSpeciesNames()
+  const details = useTreesDetails(trees)
 
   return (
     <PopupShell>
@@ -20,23 +25,20 @@ export function SamePointListPanel({ trees }: Props) {
       </div>
       <div className="max-h-64 overflow-y-auto">
         {trees.map((tree) => {
-          const binomial = tree.species_binomial ?? tree.species
-          const vernacular = tree.name_vernacular
-            ? capitalizeFirst(tree.name_vernacular.toLowerCase()).replace(/'([a-z])/g, (_, c: string) => `'${c.toUpperCase()}`)
-            : null
-          const displayName = nameMode === 'vernacular' && vernacular ? vernacular : capitalizeFirst(binomial)
-          const cultivar = tree.species_cultivar ? ` '${capitalizeFirst(tree.species_cultivar)}'` : ''
+          const key = treeKey(tree)
+          const d = details.get(key)
+          const cultivar = d?.species_cultivar ? ` '${capitalizeFirst(d.species_cultivar)}'` : ''
           return (
             <button
-              key={tree.id}
+              key={key}
               onClick={() => openTreeDetail(tree, PopupKind.SamePointList)}
               className="w-full flex items-center justify-between gap-2 px-4 py-1.5 text-sm text-left hover:bg-gray-100 border-b last:border-b-0"
             >
               <span className={`min-w-0 truncate ${nameMode === 'scientific' ? 'italic' : ''}`}>
-                {displayName}{nameMode === 'scientific' ? cultivar : ''}
+                {displayName(names(tree.speciesId), nameMode)}{nameMode === 'scientific' ? cultivar : ''}
               </span>
-              {tree.year_planted && (
-                <span className="text-xs text-muted-foreground shrink-0">{tree.year_planted}</span>
+              {d?.year_planted && (
+                <span className="text-xs text-muted-foreground shrink-0">{d.year_planted}</span>
               )}
             </button>
           )

@@ -1,9 +1,10 @@
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import type { Bbox, City, Tree } from '../types'
-import { MAP_ZOOM, MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_CITY_SWITCH_ZOOM } from '../config'
-import { createSpeciesIcon, createClusterIcon, createGroupIcon, createSelectedSpeciesIcon, createCityCircleMarker } from './markerIcon'
+import type { Bbox, Cluster, Source, Tree } from '../types'
+import { MAP_MAX_ZOOM, CLUSTER_DISABLE_ZOOM, MIN_MAP_ZOOM, PLACE_MAX_ZOOM } from '../config'
+import { createSpeciesIcon, createClusterIcon, createGroupIcon, createSelectedSpeciesIcon, createPlaceMarker } from './markerIcon'
 import { capitalizeFirst } from '../lib/utils'
+import { formatVernacular, lookupSpeciesNames } from '../lib/species'
 
 interface Callbacks {
     onMoveEnd: (bounds: Bbox, zoom: number, center: [number, number]) => void
@@ -20,9 +21,11 @@ export class MapController {
     private readonly favouriteLayer: L.LayerGroup = L.layerGroup()
     private readonly callbacks: Callbacks
     private dragOccurred = false
-    private currentHighlight: string | null = null
+    private currentHighlight: number | null = null
     private readonly onPointerDown = () => { this.dragOccurred = false }
-    private readonly cityMarkersLayer: L.LayerGroup = L.layerGroup()
+    private readonly placeMarkersLayer: L.LayerGroup = L.layerGroup()
+    // Clusters computed by the server for tiles holding too many trees to send individually.
+    private readonly serverClusterLayer: L.LayerGroup = L.layerGroup()
 
     constructor(callbacks: Callbacks) {
         this.callbacks = callbacks
@@ -40,8 +43,8 @@ export class MapController {
 
     // disableClusteringAtZoom is constructor-only in Leaflet.markercluster (no
     // live setter), so a change means tearing down and recreating the cluster
-    // group. Guarded on the value actually changing — most city switches share
-    // the same (default) zoom, and recreating the layer needlessly would be
+    // group. Guarded on the value actually changing — most views share the
+    // same (default) zoom, and recreating the layer needlessly would be
     // wasted work and a visible flicker.
     setClusterDisableZoom(zoom: number): void {
         if (zoom === this.clusterDisableZoom) return
@@ -49,12 +52,12 @@ export class MapController {
         const currentMarkers = this.markers.map(({ m }) => m)
         this.clusterLayer.remove()
         this.clusterLayer = this.buildClusterLayer(zoom)
-        if (this.map) this.clusterLayer.addTo(this.map)
+        if (this.map && !this.placesVisible) this.clusterLayer.addTo(this.map)
         this.clusterLayer.addLayers(currentMarkers)
     }
 
-    init(el: HTMLDivElement, center: [number, number], zoom?: number): void {
-        this.map = L.map(el, { center, zoom: zoom ?? MAP_ZOOM })
+    init(el: HTMLDivElement, center: [number, number], zoom: number): void {
+        this.map = L.map(el, { center, zoom, minZoom: MIN_MAP_ZOOM })
 
         this.tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -64,6 +67,7 @@ export class MapController {
         this.map.createPane('favouritePane').style.zIndex = '620'
         this.map.createPane('selectionPane').style.zIndex = '640'
 
+        this.serverClusterLayer.addTo(this.map)
         this.clusterLayer.addTo(this.map)
         this.favouriteLayer.addTo(this.map)
 
@@ -86,36 +90,24 @@ export class MapController {
         if (!this.map) return
         const b = this.map.getBounds()
         const c = this.map.getCenter()
-        const zoom = this.map.getZoom()
-        this.updateCityMarkersVisibility(zoom)
         this.callbacks.onMoveEnd(
             {
                 nw: { lat: b.getNorth(), lon: b.getWest() },
                 se: { lat: b.getSouth(), lon: b.getEast() },
             },
-            zoom,
+            this.map.getZoom(),
             [c.lat, c.lng],
         )
     }
 
-    private updateCityMarkersVisibility(zoom: number): void {
-        if (!this.map || this.cityMarkersLayer.getLayers().length === 0) return
-        if (zoom <= MIN_CITY_SWITCH_ZOOM) {
-            this.cityMarkersLayer.addTo(this.map)
-        } else {
-            this.cityMarkersLayer.remove()
-        }
-    }
-
-    private markers: Array<{ m: L.Marker; species: string }> = []
+    private markers: Array<{ m: L.Marker; speciesId: number | null }> = []
     private favMode = false
 
     private static tooltipContent(tree: Tree): string {
-        const species = `<span style="font-style:italic;font-weight:600">${capitalizeFirst(tree.species_binomial ?? tree.species)}</span>`
-        if (!tree.name_vernacular) return species
-        const vernacular = capitalizeFirst(tree.name_vernacular.toLowerCase())
-            .replace(/'([a-z])/g, (_, c: string) => `'${c.toUpperCase()}`)
-        return `${species}, ${vernacular}`
+        const names = lookupSpeciesNames(tree.speciesId)
+        const species = `<span style="font-style:italic;font-weight:600">${capitalizeFirst(names.key)}</span>`
+        if (!names.vernacular) return species
+        return `${species}, ${formatVernacular(names.vernacular)}`
     }
 
     private tooltipGen = 0
@@ -173,20 +165,20 @@ export class MapController {
         // Group markers only earn their keep once clustering is fully off, which
         // is the only point where a coordinate collision is actually unclickable.
         const groupingActive = (this.map?.getZoom() ?? 0) >= this.clusterDisableZoom
-        for (const group of MapController.groupByCoordinate(trees.filter((t) => t.species_binomial))) {
+        for (const group of MapController.groupByCoordinate(trees)) {
             if (group.length === 1 || !groupingActive) {
                 for (const tree of group) {
-                    const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(tree.species_binomial!) })
+                    const m = L.marker([tree.lat, tree.lon], { icon: createSpeciesIcon(lookupSpeciesNames(tree.speciesId).key) })
                     this.addDelayedTooltip(m, tree, gen, () => this.tooltipGen)
                     m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onMarkerClick(tree) })
-                    this.markers.push({ m, species: tree.species_binomial! })
+                    this.markers.push({ m, speciesId: tree.speciesId })
                     layerMarkers.push(m)
                 }
             } else {
                 const [{ lat, lon }] = group
                 const m = L.marker([lat, lon], { icon: createGroupIcon(group.length) })
                 m.on('click', (e) => { L.DomEvent.stopPropagation(e); this.callbacks.onGroupMarkerClick(group) })
-                this.markers.push({ m, species: '' })
+                this.markers.push({ m, speciesId: null })
                 layerMarkers.push(m)
             }
         }
@@ -194,14 +186,25 @@ export class MapController {
         this.applyOpacities()
     }
 
+    setServerClusters(clusters: Cluster[]): void {
+        this.serverClusterLayer.clearLayers()
+        for (const c of clusters) {
+            const m = L.marker([c.lat, c.lon], { icon: createClusterIcon(c.count) })
+            m.on('click', (e) => {
+                L.DomEvent.stopPropagation(e)
+                if (this.map) this.map.setView([c.lat, c.lon], Math.min(this.map.getZoom() + 2, MAP_MAX_ZOOM))
+            })
+            this.serverClusterLayer.addLayer(m)
+        }
+    }
+
     setFavouriteMarkers(trees: Tree[]): void {
         this.favTooltipGen++
         this.favouriteLayer.clearLayers()
         const gen = this.favTooltipGen
         for (const tree of trees) {
-            if (!tree.species_binomial) continue
             const m = L.marker([tree.lat, tree.lon], {
-                icon: createSpeciesIcon(tree.species_binomial),
+                icon: createSpeciesIcon(lookupSpeciesNames(tree.speciesId).key),
                 pane: 'favouritePane',
             })
             this.addDelayedTooltip(m, tree, gen, () => this.favTooltipGen)
@@ -210,12 +213,17 @@ export class MapController {
         }
     }
 
+    getView(): { center: [number, number]; zoom: number } | null {
+        if (!this.map) return null
+        const c = this.map.getCenter()
+        return { center: [c.lat, c.lng], zoom: this.map.getZoom() }
+    }
+
     panTo(lat: number, lon: number): void {
         this.map?.panTo([lat, lon])
     }
 
     flyToLocation(lat: number, lon: number, zoom = 16, { fly = true }: { fly?: boolean } = {}): void {
-        this.cityMarkersLayer.remove()
         if (fly) {
             this.map?.flyTo([lat, lon], zoom)
         } else {
@@ -223,10 +231,8 @@ export class MapController {
         }
     }
 
-    fitTrees(trees: { lat: number; lon: number }[]): void {
-        if (!this.map || trees.length === 0) return
-        const bounds = L.latLngBounds(trees.map((t) => [t.lat, t.lon] as [number, number]))
-        this.map.fitBounds(bounds, { padding: [60, 60], maxZoom: MAP_ZOOM })
+    fitBbox(bbox: Source['bbox']): void {
+        this.map?.flyToBounds([[bbox.s, bbox.w], [bbox.n, bbox.e]], { padding: [40, 40], maxZoom: PLACE_MAX_ZOOM })
     }
 
     private selectedRing: L.Marker | null = null
@@ -255,12 +261,13 @@ export class MapController {
             this.selectedRing = null
             return
         }
+        const icon = createSelectedSpeciesIcon(lookupSpeciesNames(tree.speciesId).key)
         if (this.selectedRing) {
             this.selectedRing.setLatLng([tree.lat, tree.lon])
-            this.selectedRing.setIcon(createSelectedSpeciesIcon(tree.species_binomial ?? ''))
+            this.selectedRing.setIcon(icon)
         } else {
             this.selectedRing = L.marker([tree.lat, tree.lon], {
-                icon: createSelectedSpeciesIcon(tree.species_binomial ?? ''),
+                icon,
                 interactive: false,
                 pane: 'selectionPane',
             }).addTo(this.map)
@@ -282,28 +289,45 @@ export class MapController {
         this.applyOpacities()
     }
 
-    highlightSpecies(species: string | null): void {
-        this.currentHighlight = species
+    highlightSpecies(speciesId: number | null): void {
+        this.currentHighlight = speciesId
         this.applyOpacities()
     }
 
     private applyOpacities(): void {
-        for (const { m, species } of this.markers) {
+        for (const { m, speciesId } of this.markers) {
             const opacity = this.favMode
                 ? 0.4
-                : (this.currentHighlight === null || this.currentHighlight === species ? 1 : 0.5)
+                : (this.currentHighlight === null || this.currentHighlight === speciesId ? 1 : 0.5)
             m.setOpacity(opacity)
         }
     }
 
-    setCityMarkers(cities: City[], onCityClick: (id: string) => void): void {
-        this.cityMarkersLayer.clearLayers()
-        for (const city of cities) {
-            const m = createCityCircleMarker(city)
-            m.on('click', (e) => { L.DomEvent.stopPropagation(e); onCityClick(city.id) })
-            this.cityMarkersLayer.addLayer(m)
+    setPlaceMarkers(sources: Source[], onPlaceClick: (source: Source) => void): void {
+        this.placeMarkersLayer.clearLayers()
+        for (const source of sources) {
+            const m = createPlaceMarker(source)
+            m.on('click', (e) => { L.DomEvent.stopPropagation(e); onPlaceClick(source) })
+            this.placeMarkersLayer.addLayer(m)
         }
-        if (this.map) this.updateCityMarkersVisibility(this.map.getZoom())
+    }
+
+    // While the places overlay is on, it replaces the trees: at national zoom, place markers on
+    // top of tree clusters are an unreadable pile.
+    private placesVisible = false
+
+    setPlacesVisible(visible: boolean): void {
+        if (!this.map) return
+        this.placesVisible = visible
+        if (visible) {
+            this.serverClusterLayer.remove()
+            this.clusterLayer.remove()
+            this.placeMarkersLayer.addTo(this.map)
+        } else {
+            this.placeMarkersLayer.remove()
+            this.serverClusterLayer.addTo(this.map)
+            this.clusterLayer.addTo(this.map)
+        }
     }
 
     switchTileLayer(url: string, attribution: string, maxZoom: number): void {

@@ -8,29 +8,83 @@ export interface Bbox {
   se: Coordinate
 }
 
+/** A tree as the map holds it: position and species only. Details are fetched on demand. */
 export interface Tree {
+  source: string
+  id: string
   lat: number
   lon: number
+  speciesId: number
+}
+
+/** Full record of one tree, from /api/tree or /api/trees/details. */
+export interface TreeDetails {
+  source: string
   id: string
-  year_planted: string
-  name_vernacular: string | null
-  species: string
-  species_binomial: string | null
+  lat: number
+  lon: number
+  species_id: number
+  species: string | null
   species_cultivar: string | null
-  neighbourhood: string
-  street: string
+  year_planted: string | null
+  neighbourhood: string | null
+  street: string | null
   trunk_diameter: number | null
   crown_spread: number | null
 }
 
-export interface SpeciesItem {
-  species: string
-  species_binomial: string | null
-  name_vernacular: string | null
+export type LocalizedNames = { nl?: string; en?: string; de?: string; fr?: string }
+
+export interface SpeciesEntry {
+  id: number
+  /** species_binomial, or the source's raw species string when no binomial could be resolved */
+  key: string
+  binomial: string | null
+  names: LocalizedNames
+}
+
+export interface SourceMeta {
+  source?: string
+  lastFetched?: string
+  description?: LocalizedNames
+}
+
+/** A tree dataset: a municipality or an institution (arboretum and similar). */
+export interface Source {
+  id: string
+  name: string
+  type: 'city' | 'institution'
+  center: [number, number]
+  bbox: { s: number; n: number; w: number; e: number }
+  tree_count: number
+  meta: SourceMeta
+  /** Zoom at which markers stop clustering while this source is in view — only needed for
+   *  dense, spatially small datasets (e.g. an arboretum). Falls back to CLUSTER_DISABLE_ZOOM. */
+  clusterDisableZoom?: number
+}
+
+export interface Meta {
+  version: string
+  sources: Source[]
+  species: SpeciesEntry[]
+}
+
+export interface Cluster {
+  lat: number
+  lon: number
   count: number
 }
 
+/** One 256 px web-mercator tile as served by /api/tiles, with trees decoded. */
+export interface TilePayload {
+  count: number
+  sources: Record<string, number>
+  clusters: Cluster[] | null
+  trees: Tree[] | null
+}
+
 export interface TreeIssue {
+  /** source id */
   city: string
   tree_id: string
   lat: number | null
@@ -51,47 +105,4 @@ export interface SpeciesIssue {
   note: string | null
   created_at: string
   updated_at: string
-}
-
-export type VernacularNames = Record<string, { nl?: string; en?: string; de?: string; fr?: string }>
-
-export interface CityMeta {
-  source?: string
-  lastFetched?: string
-  description?: { nl?: string; en?: string; de?: string; fr?: string }
-}
-
-export interface City {
-  id: string
-  name: string
-  center: [number, number]
-  bbox: { s: number; n: number; w: number; e: number }
-  tree_count: number
-  has_data: boolean
-  meta?: CityMeta
-  /** 'city' for regular municipalities, 'institution' for arboretums and similar.
-   *  Defaults to 'city' if absent. */
-  type?: 'city' | 'institution'
-  /** Overrides config.ts's CLUSTER_DISABLE_ZOOM for this city — only needed for
-   *  dense, spatially small datasets (e.g. an arboretum) where the default would
-   *  render too many individual DOM markers at once. Falls back to the global
-   *  default when absent. */
-  clusterDisableZoom?: number
-  /** Overrides config.ts's MAP_ZOOM when flying to this city's center (initial
-   *  load, city picker, clicking its overview marker, or returning with no saved
-   *  position) — only needed for small places (e.g. an arboretum) where the
-   *  default zoom is too far out. Falls back to the global default when absent. */
-  mapZoom?: number
-  /** Overrides config.ts's MIN_FETCH_ZOOM — only needed for sparse, spatially
-   *  spread datasets (e.g. a curated "monumental trees" layer covering a whole
-   *  merged municipality) where trees far from the city center would otherwise
-   *  never be fetched/discovered unless the user already knows to pan there.
-   *  Pairs with maxViewportDeg2 below, since a lower fetch zoom implies a wider
-   *  viewport. Falls back to the global default when absent. */
-  minFetchZoom?: number
-  /** Overrides config.ts's MAX_VIEWPORT_DEG2 — only needed alongside a lowered
-   *  minFetchZoom, since the global cap assumes fetches happen at street-level
-   *  zoom and would otherwise silently block fetching the wider viewport a low
-   *  minFetchZoom allows. Falls back to the global default when absent. */
-  maxViewportDeg2?: number
 }

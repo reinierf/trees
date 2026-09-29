@@ -50,18 +50,17 @@ const nl = {
   'issues.empty': 'Geen meldingen',
   'issues.searchSpecies': 'Zoek op soort',
 
-  'app.dataUnavailable': 'Boomdata voor {city} is nog niet beschikbaar.',
-  'app.backToMap': 'Terug naar kaart',
 
   'map.chooseCity': 'Kies een plaats om bomen te verkennen',
-  'map.zoomIn': 'Zoom {n}x in om bomen te zien',
 
   'marker.trees': 'bomen',
-  'marker.dataComingSoon': 'Boomdata binnenkort beschikbaar',
 
-  'city.info': 'Plaats info',
   'city.choose': 'Kies plaats',
   'city.allPlaces': 'Alle plaatsen',
+  'city.hidePlaces': 'Plaatsen verbergen',
+  'sources.title': 'Bronnen in beeld',
+  'sources.inView': 'In beeld',
+  'species.zoomInForTrees': 'Zoom in om alle bomen afzonderlijk te zien',
 
   'map.layer': 'Kaartlaag',
 
@@ -135,18 +134,17 @@ const en: Dict = {
   'issues.empty': 'No reports',
   'issues.searchSpecies': 'Search by species',
 
-  'app.dataUnavailable': 'Tree data for {city} is not yet available.',
-  'app.backToMap': 'Back to map',
 
   'map.chooseCity': 'Choose a place to explore trees',
-  'map.zoomIn': 'Zoom in {n}x to see trees',
 
   'marker.trees': 'trees',
-  'marker.dataComingSoon': 'Tree data coming soon',
 
-  'city.info': 'Place info',
   'city.choose': 'Choose place',
   'city.allPlaces': 'All places',
+  'city.hidePlaces': 'Hide places',
+  'sources.title': 'Sources in view',
+  'sources.inView': 'In view',
+  'species.zoomInForTrees': 'Zoom in to see all individual trees',
 
   'map.layer': 'Map layer',
 
@@ -217,18 +215,17 @@ const de: Dict = {
   'issues.empty': 'Keine Meldungen',
   'issues.searchSpecies': 'Nach Art suchen',
 
-  'app.dataUnavailable': 'Baumdaten für {city} sind noch nicht verfügbar.',
-  'app.backToMap': 'Zurück zur Karte',
 
   'map.chooseCity': 'Wähle einen Ort, um Bäume zu erkunden',
-  'map.zoomIn': '{n}x hineinzoomen, um Bäume zu sehen',
 
   'marker.trees': 'Bäume',
-  'marker.dataComingSoon': 'Baumdaten folgen in Kürze',
 
-  'city.info': 'Ortsinfo',
   'city.choose': 'Ort wählen',
   'city.allPlaces': 'Alle Orte',
+  'city.hidePlaces': 'Orte ausblenden',
+  'sources.title': 'Quellen im Blick',
+  'sources.inView': 'Im Blick',
+  'species.zoomInForTrees': 'Hineinzoomen, um alle Bäume einzeln zu sehen',
 
   'map.layer': 'Kartenebene',
 
@@ -299,18 +296,17 @@ const fr: Dict = {
   'issues.empty': 'Aucun signalement',
   'issues.searchSpecies': 'Rechercher par espèce',
 
-  'app.dataUnavailable': "Les données d'arbres pour {city} ne sont pas encore disponibles.",
-  'app.backToMap': 'Retour à la carte',
 
   'map.chooseCity': 'Choisissez un lieu pour explorer les arbres',
-  'map.zoomIn': 'Zoomez {n}x pour voir les arbres',
 
   'marker.trees': 'arbres',
-  'marker.dataComingSoon': "Données d'arbres bientôt disponibles",
 
-  'city.info': 'Infos sur la ville',
   'city.choose': 'Choisir un lieu',
   'city.allPlaces': 'Tous les lieux',
+  'city.hidePlaces': 'Masquer les lieux',
+  'sources.title': 'Sources visibles',
+  'sources.inView': 'Visibles',
+  'species.zoomInForTrees': 'Zoomez pour voir chaque arbre',
 
   'map.layer': 'Couche de carte',
 

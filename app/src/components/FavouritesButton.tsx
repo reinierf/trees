@@ -9,7 +9,7 @@ export function FavouritesButton() {
   const closePopup = useStore((s) => s.closePopup)
   const favourites = useStore((s) => s.favourites)
 
-  const totalFavs = Object.values(favourites).reduce((sum, trees) => sum + trees.length, 0)
+  const totalFavs = Object.keys(favourites).length
   const isActive =
     popupView?.kind === PopupKind.Favourites ||
     (popupView?.kind === PopupKind.TreeDetail && popupView.returnTo === PopupKind.Favourites)

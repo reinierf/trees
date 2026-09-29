@@ -1,13 +1,18 @@
 import { useState, useRef } from 'react'
 import { Crosshair, Heart, Share2, ArrowUp, Image, ImageOff, Flag } from 'lucide-react'
 import { capitalizeFirst, capitalize } from '../../lib/utils'
+import { formatVernacular, useSpeciesNames } from '../../lib/species'
+import { treeKey } from '../../lib/treeKey'
 import { useStore, PopupKind, type PopupReturnTo } from '../../store'
 import { WikipediaIcon, GoogleIcon } from '../icons'
 import { PopupShell, CloseButton, CollapseButton } from '../InfoPopup'
 import { useTreePhotos } from '../../api/useTreePhotos'
+import { useTreeDetails } from '../../api/useTreeDetails'
 import { TreeImageModal } from '../TreeImageModal'
-import { FlagModal } from '../FlagModal'
+import { FlagModal, type FlagSubject } from '../FlagModal'
 import { flagTree, flagSpecies } from '../../api/trees'
+import { shareUrl } from '../../map/urlState'
+import { SHARE_ZOOM } from '../../config'
 import { useT } from '../../translations/useT'
 import type { Tree, TreeIssue, SpeciesIssue } from '../../types'
 
@@ -26,17 +31,6 @@ function googleUrl(binomial: string, cultivar?: string | null): string {
   return `https://www.google.com/search?q=${encodeURIComponent(query)}`
 }
 
-function buildShareUrl(tree: Tree): string {
-  const hash = window.location.hash
-  const qIdx = hash.indexOf('?')
-  const pathPart = qIdx !== -1 ? hash.slice(0, qIdx) : hash
-  const params = new URLSearchParams()
-  params.set('tree', tree.id)
-  params.set('lat', String(tree.lat))
-  params.set('lon', String(tree.lon))
-  return `${window.location.origin}${window.location.pathname}${pathPart}?${params}`
-}
-
 function Row({ label, value }: { label: string; value: string | number | null | undefined }) {
   if (value == null || value === '') return null
   return (
@@ -50,10 +44,9 @@ function Row({ label, value }: { label: string; value: string | number | null | 
 interface Props {
   tree: Tree
   returnTo: PopupReturnTo
-  cityId: string
 }
 
-export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
+export function TreeDetailPanel({ tree, returnTo }: Props) {
   const t = useT()
   const openSpeciesListAt = useStore((s) => s.openSpeciesListAt)
   const openFavourites = useStore((s) => s.openFavourites)
@@ -62,12 +55,14 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const closePopup = useStore((s) => s.closePopup)
   const setPendingCenter = useStore((s) => s.setPendingCenter)
   const toggleFavourite = useStore((s) => s.toggleFavourite)
-  const favourites = useStore((s) => s.favourites)
+  const isFav = useStore((s) => s.favourites[treeKey(tree)] !== undefined)
   const debugMode        = useStore((s) => s.debugMode)
   const upsertTreeIssue  = useStore((s) => s.upsertTreeIssue)
   const upsertSpeciesIssue = useStore((s) => s.upsertSpeciesIssue)
-  const hasTreeIssue     = useStore((s) => s.treeIssues.some((i) => i.city === cityId && i.tree_id === tree.id))
-  const hasSpeciesIssue  = useStore((s) => s.speciesIssues.some((i) => i.species_binomial === tree.species_binomial))
+  const names = useSpeciesNames()(tree.speciesId)
+  const hasTreeIssue     = useStore((s) => s.treeIssues.some((i) => i.city === tree.source && i.tree_id === tree.id))
+  const hasSpeciesIssue  = useStore((s) => s.speciesIssues.some((i) => i.species_binomial === names.binomial))
+  const details = useTreeDetails(tree)
   const [collapsed, setCollapsed] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [photoModalOpen, setPhotoModalOpen] = useState(false)
@@ -75,19 +70,27 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   const [speciesFlagOpen, setSpeciesFlagOpen] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const { thumbnail, photos, loadPhotos } = useTreePhotos(tree.species_binomial)
+  const binomial = names.binomial
+  const { thumbnail, photos, loadPhotos } = useTreePhotos(binomial)
 
   function openPhotos() {
     setPhotoModalOpen(true)
     void loadPhotos()
   }
 
-  const isFav = (favourites[cityId] ?? []).some((t) => t.id === tree.id)
+  const displayName = capitalizeFirst(names.key)
+  const cultivarName = details?.species_cultivar ?? null
+  const cultivar = cultivarName ? ` '${capitalizeFirst(cultivarName)}'` : ''
+  const vernacular = names.vernacular ? formatVernacular(names.vernacular) : null
 
-  const binomial = tree.species_binomial
-  const speciesKey = binomial ?? tree.species
-  const displayName = capitalizeFirst(binomial ?? tree.species)
-  const cultivar = tree.species_cultivar ? ` '${capitalizeFirst(tree.species_cultivar)}'` : ''
+  const flagSubject: FlagSubject = {
+    source: tree.source,
+    id: tree.id,
+    binomial,
+    cultivar: cultivarName,
+    vernacular: names.vernacular,
+    street: details?.street ?? null,
+  }
 
   function showToast(msg: string) {
     setToast(msg)
@@ -96,7 +99,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
   }
 
   async function handleShare() {
-    const url = buildShareUrl(tree)
+    const url = shareUrl(tree, SHARE_ZOOM)
     const title = `${displayName}${cultivar}`
 
     if (typeof navigator.share === 'function') {
@@ -122,7 +125,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
     } else if (returnTo === PopupKind.SamePointList) {
       openSamePointList(visibleTrees.filter((t) => t.lat === tree.lat && t.lon === tree.lon))
     } else {
-      openSpeciesListAt(speciesKey, tree.id)
+      openSpeciesListAt(tree.speciesId, treeKey(tree))
     }
   }
 
@@ -154,10 +157,8 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
           </div>
         </div>
 
-        {!collapsed && tree.name_vernacular && (
-          <p className="text-sm mt-0.5">
-            {capitalizeFirst(tree.name_vernacular.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)}
-          </p>
+        {!collapsed && vernacular && (
+          <p className="text-sm mt-0.5">{vernacular}</p>
         )}
       </div>
 
@@ -165,10 +166,16 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         <>
           <div className="flex gap-2 px-4 pb-3 border-t pt-2">
             <div className="flex-1 space-y-1 min-w-0">
-              <Row label={t('tree.planted')} value={tree.year_planted} />
-              <Row label={t('tree.street')} value={tree.street != null ? capitalize(tree.street) : null} />
-              <Row label={t('tree.trunkDiameter')} value={tree.trunk_diameter != null ? `${tree.trunk_diameter} m` : null} />
-              <Row label={t('tree.crown')} value={tree.crown_spread != null ? `${tree.crown_spread} m` : null} />
+              {details === undefined ? (
+                <p className="text-sm text-muted-foreground">…</p>
+              ) : (
+                <>
+                  <Row label={t('tree.planted')} value={details?.year_planted} />
+                  <Row label={t('tree.street')} value={details?.street != null ? capitalize(details.street) : null} />
+                  <Row label={t('tree.trunkDiameter')} value={details?.trunk_diameter != null ? `${details.trunk_diameter} m` : null} />
+                  <Row label={t('tree.crown')} value={details?.crown_spread != null ? `${details.crown_spread} m` : null} />
+                </>
+              )}
             </div>
             {binomial && (
               <div className="w-11 h-11 shrink-0 self-start flex items-center justify-center">
@@ -205,7 +212,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
                     <WikipediaIcon />
                   </a>
                   <a
-                    href={googleUrl(binomial, tree.species_cultivar)}
+                    href={googleUrl(binomial, cultivarName)}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Google search"
@@ -228,7 +235,7 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
             </div>
             <div className="relative flex items-center gap-3">
               <button
-                onClick={() => toggleFavourite(cityId, tree)}
+                onClick={() => toggleFavourite(tree, details ?? null)}
                 className={`${isFav ? 'text-red-400' : 'text-muted-foreground hover:text-foreground'}`}
                 aria-label={isFav ? t('tree.removeFavourite') : t('tree.addFavourite')}
               >
@@ -263,37 +270,33 @@ export function TreeDetailPanel({ tree, returnTo, cityId }: Props) {
         thumbnail={thumbnail}
         photos={photos}
         speciesName={`${displayName}${cultivar}`}
-        vernacularName={tree.name_vernacular
-          ? capitalizeFirst(tree.name_vernacular.toLowerCase()).replace(/'([a-z])/g, (_, c) => `'${c.toUpperCase()}`)
-          : null}
+        vernacularName={vernacular}
         onClose={() => setPhotoModalOpen(false)}
       />
     )}
     {treeFlagOpen && (
       <FlagModal
         mode="tree"
-        tree={tree}
-        cityId={cityId}
+        subject={flagSubject}
         noImages={thumbnail === null}
         onClose={() => setTreeFlagOpen(false)}
         onSubmit={async (flags, note) => {
-          await flagTree(cityId, tree.id, tree.lat, tree.lon, tree.species_binomial, tree.name_vernacular, tree.street, flags, note)
+          await flagTree(tree.source, tree.id, tree.lat, tree.lon, binomial, names.vernacular, flagSubject.street, flags, note)
           const now = new Date().toISOString()
-          upsertTreeIssue({ city: cityId, tree_id: tree.id, lat: tree.lat, lon: tree.lon, species_binomial: tree.species_binomial, name_vernacular: tree.name_vernacular, street: tree.street, flags, note: note || null, created_at: now, updated_at: now } as TreeIssue)
+          upsertTreeIssue({ city: tree.source, tree_id: tree.id, lat: tree.lat, lon: tree.lon, species_binomial: binomial, name_vernacular: names.vernacular, street: flagSubject.street, flags, note: note || null, created_at: now, updated_at: now } as TreeIssue)
         }}
       />
     )}
     {speciesFlagOpen && binomial && (
       <FlagModal
         mode="species"
-        tree={tree}
-        cityId={cityId}
+        subject={flagSubject}
         noImages={thumbnail === null}
         onClose={() => setSpeciesFlagOpen(false)}
         onSubmit={async (flags, note) => {
-          await flagSpecies(binomial, tree.name_vernacular, flags, note)
+          await flagSpecies(binomial, names.vernacular, flags, note)
           const now = new Date().toISOString()
-          upsertSpeciesIssue({ species_binomial: binomial, name_vernacular: tree.name_vernacular, flags, note: note || null, created_at: now, updated_at: now } as SpeciesIssue)
+          upsertSpeciesIssue({ species_binomial: binomial, name_vernacular: names.vernacular, flags, note: note || null, created_at: now, updated_at: now } as SpeciesIssue)
         }}
       />
     )}

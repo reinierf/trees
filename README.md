@@ -1,35 +1,40 @@
 # Bomen
 
-Interactive map of municipal trees for Dutch cities. Data is loaded on demand for the visible viewport; no full dataset is downloaded upfront.
+Interactive map of municipal and arboretum trees in the Netherlands. The map shows every tree in view, whichever dataset it comes from; data is loaded per map tile on demand, never a full dataset upfront.
 
-**Cities:** Rotterdam · Amsterdam · Den Haag · Groningen · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Apeldoorn · Deventer · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem
+**Cities:** Rotterdam · Groningen · Den Haag · Amsterdam · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Deventer · Apeldoorn · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem · Zoetermeer · Bergen (NH) · Súdwest-Fryslân
 
-**Institutions (arboretums):** Bomenmuseum Gimborn · Trompenburg · Pinetum Ter Borgh · Pinetum de Dennenhorst
+**Institutions (arboretums):** Bomenmuseum Gimborn · Arboretum Trompenburg · Pinetum Ter Borgh · Pinetum de Dennenhorst · Arboretum De Nieuwe Ooster
 
 ---
 
 ## Features
 
-- **Viewport-based loading** — trees are fetched only for the visible bounding box. A spatial tile cache avoids redundant requests when panning.
-- **Species markers** — each tree is rendered as a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*). Markers cluster at lower zoom levels.
-- **Species list panel** — shows all species in the current view with counts; expanding a species lists individual trees; clicking navigates the map to the tree.
-- **Tree detail panel** — full tree info (species, Dutch name, year planted, street, trunk diameter, crown spread) with a Wikipedia link and a photo thumbnail.
+- **Map view across all sources** — the map shows every tree in view regardless of which dataset (city or institution) it comes from, so trees near municipal borders or inside overlapping datasets are never hidden. The source is per-tree metadata.
+- **Clusters at every zoom** — the server decides per 256 px map tile: more than 500 trees → precomputed clusters, otherwise individual trees. Zoomed out you see tree density across the country; zoomed in, individual trees. Sparse datasets (e.g. monumental-trees-only layers) show individual trees from far out without any per-city settings.
+- **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*). Markers also cluster client-side until `CLUSTER_DISABLE_ZOOM`.
+- **Species list panel** — species in view with counts; expanding a species lists its individual trees (where the map shows individual trees); clicking highlights the tree on the map.
+- **Search** — searches the species in view; selecting one sets the species filter.
+- **Species filter** — the map shows only one species (clusters and trees); the filter persists across map moves.
+- **Tree detail panel** — species, vernacular name, year planted, street, trunk diameter, crown spread, Wikipedia/Google links and a photo thumbnail. Details are fetched when the tree is opened.
 - **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
-- **Species filter** — search the full city species list; filter the map to a single species. Active filter persists across map moves.
-- **Favourites** — save trees across cities; stored in `localStorage`.
-- **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular) throughout the UI; both persisted in `localStorage`.
+- **Places** — the signpost button lists recently visited places and "All places": the national overview with a marker per dataset (green = city, amber = institution). Picking one flies to its extent.
+- **Sources in view** — the info button lists the datasets the trees in view come from, with counts, source, date fetched and description.
+- **Favourites** — save trees from any source; stored in `localStorage`.
+- **Position in the URL** — `#@lat,lon,zoom`; reloading or sharing a URL keeps the view. Panning updates the current history entry, so the back button isn't flooded; deliberate jumps (picking a place, locate-me, flying to a favourite or issue) add one, so back returns to where you were.
+- **Share a tree** — `#@lat,lon,19?tree=<source>:<id>` opens the tree's detail panel.
+- **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular); both persisted in `localStorage`.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
-- **Current location** — geolocation button flies to user position and places a location dot.
-- **Multi-city routing** — URL is `/:city` (e.g. `/rotterdam`); auto-switches city when the map centre crosses a city boundary.
-- **Persistent map position** — position and zoom restored from `localStorage` on reload (1-day TTL per city).
+- **Current location** — geolocation button flies to the user's position and places a location dot.
 
 ---
 
 ## Project layout
 
 ```
-open-data-fetcher/   Node.js — pulls tree data from a city's WFS service → SQLite
-api/                 PHP — serves tree data over HTTP from SQLite
+open-data-fetcher/   Node.js — pulls tree data from each source → per-source SQLite;
+                     builds the national databases the API serves (tools/build-db.js)
+api/                 PHP — serves tiles, species and tree details over HTTP from SQLite
 app/                 Vite + React web app
 ```
 
@@ -38,11 +43,17 @@ app/                 Vite + React web app
 ## Running locally
 
 **Prerequisites**
-- Node.js ≥ 18
+- Node.js ≥ 22.13 (the build script uses the built-in `node:sqlite`)
 - PHP 8.3 with `pdo_sqlite` enabled
   - Install: `winget install PHP.PHP.8.3`
   - Copy `php.ini-development` → `php.ini`, set `extension_dir` to the `ext/` subfolder,
     uncomment `extension=pdo_sqlite` and `extension=sqlite3`
+
+**Once, and after every (re)fetch — build the national databases**
+```sh
+cd open-data-fetcher
+npm run build-db   # data/*.db + sources.json → ../api/data/trees.db + meta.db (~1.5 min)
+```
 
 **Terminal 1 — PHP API**
 ```sh
@@ -55,7 +66,7 @@ cd app
 npm run dev   # http://localhost:5173
 ```
 
-Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/trees` with no CORS issues. In production both live on the same server; no proxy is needed and no code differs between dev and prod.
+Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/tiles` with no CORS issues. In production both live on the same server; no proxy is needed and no code differs between dev and prod.
 
 **Browsing the database:** the **SQLite Viewer** VS Code extension (by Florian Klampfer) opens `.db` files directly in the editor.
 
@@ -64,18 +75,21 @@ Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/t
 ## Deployment
 
 - PHP server with `pdo_sqlite` (enabled by default on most shared hosting)
-- Upload `api/index.php`, `api/.htaccess`, `api/cities.json`
-- Upload city databases and vernacular databases into `api/data/` (e.g. `api/data/rotterdam.db`, `api/data/vernacular-nl.db`)
+- Upload `api/index.php`, `api/.htaccess`
+- Upload `api/data/trees.db` and `api/data/meta.db`. Upload them under temporary names and rename on the server, so the API never reads a half-uploaded file. **Never overwrite `api/data/issues.db`** — it holds user-reported issues written by the live API.
 - Upload `app/dist/` as the web root (or a subdirectory)
 - No database server, no Node.js on the server
 - `VITE_API_BASE` env var overrides the API base URL for subdirectory deployments
 - Add your production domain to the `ALLOWED_ORIGINS` array in `api/index.php` (see [API access control](#api-access-control) below)
+- Responses are gzipped by PHP (`ob_gzhandler`) unless the server already compresses
+
+Open browsers notice a new build by itself: every tile response carries the build version, and the app reloads its species dictionary and cache when it changes.
 
 ---
 
 ## open-data-fetcher
 
-Fetches all trees from a city's public OGC WFS service and writes a local SQLite file.
+Fetches all trees from each source (mostly public OGC WFS services) into one SQLite file per source in `open-data-fetcher/data/`, and builds the national databases from them.
 
 See [open-data-fetcher/README.md](open-data-fetcher/README.md) for full usage, arguments, available layers, and design notes.
 
@@ -83,95 +97,83 @@ Quick start for Rotterdam:
 ```sh
 cd open-data-fetcher
 npm install
-node index.js --all --format sqlite   # → bomen-rotterdam.db (~200k trees)
+node index.js --city rotterdam --all   # → data/rotterdam.db (~200k trees)
+npm run build-db                       # → ../api/data/trees.db + meta.db
 ```
 
-Copy the resulting `.db` into `api/data/`.
+`sources.json` lists the sources the build includes (id = database filename, name, center, type, source metadata, optional `clusterDisableZoom`). `node add-city.js --city <id>` runs the whole pipeline for a new city, ending with the build.
 
 **Key design choices in the fetcher:**
 - Uses WFS `GetFeature` requests (not scraping) — stable and within the open-data licence
 - Coordinates are requested as WGS84 directly from the server (`SRSNAME=urn:ogc:def:crs:EPSG::4326`) — no client-side reprojection needed
-- Uses `sql.js` (SQLite compiled to WASM) rather than `better-sqlite3` to avoid native compilation (`node-gyp`, Visual Studio)
+- Uses `sql.js` (SQLite compiled to WASM) rather than `better-sqlite3` to avoid native compilation (`node-gyp`, Visual Studio); the build script uses Node's built-in `node:sqlite` (also no native compilation), since `sql.js` keeps a whole database in WASM memory
 - All source-specific data cleaning happens here; the API and client receive only clean, typed values
+
+### National build (`tools/build-db.js`)
+
+Merges every source in `sources.json` into `api/data/trees.db` and `api/data/meta.db`, then renames them into place (a failed build never leaves a half-written database). Besides copying trees it:
+
+- **assigns species ids** — one per `species_binomial` (or raw `species` when there is no binomial), with vernacular names resolved at build time: Dutch curated overrides (`vernacular-nl.db`) win for `nl`, iNaturalist (`vernacular-base.db`) supplies all locales, and the most common name the source datasets use is the Dutch fallback.
+- **deduplicates** — rows sharing a source id within 5 m are the same tree listed twice (e.g. all of Assen appears twice ~0.3 m apart; Maastricht has exact duplicates) and are dropped. Rows sharing an id further apart are different trees and keep a suffixed id (`1~2`). Ids used by more than 10 rows in a source are placeholders (`undefined` for all of Dordrecht, `Onbekend` in Deventer): those trees are all kept with generated ids (`undefined~1234`), which are stable only as long as the source data doesn't change.
+- **precomputes pyramids** for zoom 5–17: clusters per 64 px cell, species counts per tile, tree counts per source per tile, and species clusters up to zoom 11.
 
 ---
 
 ## API
 
-PHP reads city SQLite databases. The active city is selected via a `city` query param (matching the database filename, e.g. `rotterdam` → `rotterdam.db`).
+PHP reads `trees.db` and `meta.db` (read-only) and `issues.db`.
 
-| Method | URL | Params | Returns |
+| Method | URL | Params / body | Returns |
 |--------|-----|--------|---------|
-| GET | `/api/trees` | `s,n,w,e` (bbox), `city`, `species?`, `strict?`, `limit?` | array of tree objects |
-| POST | `/api/trees` | JSON body (see below) | array of tree objects |
-| GET | `/api/species` | `city`, `q?` (search string) | array of species items |
-| GET | `/api/cities` | — | array of city objects from `cities.json` |
-| GET | `/api/vernacular-names` | — | map of `species_binomial → {nl?, en?, de?, fr?}` |
-| GET | `/api/health` | — | `{status, trees}` |
+| GET | `/api/meta` | — | `{version, sources, species}`; ETag = build version |
+| POST | `/api/tiles` | `{"z", "tiles": [[x, y], …], "species"?}` (≤ 100 tiles) | `{version, tiles: [...]}` — see below |
+| GET | `/api/species` | `z, x0, x1, y0, y1` (tile range, ≤ 400 tiles) | `[[speciesId, count], …]`, most common first |
+| GET | `/api/tree` | `source, id` | tree details object |
+| POST | `/api/trees/details` | `{"trees": [[source, id], …]}` (≤ 200) | array of tree details objects |
+| POST | `/api/flag` | issue report | `{ok}` |
+| GET | `/api/issues` | — | `{trees, species}` |
+| POST | `/api/issues/resolve` | `{type, …}` | `{ok}` |
+| GET | `/api/health` | — | tree/source/species counts and build version |
 
-`s/n/w/e` are WGS84 lat/lon for south/north/west/east of the viewport. Default limit 500, max 20 000.
+Tiles use standard web-mercator `z/x/y` indices (256 px), the same as the map's base layer. The client, the API and the build script share the same tile math.
 
-`POST /api/trees` accepts multiple bboxes and returns the union, deduplicated by tree `id`:
+**Tile object** — one per requested tile:
 ```json
-{
-  "bboxes": [
-    { "s": 51.88, "n": 51.90, "w": 4.47, "e": 4.52 },
-    { "s": 51.90, "n": 51.92, "w": 4.50, "e": 4.55 }
-  ],
-  "city": "rotterdam",
-  "limit": 2000
-}
+{ "x": 16808, "y": 10828, "count": 1135, "sources": { "rotterdam": 1000, "barendrecht": 104, "ridderkerk": 31 },
+  "clusters": [[51.88182, 4.55816, 312], …] }
+{ "x": 67233, "y": 43315, "count": 92, "sources": { "rotterdam": 92 },
+  "trees": { "rotterdam": [["176863", 51.883696, 4.553936, 79], …] } }
 ```
+- `clusters`: `[lat, lon, count]` per 64 px cell (cell mean position), when the tile holds more than 500 trees (or more than 500 of the filtered species)
+- `trees`: `[id, lat, lon, speciesId]` grouped by source, otherwise. Above zoom 17 (beyond the pyramids) tiles are always trees.
+- `sources`/`count`: trees per source and in total (counting only the filtered species in `count` when `species` is given)
 
-Optional `strict` param (default `false`):
-- `strict=false` — filter by `species_binomial` (all cultivars match)
-- `strict=true` — filter by `(species_binomial, species_cultivar)` (per-cultivar)
-
-**Tree object**
+**Source object** (in `/api/meta`):
 ```json
 {
-  "lat": 51.8825586,
-  "lon": 4.5144985,
-  "id": "67112",
-  "year_planted": "1948",
-  "name_vernacular": "WITTE ABEEL",
-  "species": "POPULUS NIGRA 'VEREECKEN'",
-  "species_binomial": "POPULUS NIGRA",
-  "species_cultivar": "VEREECKEN",
-  "neighbourhood": "VREEWIJK",
-  "street": "SMEETSLANDSEDIJK",
-  "trunk_diameter": 1.11,
-  "crown_spread": 20
-}
-```
-
-**City object** (from `GET /api/cities`)
-```json
-{
-  "id": "rotterdam",
-  "name": "Rotterdam",
+  "id": "rotterdam", "name": "Rotterdam", "type": "city",
   "center": [51.9225, 4.4792],
-  "type": "city",
-  "bbox": { "s": 51.8, "n": 52.1, "w": 4.2, "e": 4.6 },
-  "tree_count": 200000,
-  "has_data": true,
-  "meta": { "source": "Gemeente Rotterdam" }
+  "bbox": { "s": 51.845, "n": 51.994, "w": 4.112, "e": 4.600 },
+  "tree_count": 200242,
+  "meta": { "source": "Gemeente Rotterdam", "lastFetched": "2026-06-23" }
+}
+```
+- `type`: `'city'` for municipalities, `'institution'` for arboretums and similar
+- `clusterDisableZoom`: optional; while this source is in view, markers keep clustering up to this zoom (dense, small datasets like arboretums)
+
+**Species** (in `/api/meta`): `[id, key, binomial, {nl?, en?, de?, fr?}]`. `key` is the binomial, or the raw species string when no binomial could be resolved. Names are resolved client-side, so switching language needs no request.
+
+**Tree details object:**
+```json
+{
+  "source": "rotterdam", "id": "176863", "lat": 51.883696, "lon": 4.553936,
+  "species_id": 79, "species": "SORBUS INTERMEDIA", "species_cultivar": null,
+  "year_planted": "2008", "neighbourhood": "GROOT IJSSELMONDE", "street": "NIEUWENOORD",
+  "trunk_diameter": 0.15, "crown_spread": 3
 }
 ```
 
-**Field notes:**
-- `type`: `'city'` for regular municipalities, `'institution'` for arboretums and similar (defaults to `'city'` if absent)
-- `mapZoom`: optional override for this location's initial zoom (used for spatially small datasets like arboretums)
-- `clusterDisableZoom`: optional override for clustering disable threshold
-- `minFetchZoom`: optional override for `MIN_FETCH_ZOOM` (used for sparse, spatially spread datasets — e.g. a curated "monumental trees" layer covering a whole merged municipality — so outlying trees aren't stuck behind a fetch gate tuned for dense city centers)
-- `maxViewportDeg2`: optional override for `MAX_VIEWPORT_DEG2`, needed alongside a lowered `minFetchZoom` since the global cap assumes street-level zoom and would otherwise block the wider viewport a lower `minFetchZoom` allows
-
-On the map overview (zoom ≤ `MIN_CITY_SWITCH_ZOOM`), cities and institutions are rendered with different marker colors:
-- **Cities with tree data:** dark green (#2d6a4f)
-- **Cities without tree data:** gray (#9ca3af)
-- **Institutions with tree data:** amber/orange (#f59e0b)
-- **Institutions without tree data:** light slate (#cbd5e1)
-
+Issues keep a `city` column in `issues.db`; it holds the source id.
 
 ### API access control
 
@@ -189,59 +191,56 @@ Add or replace the production domain in this array. Requests with no `Origin` he
 
 ### Vernacular names
 
-`GET /api/vernacular-names` is fetched once at app startup and stored in the
-Zustand store. Components resolve names client-side — language switching requires
-no re-fetch.
-
-The response is a flat map keyed by `species_binomial` (proper-cased):
-
-```json
-{
-  "Quercus robur": { "nl": "Zomereik", "en": "English oak", "de": "Stieleiche" },
-  "Acer platanoides": { "nl": "Noorse esdoorn", "en": "Norway maple" }
-}
-```
-
-The API merges two layers in priority order:
+Vernacular names are part of the species dictionary in `/api/meta`, resolved at build time from two layers in priority order:
 
 | Layer | Source | File |
 |---|---|---|
-| Override | Dutch curated names (Wikipedia + Bomenbieb + DB votes) | `vernacular-nl.db` |
-| Base | iNaturalist vernacular names for all languages | `vernacular-base.db` |
+| Override | Dutch curated names (Wikipedia + Bomenbieb + DB votes) | `open-data-fetcher/data/vernacular-nl.db` |
+| Base | iNaturalist vernacular names for all languages | `open-data-fetcher/data/vernacular-base.db` |
+| Fallback (Dutch only) | Most common name in the source datasets | per-source `name_vernacular` |
 
-Dutch names from the override layer take precedence over iNaturalist. English,
-German, and French always come from iNaturalist. Both databases are built by
-scripts in `open-data-fetcher/tools/vernacular/` — see
-[open-data-fetcher/README.md](open-data-fetcher/README.md) for details.
+Both vernacular databases are built by scripts in `open-data-fetcher/tools/vernacular/` — see [open-data-fetcher/README.md](open-data-fetcher/README.md) for details. Rebuild the national databases afterwards.
 
 ---
 
 ## SQLite schema
 
-One database per city, placed in `api/data/`. Filename matches the city `id` in `cities.json`.
+**Per source** (`open-data-fetcher/data/<id>.db`, written by the fetcher, input to the build):
 
 ```sql
 CREATE TABLE trees (
-    lat              REAL,
-    lon              REAL,
-    id               TEXT,
-    year_planted     TEXT,
-    name_vernacular  TEXT,   -- sanitised Dutch name from source, e.g. "ZOMEREIK"; NULL if none
-    species          TEXT,   -- original full value, e.g. "QUERCUS ROBUR 'FASTIGIATA KOSTER'"
-    species_binomial TEXT,   -- clean binomial, e.g. "QUERCUS ROBUR" or "ACER × FREEMANII"
-    species_cultivar TEXT,   -- normalised cultivar/trade code; NULL if none
-    neighbourhood    TEXT,
-    street           TEXT,
-    trunk_diameter   TEXT,   -- metres
-    crown_spread     TEXT    -- metres
+    city, lat, lon, id, year_planted,
+    name_vernacular,   -- sanitised Dutch name from source, e.g. "ZOMEREIK"; NULL if none
+    species,           -- original full value, e.g. "QUERCUS ROBUR 'FASTIGIATA KOSTER'"
+    species_binomial,  -- clean binomial, e.g. "QUERCUS ROBUR" or "ACER × FREEMANII"
+    species_cultivar,  -- normalised cultivar/trade code; NULL if none
+    neighbourhood, street,
+    trunk_diameter,    -- metres
+    crown_spread,      -- metres
+    last_fetched
 );
-CREATE INDEX idx_lat_lon          ON trees (lat, lon);
-CREATE INDEX idx_species          ON trees (species);
-CREATE INDEX idx_species_binomial ON trees (species_binomial);
-CREATE INDEX idx_species_cultivar ON trees (species_binomial, species_cultivar);
 ```
 
 `species_binomial`, `species_cultivar`, and `name_vernacular` are written by the fetcher at import time. Non-botanical entries (`ASSORTIMENT ONBEKEND`, `OVERIG`, etc.) are dropped entirely and never written to the DB.
+
+**National** (`api/data/trees.db`, built):
+
+```sql
+CREATE TABLE trees (source_idx, id, lat, lon, species_id, species, species_cultivar,
+                    name_vernacular_src, year_planted, neighbourhood, street,
+                    trunk_diameter, crown_spread);           -- rows sorted by position
+CREATE UNIQUE INDEX idx_source_id       ON trees (source_idx, id);
+CREATE INDEX        idx_lat_lon         ON trees (lat, lon);
+CREATE INDEX        idx_species_lat_lon ON trees (species_id, lat, lon);
+
+-- pyramids, zoom 5–17 (WITHOUT ROWID)
+cluster_cell (z, cx, cy, count, lat, lon)             -- 64 px cells
+species_cell (z, species_id, cx, cy, count, lat, lon) -- 64 px cells, zoom ≤ 11
+tile_species (z, x, y, species_id, count)             -- 256 px tiles
+tile_source  (z, x, y, source_idx, count)             -- 256 px tiles
+```
+
+**Metadata** (`api/data/meta.db`, built): `build(version, built_at, tree_count)`, `sources(idx, id, name, type, center_lat, center_lon, s, n, w, e, tree_count, last_fetched, cluster_disable_zoom, meta_json)`, `species(id, key, binomial, count, nl, en, de, fr)`.
 
 ---
 
@@ -258,7 +257,6 @@ CREATE INDEX idx_species_cultivar ON trees (species_binomial, species_cultivar);
 | **Zustand** | ~1 KB, no boilerplate, components subscribe to exact slices avoiding extra re-renders |
 | **Leaflet.js** | Mature, well-documented map library; intentionally kept outside React's render cycle |
 | **Leaflet.MarkerCluster** | Clustering plugin; avoids rendering thousands of overlapping markers |
-| **React Router** | `/:city` URL routing; city switch is a navigation, not a state change |
 | **Lucide React** | Consistent icon set |
 
 ### Architecture
@@ -268,104 +266,109 @@ React state is the single source of truth. Leaflet is managed through a `MapCont
 ```
 React store (Zustand)
       ↑  callbacks from MapController → store setters
-      ↓  useEffect → controller.setTrees / highlightSpecies / …
+      ↓  useEffect → controller.setTrees / setServerClusters / highlightSpecies / …
 
 ┌─────────────────────────┐     ┌──────────────────────────┐
 │  <Map> component        │     │  <InfoPopup>             │
 │  div ← useMap hook      │     │  SpeciesListPanel        │
 │  MapController          │     │  TreeDetailPanel         │
 │  (Leaflet lives here,   │     │  FavouritesPanel         │
-│   untouched by React)   │     │  SearchOverlay           │
+│   untouched by React)   │     │  SourcesPanel, …         │
 └─────────────────────────┘     └──────────────────────────┘
 ```
 
-**`MapController`** (`src/map/MapController.ts`) — owns the Leaflet map, marker layer, and cluster layer. Exposes imperative methods; fires outward via `onMoveEnd` and `onMarkerClick` callbacks.
+**`MapController`** (`src/map/MapController.ts`) — owns the Leaflet map: tree markers in a markercluster group, a layer of server clusters, favourites, the place markers overlay and the selection ring. Exposes imperative methods; fires outward via `onMoveEnd` and click callbacks.
 
-**`useMap`** (`src/map/useMap.ts`) — holds a `MapController` in a `useRef`. Wires callbacks to store setters. Watches store state and calls controller methods as side effects. Restores map position from `localStorage` on mount (1-day TTL per city).
+**`useMap`** (`src/map/useMap.ts`) — holds a `MapController` in a `useRef`. Wires callbacks to store setters, keeps the URL position up to date, handles back/forward, and calls controller methods as side effects of store changes.
 
-**`tileCache`** (`src/map/tileCache.ts`) — spatial tile cache over a 0.005° × 0.005° grid (~556 m × 342 m at Rotterdam's latitude). On every map move: computes which grid cells intersect the viewport, subtracts cached cells, merges the missing cells into the minimum set of rectangular bboxes (scanline merge), and sends one `POST /api/trees`. LRU eviction at 666 cells.
+**`useTileLoader`** (`src/map/useTileLoader.ts`) — on every map move (debounced): takes the 256 px tiles covering the viewport at the current zoom, loads the missing ones with one `POST /api/tiles`, and publishes what's in view to the store (trees, clusters, counts per source).
+
+**`TileCache`** (`src/map/tileCache.ts`) — LRU cache of tile payloads keyed by build version, species filter and `z/x/y`. A tile the server sent as individual trees holds all trees of its area, so its descendant tiles at higher zooms are derived without a request.
+
+**`useSpeciesInView`** (`src/api/useSpeciesInView.ts`) — species in view for the species list and search: counted from the loaded trees when the whole view is in tree mode, otherwise from `/api/species` over tiles one zoom finer than the map.
 
 **`createSpeciesIcon`** (`src/map/markerIcon.ts`) — derives a 4-char code from the binomial name (`QUERCUS ROBUR` → `QuRo`), renders an SVG `L.DivIcon`, and caches the result per species. Genus-only entries use `Ge??`.
-
-**`useCitySwitcher`** (`src/map/useCitySwitcher.ts`) — on every `moveend`, checks if the map centre has crossed into a different city's bounding box and navigates to `/:newCity` via React Router if so.
 
 ### App source layout
 
 ```
 src/
-  types.ts                      shared TypeScript interfaces (Tree, City, Bbox, …)
+  types.ts                      shared TypeScript interfaces (Tree, TreeDetails, Source, Meta, …)
   config.ts                     tunable constants
   store.ts                      Zustand store
-  App.tsx                       city routing, cities fetch
+  App.tsx                       loads /api/meta, renders map + panels
   main.tsx
   api/
-    trees.ts                    POST /api/trees, GET /api/species, GET /api/cities, GET /api/vernacular-names
+    trees.ts                    API client (meta, tiles, species, details, issues)
+    useTreeDetails.ts           tree details on demand (single + batched), session cache
+    useSpeciesInView.ts         species in the current view
     useTreePhotos.ts            iNaturalist two-step fetch + session cache
+  lib/
+    species.ts                  species id → names for the current locale
+    treeKey.ts                  "source:id" key of a tree
+    favouritesStorage.ts        localStorage: favourites
+    recentCitiesStorage.ts      localStorage: recently picked places
   map/
     MapController.ts            Leaflet wrapper class, no React imports
     useMap.ts                   React ↔ MapController bridge
-    tileCache.ts                spatial tile cache + bbox merge
-    markerIcon.ts               SVG DivIcon, cached per species
+    useTileLoader.ts            tile loading orchestration
+    tileCache.ts                tile cache with derivation from tree-mode ancestors
+    mercator.ts                 web-mercator tile math
+    urlState.ts                 position/tree in the URL hash, history handling
+    markerIcon.ts               SVG DivIcons (species, clusters, groups, places)
     layers.ts                   tile layer definitions (streets/satellite/topo/light)
-    positionStorage.ts          localStorage: map position per city
-    useTreeLoader.ts            tree loading orchestration
     useMapClickHandlers.ts      marker click → store actions
-    useCitySwitcher.ts          auto city detection from map centre
   components/
     Map.tsx                     map div + floating button bar
     InfoPopup.tsx               popup shell, shared CloseButton/CollapseButton
-    LocationButton.tsx          geolocation (idle/loading/error states)
-    FullscreenButton.tsx
-    LayerButton.tsx             tile layer switcher
-    SettingsButton.tsx          gear-icon menu: language switcher (nl/en/de/fr) + name mode toggle
-    FavouritesButton.tsx
-    SearchButton.tsx
-    SearchOverlay.tsx           full-city species search with keyboard navigation
-    SpeciesButton.tsx
+    CityButton.tsx              place picker (recent places, all places overlay)
+    SourcesButton.tsx
+    SearchOverlay.tsx           search in the species in view, keyboard navigation
     SpeciesFilterBadge.tsx      active filter indicator + clear button
-    CityButton.tsx
-    LoadingSpinner.tsx
-    TreeImageModal.tsx          species photo viewer (portal, swipeable gallery)
+    …                           Location, Fullscreen, Layer, Settings, Favourites, Species, Issues buttons
     panels/
-      SpeciesListPanel.tsx      tree count + expandable species list
-      TreeDetailPanel.tsx       full tree detail + Wikipedia link + photo thumbnail
-      FavouritesPanel.tsx       saved favourites grouped by city
+      SpeciesListPanel.tsx      species in view, expandable to trees
+      TreeDetailPanel.tsx       tree details + links + photo thumbnail
+      FavouritesPanel.tsx       saved favourites grouped by source
+      SourcesPanel.tsx          datasets in view
+      SamePointListPanel.tsx    trees sharing one coordinate
+      IssuesPanel.tsx           reported data issues (debug mode)
   translations/
     locale.ts                   supported locales, labels, Intl tag mapping
     strings.ts                  flat UI string dictionary per locale
     useT.ts                     useT() hook — translate + {var} interpolation
-    cityFields.ts               resolves per-locale city metadata (e.g. description)
+    cityFields.ts               resolves per-locale source metadata (e.g. description)
 ```
 
 ### Zustand store (`src/store.ts`)
 
 | Field | Purpose |
 |---|---|
-| `popupView` | Which panel is open (`species-list`, `tree-detail`, `favourites`) or `null` |
-| `visibleTrees` | Trees in the current viewport; drives the species list |
-| `speciesFilter` | Active species filter (`null` = no filter) |
-| `nameMode` | `'scientific'` or `'vernacular'`; persisted in `localStorage` |
-| `tileLayerId` | Active map layer; persisted in `localStorage` |
-| `favourites` | Saved trees per city ID; persisted in `localStorage` |
+| `meta` / `speciesById` / `sourcesById` | Build version, sources and species dictionary from `/api/meta` |
+| `visibleTrees` / `clusters` | Trees and server clusters in the current view |
+| `sourcesInView` / `countInView` / `allTreeMode` | Per-source and total counts in view; whether the whole view is individual trees |
+| `popupView` | Which panel is open, or `null` |
+| `speciesFilter` | Active species filter (species id, `null` = no filter) |
+| `placesOverlay` | Whether the places overlay replaces the trees on the map |
+| `nameMode` / `locale` / `tileLayerId` | Preferences; persisted in `localStorage` |
+| `favourites` | Saved trees keyed by `source:id`; persisted in `localStorage` |
 | `currentZoom` / `currentCenter` | Live map position; drives the debug overlay |
-| `citySpecies` | Full species list for the current city; used by search |
-| `vernacularNames` | `species_binomial → {nl?, en?, de?, fr?}`; fetched once at startup from `/api/vernacular-names` |
-| `pendingTreeId` / `pendingCenter` | Coordinate a "fly to and highlight" when navigating from the favourites panel |
+| `pendingTree` / `pendingFlyTo` / `pendingHighlight…` | Coordinate "fly to and highlight/open" across components |
 
 ### Configuration constants (`src/config.ts`)
 
 | Constant | Default | Purpose |
 |---|---|---|
-| `CELL_SIZE_DEG` | `0.005` | Grid cell size in degrees |
-| `MAX_VIEWPORT_DEG2` | `0.04` | Area threshold above which fetch is skipped |
-| `MAX_CACHE_CELLS` | `666` | LRU eviction limit |
-| `DEBOUNCE_MS` | `300` | Delay after pan/zoom before triggering load |
-| `MIN_FETCH_ZOOM` | `16` | Below this zoom fetch is skipped; "zoom in" banner shown |
-| `MIN_CITY_SWITCH_ZOOM` | `11` | Below this zoom auto city-switching is suppressed |
-| `CLUSTER_DISABLE_ZOOM` | `18` | At and above this zoom markers are individual |
-| `MAP_ZOOM` | `14` | Initial zoom |
-| `SHARE_ZOOM` | `19` | Zoom used when navigating to a shared/favourited tree |
-| `API_LIMIT` | `20000` | Max trees per POST request |
+| `DEBOUNCE_MS` | `300` | Delay after pan/zoom before loading tiles |
+| `MAX_CACHE_TILES` | `2000` | LRU limit of the tile cache |
+| `MIN_MAP_ZOOM` | `5` | Lowest map zoom (the pyramids start here) |
+| `NL_CENTER` / `NL_ZOOM` | `[52.22, 5.29]` / `7` | National overview |
+| `PLACES_OVERLAY_MAX_ZOOM` | `11` | Zooming in beyond this hides the places overlay |
+| `PLACE_MAX_ZOOM` | `17` | Zoom cap when fitting the map to a place |
+| `CLUSTER_DISABLE_ZOOM` | `18` | At and above this zoom markers are individual (per-source override possible) |
+| `SHARE_ZOOM` | `19` | Zoom used when opening a shared tree link |
+
+API limits (`MAX_TILES_PER_REQUEST`, `MAX_SPECIES_TILES`, `MAX_DETAILS_PER_REQUEST`) mirror the constants in `api/index.php`. The tree/cluster threshold per tile (`TILE_TREE_LIMIT`, 500) lives in the API only.
 
 ### Map tile layers (`src/map/layers.ts`)
 
@@ -384,13 +387,10 @@ The fetcher extracts structured fields from the raw source string at import time
 
 | Context | Field used |
 |---|---|
-| Marker code (`QuRo`, `AcFr`) | `species_binomial` |
-| Wikipedia URL | `species_binomial` |
-| Species list (default) | `species_binomial` |
-| Species list (strict) | `(species_binomial, species_cultivar)` |
-| Tree detail display | `species` (full original) |
-| API filtering (default) | `species_binomial` |
-| API filtering (strict) | `(species_binomial, species_cultivar)` |
+| Marker code (`QuRo`, `AcFr`) | species `key` (binomial, or raw species string) |
+| Wikipedia / Google / iNaturalist | `species_binomial` |
+| Species list, search, filter | species id (one per binomial) |
+| Tree detail title | binomial + `species_cultivar` |
 
 **Wikipedia URL:** `"QUERCUS ROBUR"` → `https://en.wikipedia.org/wiki/Quercus_robur` (first word title-cased, rest lowercase, joined with `_`).
 

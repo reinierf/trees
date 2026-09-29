@@ -1,10 +1,12 @@
 import { create } from 'zustand'
-import type { Tree, SpeciesItem, TreeIssue, SpeciesIssue, VernacularNames } from './types'
+import type { Cluster, Meta, Source, SpeciesEntry, Tree, TreeDetails, TreeIssue, SpeciesIssue } from './types'
+import type { TileRange } from './map/mercator'
+import type { TreeRef } from './map/urlState'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
 import { loadFavourites, saveFavourites, type Favourites } from './lib/favouritesStorage'
+import { treeKey } from './lib/treeKey'
 import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
 import { type Locale } from './translations/locale'
-import { resolveVernacularNames } from './lib/vernacular'
 
 export type { TileLayerId }
 
@@ -18,7 +20,7 @@ export const PopupKind = {
   TreeDetail: 'tree-detail',
   Favourites: 'favourites',
   Issues: 'issues',
-  CityInfo: 'city-info',
+  Sources: 'sources',
   SamePointList: 'same-point-list',
 } as const
 export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
@@ -26,173 +28,180 @@ export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
 export type PopupReturnTo = typeof PopupKind.SpeciesList | typeof PopupKind.Favourites | typeof PopupKind.SamePointList
 
 export type PopupView =
-  | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: string; selectedTreeId?: string }
+  | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: number; selectedTreeKey?: string }
   | { kind: typeof PopupKind.TreeDetail; tree: Tree; returnTo: PopupReturnTo }
   | { kind: typeof PopupKind.Favourites }
   | { kind: typeof PopupKind.Issues }
-  | { kind: typeof PopupKind.CityInfo }
+  | { kind: typeof PopupKind.Sources }
   | { kind: typeof PopupKind.SamePointList; trees: Tree[] }
 
-interface AppStore {
-  popupView: PopupView | null
+/** What the tile loader found in the current view. */
+export interface ViewContents {
   visibleTrees: Tree[]
+  clusters: Cluster[]
+  /** trees per source in the tiles covering the view */
+  sourcesInView: Record<string, number>
+  /** trees (matching the species filter, if any) in the tiles covering the view */
+  countInView: number
+  /** true when every tile in view holds individual trees, i.e. visibleTrees is complete */
+  allTreeMode: boolean
+  range: TileRange
+}
+
+interface AppStore extends ViewContents {
+  meta: Meta | null
+  speciesById: Map<number, SpeciesEntry>
+  sourcesById: Map<string, Source>
+  popupView: PopupView | null
   isLoading: boolean
-  tooZoomedOut: boolean
   currentZoom: number
   currentCenter: [number, number] | null
-  pendingTreeId: string | null
+  pendingTree: TreeRef | null
   pendingCenter: [number, number] | null
   pendingHighlight: Tree | null
-  citySpecies: SpeciesItem[]
-  speciesFilter: string | null
-  isLoadingSpeciesFilter: boolean
+  speciesFilter: number | null
   nameMode: NameMode
   locale: Locale
   tileLayerId: TileLayerId
-  vernacularNames: VernacularNames
   favourites: Favourites
+  placesOverlay: boolean
   debugMode: boolean
   treeIssues: TreeIssue[]
   speciesIssues: SpeciesIssue[]
   pendingFlyTo: { lat: number; lon: number; minZoom: number } | null
-  pendingHighlightId: string | null
+  pendingHighlightKey: string | null
+  pendingSearch: string | null
+  pendingSpeciesSelect: number | null
 
+  setMeta: (meta: Meta) => void
+  setView: (view: ViewContents) => void
   openSpeciesList: () => void
-  openSpeciesListAt: (species: string, selectedTreeId?: string) => void
-  selectTreeInList: (treeId: string) => void
+  openSpeciesListAt: (speciesId: number, selectedTreeKey?: string) => void
+  selectTreeInList: (key: string) => void
   openTreeDetail: (tree: Tree, returnTo?: PopupReturnTo) => void
   openFavourites: () => void
   openSamePointList: (trees: Tree[]) => void
+  openIssues: () => void
+  openSources: () => void
   closePopup: () => void
-  setVisibleTrees: (trees: Tree[]) => void
   setIsLoading: (v: boolean) => void
-  setTooZoomedOut: (v: boolean) => void
   setCurrentZoom: (z: number) => void
   setCurrentCenter: (c: [number, number]) => void
-  setPendingTreeId: (id: string | null) => void
+  setPendingTree: (tree: TreeRef | null) => void
   setPendingCenter: (c: [number, number] | null) => void
   setPendingHighlight: (tree: Tree | null) => void
-  setCitySpecies: (species: SpeciesItem[]) => void
-  setSpeciesFilter: (species: string, trees: Tree[]) => void
+  setSpeciesFilter: (speciesId: number) => void
   clearSpeciesFilter: () => void
-  setIsLoadingSpeciesFilter: (v: boolean) => void
   setNameMode: (mode: NameMode) => void
   setLocale: (locale: Locale) => void
-  setVernacularNames: (names: VernacularNames) => void
   setTileLayerId: (id: TileLayerId) => void
-  toggleFavourite: (cityId: string, tree: Tree) => void
+  toggleFavourite: (tree: Tree, details: TreeDetails | null) => void
+  setPlacesOverlay: (v: boolean) => void
   setDebugMode: (v: boolean) => void
-  pendingSearch: string | null
   setPendingSearch: (q: string | null) => void
-  pendingSpeciesSelect: string | null
-  setPendingSpeciesSelect: (species: string | null) => void
+  setPendingSpeciesSelect: (speciesId: number | null) => void
   setPendingFlyTo: (v: { lat: number; lon: number; minZoom: number } | null) => void
-  setPendingHighlightId: (id: string | null) => void
-  openIssues: () => void
-  openCityInfo: () => void
+  setPendingHighlightKey: (key: string | null) => void
   setIssues: (trees: TreeIssue[], species: SpeciesIssue[]) => void
   upsertTreeIssue: (issue: TreeIssue) => void
   upsertSpeciesIssue: (issue: SpeciesIssue) => void
-  removeTreeIssue: (city: string, treeId: string) => void
+  removeTreeIssue: (source: string, treeId: string) => void
   removeSpeciesIssue: (binomial: string) => void
 }
 
-export const useStore = create<AppStore>((set) => ({
-  popupView: null,
+const EMPTY_VIEW: ViewContents = {
   visibleTrees: [],
+  clusters: [],
+  sourcesInView: {},
+  countInView: 0,
+  allTreeMode: false,
+  range: { z: 0, x0: 0, x1: -1, y0: 0, y1: -1 },
+}
+
+export const useStore = create<AppStore>((set) => ({
+  ...EMPTY_VIEW,
+  meta: null,
+  speciesById: new Map(),
+  sourcesById: new Map(),
+  popupView: null,
   isLoading: false,
-  tooZoomedOut: false,
   currentZoom: 0,
   currentCenter: null,
-  pendingTreeId: null,
+  pendingTree: null,
   pendingCenter: null,
   pendingHighlight: null,
-  citySpecies: [],
   speciesFilter: null,
-  isLoadingSpeciesFilter: false,
   nameMode: loadPreference<NameMode>(NAME_MODE_KEY, 'scientific'),
   locale: loadPreference<Locale>(LOCALE_KEY, 'nl'),
-  vernacularNames: {},
   tileLayerId: loadPreference<TileLayerId>(TILE_LAYER_KEY, 'streets'),
   favourites: loadFavourites(),
+  placesOverlay: false,
   debugMode: import.meta.env.DEV || new URLSearchParams(window.location.search).get('dbg') === '1',
   treeIssues: [],
   speciesIssues: [],
+  pendingFlyTo: null,
+  pendingHighlightKey: null,
   pendingSearch: null,
   pendingSpeciesSelect: null,
-  pendingFlyTo: null,
-  pendingHighlightId: null,
 
+  setMeta: (meta) => set({
+    meta,
+    speciesById: new Map(meta.species.map((s) => [s.id, s])),
+    sourcesById: new Map(meta.sources.map((s) => [s.id, s])),
+    // Species ids are only meaningful within one build.
+    speciesFilter: null,
+    ...EMPTY_VIEW,
+  }),
+  setView: (view) => set(view),
   openSpeciesList: () => set({ popupView: { kind: PopupKind.SpeciesList } }),
-  openSpeciesListAt: (species, selectedTreeId) =>
-    set({ popupView: { kind: PopupKind.SpeciesList, expandedSpecies: species, selectedTreeId } }),
-  selectTreeInList: (treeId) =>
+  openSpeciesListAt: (speciesId, selectedTreeKey) =>
+    set({ popupView: { kind: PopupKind.SpeciesList, expandedSpecies: speciesId, selectedTreeKey } }),
+  selectTreeInList: (key) =>
     set((state) => {
       if (state.popupView?.kind !== PopupKind.SpeciesList) return state
-      return { popupView: { ...state.popupView, selectedTreeId: treeId } }
+      return { popupView: { ...state.popupView, selectedTreeKey: key } }
     }),
   openTreeDetail: (tree, returnTo = PopupKind.SpeciesList) =>
     set({ popupView: { kind: PopupKind.TreeDetail, tree, returnTo } }),
   openFavourites: () => set({ popupView: { kind: PopupKind.Favourites } }),
   openSamePointList: (trees) => set({ popupView: { kind: PopupKind.SamePointList, trees } }),
+  openIssues: () => set({ popupView: { kind: PopupKind.Issues } }),
+  openSources: () => set({ popupView: { kind: PopupKind.Sources } }),
   closePopup: () => set({ popupView: null }),
-  setVisibleTrees: (trees) => set({ visibleTrees: trees }),
   setIsLoading: (v) => set({ isLoading: v }),
-  setTooZoomedOut: (v) => set({ tooZoomedOut: v }),
   setCurrentZoom: (z) => set({ currentZoom: z }),
   setCurrentCenter: (c) => set({ currentCenter: c }),
-  setPendingTreeId: (id) => set({ pendingTreeId: id }),
+  setPendingTree: (tree) => set({ pendingTree: tree }),
   setPendingCenter: (c) => set({ pendingCenter: c }),
   setPendingHighlight: (tree) => set({ pendingHighlight: tree }),
-  setCitySpecies: (species) => set({ citySpecies: species }),
-  setSpeciesFilter: (species, trees) => set({ speciesFilter: species, visibleTrees: trees, tooZoomedOut: false, isLoadingSpeciesFilter: false }),
-  clearSpeciesFilter: () => set({ speciesFilter: null, visibleTrees: [] }),
-  setIsLoadingSpeciesFilter: (v) => set({ isLoadingSpeciesFilter: v }),
+  setSpeciesFilter: (speciesId) => set({ speciesFilter: speciesId }),
+  clearSpeciesFilter: () => set({ speciesFilter: null }),
   setNameMode: (mode) => { savePreference(NAME_MODE_KEY, mode); set({ nameMode: mode }) },
-  setLocale: (locale) => {
-    savePreference(LOCALE_KEY, locale)
-    set((state) => {
-      const remap = <T extends { species_binomial: string | null; name_vernacular: string | null }>(items: T[]) =>
-        resolveVernacularNames(items, state.vernacularNames, locale)
-
-      const favourites = Object.fromEntries(
-        Object.entries(state.favourites).map(([cityId, trees]) => [cityId, remap(trees)]),
-      )
-
-      let popupView = state.popupView
-      if (popupView?.kind === PopupKind.TreeDetail) {
-        popupView = { ...popupView, tree: remap([popupView.tree])[0] }
-      } else if (popupView?.kind === PopupKind.SamePointList) {
-        popupView = { ...popupView, trees: remap(popupView.trees) }
-      }
-
-      return {
-        locale,
-        visibleTrees: remap(state.visibleTrees),
-        citySpecies: remap(state.citySpecies),
-        favourites,
-        popupView,
-      }
-    })
-  },
-  setVernacularNames: (names) => set({ vernacularNames: names }),
+  setLocale: (locale) => { savePreference(LOCALE_KEY, locale); set({ locale }) },
   setTileLayerId: (id) => { savePreference(TILE_LAYER_KEY, id); set({ tileLayerId: id }) },
-  setDebugMode: (v) => set({ debugMode: v }),
-  toggleFavourite: (cityId, tree) =>
+  toggleFavourite: (tree, details) =>
     set((state) => {
-      const cityFavs = state.favourites[cityId] ?? []
-      const exists = cityFavs.some((t) => t.id === tree.id)
-      const newFavs = exists ? cityFavs.filter((t) => t.id !== tree.id) : [...cityFavs, tree]
-      const updated = { ...state.favourites, [cityId]: newFavs }
+      const key = treeKey(tree)
+      const updated = { ...state.favourites }
+      if (updated[key]) {
+        delete updated[key]
+      } else {
+        updated[key] = {
+          ...tree,
+          street: details?.street ?? null,
+          year_planted: details?.year_planted ?? null,
+          addedAt: Date.now(),
+        }
+      }
       saveFavourites(updated)
       return { favourites: updated }
     }),
+  setPlacesOverlay: (v) => set({ placesOverlay: v }),
+  setDebugMode: (v) => set({ debugMode: v }),
   setPendingSearch: (q) => set({ pendingSearch: q }),
-  setPendingSpeciesSelect: (species) => set({ pendingSpeciesSelect: species }),
+  setPendingSpeciesSelect: (speciesId) => set({ pendingSpeciesSelect: speciesId }),
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
-  setPendingHighlightId: (id) => set({ pendingHighlightId: id }),
-  openIssues: () => set({ popupView: { kind: PopupKind.Issues } }),
-  openCityInfo: () => set({ popupView: { kind: PopupKind.CityInfo } }),
+  setPendingHighlightKey: (key) => set({ pendingHighlightKey: key }),
   setIssues: (trees, species) => set({ treeIssues: trees, speciesIssues: species }),
   upsertTreeIssue: (issue) => set((state) => {
     const rest = state.treeIssues.filter((i) => !(i.city === issue.city && i.tree_id === issue.tree_id))
@@ -202,8 +211,8 @@ export const useStore = create<AppStore>((set) => ({
     const rest = state.speciesIssues.filter((i) => i.species_binomial !== issue.species_binomial)
     return { speciesIssues: [issue, ...rest] }
   }),
-  removeTreeIssue: (city, treeId) => set((state) => ({
-    treeIssues: state.treeIssues.filter((i) => !(i.city === city && i.tree_id === treeId)),
+  removeTreeIssue: (source, treeId) => set((state) => ({
+    treeIssues: state.treeIssues.filter((i) => !(i.city === source && i.tree_id === treeId)),
   })),
   removeSpeciesIssue: (binomial) => set((state) => ({
     speciesIssues: state.speciesIssues.filter((i) => i.species_binomial !== binomial),

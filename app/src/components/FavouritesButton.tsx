@@ -27,7 +27,7 @@ export function FavouritesButton() {
       title={title}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
-        'top-[156px] left-[12px]',
+        'top-[120px] left-[12px]',
         isActive ? 'bg-gray-100 text-red-500' : 'bg-white text-gray-700 hover:bg-gray-50',
       ].join(' ')}
     >

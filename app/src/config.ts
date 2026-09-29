@@ -12,6 +12,7 @@ export const NL_ZOOM = 7               // zoom level for the Netherlands overvie
 
 export const PLACES_OVERLAY_MAX_ZOOM = 11 // zooming in beyond this hides the places overlay
 export const PLACE_MAX_ZOOM = 17        // zoom cap when fitting the map to a place's extent
+export const NEAREST_TREE_ZOOM = 18     // zoom level when flying to the nearest tree of a species
 export const SHARE_ZOOM = 19            // zoom level used when opening a shared tree link
 export const MAP_MAX_ZOOM = 19          // OSM standard tile layer cap
 export const CLUSTER_DISABLE_ZOOM = 18  // zoom level at and above which markers are individual, possibly overridden per source

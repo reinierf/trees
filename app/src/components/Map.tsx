@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useMap } from '../map/useMap'
 import { useDebugMode } from '../map/useDebugMode'
 import { useStore } from '../store'
@@ -11,8 +11,6 @@ import { CityButton } from './CityButton'
 import { LocationButton } from './LocationButton'
 import { FullscreenButton } from './FullscreenButton'
 import { LoadingSpinner } from './LoadingSpinner'
-import { SearchButton } from './SearchButton'
-import { SearchOverlay } from './SearchOverlay'
 import { SpeciesFilterBadge } from './SpeciesFilterBadge'
 import { LayerButton } from './LayerButton'
 import { FavouritesButton } from './FavouritesButton'
@@ -43,33 +41,15 @@ export function Map() {
     fetchIssues().then(({ trees, species }) => setIssues(trees, species)).catch(console.error)
   }, [debugMode, setIssues])
 
-  const pendingSearch    = useStore((s) => s.pendingSearch)
-  const setPendingSearch = useStore((s) => s.setPendingSearch)
   const pendingSpeciesSelect    = useStore((s) => s.pendingSpeciesSelect)
   const setPendingSpeciesSelect = useStore((s) => s.setPendingSpeciesSelect)
-
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [searchInitialQuery, setSearchInitialQuery] = useState<string | undefined>(undefined)
-
-  useEffect(() => {
-    if (pendingSearch !== null) {
-      setSearchInitialQuery(pendingSearch)
-      setPendingSearch(null)
-      setSearchOpen(true)
-    }
-  }, [pendingSearch, setPendingSearch])
-
-  const handleSpeciesSelect = useCallback((speciesId: number) => {
-    setSearchOpen(false)
-    setSpeciesFilter(speciesId)
-  }, [setSpeciesFilter])
 
   useEffect(() => {
     if (pendingSpeciesSelect !== null) {
       setPendingSpeciesSelect(null)
-      handleSpeciesSelect(pendingSpeciesSelect)
+      setSpeciesFilter(pendingSpeciesSelect)
     }
-  }, [pendingSpeciesSelect, setPendingSpeciesSelect, handleSpeciesSelect])
+  }, [pendingSpeciesSelect, setPendingSpeciesSelect, setSpeciesFilter])
 
   function handleLocate(lat: number, lon: number, accuracy: number) {
     markJump()
@@ -112,20 +92,9 @@ export function Map() {
       <LayerButton onSwitch={(url, attribution, maxZoom) => controllerRef.current?.switchTileLayer(url, attribution, maxZoom)} />
       <CityButton onAllPlaces={handleAllPlaces} onPlace={goToPlace} />
       <SpeciesButton />
-      <SearchButton
-        onClick={() => setSearchOpen((o) => !o)}
-        active={searchOpen || speciesFilter !== null}
-      />
       <FavouritesButton />
       <IssuesButton />
       <SourcesButton />
-      {searchOpen && (
-        <SearchOverlay
-          onSelect={handleSpeciesSelect}
-          initialQuery={searchInitialQuery}
-          onClose={() => { setSearchOpen(false); setSearchInitialQuery(undefined) }}
-        />
-      )}
       <LocationButton onLocate={handleLocate} />
     </div>
   )

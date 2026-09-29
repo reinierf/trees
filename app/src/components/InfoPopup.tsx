@@ -53,6 +53,7 @@ export function InfoPopup() {
       <SpeciesListPanel
         expandedSpecies={popupView.expandedSpecies}
         selectedTreeKey={popupView.selectedTreeKey}
+        initialQuery={popupView.query}
       />
     )
   if (popupView.kind === PopupKind.SamePointList)

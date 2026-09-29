@@ -28,7 +28,7 @@ export type PopupKind = typeof PopupKind[keyof typeof PopupKind]
 export type PopupReturnTo = typeof PopupKind.SpeciesList | typeof PopupKind.Favourites | typeof PopupKind.SamePointList
 
 export type PopupView =
-  | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: number; selectedTreeKey?: string }
+  | { kind: typeof PopupKind.SpeciesList; expandedSpecies?: number; selectedTreeKey?: string; query?: string }
   | { kind: typeof PopupKind.TreeDetail; tree: Tree; returnTo: PopupReturnTo }
   | { kind: typeof PopupKind.Favourites }
   | { kind: typeof PopupKind.Issues }
@@ -70,12 +70,12 @@ interface AppStore extends ViewContents {
   speciesIssues: SpeciesIssue[]
   pendingFlyTo: { lat: number; lon: number; minZoom: number } | null
   pendingHighlightKey: string | null
-  pendingSearch: string | null
   pendingSpeciesSelect: number | null
 
   setMeta: (meta: Meta) => void
   setView: (view: ViewContents) => void
-  openSpeciesList: () => void
+  /** Opens the species list, optionally with its search box filled in. */
+  openSpeciesList: (query?: string) => void
   openSpeciesListAt: (speciesId: number, selectedTreeKey?: string) => void
   selectTreeInList: (key: string) => void
   openTreeDetail: (tree: Tree, returnTo?: PopupReturnTo) => void
@@ -98,7 +98,6 @@ interface AppStore extends ViewContents {
   toggleFavourite: (tree: Tree, details: TreeDetails | null) => void
   setPlacesOverlay: (v: boolean) => void
   setDebugMode: (v: boolean) => void
-  setPendingSearch: (q: string | null) => void
   setPendingSpeciesSelect: (speciesId: number | null) => void
   setPendingFlyTo: (v: { lat: number; lon: number; minZoom: number } | null) => void
   setPendingHighlightKey: (key: string | null) => void
@@ -141,7 +140,6 @@ export const useStore = create<AppStore>((set) => ({
   speciesIssues: [],
   pendingFlyTo: null,
   pendingHighlightKey: null,
-  pendingSearch: null,
   pendingSpeciesSelect: null,
 
   setMeta: (meta) => set({
@@ -153,7 +151,7 @@ export const useStore = create<AppStore>((set) => ({
     ...EMPTY_VIEW,
   }),
   setView: (view) => set(view),
-  openSpeciesList: () => set({ popupView: { kind: PopupKind.SpeciesList } }),
+  openSpeciesList: (query) => set({ popupView: { kind: PopupKind.SpeciesList, query } }),
   openSpeciesListAt: (speciesId, selectedTreeKey) =>
     set({ popupView: { kind: PopupKind.SpeciesList, expandedSpecies: speciesId, selectedTreeKey } }),
   selectTreeInList: (key) =>
@@ -198,7 +196,6 @@ export const useStore = create<AppStore>((set) => ({
     }),
   setPlacesOverlay: (v) => set({ placesOverlay: v }),
   setDebugMode: (v) => set({ debugMode: v }),
-  setPendingSearch: (q) => set({ pendingSearch: q }),
   setPendingSpeciesSelect: (speciesId) => set({ pendingSpeciesSelect: speciesId }),
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),
   setPendingHighlightKey: (key) => set({ pendingHighlightKey: key }),

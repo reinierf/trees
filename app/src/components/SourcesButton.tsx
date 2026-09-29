@@ -16,7 +16,7 @@ export function SourcesButton() {
       title={t('sources.title')}
       className={[
         'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
-        'top-[192px] left-[12px]',
+        'top-[156px] left-[12px]',
         isActive ? 'bg-gray-100 text-blue-600' : 'bg-white text-gray-700 hover:bg-gray-50',
       ].join(' ')}
     >

@@ -21,7 +21,7 @@ export function IssuesPanel() {
   const setPendingFlyTo        = useStore((s) => s.setPendingFlyTo)
   const setPendingHighlightKey = useStore((s) => s.setPendingHighlightKey)
   const sourcesById            = useStore((s) => s.sourcesById)
-  const setPendingSearch       = useStore((s) => s.setPendingSearch)
+  const openSpeciesList        = useStore((s) => s.openSpeciesList)
   const closePopup             = useStore((s) => s.closePopup)
 
   const [collapsed, setCollapsed]   = useState(false)
@@ -63,7 +63,7 @@ export function IssuesPanel() {
   }
 
   function handleSpeciesSearch(binomial: string) {
-    setPendingSearch(binomial)
+    openSpeciesList(binomial)
   }
 
   return (

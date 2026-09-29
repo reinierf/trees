@@ -12,6 +12,7 @@
  *   POST /api/tiles   {"z","tiles":[[x,y],...],"species"?}   per tile: clusters or slim trees
  *   GET  /api/species?z=&x0=&x1=&y0=&y1=             [[speciesId, count]] for a tile range
  *   GET  /api/tree?source=&id=                       full details of one tree
+ *   GET  /api/nearest?species=&lat=&lon=             nearest tree of a species to a point
  *   POST /api/trees/details  {"trees":[[source,id],...]}     details of several trees
  *   POST /api/flag, GET /api/issues, POST /api/issues/resolve
  *   GET  /api/health
@@ -56,6 +57,7 @@ try {
         '/tiles'             => handle_tiles(),
         '/species'           => handle_species(),
         '/tree'              => handle_tree(),
+        '/nearest'           => handle_nearest(),
         '/trees/details'     => handle_trees_details(),
         '/health'            => handle_health(),
         '/flag'              => handle_flag(),
@@ -356,6 +358,52 @@ function handle_tree(): void
     $rows = tree_details([[$source, $id]]);
     if (!$rows) respond(404, ['error' => 'Tree not found']);
     respond(200, $rows[0]);
+}
+
+/**
+ * Nearest tree of a species to a point, as a slim tree {source, id, lat, lon, speciesId}.
+ * Searches boxes of growing size on the (species_id, lat, lon) index until one holds a tree,
+ * then re-queries a box as large as that tree's distance: a tree just outside the first box's
+ * corner can be closer than one inside it.
+ */
+function handle_nearest(): void
+{
+    $species = int_param('species', 1, PHP_INT_MAX);
+    $lat = filter_input(INPUT_GET, 'lat', FILTER_VALIDATE_FLOAT);
+    $lon = filter_input(INPUT_GET, 'lon', FILTER_VALIDATE_FLOAT);
+    if (!is_float($lat) || !is_float($lon) || abs($lat) > 85 || abs($lon) > 180) {
+        respond(400, ['error' => 'Required query params: lat, lon (WGS84)']);
+    }
+
+    $metresPerDegLat = 111320;
+    $metresPerDegLon = 111320 * cos(deg2rad($lat));
+    $distance = fn(array $r) => hypot(((float) $r['lat'] - $lat) * $metresPerDegLat, ((float) $r['lon'] - $lon) * $metresPerDegLon);
+    $inBox = function (float $metres) use ($species, $lat, $lon, $metresPerDegLat, $metresPerDegLon): array {
+        $dLat = $metres / $metresPerDegLat;
+        $dLon = $metres / $metresPerDegLon;
+        [$s, $n, $w, $e] = array_map(fn($v) => sprintf('%.9F', $v), [$lat - $dLat, $lat + $dLat, $lon - $dLon, $lon + $dLon]);
+        return trees_db()->query("SELECT source_idx, id, lat, lon FROM trees
+                                  WHERE species_id = {$species} AND lat BETWEEN {$s} AND {$n} AND lon BETWEEN {$w} AND {$e}")
+                          ->fetchAll();
+    };
+
+    // 500 m up to beyond the width of the Netherlands.
+    foreach ([500, 2000, 8000, 32000, 128000, 512000] as $radius) {
+        $rows = $inBox($radius);
+        if (!$rows) continue;
+        $nearest = min(array_map($distance, $rows));
+        if ($nearest > $radius) $rows = $inBox($nearest);
+        usort($rows, fn($a, $b) => $distance($a) <=> $distance($b));
+        $r = $rows[0];
+        respond(200, [
+            'source'    => source_ids()[(int) $r['source_idx']],
+            'id'        => $r['id'],
+            'lat'       => (float) $r['lat'],
+            'lon'       => (float) $r['lon'],
+            'speciesId' => $species,
+        ]);
+    }
+    respond(404, ['error' => 'No tree of this species found']);
 }
 
 function handle_trees_details(): void

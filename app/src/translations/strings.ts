@@ -22,7 +22,6 @@ const nl = {
 
   'search.placeholder': 'Zoek op soortnaam...',
   'search.clear': 'Wis zoekopdracht',
-  'search.close': 'Sluiten',
   'search.loading': 'Soorten laden…',
   'search.noResults': 'Geen soorten gevonden',
   'search.typeMore': 'Typ meer om te verfijnen',
@@ -30,7 +29,7 @@ const nl = {
   'species.title': 'Soorten in beeld',
   'species.empty': 'Geen bomen in beeld',
   'species.filterBy': 'Filter op soort',
-  'species.showAllOnMap': 'Toon alle bomen van deze soort op de kaart',
+  'species.showAllOnMap': 'Toon alleen deze soort op de kaart',
   'species.openDetail': 'Open boomdetails',
 
   'popup.close': 'Sluiten',
@@ -57,6 +56,8 @@ const nl = {
 
   'city.choose': 'Kies plaats',
   'city.allPlaces': 'Alle plaatsen',
+  'species.nearest': 'Toon de dichtstbijzijnde boom van deze soort',
+  'species.notInView': 'Niet in beeld',
   'city.hidePlaces': 'Plaatsen verbergen',
   'sources.title': 'Bronnen in beeld',
   'sources.inView': 'In beeld',
@@ -106,7 +107,6 @@ const en: Dict = {
 
   'search.placeholder': 'Search by species name...',
   'search.clear': 'Clear search',
-  'search.close': 'Close',
   'search.loading': 'Loading species…',
   'search.noResults': 'No species found',
   'search.typeMore': 'Type more to narrow results',
@@ -114,7 +114,7 @@ const en: Dict = {
   'species.title': 'Species in view',
   'species.empty': 'No trees in view',
   'species.filterBy': 'Filter by species',
-  'species.showAllOnMap': 'Show all trees of this species on the map',
+  'species.showAllOnMap': 'Show only this species on the map',
   'species.openDetail': 'Open tree detail',
 
   'popup.close': 'Close',
@@ -141,6 +141,8 @@ const en: Dict = {
 
   'city.choose': 'Choose place',
   'city.allPlaces': 'All places',
+  'species.nearest': 'Show the nearest tree of this species',
+  'species.notInView': 'Not in view',
   'city.hidePlaces': 'Hide places',
   'sources.title': 'Sources in view',
   'sources.inView': 'In view',
@@ -187,7 +189,6 @@ const de: Dict = {
 
   'search.placeholder': 'Nach Artname suchen...',
   'search.clear': 'Suche löschen',
-  'search.close': 'Schließen',
   'search.loading': 'Arten werden geladen…',
   'search.noResults': 'Keine Arten gefunden',
   'search.typeMore': 'Weiter tippen zum Verfeinern',
@@ -195,7 +196,7 @@ const de: Dict = {
   'species.title': 'Arten im Blick',
   'species.empty': 'Keine Bäume im Blick',
   'species.filterBy': 'Nach Art filtern',
-  'species.showAllOnMap': 'Alle Bäume dieser Art auf der Karte anzeigen',
+  'species.showAllOnMap': 'Nur diese Art auf der Karte zeigen',
   'species.openDetail': 'Baumdetails öffnen',
 
   'popup.close': 'Schließen',
@@ -222,6 +223,8 @@ const de: Dict = {
 
   'city.choose': 'Ort wählen',
   'city.allPlaces': 'Alle Orte',
+  'species.nearest': 'Nächsten Baum dieser Art zeigen',
+  'species.notInView': 'Nicht im Blick',
   'city.hidePlaces': 'Orte ausblenden',
   'sources.title': 'Quellen im Blick',
   'sources.inView': 'Im Blick',
@@ -268,7 +271,6 @@ const fr: Dict = {
 
   'search.placeholder': "Rechercher par nom d'espèce...",
   'search.clear': 'Effacer la recherche',
-  'search.close': 'Fermer',
   'search.loading': 'Chargement des espèces…',
   'search.noResults': 'Aucune espèce trouvée',
   'search.typeMore': 'Continuez à taper pour affiner',
@@ -276,7 +278,7 @@ const fr: Dict = {
   'species.title': 'Espèces visibles',
   'species.empty': 'Aucun arbre visible',
   'species.filterBy': 'Filtrer par espèce',
-  'species.showAllOnMap': 'Afficher tous les arbres de cette espèce sur la carte',
+  'species.showAllOnMap': 'Afficher uniquement cette espèce sur la carte',
   'species.openDetail': "Ouvrir les détails de l'arbre",
 
   'popup.close': 'Fermer',
@@ -303,6 +305,8 @@ const fr: Dict = {
 
   'city.choose': 'Choisir un lieu',
   'city.allPlaces': 'Tous les lieux',
+  'species.nearest': "Afficher l'arbre le plus proche de cette espèce",
+  'species.notInView': 'Hors de vue',
   'city.hidePlaces': 'Masquer les lieux',
   'sources.title': 'Sources visibles',
   'sources.inView': 'Visibles',

@@ -14,8 +14,8 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 - **Clusters at every zoom** — the server decides per 256 px map tile: more than 500 trees → precomputed clusters, otherwise individual trees. Zoomed out you see tree density across the country; zoomed in, individual trees. Sparse datasets (e.g. monumental-trees-only layers) show individual trees from far out without any per-city settings.
 - **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*).
 - **One set of bubbles** — server clusters join the tree markers in Leaflet.markercluster, carrying their tree count, so bubbles group by on-screen distance (120 px below zoom 16, 80 px from 16) instead of showing the server's 64 px grid, and cluster tiles and tree tiles blend seamlessly. Clustering stops at `CLUSTER_DISABLE_ZOOM`.
-- **Species list panel** — species in view with counts; expanding a species lists its individual trees (where the map shows individual trees); clicking highlights the tree on the map.
-- **Search** — searches the species in view; selecting one sets the species filter.
+- **Species list panel** — species in view with counts, with a search box at the top (scientific and vernacular names; Enter filters on the top row). Expanding a species lists its individual trees (where the map shows individual trees); clicking highlights the tree on the map. Each row has two actions: filter the map on this species, and fly to the nearest tree of it.
+- **Nearest tree** — finds the tree of a species closest to the map centre, across all sources, flies there (zoom 18, as a history entry so back returns) and opens its detail panel. While searching, matching species that aren't in view are listed under "Not in view" with only this action, so any species in the country can be found.
 - **Species filter** — the map shows only one species (clusters and trees); the filter persists across map moves.
 - **Tree detail panel** — species, vernacular name, year planted, street, trunk diameter, crown spread, Wikipedia/Google links and a photo thumbnail. Details are fetched when the tree is opened.
 - **Tree photos** — species photos fetched on demand from the [iNaturalist API](https://api.inaturalist.org/v1/) using the binomial name. A thumbnail appears in the detail panel; tapping it opens a full-screen modal with a swipeable photo gallery and per-photo attribution. Photos with no licence (`all rights reserved`) are excluded; all others are shown with their iNaturalist attribution string. Images are hot-linked from iNaturalist's S3 CDN — no self-hosting required. Results are cached in-memory per species for the session lifetime.
@@ -130,6 +130,7 @@ PHP reads `trees.db` and `meta.db` (read-only) and `issues.db`.
 | POST | `/api/tiles` | `{"z", "tiles": [[x, y], …], "species"?}` (≤ 100 tiles) | `{version, tiles: [...]}` — see below |
 | GET | `/api/species` | `z, x0, x1, y0, y1` (tile range, ≤ 400 tiles) | `[[speciesId, count], …]`, most common first |
 | GET | `/api/tree` | `source, id` | tree details object |
+| GET | `/api/nearest` | `species, lat, lon` | nearest tree of the species as `{source, id, lat, lon, speciesId}`, or 404 |
 | POST | `/api/trees/details` | `{"trees": [[source, id], …]}` (≤ 200) | array of tree details objects |
 | POST | `/api/flag` | issue report | `{ok}` |
 | GET | `/api/issues` | — | `{trees, species}` |
@@ -286,7 +287,7 @@ React store (Zustand)
 
 **`TileCache`** (`src/map/tileCache.ts`) — LRU cache of tile payloads keyed by build version, species filter and `z/x/y`. A tile the server sent as individual trees holds all trees of its area, so its descendant tiles at higher zooms are derived without a request.
 
-**`useSpeciesInView`** (`src/api/useSpeciesInView.ts`) — species in view for the species list and search: counted from the loaded trees when the whole view is in tree mode, otherwise from `/api/species` over tiles one zoom finer than the map.
+**`useSpeciesInView`** (`src/api/useSpeciesInView.ts`) — species in view for the species list: counted from the loaded trees when the whole view is in tree mode, otherwise from `/api/species` over tiles one zoom finer than the map.
 
 **`createSpeciesIcon`** (`src/map/markerIcon.ts`) — derives a 4-char code from the binomial name (`QUERCUS ROBUR` → `QuRo`), renders an SVG `L.DivIcon`, and caches the result per species. Genus-only entries use `Ge??`.
 
@@ -324,11 +325,10 @@ src/
     InfoPopup.tsx               popup shell, shared CloseButton/CollapseButton
     CityButton.tsx              place picker (recent places, all places overlay)
     SourcesButton.tsx
-    SearchOverlay.tsx           search in the species in view, keyboard navigation
     SpeciesFilterBadge.tsx      active filter indicator + clear button
     …                           Location, Fullscreen, Layer, Settings, Favourites, Species, Issues buttons
     panels/
-      SpeciesListPanel.tsx      species in view, expandable to trees
+      SpeciesListPanel.tsx      species in view with search, filter and nearest-tree actions, expandable to trees
       TreeDetailPanel.tsx       tree details + links + photo thumbnail
       FavouritesPanel.tsx       saved favourites grouped by source
       SourcesPanel.tsx          datasets in view
@@ -367,6 +367,7 @@ src/
 | `PLACES_OVERLAY_MAX_ZOOM` | `11` | Zooming in beyond this hides the places overlay |
 | `PLACE_MAX_ZOOM` | `17` | Zoom cap when fitting the map to a place |
 | `CLUSTER_DISABLE_ZOOM` | `18` | At and above this zoom markers are individual (per-source override possible) |
+| `NEAREST_TREE_ZOOM` | `18` | Zoom used when flying to the nearest tree of a species |
 | `SHARE_ZOOM` | `19` | Zoom used when opening a shared tree link |
 
 API limits (`MAX_TILES_PER_REQUEST`, `MAX_SPECIES_TILES`, `MAX_DETAILS_PER_REQUEST`) mirror the constants in `api/index.php`. The tree/cluster threshold per tile (`TILE_TREE_LIMIT`, 500) lives in the API only.
@@ -390,7 +391,7 @@ The fetcher extracts structured fields from the raw source string at import time
 |---|---|
 | Marker code (`QuRo`, `AcFr`) | species `key` (binomial, or raw species string) |
 | Wikipedia / Google / iNaturalist | `species_binomial` |
-| Species list, search, filter | species id (one per binomial) |
+| Species list, search, filter, nearest | species id (one per binomial) |
 | Tree detail title | binomial + `species_cultivar` |
 
 **Wikipedia URL:** `"QUERCUS ROBUR"` → `https://en.wikipedia.org/wiki/Quercus_robur` (first word title-cased, rest lowercase, joined with `_`).

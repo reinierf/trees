@@ -7,6 +7,7 @@ export function SpeciesButton() {
   const popupView = useStore((s) => s.popupView)
   const openSpeciesList = useStore((s) => s.openSpeciesList)
   const closePopup = useStore((s) => s.closePopup)
+  const placesOverlay = useStore((s) => s.placesOverlay)
 
   function toggle() {
     if (popupView?.kind === PopupKind.SpeciesList) {
@@ -21,9 +22,10 @@ export function SpeciesButton() {
   return (
     <button
       onClick={toggle}
+      disabled={placesOverlay}
       title={t('species.title')}
       className={[
-        'absolute z-[1000] rounded-full p-2 shadow-md transition-colors',
+        'absolute z-[1000] rounded-full p-2 shadow-md transition-colors disabled:opacity-50 disabled:pointer-events-none',
         'top-[84px] left-[12px]',
         isActive
           ? 'bg-gray-100 text-green-700'

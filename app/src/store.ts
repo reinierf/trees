@@ -205,7 +205,13 @@ export const useStore = create<AppStore>((set) => ({
       saveFavourites(updated)
       return { favourites: updated }
     }),
-  setPlacesOverlay: (v) => set({ placesOverlay: v }),
+  setPlacesOverlay: (v) =>
+    set((state) => {
+      // The species and sources buttons are disabled in the overview, so close their panels too.
+      const kind = state.popupView?.kind
+      const closeIt = v && (kind === PopupKind.SpeciesList || kind === PopupKind.Sources)
+      return closeIt ? { placesOverlay: v, popupView: null } : { placesOverlay: v }
+    }),
   setDebugMode: (v) => set({ debugMode: v }),
   setPendingSpeciesSelect: (speciesId) => set({ pendingSpeciesSelect: speciesId }),
   setPendingFlyTo: (v) => set({ pendingFlyTo: v }),

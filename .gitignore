@@ -37,3 +37,6 @@ Thumbs.db
 *.db
 open-data-fetcher/tools/sources/
 api/data/cities-cache.json
+
+# Deployment output (node deploy.js)
+webroot/

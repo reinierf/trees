@@ -38,6 +38,7 @@ open-data-fetcher/   Node.js — pulls tree data from each source → per-source
                      builds the national databases the API serves (tools/build-db.js)
 api/                 PHP — serves tiles, species and tree details over HTTP from SQLite
 app/                 Vite + React web app
+deploy.js            collects the deployable files into webroot/ (see Deployment)
 ```
 
 ---
@@ -75,6 +76,17 @@ Vite proxies `/api/*` → `http://localhost:8000`, so the frontend calls `/api/t
 ---
 
 ## Deployment
+
+`node deploy.js` (from the repo root) collects everything the server needs into `webroot/` (gitignored), ready to upload as-is:
+
+```sh
+node deploy.js                # app/dist/ → webroot/, api code → webroot/api/
+node deploy.js --build        # build the app first
+node deploy.js --db           # also copy trees.db + meta.db → webroot/api/data/
+node deploy.js --build-db     # rebuild the databases first (implies --db)
+```
+
+`webroot/` is updated, not wiped: the app files and API code are replaced (old hashed assets are removed), and `webroot/api/data/` is only touched when databases are copied. `issues.db` is never copied.
 
 - PHP server with `pdo_sqlite` (enabled by default on most shared hosting)
 - Upload `api/index.php`, `api/.htaccess`

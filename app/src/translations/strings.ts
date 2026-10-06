@@ -51,6 +51,8 @@ const nl = {
 
 
   'map.chooseCity': 'Kies een plaats om bomen te verkennen',
+  'map.legend.city': 'Gemeente',
+  'map.legend.institution': 'Arboretum',
 
   'marker.trees': 'bomen',
 
@@ -138,6 +140,8 @@ const en: Dict = {
 
 
   'map.chooseCity': 'Choose a place to explore trees',
+  'map.legend.city': 'Municipality',
+  'map.legend.institution': 'Arboretum or institute',
 
   'marker.trees': 'trees',
 
@@ -222,6 +226,8 @@ const de: Dict = {
 
 
   'map.chooseCity': 'Wähle einen Ort, um Bäume zu erkunden',
+  'map.legend.city': 'Gemeinde',
+  'map.legend.institution': 'Arboretum oder Institut',
 
   'marker.trees': 'Bäume',
 
@@ -306,6 +312,8 @@ const fr: Dict = {
 
 
   'map.chooseCity': 'Choisissez un lieu pour explorer les arbres',
+  'map.legend.city': 'Commune',
+  'map.legend.institution': 'Arboretum ou institut',
 
   'marker.trees': 'arbres',
 

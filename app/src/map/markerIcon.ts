@@ -68,12 +68,17 @@ export function createSpeciesIcon(speciesBinomial: string): L.DivIcon {
   return icon
 }
 
+export const PLACE_COLORS: Record<Source['type'], string> = {
+  city: '#2d6a4f',
+  institution: '#f59e0b',
+}
+
 export function createPlaceMarker(source: Source): L.CircleMarker {
   const locale = useStore.getState().locale
   const t = TRANSLATIONS[locale]
   const m = L.circleMarker(source.center, {
     radius: 10,
-    fillColor: source.type === 'institution' ? '#f59e0b' : '#2d6a4f',
+    fillColor: PLACE_COLORS[source.type],
     fillOpacity: 1,
     color: 'white',
     weight: 2,

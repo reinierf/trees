@@ -5,6 +5,7 @@ import { useStore } from '../store'
 import { NL_CENTER, NL_ZOOM } from '../config'
 import { fetchIssues } from '../api/trees'
 import { zoomForAccuracy } from '../lib/utils'
+import { PLACE_COLORS } from '../map/markerIcon'
 import { useT } from '../translations/useT'
 import { SpeciesButton } from './SpeciesButton'
 import { CityButton } from './CityButton'
@@ -75,6 +76,17 @@ export function Map() {
         <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
             {t('map.chooseCity')}
+            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+              {(['city', 'institution'] as const).map((type) => (
+                <span key={type} className="flex items-center gap-1.5">
+                  <span
+                    className="w-[13px] h-[13px] rounded-full ring-1 ring-white shadow-sm"
+                    style={{ backgroundColor: PLACE_COLORS[type] }}
+                  />
+                  {t(`map.legend.${type}`)}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       )}

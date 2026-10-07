@@ -34,7 +34,8 @@ define('MAX_DETAILS_PER_REQUEST', 200);
 define('ALLOWED_ORIGINS', [
     'http://localhost:5173',   // Vite dev server
     'http://localhost:8000',   // PHP built-in dev server
-    'https://boxofchocolates.nl',
+    'https://bomenatlas.nl',
+    'https://www.bomenatlas.nl',
 ]);
 
 if (extension_loaded('zlib') && !ini_get('zlib.output_compression')) ob_start('ob_gzhandler');

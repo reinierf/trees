@@ -1,6 +1,6 @@
 # Bomen
 
-Interactive map of municipal and arboretum trees in the Netherlands. The map shows every tree in view, whichever dataset it comes from; data is loaded per map tile on demand, never a full dataset upfront.
+Interactive map of municipal and arboretum trees in the Netherlands. The map shows every tree in view, whichever dataset it comes from; data is loaded per map tile on demand, never a full dataset upfront. Live at [bomenatlas.nl](https://bomenatlas.nl).
 
 **Cities:** Rotterdam · Groningen · Den Haag · Amsterdam · Utrecht · Arnhem · Nijmegen · Zwolle · Eindhoven · Amersfoort · Breda · Assen · Delft · Haarlem · Zandvoort · Oss · Voorschoten · Deventer · Apeldoorn · Enschede · Leiden · Dordrecht · Alkmaar · Den Bosch · Ede · Albrandswaard · Barendrecht · Leeuwarden · Roosendaal · Almere · Maastricht · Ridderkerk · Gouda · Wageningen · Steenwijk · Hilversum · Gorinchem · Zoetermeer · Bergen (NH) · Súdwest-Fryslân
 
@@ -10,6 +10,7 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 
 ## Features
 
+- **Welcome dialog** — on landing, a centred dialog with the bomenatlas.nl wordmark explains what the site is and how to use it, with the rest of the UI hidden until it's closed (× or Esc, or a click outside it). It keeps showing on every visit until closed with its "Niet meer tonen" checkbox ticked (unchecked on a first visit; when reopened via the attribution link it shows the stored choice); the choice is stored in `localStorage` (`welcome-hidden`).
 - **Map view across all sources** — the map shows every tree in view regardless of which dataset (city or institution) it comes from, so trees near municipal borders or inside overlapping datasets are never hidden. The source is per-tree metadata.
 - **Clusters at every zoom** — the server decides per 256 px map tile: more than 500 trees → precomputed clusters, otherwise individual trees. Zoomed out you see tree density across the country; zoomed in, individual trees. Sparse datasets (e.g. monumental-trees-only layers) show individual trees from far out without any per-city settings.
 - **Species markers** — each tree is a circular SVG marker with a 4-char species code (`QuRo` for *Quercus robur*).
@@ -26,6 +27,7 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 - **Share a tree** — `#@lat,lon,19?tree=<source>:<id>` opens the tree's detail panel.
 - **Place links** — `/<source-id>` or `#/<source-id>` (e.g. `/rotterdam`, `#/bomenmuseum-gimborn`; ids as in `sources.json`, case-insensitive) opens the map fitted to that place. The path form is redirected to the hash form by `app/public/.htaccess` in production and by a small middleware in `vite.config.ts` in development; the URL then becomes a position like any other. Unknown ids show the national overview.
 - **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular); both persisted in `localStorage`.
+- **About & contact** — "Bomenatlas" as the last entry of the map's attribution line reopens the welcome dialog. The ✉ button at the bottom right of the dialog opens a mail to the contact address (in a new tab for webmail handlers). The address is stored as shifted char codes in `lib/contact.ts` and only assembled on click, so it never appears in the source or the DOM.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
 - **Current location** — geolocation button flies to the user's position and places a location dot.
 
@@ -198,7 +200,8 @@ The API rejects cross-origin browser requests from unknown origins. `ALLOWED_ORI
 define('ALLOWED_ORIGINS', [
     'http://localhost:5173',       // Vite dev server
     'http://localhost:8000',       // PHP built-in dev server
-    'https://boxofchocolates.nl',  // production
+    'https://bomenatlas.nl',       // production
+    'https://www.bomenatlas.nl',   // production (www)
 ]);
 ```
 
@@ -323,6 +326,8 @@ src/
     treeKey.ts                  "source:id" key of a tree
     favouritesStorage.ts        localStorage: favourites
     recentCitiesStorage.ts      localStorage: recently picked places
+    welcomeStorage.ts           localStorage: welcome dialog dismissed
+    contact.ts                  obfuscated contact address, opens the mail
   map/
     MapController.ts            Leaflet wrapper class, no React imports
     useMap.ts                   React ↔ MapController bridge
@@ -336,6 +341,8 @@ src/
   components/
     Map.tsx                     map div + floating button bar
     InfoPopup.tsx               popup shell, shared CloseButton/CollapseButton
+    WelcomeDialog.tsx           first-visit explanation dialog
+    Wordmark.tsx                logo: dot-crown mark + "bomenatlas.nl" (Bricolage Grotesque, Google Fonts)
     CityButton.tsx              place picker (recent places, all places overlay)
     SourcesButton.tsx
     SpeciesFilterBadge.tsx      active filter indicator + clear button

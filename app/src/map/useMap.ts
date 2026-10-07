@@ -122,6 +122,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
       onMapClick: (...args) => onMapClickRef.current(...args),
       onMarkerClick: (...args) => onMarkerClickRef.current(...args),
       onGroupMarkerClick: (...args) => onGroupMarkerClickRef.current(...args),
+      onAboutClick: () => useStore.getState().setWelcomeOpen(true),
     })
 
     controller.init(

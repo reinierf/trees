@@ -84,6 +84,17 @@ const nl = {
 
   'species.loadingTrees': 'Bomen laden…',
   'species.clearFilter': 'Filter wissen',
+
+  'welcome.title': 'Welkom bij Bomenatlas',
+  'welcome.intro': 'Bomenatlas zet de bomen van Nederland op één kaart: de straat- en parkbomen uit de open data van tientallen gemeenten, aangevuld met de collecties van arboreta.',
+  'welcome.stepPlace': 'Kies een plaats, of pan en zoom zelf over de kaart. Ver ingezoomd zie je elke boom afzonderlijk.',
+  'welcome.stepTree': "Tik op een boom voor de soort, het plantjaar, de stamdiameter en foto's van de soort.",
+  'welcome.stepSpecies': 'Bekijk welke soorten er in beeld staan en filter op soort.',
+  'welcome.stepFavourites': 'Bewaar je favoriete bomen en deel een link naar een boom.',
+  'welcome.stepLocation': 'Ga naar je eigen locatie om de bomen om je heen te ontdekken.',
+  'welcome.disclaimer': 'De gegevens zijn gebaseerd op open data van de bronhouders en kunnen fouten bevatten.',
+  'welcome.dontShowAgain': 'Niet meer tonen',
+  'welcome.contact': 'Contact',
 } as const
 
 export type TranslationKey = keyof typeof nl
@@ -173,6 +184,17 @@ const en: Dict = {
 
   'species.loadingTrees': 'Loading trees…',
   'species.clearFilter': 'Clear filter',
+
+  'welcome.title': 'Welcome to Bomenatlas',
+  'welcome.intro': 'Bomenatlas puts the trees of the Netherlands on one map: street and park trees from the open data of dozens of municipalities, plus the collections of arboreta.',
+  'welcome.stepPlace': 'Pick a place, or pan and zoom the map yourself. Zoomed in far, you see every tree individually.',
+  'welcome.stepTree': 'Tap a tree for its species, year planted, trunk diameter and photos of the species.',
+  'welcome.stepSpecies': 'See which species are in view and filter by species.',
+  'welcome.stepFavourites': 'Save your favourite trees and share a link to a tree.',
+  'welcome.stepLocation': 'Go to your own location to discover the trees around you.',
+  'welcome.disclaimer': 'The data is based on open data from the data owners and may contain errors.',
+  'welcome.dontShowAgain': "Don't show again",
+  'welcome.contact': 'Contact',
 }
 
 const de: Dict = {
@@ -259,6 +281,17 @@ const de: Dict = {
 
   'species.loadingTrees': 'Bäume werden geladen…',
   'species.clearFilter': 'Filter löschen',
+
+  'welcome.title': 'Willkommen bei Bomenatlas',
+  'welcome.intro': 'Bomenatlas zeigt die Bäume der Niederlande auf einer Karte: Straßen- und Parkbäume aus den offenen Daten Dutzender Gemeinden, ergänzt um die Sammlungen von Arboreten.',
+  'welcome.stepPlace': 'Wähle einen Ort oder verschiebe und zoome die Karte selbst. Weit hineingezoomt siehst du jeden Baum einzeln.',
+  'welcome.stepTree': 'Tippe auf einen Baum für Art, Pflanzjahr, Stammdurchmesser und Fotos der Art.',
+  'welcome.stepSpecies': 'Sieh dir an, welche Arten im Bild sind, und filtere nach Art.',
+  'welcome.stepFavourites': 'Speichere deine Lieblingsbäume und teile einen Link zu einem Baum.',
+  'welcome.stepLocation': 'Gehe zu deinem Standort und entdecke die Bäume um dich herum.',
+  'welcome.disclaimer': 'Die Daten beruhen auf offenen Daten der Datenhalter und können Fehler enthalten.',
+  'welcome.dontShowAgain': 'Nicht mehr anzeigen',
+  'welcome.contact': 'Kontakt',
 }
 
 const fr: Dict = {
@@ -345,6 +378,17 @@ const fr: Dict = {
 
   'species.loadingTrees': 'Chargement des arbres…',
   'species.clearFilter': 'Effacer le filtre',
+
+  'welcome.title': 'Bienvenue sur Bomenatlas',
+  'welcome.intro': "Bomenatlas réunit les arbres des Pays-Bas sur une seule carte : arbres de rue et de parc issus des données ouvertes de dizaines de communes, complétés par les collections d'arboretums.",
+  'welcome.stepPlace': 'Choisissez un lieu, ou déplacez et zoomez la carte vous-même. En zoomant fortement, vous voyez chaque arbre individuellement.',
+  'welcome.stepTree': "Touchez un arbre pour voir l'espèce, l'année de plantation, le diamètre du tronc et des photos de l'espèce.",
+  'welcome.stepSpecies': 'Voyez quelles espèces sont visibles et filtrez par espèce.',
+  'welcome.stepFavourites': 'Enregistrez vos arbres favoris et partagez un lien vers un arbre.',
+  'welcome.stepLocation': 'Allez à votre position pour découvrir les arbres autour de vous.',
+  'welcome.disclaimer': 'Les données reposent sur les données ouvertes des gestionnaires et peuvent contenir des erreurs.',
+  'welcome.dontShowAgain': 'Ne plus afficher',
+  'welcome.contact': 'Contact',
 }
 
 export const TRANSLATIONS: Record<Locale, Dict> = { nl, en, de, fr }

@@ -19,7 +19,8 @@ import { IssuesButton } from './IssuesButton'
 import { SourcesButton } from './SourcesButton'
 import { BackBar } from './BackBar'
 
-export function Map() {
+/** controls=false hides every overlay and button, leaving just the map (e.g. behind the welcome dialog). */
+export function Map({ controls = true }: { controls?: boolean }) {
   const t = useT()
   const containerRef = useRef<HTMLDivElement>(null)
   const { controllerRef, markJump, goToPlace } = useMap(containerRef)
@@ -70,8 +71,9 @@ export function Map() {
     : ''
 
   return (
-    <div className="relative w-full h-full">
+    <div className={`relative w-full h-full ${controls ? '' : '[&_.leaflet-control-zoom]:hidden'}`}>
       <div ref={containerRef} className="w-full h-full" />
+      {controls && <>
       {placesOverlay && !speciesFilter && (
         <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none z-[1000]">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-md text-sm text-muted-foreground">
@@ -110,6 +112,7 @@ export function Map() {
       <IssuesButton />
       <SourcesButton />
       <LocationButton onLocate={handleLocate} />
+      </>}
     </div>
   )
 }

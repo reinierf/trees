@@ -4,6 +4,7 @@ import type { TileRange } from './map/mercator'
 import type { TreeRef } from './map/urlState'
 import { loadPreference, savePreference } from './lib/preferencesStorage'
 import { loadFavourites, saveFavourites, type Favourites } from './lib/favouritesStorage'
+import { isWelcomeHidden } from './lib/welcomeStorage'
 import { treeKey } from './lib/treeKey'
 import { TILE_LAYER_KEY, type TileLayerId } from './map/layers'
 import { type Locale } from './translations/locale'
@@ -59,6 +60,8 @@ interface AppStore extends ViewContents {
   currentBounds: Bbox | null
   /** Time of the last jump far from the previous view; shows the "back" bar for a while. */
   backBarAt: number | null
+  /** The welcome dialog is open; all other UI is hidden meanwhile. */
+  welcomeOpen: boolean
   pendingTree: TreeRef | null
   pendingCenter: [number, number] | null
   pendingHighlight: Tree | null
@@ -93,6 +96,7 @@ interface AppStore extends ViewContents {
   setCurrentBounds: (b: Bbox) => void
   showBackBar: () => void
   hideBackBar: () => void
+  setWelcomeOpen: (open: boolean) => void
   setPendingTree: (tree: TreeRef | null) => void
   setPendingCenter: (c: [number, number] | null) => void
   setPendingHighlight: (tree: Tree | null) => void
@@ -134,6 +138,7 @@ export const useStore = create<AppStore>((set) => ({
   currentCenter: null,
   currentBounds: null,
   backBarAt: null,
+  welcomeOpen: !isWelcomeHidden(),
   pendingTree: null,
   pendingCenter: null,
   pendingHighlight: null,
@@ -180,6 +185,7 @@ export const useStore = create<AppStore>((set) => ({
   setCurrentBounds: (b) => set({ currentBounds: b }),
   showBackBar: () => set({ backBarAt: Date.now() }),
   hideBackBar: () => set({ backBarAt: null }),
+  setWelcomeOpen: (open) => set({ welcomeOpen: open }),
   setPendingTree: (tree) => set({ pendingTree: tree }),
   setPendingCenter: (c) => set({ pendingCenter: c }),
   setPendingHighlight: (tree) => set({ pendingHighlight: tree }),

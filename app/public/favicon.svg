@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .g1 { fill: #81e0b4; }
+      .g2 { fill: #3f9c72; }
+      .am { fill: #fbbf24; }
+    }
+  </style>
+  <circle class="g1" fill="#2d6a4f" cx="21" cy="8" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="32" cy="8" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="43" cy="8" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="15.5" cy="17.5" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="26.5" cy="17.5" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="37.5" cy="17.5" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="48.5" cy="17.5" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="10" cy="27" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="21" cy="27" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="32" cy="27" r="4.8"/>
+  <circle class="am" fill="#f59e0b" cx="43" cy="27" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="54" cy="27" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="15.5" cy="36.5" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="26.5" cy="36.5" r="4.8"/>
+  <circle class="g2" fill="#52b788" cx="37.5" cy="36.5" r="4.8"/>
+  <circle class="g1" fill="#2d6a4f" cx="48.5" cy="36.5" r="4.8"/>
+  <rect class="g1" fill="#2d6a4f" x="29" y="40" width="6" height="21" rx="2"/>
+</svg>

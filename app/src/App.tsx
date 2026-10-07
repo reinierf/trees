@@ -4,11 +4,15 @@ import { Map } from './components/Map'
 import { InfoPopup } from './components/InfoPopup'
 import { LoadingSpinner } from './components/LoadingSpinner'
 import { SettingsButton } from './components/SettingsButton'
+import { WelcomeDialog } from './components/WelcomeDialog'
 import { useStore } from './store'
 
 export default function App() {
   const meta = useStore((s) => s.meta)
   const setMeta = useStore((s) => s.setMeta)
+  const welcomeOpen = useStore((s) => s.welcomeOpen)
+  const setWelcomeOpen = useStore((s) => s.setWelcomeOpen)
+  const welcome = welcomeOpen && <WelcomeDialog onClose={() => setWelcomeOpen(false)} />
 
   useEffect(() => {
     fetchMeta().then(setMeta).catch(console.error)
@@ -17,19 +21,21 @@ export default function App() {
   if (!meta) {
     return (
       <div className="w-screen h-dvh flex items-center justify-center">
-        <SettingsButton />
+        {!welcomeOpen && <SettingsButton />}
         <div className="scale-150">
           <LoadingSpinner />
         </div>
+        {welcome}
       </div>
     )
   }
 
   return (
     <div className="w-screen h-dvh">
-      <Map />
-      <InfoPopup />
-      <SettingsButton />
+      <Map controls={!welcomeOpen} />
+      {!welcomeOpen && <InfoPopup />}
+      {!welcomeOpen && <SettingsButton />}
+      {welcome}
     </div>
   )
 }

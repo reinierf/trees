@@ -16,6 +16,8 @@ interface Callbacks {
     onMarkerClick: (tree: Tree) => void
     onGroupMarkerClick: (trees: Tree[]) => void
     onMapClick: () => void
+    /** The "Bomenatlas" link in the attribution line was clicked. */
+    onAboutClick: () => void
 }
 
 export class MapController {
@@ -79,6 +81,25 @@ export class MapController {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             maxZoom: MAP_MAX_ZOOM,
         }).addTo(this.map)
+
+        // "Bomenatlas" (opens the welcome dialog) as the last attribution entry, in the same style. Leaflet joins
+        // attributions with commas and rebuilds the line on every layer switch, so the link is
+        // appended after each rebuild of its (private) _update.
+        const attribution = this.map.attributionControl as L.Control.Attribution & { _update: () => void }
+        const rebuild = attribution._update
+        attribution._update = function () {
+            rebuild.call(this)
+            this.getContainer()?.insertAdjacentHTML(
+                'beforeend',
+                ' <span aria-hidden="true">|</span> <a href="#" class="about-link">Bomenatlas</a>',
+            )
+        }
+        attribution._update()
+        attribution.getContainer()?.addEventListener('click', (e) => {
+            if (!(e.target as HTMLElement).closest('.about-link')) return
+            e.preventDefault()
+            this.callbacks.onAboutClick()
+        })
 
         this.map.createPane('favouritePane').style.zIndex = '620'
         this.map.createPane('selectionPane').style.zIndex = '640'

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Heart, LocateFixed, Signpost, TreeDeciduous, Trees, type LucideIcon } from 'lucide-react'
+import { Heart, LocateFixed, Share2, Signpost, TreeDeciduous, Trees, type LucideIcon } from 'lucide-react'
 import { CloseButton } from './InfoPopup'
 import { openContactMail } from '../lib/contact'
 import { Wordmark } from './Wordmark'
@@ -21,11 +21,40 @@ const STEPS: [LucideIcon, TranslationKey][] = [
 export function WelcomeDialog({ onClose }: { onClose: () => void }) {
   const t = useT()
   const [hideNextTime, setHideNextTime] = useState(isWelcomeHidden)
+  const [toast, setToast] = useState<string | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function close() {
     setWelcomeHidden(hideNextTime)
     onClose()
   }
+
+  function showToast(msg: string) {
+    setToast(msg)
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), 2000)
+  }
+
+  // Shares the site itself (same fallback as sharing a tree: copy the link).
+  async function handleShare() {
+    const url = `${window.location.origin}${window.location.pathname}`
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: document.title, url })
+        return
+      } catch (e) {
+        if (e instanceof Error && e.name === 'AbortError') return
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url)
+      showToast(t('tree.linkCopied'))
+    } catch {
+      showToast(url)
+    }
+  }
+
+  useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current) }, [])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -71,18 +100,29 @@ export function WelcomeDialog({ onClose }: { onClose: () => void }) {
               type="checkbox"
               checked={hideNextTime}
               onChange={(e) => setHideNextTime(e.target.checked)}
-              className="shrink-0"
+              className="shrink-0 translate-y-[1.5px]"
             />
             {t('welcome.dontShowAgain')}
           </label>
-          <button
-            onClick={openContactMail}
-            className="text-muted-foreground hover:text-foreground leading-none text-xl"
-            aria-label={t('welcome.contact')}
-            title={t('welcome.contact')}
-          >
-            {'✉︎'}
-          </button>
+          <div className="flex items-center gap-3">
+            {toast && <span className="text-xs text-muted-foreground">{toast}</span>}
+            <button
+              onClick={() => void handleShare()}
+              className="text-muted-foreground hover:text-foreground"
+              aria-label={t('welcome.share')}
+              title={t('welcome.share')}
+            >
+              <Share2 size={15} />
+            </button>
+            <button
+              onClick={openContactMail}
+              className="text-muted-foreground hover:text-foreground leading-none text-xl -translate-y-px"
+              aria-label={t('welcome.contact')}
+              title={t('welcome.contact')}
+            >
+              {'✉︎'}
+            </button>
+          </div>
         </div>
       </div>
     </div>,

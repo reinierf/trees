@@ -95,6 +95,7 @@ const nl = {
   'welcome.disclaimer': 'De gegevens zijn gebaseerd op open data van de bronhouders en kunnen fouten bevatten.',
   'welcome.dontShowAgain': 'Niet meer tonen',
   'welcome.contact': 'Contact',
+  'welcome.share': 'Deel Bomenatlas',
 } as const
 
 export type TranslationKey = keyof typeof nl
@@ -195,6 +196,7 @@ const en: Dict = {
   'welcome.disclaimer': 'The data is based on open data from the data owners and may contain errors.',
   'welcome.dontShowAgain': "Don't show again",
   'welcome.contact': 'Contact',
+  'welcome.share': 'Share Bomenatlas',
 }
 
 const de: Dict = {
@@ -292,6 +294,7 @@ const de: Dict = {
   'welcome.disclaimer': 'Die Daten beruhen auf offenen Daten der Datenhalter und können Fehler enthalten.',
   'welcome.dontShowAgain': 'Nicht mehr anzeigen',
   'welcome.contact': 'Kontakt',
+  'welcome.share': 'Bomenatlas teilen',
 }
 
 const fr: Dict = {
@@ -389,6 +392,7 @@ const fr: Dict = {
   'welcome.disclaimer': 'Les données reposent sur les données ouvertes des gestionnaires et peuvent contenir des erreurs.',
   'welcome.dontShowAgain': 'Ne plus afficher',
   'welcome.contact': 'Contact',
+  'welcome.share': 'Partager Bomenatlas',
 }
 
 export const TRANSLATIONS: Record<Locale, Dict> = { nl, en, de, fr }

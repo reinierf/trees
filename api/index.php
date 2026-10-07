@@ -41,6 +41,9 @@ define('ALLOWED_ORIGINS', [
 if (extension_loaded('zlib') && !ini_get('zlib.output_compression')) ob_start('ob_gzhandler');
 
 header('Content-Type: application/json; charset=utf-8');
+// Crawlers may fetch the API to render the app (so it's not blocked in robots.txt), but its
+// responses aren't pages.
+header('X-Robots-Tag: noindex');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, If-None-Match');
 cors_origin();

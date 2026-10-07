@@ -3,7 +3,8 @@
  *
  *   data/<source>.db + data/vernacular-*.db + sources.json
  *     → ../api/data/trees.db   trees of every source + precomputed cluster/species pyramids
- *     → ../api/data/meta.db    sources, species dictionary (with vernacular names), build version
+ *     → ../api/data/meta.db    sources, species dictionary (with vernacular names), species per source,
+ *                              build version
  *
  * The per-source dbs stay the source of truth; this script can be rerun at any time.
  * Writes to *.tmp files and renames at the end, so a failed build never leaves a half-written db.
@@ -143,6 +144,7 @@ function main() {
 
         const db = new DatabaseSync(dbPath, { readOnly: true });
         let n = 0, s = 90, nn = -90, w = 180, e = -180, lastFetched = null;
+        const speciesCounts = new Map();  // species id → trees of this source
         // Source ids are not always unique: some datasets list the same tree twice (identical or
         // sub-metre positions), others reuse an id for different trees (Gorinchem). Same id and
         // species within DUPLICATE_RADIUS_M → same tree, keep one; otherwise a different tree, kept
@@ -177,6 +179,7 @@ function main() {
 
             const sp = speciesOf(r.species_binomial, r.species);
             sp.count++;
+            speciesCounts.set(sp.id, (speciesCounts.get(sp.id) ?? 0) + 1);
             if (r.name_vernacular) sp.srcNames.set(r.name_vernacular, (sp.srcNames.get(r.name_vernacular) ?? 0) + 1);
 
             insertStaging.run(idx, id, lat, lon, sp.id, r.species, r.species_cultivar, r.name_vernacular,
@@ -214,7 +217,7 @@ function main() {
         db.close();
         total += n;
         const fetched = (lastFetched ?? statSync(dbPath).mtime.toISOString()).slice(0, 10);
-        sourceRows.push({ idx, src, n, bbox: n ? [s, nn, w, e] : null, fetched });
+        sourceRows.push({ idx, src, n, bbox: n ? [s, nn, w, e] : null, fetched, speciesCounts });
         log(`  ${src.id.padEnd(28)} ${String(n).padStart(8)}`);
     });
     trees.exec('COMMIT');
@@ -291,6 +294,8 @@ function main() {
             id INTEGER PRIMARY KEY, key TEXT UNIQUE NOT NULL, binomial TEXT, count INTEGER,
             nl TEXT, en TEXT, de TEXT, fr TEXT
         );
+        CREATE TABLE source_species (source_idx INTEGER, species_id INTEGER, count INTEGER,
+                                     PRIMARY KEY (source_idx, species_id)) WITHOUT ROWID;
     `);
     meta.prepare('INSERT INTO build VALUES (?,?,?)').run(version, new Date().toISOString(), total);
     const insSource = meta.prepare('INSERT INTO sources VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
@@ -300,7 +305,12 @@ function main() {
             n, fetched, src.clusterDisableZoom ?? null, JSON.stringify(src.meta ?? {}));
     }
     const insSpecies = meta.prepare('INSERT INTO species VALUES (?,?,?,?,?,?,?,?)');
+    const insSourceSpecies = meta.prepare('INSERT INTO source_species VALUES (?,?,?)');
     meta.exec('BEGIN');
+    // Species per source, for the place pages (api/page.php): species count and most common species.
+    for (const { idx, speciesCounts } of sourceRows) {
+        for (const [spId, n] of speciesCounts) insSourceSpecies.run(idx, spId, n);
+    }
     for (const sp of species.values()) {
         const v = vernacular.get(sp.key.toUpperCase()) ?? {};
         // No curated/iNaturalist Dutch name: fall back to the name the source datasets use most for this species.

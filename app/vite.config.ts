@@ -16,16 +16,21 @@ export default defineConfig(({ mode }) => ({
       },
     },
     {
-      // Dev counterpart of public/.htaccess: /rotterdam → /#/rotterdam, the app's place link.
-      // 302 rather than production's 301, so browsers don't cache it while developing.
-      name: 'place-path-redirect',
+      // Dev counterpart of public/.htaccess: serve the app at place paths (/rotterdam). Production
+      // fills in the page's tags there (api/page.php); in dev every path gets the default ones.
+      name: 'place-paths',
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
-          const m = /^\/([a-z][a-z0-9-]+)\/?(\?.*)?$/i.exec(req.url ?? '')
-          if (!m || m[1].toLowerCase() === 'api') return next()
-          res.statusCode = 302
-          res.setHeader('Location', `/#/${m[1]}`)
-          res.end()
+          const m = /^\/((?!api\b)[a-z][a-z0-9-]*)(\/?)(\?.*)?$/i.exec(req.url ?? '')
+          if (m && m[2]) {
+            // /rotterdam/ → /rotterdam, as in production
+            res.statusCode = 302
+            res.setHeader('Location', `/${m[1]}${m[3] ?? ''}`)
+            res.end()
+            return
+          }
+          if (m) req.url = '/'
+          next()
         })
       },
     },

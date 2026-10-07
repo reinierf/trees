@@ -1,7 +1,19 @@
 Options -MultiViews
 RewriteEngine On
 
+# Site pages are served by api/page.php: index.html with the tags for that page filled in.
+#   /  /rotterdam  /rotterdam?boom=<id>  /sitemap.xml
+# Place ids as in sources.json; page.php redirects other casings to the canonical one.
+
+# /rotterdam/ → /rotterdam: index.html's relative asset URLs need the place without a slash.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI}      ^(.*)/([a-z][a-z0-9-]+)/?(\?.*)?$ [NC]
-RewriteRule ^                   %1/#/%2 [R=301,L,NE]
+RewriteCond %{REQUEST_URI}      ^(.*/[a-z][a-z0-9-]*)/$ [NC]
+RewriteRule ^                   %1 [R=301,L]
+
+RewriteRule ^$                  api/page.php [L]
+RewriteRule ^sitemap\.xml$      api/page.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^[a-z][a-z0-9-]*$   api/page.php [L,NC]

@@ -6,11 +6,14 @@ import { useStore, PopupKind } from '../store'
 import { CLUSTER_DISABLE_ZOOM, DEBOUNCE_MS, NL_CENTER, NL_ZOOM, PLACES_OVERLAY_MAX_ZOOM, SHARE_ZOOM } from '../config'
 import { useTileLoader } from './useTileLoader'
 import { useMapClickHandlers } from './useMapClickHandlers'
-import { pushUrlPosition, readUrlState, replaceUrlPosition } from './urlState'
+import { pushUrlPosition, readUrlState, replaceUrlPosition, setUrlPlace } from './urlState'
 import { recordCityVisit } from '../lib/recentCitiesStorage'
 import { treeKey } from '../lib/treeKey'
 import { LAYERS } from './layers'
 import type { Source, Tree } from '../types'
+
+// index.html's title; the server replaces it per page, so it can't be read from the document.
+const DEFAULT_TITLE = 'Bomenatlas | Bomen van Nederland op de kaart'
 
 export interface MapHandle {
   controllerRef: RefObject<MapController | null>
@@ -54,6 +57,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   const favourites = useStore((s) => s.favourites)
   const speciesFilter = useStore((s) => s.speciesFilter)
   const placesOverlay = useStore((s) => s.placesOverlay)
+  const currentCenter = useStore((s) => s.currentCenter)
+  const viewLoaded = useStore((s) => s.range.z > 0)
   const locale = useStore((s) => s.locale)
 
   const { load: loadTiles, abort: abortLoad } = useTileLoader(tileCacheRef.current)
@@ -87,7 +92,8 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
     const el = containerRef.current
     if (!el) return
 
-    const urlState = readUrlState()
+    const isPlace = (id: string) => useStore.getState().sourcesById.has(id)
+    const urlState = readUrlState(isPlace)
     const position = urlState?.kind === 'position' ? urlState : null
     // #/rotterdam: start fitted to that place. Unknown ids fall through to the overview.
     const place = urlState?.kind === 'place' ? useStore.getState().sourcesById.get(urlState.sourceId) : undefined
@@ -142,7 +148,7 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
     // Back/forward (and editing the URL by hand): move the map to the entry's position.
     function onPopState() {
       useStore.getState().hideBackBar()
-      const state = readUrlState()
+      const state = readUrlState(isPlace)
       if (!state) return
       if (state.kind === 'place') {
         // Typed into the address bar of an open tab. The browser already made a history entry
@@ -194,6 +200,15 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   useEffect(() => {
     controllerRef.current?.setServerClusters(clusters)
   }, [clusters])
+
+  // The place in view goes in the URL path and the tab title (none on the places overview).
+  // Waits for the first view's trees, so an entry path like /rotterdam isn't changed before then.
+  useEffect(() => {
+    if (!currentCenter || !viewLoaded) return
+    const place = placesOverlay ? undefined : placeInView(sourcesInView, sourcesById, currentCenter)
+    setUrlPlace(place?.id ?? null)
+    document.title = place ? `${place.name} | Bomenatlas` : DEFAULT_TITLE
+  }, [sourcesInView, sourcesById, currentCenter, placesOverlay, viewLoaded])
 
   // Dense, small datasets (arboretums) keep clustering one zoom longer while they're in view.
   useEffect(() => {
@@ -286,4 +301,34 @@ export function useMap(containerRef: RefObject<HTMLDivElement | null>): MapHandl
   }, [popupView, visibleTrees, pendingTreeKey, pendingHighlightKey, setPendingHighlightKey])
 
   return { controllerRef, markJump, goToPlace }
+}
+
+/**
+ * The source most of the trees in view belong to, if the centre lies within its extent (zoomed out
+ * over several places, none is). With no trees in view (a square, a lake), the smallest place
+ * whose extent holds the centre.
+ */
+function placeInView(
+  sourcesInView: Record<string, number>,
+  sourcesById: Map<string, Source>,
+  [lat, lon]: [number, number],
+): Source | undefined {
+  const holdsCentre = ({ bbox: { s, n, w, e } }: Source) => lat >= s && lat <= n && lon >= w && lon <= e
+  const counts = Object.entries(sourcesInView).filter(([, n]) => n > 0)
+  if (counts.length > 0) {
+    const [id] = counts.reduce((a, b) => (b[1] > a[1] ? b : a))
+    const source = sourcesById.get(id)
+    return source && holdsCentre(source) ? source : undefined
+  }
+  let best: Source | undefined
+  let bestArea = Infinity
+  for (const source of sourcesById.values()) {
+    const { s, n, w, e } = source.bbox
+    const area = (n - s) * (e - w)
+    if (holdsCentre(source) && area < bestArea) {
+      best = source
+      bestArea = area
+    }
+  }
+  return best
 }

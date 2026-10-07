@@ -1,4 +1,4 @@
-// The bomenatlas.nl logo: a tree crown of map-marker dots (same as public/favicon.svg) beside
+// The bomenatlas.nl logo: a tree crown of map-marker dots (same as public/img/favicon.svg) beside
 // "bomen" bold green + "atlas" + amber "." + "nl" in Bricolage Grotesque.
 
 const GREEN = '#2d6a4f'

@@ -1,15 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/img/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="canonical" href="https://bomenatlas.nl/" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700&display=swap" />
+    <meta name="theme-color" content="#2d6a4f" />
+    <link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Defaults for the national overview. api/page.php fills these per page (place, shared tree)
+         and takes the site URL from the canonical link; keep the attribute order as it is. -->
     <title>Bomenatlas | Bomen van Nederland op de kaart</title>
+    <meta name="description" content="Bomen van Nederland op de kaart: de straat- en parkbomen uit de open data van tientallen gemeenten, aangevuld met de collecties van arboreta. Zoek op soort, plantjaar en stamdiameter." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://bomenatlas.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bomenatlas" />
+    <meta property="og:title" content="Bomenatlas | Bomen van Nederland op de kaart" />
+    <meta property="og:description" content="Bomen van Nederland op de kaart: de straat- en parkbomen uit de open data van tientallen gemeenten, aangevuld met de collecties van arboreta." />
+    <meta property="og:url" content="https://bomenatlas.nl/" />
+    <meta property="og:image" content="https://bomenatlas.nl/img/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bomenatlas: bomen op de kaart van Nederland" />
+    <!-- Square fallback for apps that show a small square thumbnail (WhatsApp); others take the first image. -->
+    <meta property="og:image" content="https://bomenatlas.nl/img/og-image-square.png" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:image:alt" content="Logo van Bomenatlas" />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>

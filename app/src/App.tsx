@@ -13,6 +13,12 @@ export default function App() {
   const welcomeOpen = useStore((s) => s.welcomeOpen)
   const setWelcomeOpen = useStore((s) => s.setWelcomeOpen)
   const welcome = welcomeOpen && <WelcomeDialog onClose={() => setWelcomeOpen(false)} />
+  const locale = useStore((s) => s.locale)
+
+  // index.html says nl (the language of the static content); follow the chosen UI language.
+  useEffect(() => {
+    document.documentElement.lang = locale
+  }, [locale])
 
   useEffect(() => {
     fetchMeta().then(setMeta).catch(console.error)

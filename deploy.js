@@ -9,8 +9,8 @@
  *   --db        copy trees.db and meta.db into webroot/api/data/
  *
  * webroot/ layout:
- *   index.html, assets/, favicon, .htaccess   app/dist/
- *   api/index.php, api/.htaccess              api/
+ *   index.html, assets/, img/, fonts/, .htaccess   app/dist/
+ *   api/index.php, page.php, .htaccess        api/
  *   api/data/trees.db, api/data/meta.db       api/data/ (only with --db / --build-db)
  *
  * webroot/ is updated, not wiped: the app files and API code are replaced, api/data/ is only
@@ -24,7 +24,7 @@ const ROOT = __dirname
 const WEBROOT = path.join(ROOT, 'webroot')
 const DIST = path.join(ROOT, 'app', 'dist')
 const API = path.join(ROOT, 'api')
-const API_FILES = ['index.php', '.htaccess']
+const API_FILES = ['index.php', 'page.php', '.htaccess']
 const DB_FILES = ['trees.db', 'meta.db']
 
 const FLAGS = { '--build': 'build', '--build-db': 'buildDb', '--db': 'db', '-db': 'db' }

@@ -23,9 +23,10 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 - **Places** — the signpost button lists recently visited places and "All places": the national overview with a marker per dataset (green = city, amber = institution, explained by a legend in the "choose a place" balloon). Picking one flies to its extent. While the overview is shown, the species-in-view and info buttons are disabled (their panels close).
 - **Sources in view** — the info button lists the datasets the trees in view come from, with counts, source, date fetched and description.
 - **Favourites** — save trees from any source; stored in `localStorage`.
-- **Position in the URL** — `#@lat,lon,zoom`; reloading or sharing a URL keeps the view. Panning updates the current history entry, so the back button isn't flooded; deliberate jumps (picking a place, locate-me, flying to a favourite or issue) add one, so back returns to where you were.
-- **Share a tree** — `#@lat,lon,19?tree=<source>:<id>` opens the tree's detail panel.
-- **Place links** — `/<source-id>` or `#/<source-id>` (e.g. `/rotterdam`, `#/bomenmuseum-gimborn`; ids as in `sources.json`, case-insensitive) opens the map fitted to that place. The path form is redirected to the hash form by `app/public/.htaccess` in production and by a small middleware in `vite.config.ts` in development; the URL then becomes a position like any other. Unknown ids show the national overview.
+- **Position in the URL** — `/<place>#@lat,lon,zoom`; reloading or sharing a URL keeps the view. The hash holds the position; the path holds the place in view, kept in sync while panning (also in the tab title): the source most of the trees in view belong to, if the map centre lies within its extent — with no trees in view, the smallest place around the centre; none on the places overview or zoomed out over several places (`/#@…`). Panning updates the current history entry, so the back button isn't flooded; deliberate jumps (picking a place, locate-me, flying to a favourite or issue) add one, so back returns to where you were.
+- **Share a tree** — `/<source>?boom=<id>#@lat,lon,19` opens the tree's detail panel; the server gives the link a preview of that tree (see [Search and link previews](#search-and-link-previews)). `?boom=` is dropped after the first move. The older `#@lat,lon,19?tree=<source>:<id>` still works.
+- **Place links** — `/<source-id>` or `#/<source-id>` (e.g. `/rotterdam`, `#/bomenmuseum-gimborn`; ids as in `sources.json`, case-insensitive; the server redirects other casings and a trailing slash) opens the map fitted to that place. Unknown ids show the national overview (with a 404 status).
+- **Search and link previews** — every place has its own page with title, description and preview tags, served by `api/page.php` (see below).
 - **Settings menu** — gear-icon dropdown to switch UI language (Dutch, English, German, French; defaults to Dutch) and name mode (scientific ↔ vernacular); both persisted in `localStorage`.
 - **About & contact** — "Bomenatlas" as the last entry of the map's attribution line reopens the welcome dialog. At the bottom right of the dialog, a share button shares the site (system share sheet, or copies the link) and the ✉ button opens a mail to the contact address (in a new tab for webmail handlers). The address is stored as shifted char codes in `lib/contact.ts` and only assembled on click, so it never appears in the source or the DOM.
 - **Map layers** — streets (OSM), satellite (Esri), topographic (OpenTopoMap), light (CARTO).
@@ -38,7 +39,8 @@ Interactive map of municipal and arboretum trees in the Netherlands. The map sho
 ```
 open-data-fetcher/   Node.js — pulls tree data from each source → per-source SQLite;
                      builds the national databases the API serves (tools/build-db.js)
-api/                 PHP — serves tiles, species and tree details over HTTP from SQLite
+api/                 PHP — serves tiles, species and tree details over HTTP from SQLite (index.php),
+                     and the site pages with their search/preview tags (page.php)
 app/                 Vite + React web app
 deploy.js            collects the deployable files into webroot/ (see Deployment)
 ```
@@ -91,7 +93,7 @@ node deploy.js --build-db     # rebuild the databases first (implies --db)
 `webroot/` is updated, not wiped: the app files and API code are replaced (old hashed assets are removed), and `webroot/api/data/` is only touched when databases are copied. `issues.db` is never copied.
 
 - PHP server with `pdo_sqlite` (enabled by default on most shared hosting)
-- Upload `api/index.php`, `api/.htaccess`
+- Upload `api/index.php`, `api/page.php`, `api/.htaccess`
 - Upload `api/data/trees.db` and `api/data/meta.db`. Upload them under temporary names and rename on the server, so the API never reads a half-uploaded file. **Never overwrite `api/data/issues.db`** — it holds user-reported issues written by the live API.
 - Upload `app/dist/` as the web root (or a subdirectory)
 - No database server, no Node.js on the server
@@ -132,6 +134,7 @@ Merges every source in `sources.json` into `api/data/trees.db` and `api/data/met
 - **assigns species ids** — one per `species_binomial` (or raw `species` when there is no binomial), with vernacular names resolved at build time: Dutch curated overrides (`vernacular-nl.db`) win for `nl`, iNaturalist (`vernacular-base.db`) supplies all locales, and the most common name the source datasets use is the Dutch fallback.
 - **deduplicates** — rows sharing a source id within 5 m are the same tree listed twice (e.g. all of Assen appears twice ~0.3 m apart; Maastricht has exact duplicates) and are dropped. Rows sharing an id further apart are different trees and keep a suffixed id (`1~2`). Ids used by more than 10 rows in a source are placeholders (`undefined` for all of Dordrecht, `Onbekend` in Deventer): those trees are all kept with generated ids (`undefined~1234`), which are stable only as long as the source data doesn't change.
 - **precomputes pyramids** for zoom 5–17: clusters per 64 px cell, species counts per tile, tree counts per source per tile, and species clusters up to zoom 11.
+- **counts species per source** (`meta.db` `source_species`) for the place pages: number of species and the most common ones. Counting them live takes seconds per source.
 
 ---
 
@@ -191,6 +194,25 @@ Tiles use standard web-mercator `z/x/y` indices (256 px), the same as the map's 
 ```
 
 Issues keep a `city` column in `issues.db`; it holds the source id.
+
+### Search and link previews
+
+The app is one `index.html`; `api/page.php` serves it with the tags for the requested page filled in. `app/public/.htaccess` routes `/`, `/<place>` and `/sitemap.xml` to it (other files and directories, such as `assets/` and `api/`, are served as usual).
+
+| URL | Title, description, preview | Indexed |
+|-----|-----------------------------|---------|
+| `/` | the defaults in `index.html`; JSON-LD `WebSite` | yes |
+| `/rotterdam` | "Bomen in Rotterdam op de kaart" (institutions: "Bomen van Bomenmuseum Gimborn op de kaart"), tree and species counts, the three most common species, the source; canonical URL; JSON-LD `Dataset` | yes |
+| `/rotterdam?boom=<id>` | the tree: name, binomial, street, year planted, trunk diameter | no (`noindex`, no canonical) |
+| `/<unknown>` | the defaults, status 404 | no |
+| `/sitemap.xml` | the overview and every place, `lastmod` = build date | — |
+
+- **Template** — `page.php` replaces only tag values in the built `index.html` (`webroot/index.html`), so the defaults live there alone. The site URL is taken from its canonical link; keep its tags' attribute order (`<meta name|property="…" content="…">`) as it is.
+- **Static content** — a summary of the page (place: counts, top 10 species, source and date; overview: all places with counts) plus links to all places goes inside `#root`, for crawlers that don't run JavaScript. It is visually hidden (screen-reader-only CSS), so visitors never see it flash before the app mounts and replaces it.
+- **Fallback** — if anything fails (no databases, an old `meta.db` without `source_species`), the plain `index.html` is served: the app always loads. An old `meta.db` only leaves out the species.
+- **Images** — in `app/public/img/` (with the favicons). `og-image.png` (1200×630, real trees on an OSM map with the wordmark) is the preview of every page, including shared trees. `og-image-square.png` (400×400, the logo) is a second `og:image` for apps that show a square thumbnail (WhatsApp). `apple-touch-icon.png` is the home-screen icon. All three are rendered by `node tools/share-images.mjs` (in `app/`; needs the databases, Chrome or Edge, and internet for the map tiles).
+- `robots.txt` allows everything (crawlers need `/api/` to render the map) and points to the sitemap; the API sends `X-Robots-Tag: noindex`.
+- In development Vite serves the app at place paths with the default tags (middleware in `vite.config.ts`).
 
 ### API access control
 
@@ -258,7 +280,7 @@ tile_species (z, x, y, species_id, count)             -- 256 px tiles
 tile_source  (z, x, y, source_idx, count)             -- 256 px tiles
 ```
 
-**Metadata** (`api/data/meta.db`, built): `build(version, built_at, tree_count)`, `sources(idx, id, name, type, center_lat, center_lon, s, n, w, e, tree_count, last_fetched, cluster_disable_zoom, meta_json)`, `species(id, key, binomial, count, nl, en, de, fr)`.
+**Metadata** (`api/data/meta.db`, built): `build(version, built_at, tree_count)`, `sources(idx, id, name, type, center_lat, center_lon, s, n, w, e, tree_count, last_fetched, cluster_disable_zoom, meta_json)`, `species(id, key, binomial, count, nl, en, de, fr)`, `source_species(source_idx, species_id, count)`.
 
 ---
 
@@ -276,6 +298,8 @@ tile_source  (z, x, y, source_idx, count)             -- 256 px tiles
 | **Leaflet.js** | Mature, well-documented map library; intentionally kept outside React's render cycle |
 | **Leaflet.MarkerCluster** | Clustering plugin; avoids rendering thousands of overlapping markers |
 | **Lucide React** | Consistent icon set |
+
+The wordmark's font, Bricolage Grotesque, is self-hosted: `public/fonts/` holds the latin subset of the variable font (weights 400–700, licence `OFL.txt`), declared in `index.css` with `font-display: block` and preloaded in `index.html`, so the wordmark never renders in a fallback font first.
 
 ### Architecture
 
@@ -334,7 +358,7 @@ src/
     useTileLoader.ts            tile loading orchestration
     tileCache.ts                tile cache with derivation from tree-mode ancestors
     mercator.ts                 web-mercator tile math
-    urlState.ts                 position/tree in the URL hash, history handling
+    urlState.ts                 place in the path, position/tree in the hash, history handling
     markerIcon.ts               SVG DivIcons (species, clusters, groups, places)
     layers.ts                   tile layer definitions (streets/satellite/topo/light)
     useMapClickHandlers.ts      marker click → store actions
@@ -342,7 +366,7 @@ src/
     Map.tsx                     map div + floating button bar
     InfoPopup.tsx               popup shell, shared CloseButton/CollapseButton
     WelcomeDialog.tsx           first-visit explanation dialog
-    Wordmark.tsx                logo: dot-crown mark + "bomenatlas.nl" (Bricolage Grotesque, Google Fonts)
+    Wordmark.tsx                logo: dot-crown mark + "bomenatlas.nl" (Bricolage Grotesque, self-hosted)
     CityButton.tsx              place picker (recent places, all places overlay)
     SourcesButton.tsx
     SpeciesFilterBadge.tsx      active filter indicator + clear button
